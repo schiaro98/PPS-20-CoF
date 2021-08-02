@@ -2,4 +2,5 @@
 *.log
 .idea
 target
+.bsp
 out
