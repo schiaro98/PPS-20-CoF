@@ -4,3 +4,5 @@
 target
 .bsp
 out
+project/build.properties
+.bsp/
