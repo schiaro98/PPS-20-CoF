@@ -3,6 +3,8 @@ import com.google.gson.{GsonBuilder, JsonElement, JsonStreamParser}
 import java.io.{ByteArrayInputStream, InputStream, InputStreamReader, Reader}
 import java.nio.charset.StandardCharsets
 
+case class Car(brand: String, doors:String)
+
 object ReadWrite extends App {
   val initialString = "{\"brand\":\"poop\", \"doors\": 105}{\"brand\":\"Panda\", \"doors\": 5}"
   val is = new ByteArrayInputStream(initialString.getBytes(StandardCharsets.UTF_8));
