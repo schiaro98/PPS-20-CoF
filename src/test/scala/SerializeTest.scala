@@ -1,4 +1,4 @@
-import Serializer.{deserializeOne, serializeMany, serializeManyOnFile, serializeOne}
+import Serializer.{deserializeMany, deserializeOne, serializeArray, serializeMany, serializeManyOnFile, serializeOne}
 import org.scalatest.funsuite.AnyFunSuite
 
 import scala.io.Source
@@ -22,6 +22,16 @@ class SerializeTest extends AnyFunSuite{
     assert(json === "{\"brand\":\"Rover\",\"doors\":5}{\"brand\":\"Ferrari\",\"doors\":3}{\"brand\":\"Fiat\",\"doors\":5}")
   }
 
+  test("serializeArray"){
+    val car = Car("Rover", 5)
+    val car2 = Car("Ferrari", 3)
+    val car3 = Car("Fiat", 5)
+
+    val json = serializeArray(List(car, car2, car3))
+    println(json)
+    assert(json === "{\"brand\":\"Rover\",\"doors\":5}{\"brand\":\"Ferrari\",\"doors\":3}{\"brand\":\"Fiat\",\"doors\":5}")
+  }
+
   test("serializeManyOnFile"){
     val car = Car("Rover", 5)
     val car2 = Car("Ferrari", 3)
@@ -39,5 +49,10 @@ class SerializeTest extends AnyFunSuite{
     assert(deserializedCar.doors === 5)
   }
 
-
+  test("deserializeMany"){
+    val deserializedCars = deserializeMany("{\"brand\":\"Rover\",\"doors\":5}{\"brand\":\"Ferrari\",\"doors\":3}{\"brand\":\"Fiat\",\"doors\":5}")(classOf[Car])
+//    println(deserializedCars)
+    assert(deserializedCars.length === 3)
+    assert(deserializedCars.head.doors === 5)
+  }
 }
