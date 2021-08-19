@@ -28,7 +28,7 @@ class SerializeTest extends AnyFunSuite{
   test("serializeManyToFile"){
     val fileName = "cars.txt"
     serializeManyToFile(List(car, car2, car3))(fileName)
-    val path = Path.of("res"+File.separator+fileName)
+    val path = Path.of("res"+File.separator+"serialization"+File.separator+fileName)
     val json = Files.readString(path, StandardCharsets.UTF_8)
 //    println(json)
     assert(json === "{\"brand\":\"Rover\",\"doors\":5}{\"brand\":\"Ferrari\",\"doors\":3}{\"brand\":\"Fiat\",\"doors\":5}")

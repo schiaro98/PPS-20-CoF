@@ -25,7 +25,7 @@ sealed trait Serializer
     }
 
     def serializeManyToFile[U](objs:Iterable[U])(fileName:String): Unit =
-      new PrintWriter("res"+File.separator+fileName) { write(serializeMany(objs)); close() }
+      new PrintWriter("res"+File.separator+"serialization"+File.separator+fileName) { write(serializeMany(objs)); close() }
 
     def deserializeOne[T](json: String)(classOfT: Class[T]): T = gson.fromJson(json,classOfT)
 
@@ -49,7 +49,7 @@ sealed trait Serializer
       import java.nio.charset.StandardCharsets
       import java.nio.file.{Files, Path}
 
-      val path = Path.of("res"+File.separator+fileName)
+      val path = Path.of("res"+File.separator+"serialization"+File.separator+fileName)
       val json = Files.readString(path, StandardCharsets.UTF_8)
       deserializeMany(json)(classOfT)
     }
