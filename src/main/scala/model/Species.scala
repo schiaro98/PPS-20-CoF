@@ -1,0 +1,51 @@
+package model
+
+import java.awt.image.BufferedImage
+
+/**
+ * Trait that represent the size of a species.
+ */
+trait Size
+
+/**
+ * Object that contains the possible size of a species.
+ */
+object Size {
+  case object Big extends Size
+  case object Medium extends Size
+  case object Small extends Size
+}
+
+
+/**
+ * Trait that represent a specific species of animal.
+ */
+trait Species extends Visualizable {
+  val name: String
+  val size: Size
+  val strength: Int
+  val visibility: Int
+}
+
+/**
+ * Object that represent a specific species of animal.
+ */
+object Species {
+  /**
+   * Apply method for a Species.
+   * @param icon the image to draw in the map.
+   * @param name the name of the species.
+   * @param size the size of the species.
+   * @param strength the value that determines who wins in a fight between two animals.
+   * @param visibility the visual range of the species.
+   * @return an implementation of Species.
+   */
+  def apply(icon: BufferedImage, name: String, size: Size, strength: Int, visibility: Int): Species =
+    new SpeciesImpl(icon, name, size, strength, visibility)
+
+  private class SpeciesImpl(override val icon: BufferedImage,
+                            override val name: String,
+                            override val size: Size,
+                            override val strength: Int,
+                            override val visibility: Int) extends Species
+}
