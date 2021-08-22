@@ -16,7 +16,6 @@ class AreaTest extends AnyFunSuite{
   test("Create FertileArea") {
     val fertileArea: Area = Area(Fertile, "fertile", (10, 10), (5,5), fertility = 50)
     assert(fertileArea.name == "fertile")
-    assert(fertileArea.)
   }
 
 }
