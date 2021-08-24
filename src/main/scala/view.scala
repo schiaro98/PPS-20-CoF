@@ -1,9 +1,10 @@
 import java.awt.Dimension
 import scala.swing.BorderPanel.Position._
 import scala.swing.event.ButtonClicked
-import scala.swing.{BorderPanel, Button, Frame, GridPanel, TextField}
+import scala.swing.{BorderPanel, Button, FlowPanel, Frame, TextField}
 
 object view extends App {
+
   import Writer._
 
   val animals = scala.collection.mutable.Map[String, Int]()
@@ -24,63 +25,67 @@ object view extends App {
       tooltip = "Click to start the simulation"
     }
 
-    val leftPanel : BorderPanel = new BorderPanel {
+    val leftPanel: BorderPanel = new BorderPanel {
       layout(createButton) = North
       layout(startButton) = South
     }
 
-    var grid: GridPanel = new GridPanel(0, 4){
-      animals.foreach(animal => {
-        val nameField = new TextField(animal._1){
-          editable = false
-        }
-
-        val quantityField = new TextField(animal._2.toString){
-          editable = false
-        }
-
-        val increase = new Button() {
-          text = "+"
-          preferredSize = new Dimension(50, 50)
-          reactions += {
-            case _: ButtonClicked => animals(animal._1) = animals(animal._1) + 1
+    val flowPanel: FlowPanel = new FlowPanel {
+        animals.foreach(animal => {
+          val nameField = new TextField(animal._1) {
+            editable = false
           }
-        }
 
-        val decrease = new Button(){
-          text = "-"
-          preferredSize = new Dimension(50, 50)
-          reactions += {
-            case _: ButtonClicked =>
-              val actualValue = animals(animal._1)
-              if(actualValue > 0){
-                animals(animal._1) = actualValue - 1
-              } else {
-                animals -= animal._1
-              }
+          val quantityField = new TextField(animal._2.toString) {
+            editable = false
           }
-        }
 
-        listenTo(increase, decrease)
-        reactions += {
-          case _: ButtonClicked =>
-            print(animals)
-            grid.revalidate()
-            grid.repaint()
-        }
+          val increase = new Button() {
+            text = "+"
+            reactions += {
+              case _: ButtonClicked => incQuantity(animal._1)
+            }
+            listenTo(this)
+          }
 
-        contents addAll List(nameField, quantityField, increase, decrease)
+          val decrease = new Button() {
+            text = "-"
+            reactions += {
+              case _: ButtonClicked => decQuantity(animal._1)
+            }
+            listenTo(this)
+          }
 
-      })
+          contents addAll List(nameField, quantityField, increase, decrease)
+        })
+      }
+
+    def incQuantity(name: String): Unit = {
+      if (animals.contains(name)) {
+        animals(name) = animals(name) + 1
+      }
+      println(animals)
     }
 
-
-    contents = new BorderPanel {
-      layout(grid) = Center
-      layout(leftPanel) = West
+    def decQuantity(name: String): Unit = {
+      if (animals.contains(name)) {
+        val actualValue = animals(name)
+        if (actualValue > 0) {
+          animals(name) = actualValue - 1
+        } else {
+          animals -= name
+        }
+      }
+      println(animals)
     }
 
-  }
+      contents = new BorderPanel {
+        layout(flowPanel) = Center
+        layout(leftPanel) = West
+      }
 
-
+      pack()
+      centerOnScreen()
+      open()
+    }
 }
