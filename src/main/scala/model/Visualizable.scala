@@ -15,6 +15,7 @@ trait Visualizable {
 object Visualizable {
   /**
    * Apply method for a Visualizable.
+   *
    * @param icon the image to draw in the map.
    * @return an implementation of Visualizable.
    */
@@ -22,19 +23,3 @@ object Visualizable {
 
   private class VisualizableImpl(override val icon: BufferedImage) extends Visualizable
 }
-
-
-
-//trait Visualizable {
-//  def getImage: BufferedImage
-//}
-//object Visualizable {
-///**
-// * Apply method for a Visualizable.
-// * @param icon the image to draw in the map
-// * @return a new Visualizable
-// */
-//  def apply(icon: BufferedImage): Visualizable = new Visualizable {
-//    override def getImage: BufferedImage = icon
-//  }
-//}

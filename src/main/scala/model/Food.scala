@@ -7,43 +7,37 @@ import java.awt.image.BufferedImage
  */
 trait Food extends Visualizable {
   val energy: Int
-  var quantity: Int
+  val quantity: Int
+  val position: (Int, Int) //todo fare una interfaccia con position implementata dagli elementi da disegnare?
 
   /**
-   * Amount of health healed to an animal; the food will be eaten only in the quantity
-   * necessary to totally cure the animal
-   * @param missingHealth the maximum health that the animal can be healed
-   * @return the amount of health to heal
+   * Method to decrease the quantity of the food.
+   *
+   * @param amount the quantity of food consumed.
+   * @return a new food, the same as before but with de quantity decreased.
+   * @throws IllegalArgumentException if the amount is greater than the quantity
    */
-  def feed(missingHealth: Int): Int
+  def consume(amount: Int): Food = if (quantity > amount) Food(icon, energy, quantity - amount, position) else throw new IllegalArgumentException
 }
 
 /**
  * Object that represent a food.
  */
-object Food {
+private object Food {
   /**
    * Apply method for a Food.
-   * @param icon the image to draw in the map.
-   * @param energy the health it returns to an animal.
-   * @param quantity the number of times it returns health before running out.
-   * @return an implementation of Food
+   *
+   * @param icon     the image to draw in the map.
+   * @param energy   the health it returns to an animal.
+   * @param quantity the number of times it returns the energy to an animal before running out.
+   * @param position the location on the map, where the food is.
+   * @return an implementation of Food.
    */
-  def apply(icon: BufferedImage, energy: Int, quantity: Int): Food = new FoodImpl(icon, energy, quantity)
+  def apply(icon: BufferedImage, energy: Int, quantity: Int, position: (Int, Int)): Food =
+    new FoodImpl(icon, energy, quantity, position)
 
   private class FoodImpl(override val icon: BufferedImage,
                          override val energy: Int,
-                         override var quantity: Int) extends Food {
-
-    override def feed(missingHealth: Int): Int = quantity match {
-      case 0 => 0
-      case _ if missingHealth / energy < quantity =>
-        val temp = quantity
-        quantity = 0 // TODO: destroy the food
-        energy * temp
-      case _ =>
-        quantity -= missingHealth / energy
-        energy * (missingHealth / energy)
-    }
-  }
+                         override val quantity: Int,
+                         override val position: (Int, Int)) extends Food
 }
