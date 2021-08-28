@@ -12,8 +12,8 @@ Il pulsante start dovrebbe caricare gli animali scelti nella simulazione
  */
 object MainGUI extends SimpleSwingApplication {
 
-  var animalManager = new AnimalManager
-  animalManager.initialize()
+  var logic = new LogicGui
+  logic.initialize()
 
   override def top: Frame = new Frame {
     title = "Circle of life"
@@ -22,7 +22,7 @@ object MainGUI extends SimpleSwingApplication {
     val createButton: Button = new Button("Create new specie") {
       tooltip = "Click to create new species"
       reactions += {
-        case _: ButtonClicked => new SpeciesDialog(animalManager).top.visible = true
+        case _: ButtonClicked => new SpeciesDialog(logic).top.visible = true
       }
     }
 
@@ -52,7 +52,7 @@ object MainGUI extends SimpleSwingApplication {
           val increase = new Button("+") {
             reactions += {
               case _: ButtonClicked =>
-                animalManager.increase(animal._1)
+                logic.increase(animal._1)
                 updateGrid()
             }
           }
@@ -60,7 +60,7 @@ object MainGUI extends SimpleSwingApplication {
           val decrease = new Button("-") {
             reactions += {
               case _: ButtonClicked =>
-                animalManager.decrease(animal._1)
+                logic.decrease(animal._1)
                 updateGrid()
             }
           }
@@ -68,13 +68,13 @@ object MainGUI extends SimpleSwingApplication {
           contents addAll List(nameField, quantityField, increase, decrease)
         })
 
-        val cb: ComboBox[String] = new ComboBox[String](animalManager.species.prepended(""))
+        val cb: ComboBox[String] = new ComboBox[String](logic.animals.keySet.toSeq)
 
         val chooseButton = new Button("Add") {
           reactions += {
             case _: ButtonClicked =>
               if (cb.selection.item != "") {
-                animalManager.add(cb.selection.item)
+                logic.increase(cb.selection.item)
                 updateGrid()
               }
           }
@@ -87,10 +87,10 @@ object MainGUI extends SimpleSwingApplication {
         grid.peer.removeAll()
         grid.revalidate()
         grid.repaint()
-        initGrid(animalManager.animals)
+        initGrid(logic.animals)
       }
 
-      initGrid(animalManager.animals)
+      initGrid(logic.animals)
     }
 
     contents = new BorderPanel() {

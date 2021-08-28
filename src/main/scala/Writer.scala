@@ -1,17 +1,21 @@
 import Serializer.{deserializeManyFromFile, serializeManyToFile}
+import model.{Size, Species}
 
 sealed trait Writer
 
 object Writer {
-  case class Animal(name: String, var quantity: Int) //TODO aggiungere altri campi, prendendo la classe animal
 
-  val filename = "animals.txt"
+  /*
+  TODO avrebbe senso fare una mappa di Map[Species, Int] ma
+   */
 
-  val basicAnimals: Seq[Animal] = Seq(Animal("Lion",3),Animal("Zebra",2), Animal("Ippo", 1))
+  val speciesFile = "species.txt"
 
-  def read: Seq[Animal] = deserializeManyFromFile(filename)(classOf[Animal])
+  def read: Seq[Species] = deserializeManyFromFile(speciesFile)(classOf[Species])
 
+  /*
   def write(): Unit = {
-    serializeManyToFile(basicAnimals)(filename)
+    serializeManyToFile(species)(speciesFile)
   }
+  */
 }

@@ -1,21 +1,21 @@
-class AnimalManager {
+class LogicGui {
   import Writer._
 
   var animals = Map.empty[String, Int]
 
   /*
     TODO non so da dove recuperarli
+    La specie va create dal menu e salvata su file
    */
-  var species = Seq("Lion", "Ippo", "Zebra", "Horse", "Ryno")
 
   def initialize(): Unit = {
-    write() //Scrivo animali di base
-    read.foreach(animal => { animals += (animal.name -> animal.quantity) }) //e li leggo
+    //write() //Scrivo animali di base
+    read.foreach(species => { animals += (species.name -> 1) }) //e li leggo
   }
 
   /**
-    Add a new animal if it doesn't exist
-   @param str name of the animal
+  Add a new animal if it doesn't exist
+  @param str name of the animal
    */
   def add(str: String): Unit = {
     if(!animals.contains(str)) {
@@ -24,9 +24,9 @@ class AnimalManager {
   }
 
   /**
-    Increase quantity of an animal
+  Increase quantity of an animal
     if it doesn't exist, add it
-    @param str name of the animal
+  @param str name of the animal
    */
   def increase(str: String): Unit = {
     if(animals.contains(str)){
@@ -37,8 +37,8 @@ class AnimalManager {
   }
 
   /**
-    Remove an animal
-   @param str name of the animal
+  Remove an animal
+  @param str name of the animal
    */
   def remove(str: String): Unit = animals = animals - str
 
@@ -54,6 +54,4 @@ class AnimalManager {
       case None => println("Animal not found") //TODO maybe exception
     }
   }
-
-
 }

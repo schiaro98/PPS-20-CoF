@@ -1,0 +1,1 @@
+{"name":"lion","size":{},"strength":10,"sight":10}{"name":"ippo","size":{},"strength":10,"sight":10}{"name":"coyote","size":{},"strength":10,"sight":10}
