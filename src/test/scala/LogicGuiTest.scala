@@ -1,6 +1,6 @@
 import org.scalatest.funsuite.AnyFunSuite
 
-class AnimalManagerTest extends AnyFunSuite {
+class LogicGuiTest extends AnyFunSuite {
   var mng = new LogicGui
 
   test("Initial list of animals should be empty"){
