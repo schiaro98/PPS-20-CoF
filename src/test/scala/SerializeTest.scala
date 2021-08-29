@@ -1,8 +1,9 @@
 import controller.Serializer._
+import model.Size
 import org.scalatest.funsuite.AnyFunSuite
+
 import java.nio.charset.StandardCharsets
 import java.nio.file.{Files, Path}
-
 import scala.reflect.io.File
 
 class SerializeTest extends AnyFunSuite{
@@ -56,5 +57,17 @@ class SerializeTest extends AnyFunSuite{
 //    println(deserializedCars)
     assert(deserializedCars.length === 3)
     assert(deserializedCars.head.doors === 5)
+  }
+
+  test("serialize with Enumeration"){
+    case class CarEnum(brand: String, doors:Int, size: Size)
+
+    val car: CarEnum = CarEnum("Rover", 5, Size.Big)
+    val car2: CarEnum = CarEnum("Ferrari", 3, Size.Medium)
+    val car3: CarEnum = CarEnum("Fiat", 5, Size.Small)
+
+    println(car)
+    val json = serializeOne(car)
+    println(json)
   }
 }
