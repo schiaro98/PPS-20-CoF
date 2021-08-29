@@ -1,6 +1,7 @@
 package view
 
 import controller.Serializer._
+import model.Size._
 import model.{Size, Species}
 
 sealed trait Writer
@@ -13,8 +14,8 @@ object Writer {
 
   val speciesFile = "species.txt"
 
-  val lion: Species = Species("img", "Lion", Size.Medium, 10, 10)
-  val ippo: Species = Species("img", "Ippo", Size.Big, 10, 10)
+  val lion: Species = Species("img", "Lion", Size.Big, 10, 10)
+  val ippo: Species = Species("img", "Ippo", Size.Medium, 10, 10)
   val zebra: Species = Species("img", "Zebra", Size.Small, 10, 10)
 
   val basicSpecies = List(lion, ippo, zebra)

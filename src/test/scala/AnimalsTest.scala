@@ -1,4 +1,4 @@
-import model.{Animal, Carnivores, Meat, Size, Species, Vegetable}
+import model._
 import org.scalatest.funsuite.AnyFunSuite
 
 import java.awt.image.BufferedImage
@@ -10,7 +10,7 @@ class AnimalsTest extends AnyFunSuite{
   val path = "res/images/tiger-icon.jpg"
   val img: BufferedImage = ImageIO.read(new File(path))
   val p: (Int, Int) = (0,0)
-  val a: Animal = Carnivores(Species(path, "tiger", Size.Medium, 10, 10), p, p)
+  val a: Animal = Carnivores(Species(path, "tiger", Size.Small, 10, 10), p, p)
   //todo è giusto passare la specie ad una classe che la estende?
 
   test("An animal is an entity with personal parameters and belong to a species") {

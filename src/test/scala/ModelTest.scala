@@ -1,5 +1,4 @@
-import model.Size.Medium
-import model.{Food, Species, Vegetable, Visualizable}
+import model._
 import org.scalatest.funsuite.AnyFunSuite
 
 import java.awt.image.BufferedImage
@@ -18,7 +17,7 @@ class ModelTest extends AnyFunSuite {
   }
 
   test("A species is a visualizable with more information") {
-    val s: Species = Species(path, "tiger", Medium, 10, 10)
+    val s: Species = Species(path, "tiger", Size.Medium, 10, 10)
     assert(path == s.icon)
     assert("tiger" == s.name )
   }

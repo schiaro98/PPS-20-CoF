@@ -14,7 +14,7 @@ Il pulsante start dovrebbe caricare gli animali scelti nella simulazione
  */
 object MainGUI extends SimpleSwingApplication {
 
-  var logic = new LogicGui
+  val logic = new LogicGui
   logic.initialize()
 
   override def top: Frame = new Frame {

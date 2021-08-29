@@ -60,14 +60,14 @@ class SerializeTest extends AnyFunSuite{
   }
 
   test("serialize with Enumeration"){
-    case class CarEnum(brand: String, doors:Int, size: Size)
+    case class CarEnum(brand: String, doors:Int, size: Size.Value)
 
-    val car: CarEnum = CarEnum("Rover", 5, Size.Big)
+    val newCar: CarEnum = CarEnum("Rover", 5, Size.Big)
     val car2: CarEnum = CarEnum("Ferrari", 3, Size.Medium)
     val car3: CarEnum = CarEnum("Fiat", 5, Size.Small)
 
-    println(car)
-    val json = serializeOne(car)
+    println(newCar)
+    val json = serializeOne(newCar)
     println(json)
   }
 }
