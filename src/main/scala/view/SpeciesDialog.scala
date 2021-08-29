@@ -1,9 +1,9 @@
-import model.{Size, Species}
+package view
 
 import java.awt.Dimension
 import scala.swing.BorderPanel.Position.Center
 import scala.swing.event.ButtonClicked
-import scala.swing.{BorderPanel, Button, ComboBox, FlowPanel, Frame, SimpleSwingApplication, TextField}
+import scala.swing._
 
 class SpeciesDialog(mng: LogicGui) extends SimpleSwingApplication {
 
@@ -15,7 +15,7 @@ class SpeciesDialog(mng: LogicGui) extends SimpleSwingApplication {
     val nameField = new TextField("Name")
     val strengthField = new TextField("Strength")
     val sightField = new TextField("Sight")
-    val sizeField = new ComboBox[String](Seq.empty) //TODO
+    val sizeField = new ComboBox[String](List("Big","Medium","Small"))
 
     val confirm: Button = new Button("Confirm"){
       reactions += {

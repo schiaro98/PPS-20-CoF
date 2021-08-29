@@ -1,7 +1,5 @@
 package model
 
-import java.awt.image.BufferedImage
-
 /**
  * Trait that represent the age of an animal.
  */
@@ -94,7 +92,7 @@ private object Animal { //todo va bene private per non far creare un animal?
   def apply(s: Species, position: (Int, Int), direction: (Int, Int), health: Int = 100, thirst: Int = 100): Animal =
     new AnimalImpl(s.icon, s.name, s.size, s.strength, s.sight, health, thirst, position, direction)
 
-  private class AnimalImpl(override val icon: BufferedImage,
+  private class AnimalImpl(override val icon: String,
                            override val name: String,
                            override val size: Size,
                            override val strength: Int,

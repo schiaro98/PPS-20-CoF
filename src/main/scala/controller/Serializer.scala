@@ -1,3 +1,5 @@
+package controller
+
 import com.google.gson.{Gson, JsonStreamParser}
 
 import java.io.PrintWriter

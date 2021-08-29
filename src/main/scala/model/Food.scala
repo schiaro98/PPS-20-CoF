@@ -1,7 +1,5 @@
 package model
 
-import java.awt.image.BufferedImage
-
 /**
  * Trait that represent a food.
  */
@@ -33,10 +31,10 @@ private object Food {
    * @param position the location on the map, where the food is.
    * @return an implementation of Food.
    */
-  def apply(icon: BufferedImage, energy: Int, quantity: Int, position: (Int, Int)): Food =
+  def apply(icon: String, energy: Int, quantity: Int, position: (Int, Int)): Food =
     new FoodImpl(icon, energy, quantity, position)
 
-  private class FoodImpl(override val icon: BufferedImage,
+  private class FoodImpl(override val icon: String,
                          override val energy: Int,
                          override val quantity: Int,
                          override val position: (Int, Int)) extends Food

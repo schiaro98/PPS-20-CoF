@@ -1,4 +1,4 @@
-import Serializer.{deserializeMany, deserializeManyFromFile, deserializeOne, serializeMany, serializeManyToFile, serializeOne}
+import controller.Serializer._
 import org.scalatest.funsuite.AnyFunSuite
 import java.nio.charset.StandardCharsets
 import java.nio.file.{Files, Path}

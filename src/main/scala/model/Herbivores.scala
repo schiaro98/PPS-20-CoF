@@ -1,7 +1,5 @@
 package model
 
-import java.awt.image.BufferedImage
-
 trait Herbivores extends Animal {
 
   /**
@@ -29,7 +27,7 @@ object Herbivores {
   def apply(s: Species, position: (Int, Int), direction: (Int, Int), health: Int = 100, thirst: Int = 100): Herbivores =
     new HerbivoresImpl(s.icon, s.name, s.size, s.strength, s.sight, health, thirst, position, direction)
 
-  private class HerbivoresImpl(override val icon: BufferedImage,
+  private class HerbivoresImpl(override val icon: String,
                            override val name: String,
                            override val size: Size,
                            override val strength: Int,

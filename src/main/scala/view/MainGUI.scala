@@ -1,3 +1,5 @@
+package view
+
 import java.awt.Dimension
 import scala.swing.BorderPanel.Position._
 import scala.swing._
@@ -68,7 +70,7 @@ object MainGUI extends SimpleSwingApplication {
           contents addAll List(nameField, quantityField, increase, decrease)
         })
 
-        val cb: ComboBox[String] = new ComboBox[String](logic.animals.keySet.toSeq)
+        val cb: ComboBox[String] = new ComboBox[String](logic.species.keySet.toSeq)
 
         val chooseButton = new Button("Add") {
           reactions += {
@@ -87,10 +89,10 @@ object MainGUI extends SimpleSwingApplication {
         grid.peer.removeAll()
         grid.revalidate()
         grid.repaint()
-        initGrid(logic.animals)
+        initGrid(logic.species)
       }
 
-      initGrid(logic.animals)
+      initGrid(logic.species)
     }
 
     contents = new BorderPanel() {

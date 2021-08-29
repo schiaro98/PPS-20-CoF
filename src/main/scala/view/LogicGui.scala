@@ -1,7 +1,10 @@
-class LogicGui {
-  import Writer._
+package view
 
-  var animals = Map.empty[String, Int]
+import Writer._
+
+class LogicGui {
+
+  var species = Map.empty[String, Int]
 
   /*
     TODO non so da dove recuperarli
@@ -9,8 +12,8 @@ class LogicGui {
    */
 
   def initialize(): Unit = {
-    //write() //Scrivo animali di base
-    read.foreach(species => { animals += (species.name -> 1) }) //e li leggo
+    write() //Scrivo animali di base
+    read.foreach(speciesOnFile => { species += (speciesOnFile.name -> 1) }) //e li leggo
   }
 
   /**
@@ -18,8 +21,8 @@ class LogicGui {
   @param str name of the animal
    */
   def add(str: String): Unit = {
-    if(!animals.contains(str)) {
-      animals += str -> 1
+    if(!species.contains(str)) {
+      species += str -> 1
     }
   }
 
@@ -29,8 +32,8 @@ class LogicGui {
   @param str name of the animal
    */
   def increase(str: String): Unit = {
-    if(animals.contains(str)){
-      animals += str -> animals(str).+(1)
+    if(species.contains(str)){
+      species += str -> species(str).+(1)
     } else {
       add(str)
     }
@@ -40,16 +43,16 @@ class LogicGui {
   Remove an animal
   @param str name of the animal
    */
-  def remove(str: String): Unit = animals = animals - str
+  def remove(str: String): Unit = species = species - str
 
   /**
    * Decrease quantity of an animal, deleting it if it's equal to zero
    * @param str name of the animal
    */
   def decrease(str: String): AnyVal = {
-    val value = animals get str
+    val value = species get str
     value match {
-      case Some(value) if value > 1 => animals += str -> animals(str).-(1)
+      case Some(value) if value > 1 => species += str -> species(str).-(1)
       case Some(_) => remove(str)
       case None => println("Animal not found") //TODO maybe exception
     }
