@@ -8,8 +8,8 @@ import scala.reflect.io.File
 
 class SerializeTest extends AnyFunSuite{
 
-  val defaultSerializer = Serializer(Default)
-  val speciesSerializer = Serializer(OfSpecies)
+  val defaultSerializer: Serializer = Serializer(Default)
+  val speciesSerializer: Serializer = Serializer(OfSpecies)
   case class Car(brand: String, doors:Int)
 
   val car: Car = Car("Rover", 5)
