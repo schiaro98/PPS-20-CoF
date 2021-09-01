@@ -1,5 +1,6 @@
 import controller.Serializer._
-import model.Size
+import controller.SpeciesSerializer
+import model.{Size, Species}
 import org.scalatest.funsuite.AnyFunSuite
 
 import java.nio.charset.StandardCharsets
@@ -59,15 +60,18 @@ class SerializeTest extends AnyFunSuite{
     assert(deserializedCars.head.doors === 5)
   }
 
-  test("serialize with Enumeration"){
-    case class CarEnum(brand: String, doors:Int, size: Size.Value)
 
-    val newCar: CarEnum = CarEnum("Rover", 5, Size.Big)
-    val car2: CarEnum = CarEnum("Ferrari", 3, Size.Medium)
-    val car3: CarEnum = CarEnum("Fiat", 5, Size.Small)
-
-    println(newCar)
-    val json = serializeOne(newCar)
+  test("Test custom serializer for Species"){
+    val speciesSerializer = new SpeciesSerializer
+    val json = speciesSerializer.serializeOne(Species("dog.txt","dog",Size.Small, 100,10))
     println(json)
+    assert( json == "{\n  \"icon\": \"dog.txt\",\n  \"name\": \"dog\",\n  \"size\": \"Small\",\n  \"strength\": 100,\n  \"sight\": 10\n}")
   }
+
+  test("Test custom deserializer for Species"){
+    val speciesSerializer = new SpeciesSerializer
+    val dog = speciesSerializer.deserializeOne("{\n  \"icon\": \"dog.txt\",\n  \"name\": \"dog\",\n  \"size\": \"Small\",\n  \"strength\": 100,\n  \"sight\": 10\n}")(classOf[Species])
+    assert(dog.size == Size.Small)
+  }
+
 }
