@@ -14,7 +14,7 @@ Il pulsante start dovrebbe caricare gli animali scelti nella simulazione
  */
 object MainGUI extends SimpleSwingApplication {
 
-  val logic = new LogicGui
+  val logic = new LogicGui("species.txt")
   logic.initialize()
 
   override def top: Frame = new Frame {
@@ -24,7 +24,7 @@ object MainGUI extends SimpleSwingApplication {
     val createButton: Button = new Button("Create new specie") {
       tooltip = "Click to create new species"
       reactions += {
-        case _: ButtonClicked => new SpeciesDialog(logic).top.visible = true
+        case _: ButtonClicked => new SpeciesGui(logic).top.visible = true
       }
     }
 
@@ -70,12 +70,14 @@ object MainGUI extends SimpleSwingApplication {
           contents addAll List(nameField, quantityField, increase, decrease)
         })
 
-        val cb: ComboBox[String] = new ComboBox[String](logic.species.keySet.toSeq)
+        val speciesOnFile = logic.speciesSeq
+        val cb: ComboBox[String] = new ComboBox[String](speciesOnFile.map(species => species.name) diff logic.species.keySet.toSeq ) //diff
 
         val chooseButton = new Button("Add") {
           reactions += {
             case _: ButtonClicked =>
-              if (cb.selection.item != "") {
+              println(logic.species)
+              if (cb.selection.item != null) {
                 logic.increase(cb.selection.item)
                 updateGrid()
               }
@@ -103,6 +105,6 @@ object MainGUI extends SimpleSwingApplication {
     pack()
     centerOnScreen()
     open()
-  }
 
+  }
 }

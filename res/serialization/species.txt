@@ -1,1 +1,25 @@
-{"icon":"img","name":"Lion","size":{},"strength":10,"sight":10}{"icon":"img","name":"Ippo","size":{},"strength":10,"sight":10}{"icon":"img","name":"Zebra","size":{},"strength":10,"sight":10}
+{
+  "icon": "img",
+  "name": "Lion",
+  "size": "Big",
+  "strength": 10,
+  "sight": 10
+}{
+  "icon": "img",
+  "name": "Ippo",
+  "size": "Medium",
+  "strength": 10,
+  "sight": 10
+}{
+  "icon": "img",
+  "name": "Zebra",
+  "size": "Small",
+  "strength": 10,
+  "sight": 10
+}{
+  "icon": "icon.txt",
+  "name": "Dog",
+  "size": "Small",
+  "strength": 0,
+  "sight": 0
+}

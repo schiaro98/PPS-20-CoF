@@ -3,7 +3,7 @@ package model
 /**
  * Trait that represent the size of a species.
  */
-trait Size
+sealed trait Size
 
 /**
  * Object that contains the possible size of a species.
@@ -21,7 +21,7 @@ object Size {
  * Trait that represent a specific species of animal.
  */
 trait Species extends Visualizable {
-  val name: String
+  var name: String
   val size: Size
   val strength: Int
   val sight: Int

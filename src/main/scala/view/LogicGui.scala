@@ -1,19 +1,17 @@
 package view
 
-import Writer._
+import controller.{OfSpecies, Serializer}
+import model.{Size, Species}
 
-class LogicGui {
+class LogicGui(speciesFile: String) {
 
+  val serializer: Serializer = Serializer(OfSpecies)
   var species = Map.empty[String, Int]
-
-  /*
-    TODO non so da dove recuperarli
-    La specie va create dal menu e salvata su file
-   */
+  var speciesSeq = Seq.empty[Species]
 
   def initialize(): Unit = {
-    write() //Scrivo animali di base
-    read.foreach(speciesOnFile => { species += (speciesOnFile.name -> 1) }) //e li leggo
+    speciesSeq = serializer.deserializeManyFromFile(speciesFile)(classOf[Species])
+    speciesSeq.foreach(speciesOnFile => { species += (speciesOnFile.name -> 1) }) //e li leggo
   }
 
   /**
@@ -54,7 +52,39 @@ class LogicGui {
     value match {
       case Some(value) if value > 1 => species += str -> species(str).-(1)
       case Some(_) => remove(str)
-      case None => println("Animal not found") //TODO maybe exception
+      case None => println("Animal not found") //TODO maybe exception, in the future
     }
+  }
+
+  def captionSpecies(name: String, size: String, strength: String, sight: String): Species = {
+    Species("icon.txt", name,  toSize(size), tryToInt(strength), tryToInt(sight))
+  }
+
+  def tryToInt(s: String): Int = {
+    try {
+      s.toInt
+    } catch {
+      case _: Exception => 0
+    }
+  }
+
+  def toSize(s: String): Size = s match {
+    case "Small" => Size.Small
+    case "Medium" => Size.Medium
+    case "Big" => Size.Big
+  }
+
+  def addSpecies(species: Species): Unit = {
+    speciesSeq = speciesSeq :+ species
+    serializer.serializeManyToFile(speciesSeq)(speciesFile)
+  }
+
+  def removeSpecies(species: Species): Unit = {
+    speciesSeq = speciesSeq.filterNot(x => x == species)
+    serializer.serializeManyToFile(speciesSeq)(speciesFile)
+  }
+
+  def removeAllSpecies(): Unit = {
+    serializer.serializeManyToFile(Seq.empty[Species])(speciesFile)
   }
 }
