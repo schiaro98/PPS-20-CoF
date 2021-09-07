@@ -1,7 +1,9 @@
-import model.{Area, Fertile, Probability}
+import model.{Area, Fertile, Probability, Vegetable}
 import org.scalatest.funsuite.AnyFunSuite
 
 class AreaTest extends AnyFunSuite{
+
+  val image = "vegetable.png"
 
   test("Create illegal Fertile Area"){
     assertThrows[IllegalArgumentException](Area(Fertile, (20,20), (15, 25)))
@@ -12,5 +14,8 @@ class AreaTest extends AnyFunSuite{
     assert(area.areaType == Fertile)
   }
 
+  test("Create FertileArea with GrowFood"){
+    Area((10,20), (15, 25), Probability(30))
+  }
 
 }

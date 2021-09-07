@@ -34,10 +34,29 @@ object Area {
     case Volcano => VolcanoArea(areaType, topLeft, bottomRight, name)
   }
 
+  def apply(topLeft: (Int, Int), bottomRight: (Int, Int), fertility: Probability
+//            , foods: Set[Food]
+           ): Area =
+    new FertileAreaGrowFood(topLeft, bottomRight, fertility
+//      , foods
+    )
+
+
   private case class FertileArea(areaType: AreaType,
                                  topLeft: (Int, Int),
                                  bottomRight: (Int, Int),
                                  name: String = "a fertile area") extends Area
+
+  private class FertileAreaGrowFood(topLeft: (Int, Int),
+                                    bottomRight: (Int, Int),
+                                    override val fertility: Probability,
+//                                    override val foods: Set[Food]
+                                   ) extends FertileArea(Fertile, topLeft, bottomRight, "a fertile area which can grow food") with GrowFood {
+    require(areaType == Fertile)
+
+    override def growFood(food: Food): Unit = println("growing food")
+
+  }
 
   private case class WaterArea(areaType: AreaType,
                                topLeft: (Int, Int),
@@ -45,12 +64,20 @@ object Area {
                                name: String = "a bit of water") extends Area
 
   private case class RockArea(areaType: AreaType,
-                                 topLeft: (Int, Int),
-                                 bottomRight: (Int, Int),
-                                 name: String = "a rock area") extends Area
+                              topLeft: (Int, Int),
+                              bottomRight: (Int, Int),
+                              name: String = "a rock area") extends Area
 
   private case class VolcanoArea(areaType: AreaType,
-                               topLeft: (Int, Int),
-                               bottomRight: (Int, Int),
-                               name: String = "a volcano") extends Area
+                                 topLeft: (Int, Int),
+                                 bottomRight: (Int, Int),
+                                 name: String = "a volcano") extends Area
+}
+
+
+sealed trait GrowFood {
+  val fertility: Probability
+//  val foods: Set[Food]
+
+  def growFood(food: Food)
 }
