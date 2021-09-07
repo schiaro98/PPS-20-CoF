@@ -1,76 +1,56 @@
 package model
 
-trait Area {
+sealed trait AreaType
 
+case object Fertile extends AreaType
+
+case object Water extends AreaType
+
+case object Rock extends AreaType
+
+case object Volcano extends AreaType
+
+sealed trait Area {
   val name: String
-  val dimensions: (Int, Int)
-  val position: (Int, Int)
+  val areaType: AreaType
+  val topLeft: (Int, Int)
+  val bottomRight: (Int, Int)
+  require(topLeft._1 < bottomRight._1 && topLeft._2 < bottomRight._2, "inserted illegal corners")
 }
 
 object Area {
-  def apply(
-             name: String,
-             dimensions: (Int, Int),
-             position: (Int, Int)): Area = SimpleArea(name, dimensions, position)
 
-  private case class SimpleArea(  name: String ,
-                                  dimensions: (Int, Int),
-                                  position: (Int, Int)) extends Area {
+  def apply(areaType: AreaType, topLeft: (Int, Int), bottomRight: (Int, Int)): Area = areaType match {
+    case Fertile => FertileArea(areaType, topLeft, bottomRight)
+    case Water => WaterArea(areaType, topLeft, bottomRight)
+    case Rock => RockArea(areaType, topLeft, bottomRight)
+    case Volcano => VolcanoArea(areaType, topLeft, bottomRight)
   }
-}
 
-sealed trait WalkableArea extends Area {
-  val fertility: Probability
-  val hospitality: Probability
-}
+  def apply(name: String, areaType: AreaType, topLeft: (Int, Int), bottomRight: (Int, Int)): Area = areaType match {
+    case Fertile => FertileArea(areaType, topLeft, bottomRight, name)
+    case Water => WaterArea(areaType, topLeft, bottomRight, name)
+    case Rock => RockArea(areaType, topLeft, bottomRight, name)
+    case Volcano => VolcanoArea(areaType, topLeft, bottomRight, name)
+  }
 
-object WalkableArea {
-  def apply(dimensions: (Int, Int),
-            position: (Int, Int),
-            fertility: Probability,
-            hospitality: Probability): WalkableArea =
-    new SimpleWalkableArea(dimensions = dimensions, position = position, fertility = fertility, hospitality = hospitality)
+  private case class FertileArea(areaType: AreaType,
+                                 topLeft: (Int, Int),
+                                 bottomRight: (Int, Int),
+                                 name: String = "a fertile area") extends Area
 
-  def apply( name: String,
-             dimensions: (Int, Int),
-             position: (Int, Int),
-             fertility: Probability,
-             hospitality: Probability): WalkableArea =
-    new SimpleWalkableArea(name, dimensions, position, fertility, hospitality)
+  private case class WaterArea(areaType: AreaType,
+                               topLeft: (Int, Int),
+                               bottomRight: (Int, Int),
+                               name: String = "a bit of water") extends Area
 
-  private class SimpleWalkableArea( override val name: String = "Simple walkable area",
-                                    override val dimensions: (Int, Int),
-                                    override val position: (Int, Int),
-                                    override val fertility: Probability,
-                                    override val hospitality: Probability) extends WalkableArea {}
-}
+  private case class RockArea(areaType: AreaType,
+                                 topLeft: (Int, Int),
+                                 bottomRight: (Int, Int),
+                                 name: String = "a rock area") extends Area
 
-
-sealed trait TypeOfNonWalkableArea
-case object Water extends TypeOfNonWalkableArea
-case object Rock extends TypeOfNonWalkableArea
-case object Volcano extends TypeOfNonWalkableArea
-
-
-sealed trait NonWalkableArea extends Area {
-  val typeOfNonWalkableArea: TypeOfNonWalkableArea
-}
-
-object NonWalkableArea {
-
-  def apply(dimensions: (Int, Int),
-            position: (Int, Int),
-            typeOfNonWalkableArea: TypeOfNonWalkableArea): NonWalkableArea =
-    new SimpleNonWalkableArea(dimensions = dimensions, position = position,typeOfNonWalkableArea = typeOfNonWalkableArea)
-
-  def apply(name: String,
-              dimensions: (Int, Int),
-              position: (Int, Int),
-              typeOfNonWalkableArea: TypeOfNonWalkableArea): NonWalkableArea =
-      new SimpleNonWalkableArea(name, dimensions, position, typeOfNonWalkableArea)
-
-  private class SimpleNonWalkableArea( override val name: String = "Simple non walkable area",
-                                       override val dimensions: (Int, Int),
-                                       override val position: (Int, Int),
-                                       override val typeOfNonWalkableArea: TypeOfNonWalkableArea) extends NonWalkableArea {}
+  private case class VolcanoArea(areaType: AreaType,
+                               topLeft: (Int, Int),
+                               bottomRight: (Int, Int),
+                               name: String = "a volcano") extends Area
 }
