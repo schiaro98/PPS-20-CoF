@@ -15,6 +15,7 @@ class AreaTest extends AnyFunSuite{
   }
 
   test("Create FertileArea with GrowFood"){
+    // TODO: work on it with a working manager for food and areas
     Area((10,20), (15, 25), Probability(30))
   }
 

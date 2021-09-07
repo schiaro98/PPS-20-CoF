@@ -74,7 +74,7 @@ object Area {
                                  name: String = "a volcano") extends Area
 }
 
-
+// TODO: work on it with a working manager for food and areas
 sealed trait GrowFood {
   val fertility: Probability
 //  val foods: Set[Food]
