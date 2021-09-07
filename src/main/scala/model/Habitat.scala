@@ -21,8 +21,8 @@ trait Habitat {
 
   def checkDimensionsOfAreas(areas: Seq[Area]): Boolean = areas match {
     case h::t =>
-      if (h.topLeft._1 >= 0 && h.topLeft._2 >= 0 &&
-      h.bottomRight._1 <= this.dimensions._1 && h.bottomRight._2 <= this.dimensions._2) {
+      if (h.topLeft._1 < 0 || h.topLeft._2 < 0 ||
+      h.bottomRight._1 > this.dimensions._1 || h.bottomRight._2 > this.dimensions._2) {
       return false
       }
       checkDimensionsOfAreas(t)
