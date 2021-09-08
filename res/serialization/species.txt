@@ -16,10 +16,4 @@
   "size": "Small",
   "strength": 10,
   "sight": 10
-}{
-  "icon": "icon.txt",
-  "name": "Dog",
-  "size": "Small",
-  "strength": 0,
-  "sight": 0
 }
