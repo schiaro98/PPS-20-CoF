@@ -54,7 +54,7 @@ object Area {
                                    ) extends FertileArea(Fertile, topLeft, bottomRight, "a fertile area which can grow food") with GrowFood {
     require(areaType == Fertile)
 
-    override def growFood(food: Food): Unit = println("growing food")
+    override def growFood(): Unit = println("growing food")
 
   }
 
@@ -78,6 +78,7 @@ object Area {
 sealed trait GrowFood {
   val fertility: Probability
 //  val foods: Set[Food]
+// TODO: make it return a food (possibly from foods if the probability is true
 
-  def growFood(food: Food)
+  def growFood():Unit
 }

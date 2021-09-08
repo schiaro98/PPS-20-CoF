@@ -1,4 +1,4 @@
-import model.{Area, Fertile, Probability, Vegetable}
+import model.{Area, Fertile, GrowFood, Probability, Vegetable}
 import org.scalatest.funsuite.AnyFunSuite
 
 class AreaTest extends AnyFunSuite{
@@ -16,7 +16,8 @@ class AreaTest extends AnyFunSuite{
 
   test("Create FertileArea with GrowFood"){
     // TODO: work on it with a working manager for food and areas
-    Area((10,20), (15, 25), Probability(30))
+    val areaWithGrowFood = Area((10,20), (15, 25), Probability(30))
+    assert(areaWithGrowFood.isInstanceOf[Area with GrowFood])
   }
 
 }
