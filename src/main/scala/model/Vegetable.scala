@@ -3,7 +3,7 @@ package model
 /**
  * Trait that represent a vegetable.
  */
-trait Vegetable extends Food
+trait Vegetable extends FoodInstance
 
 /**
  * Object that represent a food.

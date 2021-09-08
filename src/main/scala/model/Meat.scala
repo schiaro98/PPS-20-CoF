@@ -3,7 +3,7 @@ package model
 /**
  * Trait that represent the meat that can be eaten by Carnivores.
  */
-trait Meat extends Food
+trait Meat extends FoodInstance
 
 /**
  * Object that represent the meat that can be eaten by Carnivores.

@@ -9,7 +9,7 @@ trait Herbivores extends Animal {
    * @return a pair that contains the animal with the health restored and the remaining food, if there is still any.
    * @throws IllegalArgumentException if the food to eat isn't a Vegetable.
    */
-  override def eat(food: Food): (Animal, Option[Food]) = if (food.isInstanceOf[Vegetable]) super.eat(food) else throw new IllegalArgumentException
+  override def eat(food: FoodInstance): (Animal, Option[FoodInstance]) = if (food.isInstanceOf[Vegetable]) super.eat(food) else throw new IllegalArgumentException
 }
 
 object Herbivores {

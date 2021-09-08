@@ -54,7 +54,7 @@ trait Animal extends Species {
    * @param food The food to eat.
    * @return a pair that contains the animal with the health restored and the remaining food, if there is still any
    */
-  def eat(food: Food): (Animal, Option[Food]) = health match {
+  def eat(food: FoodInstance): (Animal, Option[FoodInstance]) = health match {
     //todo se il controllo viene fatto altrove (ad es. mangi solo se non hai 100 di fame) non serve
     case 100 => (this, Some(food))
     case _ if 100 - this.health > food.energy * food.quantity => (this.update(health = health + food.energy * food.quantity), None)
