@@ -76,7 +76,6 @@ object MainGUI extends SimpleSwingApplication {
         val chooseButton = new Button("Add") {
           reactions += {
             case _: ButtonClicked =>
-              println(logic.species)
               if (cb.selection.item != null) {
                 logic.increase(cb.selection.item)
                 updateGrid()

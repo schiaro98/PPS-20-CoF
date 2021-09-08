@@ -21,7 +21,7 @@ object Size {
  * Trait that represent a specific species of animal.
  */
 trait Species extends Visualizable {
-  var name: String
+  val name: String
   val size: Size
   val strength: Int
   val sight: Int

@@ -6,3 +6,4 @@ target
 out
 project/build.properties
 .bsp/
+res/serialization/species.txt

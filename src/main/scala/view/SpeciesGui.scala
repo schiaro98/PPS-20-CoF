@@ -42,8 +42,20 @@ class SpeciesGui(logic: LogicGui) extends SimpleSwingApplication {
       }
     }
 
+    val existingSpecies = new ComboBox[String](logic.speciesSeq.map(species => species.name))
+    val removeSpecies: Button = new Button("Remove"){
+      reactions += {
+        case _ : ButtonClicked =>
+          val speciesName = existingSpecies.selection.item
+          logic.removeSpecies(logic.getSpecies(speciesName).get)
+          logic.remove(speciesName)
+          close()
+          this.visible = false
+      }
+    }
+
     val panel: FlowPanel = new FlowPanel() {
-      contents addAll List(nameField, strengthField, sightField, sizeField, confirm)
+      contents addAll List(nameField, strengthField, sightField, sizeField, confirm, existingSpecies, removeSpecies)
     }
 
     contents = new BorderPanel() {

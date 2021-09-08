@@ -5,8 +5,19 @@ import model.{Size, Species}
 
 class LogicGui(speciesFile: String) {
 
+  /**
+   * Serializer object is used to write or retrieve species saved in species file
+   */
   val serializer: Serializer = Serializer(OfSpecies)
+
+  /**
+   * Species is used to store the number of animal for every species
+   */
   var species = Map.empty[String, Int]
+
+  /**
+   * SpeciesSeq is where the different species are stored on runtime
+   */
   var speciesSeq = Seq.empty[Species]
 
   def initialize(): Unit = {
@@ -56,10 +67,17 @@ class LogicGui(speciesFile: String) {
     }
   }
 
+  /**
+   * Given the Species parameters, give an istance of Species
+   */
   def captionSpecies(name: String, size: String, strength: String, sight: String): Species = {
     Species("icon.txt", name,  toSize(size), tryToInt(strength), tryToInt(sight))
   }
 
+  /**
+    Convert int to String
+   @throws Exception if string is not a number
+   */
   def tryToInt(s: String): Int = {
     try {
       s.toInt
@@ -68,23 +86,45 @@ class LogicGui(speciesFile: String) {
     }
   }
 
+  /**
+  Convert string into Size type
+   */
   def toSize(s: String): Size = s match {
     case "Small" => Size.Small
     case "Medium" => Size.Medium
     case "Big" => Size.Big
   }
 
+  /**
+   * Add species to species file
+   * @param species to be added
+   */
   def addSpecies(species: Species): Unit = {
     speciesSeq = speciesSeq :+ species
     serializer.serializeManyToFile(speciesSeq)(speciesFile)
   }
 
+  /**
+   * Remove species in species file
+   * @param species to be removed
+   */
   def removeSpecies(species: Species): Unit = {
     speciesSeq = speciesSeq.filterNot(x => x == species)
     serializer.serializeManyToFile(speciesSeq)(speciesFile)
   }
 
+  /**
+   * Remove all species from species file, basicaly it clean the species file
+   */
   def removeAllSpecies(): Unit = {
     serializer.serializeManyToFile(Seq.empty[Species])(speciesFile)
   }
+
+  /**
+   * Return the species, given the name
+   */
+  def getSpecies(name: String): Option[Species] ={
+    speciesSeq.find(species => species.name == name)
+  }
+
 }
