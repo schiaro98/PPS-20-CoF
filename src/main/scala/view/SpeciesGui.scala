@@ -21,9 +21,6 @@ class SpeciesGui(logic: LogicGui) extends SimpleSwingApplication {
     val confirm: Button = new Button("Confirm"){
       reactions += {
         case _ : ButtonClicked =>
-          /*
-          TODO possibili eccezioni
-           */
           if(nameField.text == "Name"){
             println("Default species, please retry...")
           } else if(logic.speciesSeq.map(species => species.name).contains(nameField.text)){
@@ -36,9 +33,7 @@ class SpeciesGui(logic: LogicGui) extends SimpleSwingApplication {
 
             logic.addSpecies(newSpecie)
           }
-
-          close()
-          this.visible = false
+          closeAndUpdate()
       }
     }
 
@@ -49,8 +44,7 @@ class SpeciesGui(logic: LogicGui) extends SimpleSwingApplication {
           val speciesName = existingSpecies.selection.item
           logic.removeSpecies(logic.getSpecies(speciesName).get)
           logic.remove(speciesName)
-          close()
-          this.visible = false
+          closeAndUpdate()
       }
     }
 
@@ -60,6 +54,12 @@ class SpeciesGui(logic: LogicGui) extends SimpleSwingApplication {
 
     contents = new BorderPanel() {
       layout(panel) = Center
+    }
+
+    def closeAndUpdate(): Unit = {
+      close()
+      this.visible = false
+      MainGUI.update()
     }
   }
 }
