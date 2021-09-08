@@ -1,6 +1,18 @@
 {
-  "icon": "",
-  "name": "TestName",
+  "icon": "null",
+  "name": "Lion",
+  "size": "Medium",
+  "strength": 10,
+  "sight": 10
+}{
+  "icon": "null",
+  "name": "Ippo",
+  "size": "Big",
+  "strength": 10,
+  "sight": 10
+}{
+  "icon": "null",
+  "name": "Zebra",
   "size": "Small",
   "strength": 10,
   "sight": 10
