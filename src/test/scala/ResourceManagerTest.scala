@@ -1,4 +1,4 @@
-import controller.ResourceManager
+import controller.{FoodsFromFile, ResourceManager}
 import model.{Area, Fertile, Food, Habitat, Probability, Rock, Volcano, Water}
 import org.scalatest.funsuite.AnyFunSuite
 import utility.Constants
@@ -53,4 +53,15 @@ class ResourceManagerTest extends AnyFunSuite{
 //    println(newResMan.growableFoods)
     assert(newResMan.growableFoods.nonEmpty)
   }
+
+  test("ResourceManager from existing file with foods"){
+    //making sure there is a file with foods
+    val initResMAn = ResourceManager(habitat, Set(Food(icon, 5), Food(icon, 10), Food(icon, 15), Food(icon, 50)))
+    initResMAn.writeFoodsToFile(Constants.FOODS_FILE_PATH)
+
+    val resMan = ResourceManager(FoodsFromFile, habitat, Constants.FOODS_FILE_PATH)
+    assert(resMan.growableFoods.nonEmpty)
+    assert(resMan.growableFoods == initResMAn.growableFoods)
+  }
+
 }

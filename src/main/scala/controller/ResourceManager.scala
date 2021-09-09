@@ -12,7 +12,11 @@ object Aliases {
   type FoodInstances = Seq[FoodInstance]
 }
 
-trait ResourceManager {
+sealed trait ResourceManagerType
+case object FoodsFromFile extends ResourceManagerType
+case object DefaultResourceManager extends ResourceManagerType
+
+sealed trait ResourceManager {
 
   import Aliases._
 
@@ -29,6 +33,11 @@ object ResourceManager {
 
   def apply(habitat: Habitat, growableFoods: Set[Food] = Set.empty[Food], foods: FoodInstances = Seq.empty[FoodInstance]): ResourceManager =
     new ResourceManagerImpl(habitat, growableFoods, foods)
+
+  def apply(resourceManagerType: ResourceManagerType, habitat: Habitat, fileName: String): ResourceManager = resourceManagerType match {
+    case FoodsFromFile => new ResourceManagerImpl(habitat,Set.empty[Food], Seq.empty[FoodInstance]).importFoodsFromFile(fileName)
+    case _ => new ResourceManagerImpl(habitat, Set.empty[Food], Seq.empty[FoodInstance])
+  }
 
   class ResourceManagerImpl(override val habitat: Habitat,
                             override val growableFoods: Set[Food],
