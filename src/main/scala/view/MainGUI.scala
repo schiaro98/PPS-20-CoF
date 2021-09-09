@@ -5,13 +5,6 @@ import scala.swing.BorderPanel.Position._
 import scala.swing._
 import scala.swing.event.ButtonClicked
 
-/*
-TODO
-Il pulsante crea nuove specie dovrebbe aprire una finestra/dialog che permette di inserire alcuni campi e creare un animale
-Dopo la creazione si preme un pulsante e la nuova specie può essere scelta tra le latre nel menu cb
-
-Il pulsante start dovrebbe caricare gli animali scelti nella simulazione
- */
 object MainGUI extends SimpleSwingApplication {
 
   val logic = new LogicGui("species.txt")
@@ -24,7 +17,9 @@ object MainGUI extends SimpleSwingApplication {
     val createButton: Button = new Button("Create new specie") {
       tooltip = "Click to create new species"
       reactions += {
-        case _: ButtonClicked => new SpeciesGui(logic).top.visible = true
+        case _: ButtonClicked => new SpeciesGui(logic){
+          top.visible = true
+        }
       }
     }
 
@@ -86,7 +81,7 @@ object MainGUI extends SimpleSwingApplication {
         contents addAll List(cb, chooseButton)
       }
 
-      def updateGrid(): Unit = {
+       def updateGrid(): Unit = {
         grid.peer.removeAll()
         grid.revalidate()
         grid.repaint()
@@ -96,6 +91,7 @@ object MainGUI extends SimpleSwingApplication {
       initGrid(logic.species)
     }
 
+
     contents = new BorderPanel() {
       layout(leftPanel) = Center
       layout(grid) = West
@@ -104,6 +100,11 @@ object MainGUI extends SimpleSwingApplication {
     pack()
     centerOnScreen()
     open()
+  }
 
+  def update(): Unit ={
+    /*
+      TODO trovare il modo di chiamare updateGrid()
+     */
   }
 }

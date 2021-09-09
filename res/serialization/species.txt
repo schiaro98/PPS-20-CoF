@@ -1,11 +1,5 @@
 {
   "icon": "img",
-  "name": "Lion",
-  "size": "Big",
-  "strength": 10,
-  "sight": 10
-}{
-  "icon": "img",
   "name": "Ippo",
   "size": "Medium",
   "strength": 10,
@@ -13,6 +7,18 @@
 }{
   "icon": "img",
   "name": "Zebra",
+  "size": "Small",
+  "strength": 10,
+  "sight": 10
+}{
+  "icon": "icon.txt",
+  "name": "Lion",
+  "size": "Medium",
+  "strength": 10,
+  "sight": 10
+}{
+  "icon": "icon.txt",
+  "name": "Cat",
   "size": "Small",
   "strength": 10,
   "sight": 10
