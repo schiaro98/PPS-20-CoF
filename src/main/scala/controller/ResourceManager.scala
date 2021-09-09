@@ -42,24 +42,6 @@ object ResourceManager {
     }
 
     override def grow(): ResourceManager = {
-
-      //      @tailrec
-      //      def growImpl(areas: Seq[Area])(foods: Seq[FoodInstance]): ResourceManager = areas match {
-      //        case h :: t =>
-      //          h match {
-      //            case growArea: Area with GrowFood =>
-      //              val optionFood = growArea.growFood(randomFood())
-      //              val f:FoodInstance = optionFood.get
-      //              if (optionFood.isDefined) growImpl(t)(foods + f)
-      //
-      //            case _ => growImpl(t)(foods)
-      //          }
-      //        case _ => ResourceManager(habitat, growableFoods, foods)
-      //      }
-      //
-      //      growImpl(habitat.areas)(foods)
-      //    }
-
       val newFoods = habitat.areas
         .filter(area => area.isInstanceOf[Area with GrowFood])
         .map(a => a.asInstanceOf[Area with GrowFood])
