@@ -1,6 +1,11 @@
 import controller.ResourceManager
 import model.{Area, Fertile, Food, Habitat, Probability, Rock, Volcano, Water}
 import org.scalatest.funsuite.AnyFunSuite
+import utility.Constants
+
+import java.nio.charset.StandardCharsets
+import java.nio.file.{Files, NoSuchFileException, Path}
+import scala.reflect.io.File
 
 class ResourceManagerTest extends AnyFunSuite{
 
@@ -24,7 +29,28 @@ class ResourceManagerTest extends AnyFunSuite{
   test("ResourceManager grow()"){
     val resMan = ResourceManager(habitat, Set(Food(icon, 5), Food(icon, 10), Food(icon, 15), Food(icon, 50)))
     val newResMan = resMan.grow()
-    println(newResMan.foods)
+//    println(newResMan.foods)
     assert(newResMan.foods.nonEmpty)
+  }
+
+  test("ResourceManager import food from non existing file"){
+    val resMan = ResourceManager(habitat, Set(Food(icon, 5), Food(icon, 10), Food(icon, 15), Food(icon, 50)))
+    assertThrows[NoSuchFileException](resMan.importFoodsFromFile("absolutelyNonExistingFileMadeUpOnlyForThisTest.txtxtxt"))
+  }
+
+  test("ResourceManager write food to file"){
+    val resMan = ResourceManager(habitat, Set(Food(icon, 5), Food(icon, 10), Food(icon, 15), Food(icon, 50)))
+    resMan.writeFoodsToFile(Constants.FOODS_FILE_PATH)
+    val path = Path.of("res"+File.separator+"serialization"+File.separator+Constants.FOODS_FILE_PATH)
+    val json = Files.readString(path, StandardCharsets.UTF_8)
+//    println(json)
+    assert(json == "{\"icon\":\"icon.png\",\"energy\":5}{\"icon\":\"icon.png\",\"energy\":10}{\"icon\":\"icon.png\",\"energy\":15}{\"icon\":\"icon.png\",\"energy\":50}")
+  }
+
+  test("ResourceManager import food from file"){
+    val resMan = ResourceManager(habitat)
+    val newResMan = resMan.importFoodsFromFile(Constants.FOODS_FILE_PATH)
+//    println(newResMan.growableFoods)
+    assert(newResMan.growableFoods.nonEmpty)
   }
 }

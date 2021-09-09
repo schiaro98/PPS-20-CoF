@@ -1,7 +1,7 @@
 package controller
 
-import com.google.gson._
-import model.{Size, Species}
+import com.google.gson.{JsonDeserializer, _}
+import model.{Food, Size, Species}
 
 import java.io.PrintWriter
 import java.lang.reflect.Type
@@ -11,6 +11,7 @@ import scala.reflect.io.File
 sealed trait SerializerType
 case object Default extends SerializerType
 case object OfSpecies extends SerializerType
+case object OfFood extends SerializerType
 
 
 
@@ -28,6 +29,7 @@ object Serializer {
   def apply(serializerType: SerializerType): Serializer = serializerType match {
     case Default => new SerializerImpl
     case OfSpecies => new SpeciesSerializer
+    case OfFood => new FoodsSerializer
   }
 
   private class SerializerImpl() extends Serializer {
@@ -93,12 +95,30 @@ object Serializer {
               Species(icon, name, size, strength, sight)
             case _ => null
           }
-          Option(res).getOrElse(throw new JsonParseException(s"$json can't be parsed to State"))
+          Option(res).getOrElse(throw new JsonParseException(s"$json can't be parsed to Species"))
         }
       }
 
       override val gson: Gson = new GsonBuilder().registerTypeHierarchyAdapter(classOf[Size], SizeSerializer)
         .registerTypeHierarchyAdapter(classOf[Species], SizeDeserializer).setPrettyPrinting().create()
+  }
+
+  private class FoodsSerializer extends SerializerImpl{
+
+    object FoodDeserializer extends JsonDeserializer[Food] {
+      override def deserialize(json: JsonElement, typeOfT: Type, context: JsonDeserializationContext): Food = {
+        val res = json match {
+          case obj: JsonObject if obj.has("icon") && obj.has("energy") =>
+            val icon = obj.get("icon").getAsString
+            val energy = obj.get("energy").getAsInt
+            Food(icon, energy)
+          case _ => null
+        }
+        Option(res).getOrElse(throw new JsonParseException(s"$json can't be parsed to Food"))
+      }
+    }
+
+    override val gson: Gson = new GsonBuilder().registerTypeHierarchyAdapter(classOf[Food], FoodDeserializer).create()
   }
 }
 

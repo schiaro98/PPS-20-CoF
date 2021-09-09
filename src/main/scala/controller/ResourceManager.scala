@@ -2,9 +2,9 @@ package controller
 
 import controller.Aliases.FoodInstances
 import model.{Area, Food, FoodInstance, GrowFood, Habitat}
+import utility.Constants
 
 import scala.annotation.tailrec
-import scala.language.reflectiveCalls
 import scala.util.Random
 
 // TODO: this may be not necessary but it's cool
@@ -20,6 +20,8 @@ trait ResourceManager {
   val growableFoods: Set[Food]
   val foods: FoodInstances
 
+  def importFoodsFromFile(fileName: String): ResourceManager
+  def writeFoodsToFile(filename: String)
   def grow(): ResourceManager
 }
 
@@ -31,6 +33,8 @@ object ResourceManager {
   class ResourceManagerImpl(override val habitat: Habitat,
                             override val growableFoods: Set[Food],
                             override val foods: FoodInstances) extends ResourceManager {
+
+
 
     private def randomFood(): Option[Food] = {
       @tailrec
@@ -51,5 +55,16 @@ object ResourceManager {
       ResourceManager(habitat, growableFoods, newFoods)
     }
 
+    override def importFoodsFromFile(fileName: String): ResourceManager ={
+      val serializer: Serializer = Serializer(OfFood)
+      val growableFoods = serializer.deserializeManyFromFile(fileName)(classOf[Food])
+      ResourceManager(habitat, growableFoods.toSet, foods)
+    }
+
+
+    override def writeFoodsToFile(filename: String): Unit = {
+      val serializer: Serializer = Serializer(OfFood)
+      serializer.serializeManyToFile(growableFoods)(Constants.FOODS_FILE_PATH)
+    }
   }
 }
