@@ -1,5 +1,7 @@
 package model
 
+import scala.util.Random
+
 sealed trait AreaType
 
 case object Fertile extends AreaType
@@ -54,8 +56,21 @@ object Area {
                                    ) extends FertileArea(Fertile, topLeft, bottomRight, "a fertile area which can grow food") with GrowFood {
     require(areaType == Fertile)
 
-    override def growFood(): Unit = println("growing food")
+    override def growFood(optFood: Option[Food]): Option[FoodInstance] = {
+      if (optFood.isDefined){
+        val food = optFood.get
+        if (fertility.calculate) {
+          val random = new Random
+          val _1 = topLeft._1 + random.nextInt((bottomRight._1 - topLeft._1) +1)
+          val _2 = topLeft._2 + random.nextInt((bottomRight._2 - topLeft._2) +1)
 
+          // TODO: DELETE THE MAGIC NUMBER IN QUANTITY
+          val quantity = random.nextInt(10)
+          return Some(FoodInstance(food, quantity, (_1 ,_2)))
+        }
+      }
+      None
+    }
   }
 
   private case class WaterArea(areaType: AreaType,
@@ -80,5 +95,5 @@ sealed trait GrowFood {
 //  val foods: Set[Food]
 // TODO: make it return a food (possibly from foods if the probability is true
 
-  def growFood():Unit
+  def growFood(food: Option[Food]):Option[FoodInstance]
 }

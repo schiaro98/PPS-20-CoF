@@ -1,5 +1,5 @@
 package model
-
+// TODO: we could add to Food a maxQuantity so that when we create a new FoodInstance we can use a random from 1 to maxQuantity
 /**
  * Trait that represent a food.
  */
@@ -10,7 +10,7 @@ trait Food extends Visualizable {
 /**
  * Object that represent the a food.
  */
-private object Food {
+object Food {
   /**
    * Apply method for a Food.
    *
@@ -43,7 +43,7 @@ trait FoodInstance extends Food {
 /**
  * Object that represent the instance of a food.
  */
-private object FoodInstance {
+object FoodInstance {
   /**
    * Apply method for a Food.
    *
@@ -55,6 +55,9 @@ private object FoodInstance {
    */
   def apply(icon: String, energy: Int, quantity: Int, position: (Int, Int)): FoodInstance =
     new FoodInstanceImpl(icon, energy, quantity, position)
+
+  def apply(food: Food, quantity: Int, position: (Int, Int)): FoodInstance =
+    new FoodInstanceImpl(food.icon, food.energy, quantity, position)
 
   private class FoodInstanceImpl(override val icon: String,
                                  override val energy: Int,
