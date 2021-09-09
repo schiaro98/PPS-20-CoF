@@ -9,7 +9,7 @@ import scala.collection.mutable.ListBuffer
 import scala.reflect.io.File
 
 sealed trait SerializerType
-case object Default extends SerializerType
+case object DefaultSerializer extends SerializerType
 case object OfSpecies extends SerializerType
 case object OfFood extends SerializerType
 
@@ -27,7 +27,7 @@ sealed trait Serializer {
 object Serializer {
 
   def apply(serializerType: SerializerType): Serializer = serializerType match {
-    case Default => new SerializerImpl
+    case DefaultSerializer => new SerializerImpl
     case OfSpecies => new SpeciesSerializer
     case OfFood => new FoodsSerializer
   }

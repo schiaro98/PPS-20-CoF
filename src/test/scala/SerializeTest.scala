@@ -1,4 +1,4 @@
-import controller.{Default, OfSpecies, Serializer}
+import controller.{DefaultSerializer, OfSpecies, Serializer}
 import model.{Size, Species}
 import org.scalatest.funsuite.AnyFunSuite
 
@@ -8,7 +8,7 @@ import scala.reflect.io.File
 
 class SerializeTest extends AnyFunSuite{
 
-  val defaultSerializer: Serializer = Serializer(Default)
+  val defaultSerializer: Serializer = Serializer(DefaultSerializer)
   val speciesSerializer: Serializer = Serializer(OfSpecies)
   case class Car(brand: String, doors:Int)
 
