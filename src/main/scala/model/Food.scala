@@ -5,10 +5,9 @@ import java.awt.image.BufferedImage
 /**
  * Trait that represent a food.
  */
-trait Food extends Visualizable {
+trait Food extends Visualizable with Placeable {
   val energy: Int
   val quantity: Int
-  val position: (Int, Int) //todo fare una interfaccia con position implementata dagli elementi da disegnare?
 
   /**
    * Method to decrease the quantity of the food.
@@ -33,7 +32,7 @@ private object Food {
    * @param position the location on the map, where the food is.
    * @return an implementation of Food.
    */
-  def apply(icon: BufferedImage, energy: Int, quantity: Int, position: (Int, Int)): Food =
+  private def apply(icon: BufferedImage, energy: Int, quantity: Int, position: (Int, Int)): Food =
     new FoodImpl(icon, energy, quantity, position)
 
   private class FoodImpl(override val icon: BufferedImage,

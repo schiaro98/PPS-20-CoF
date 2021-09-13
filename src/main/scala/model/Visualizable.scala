@@ -8,7 +8,6 @@ import java.awt.image.BufferedImage
 trait Visualizable {
   val icon: BufferedImage
 }
-
 /**
  * Object that represent an element viewable on the map.
  */

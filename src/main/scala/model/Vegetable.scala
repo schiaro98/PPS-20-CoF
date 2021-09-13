@@ -1,5 +1,7 @@
 package model
 
+import utils.Constants._
+
 import java.awt.image.BufferedImage
 
 /**
@@ -20,7 +22,7 @@ object Vegetable {
    * @param position the location on the map, where the food is.
    * @return an implementation of Vegetable
    */
-  def apply(icon: BufferedImage, energy: Int, quantity: Int, position: (Int, Int)): Vegetable =
+  def apply(quantity: Int, position: (Int, Int), energy: Int = energyOfVegetable, icon: BufferedImage = iconOfVegetable): Vegetable =
     new VegetableImpl(icon, energy, quantity, position)
 
   private class VegetableImpl(override val icon: BufferedImage,
