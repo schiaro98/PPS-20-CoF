@@ -20,7 +20,7 @@ object Meat {
    * @param position the location on the map, where the food is.
    * @return an implementation of Meat.
    */
-  def apply(quantity: Int, position: (Int, Int), energy: Int = EnergyOfMeat, icon: String = IconOfMeat): Meat =
+  def apply(quantity: Int, position: (Int, Int), energy: Int = DefaultEnergyOfMeat, icon: String = DefaultIconOfMeat): Meat =
     new MeatImpl(icon, energy, quantity, position)
 
   private class MeatImpl(override val icon: String,

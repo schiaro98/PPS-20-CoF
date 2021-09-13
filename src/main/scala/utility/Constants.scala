@@ -5,11 +5,11 @@ object Constants {
 
 
   // ------- Food -------
-  val IconOfMeat = "res/images/tiger-icon.jpg"
-  val EnergyOfMeat = 20
+  val DefaultIconOfMeat = "res/images/tiger-icon.jpg"
+  val DefaultEnergyOfMeat = 20
 
-  val IconOfVegetable ="res/images/tiger-icon.jpg"
-  val EnergyOfVegetable = 10
+  val DefaultIconOfVegetable ="res/images/tiger-icon.jpg"
+  val DefaultEnergyOfVegetable = 10
 
 
   // ------- Animal -------
