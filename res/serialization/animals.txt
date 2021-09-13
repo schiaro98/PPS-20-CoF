@@ -1,1 +1,1 @@
-{"name":"Lion","quantity":1}{"name":"Zebra","quantity":2}{"name":"Ippo","quantity":3}
+{"name":"Lion","quantity":3}{"name":"Zebra","quantity":2}{"name":"Ippo","quantity":1}

@@ -1,10 +1,8 @@
 package model
 
 import model.Size._
-import utils.Constants
-import utils.Constants._
-
-import java.awt.image.BufferedImage
+import utility.Constants
+import utility.Constants._
 
 /**
  * Trait that represent the age of an animal.
@@ -58,13 +56,13 @@ trait Animal extends Species with Placeable {
    * @param food The food to eat.
    * @return a pair that contains the animal with the health restored and the remaining food, if there is still any.
    */
-  def eat(food: Food): (Animal, Option[Food]) = health match {
-    //todo se il controllo viene fatto altrove (ad es. mangi solo se hai meno di 300 di fame) non serve
-    case Constants.maxHealth => (this, Some(food))
-    case _ if maxHealth - this.health > food.energy * food.quantity => (this.update(health = health + food.energy * food.quantity), None)
+  def eat(food: FoodInstance): (Animal, Option[FoodInstance]) = health match {
+    //todo se il controllo viene fatto altrove (ad es. mangi solo se hai meno salute di MaxHealth) non serve
+    case Constants.MaxHealth => (this, Some(food))
+    case _ if MaxHealth - this.health > food.energy * food.quantity => (this.update(health = health + food.energy * food.quantity), None)
     case _ =>
-      val foodToEat = (maxHealth - health) / food.energy + (if (maxHealth - health % food.energy == 0) 0 else 1)
-      (this.update(health = maxHealth), Some(food.consume(foodToEat)))
+      val foodToEat = (MaxHealth - health) / food.energy + (if (MaxHealth - health % food.energy == 0) 0 else 1)
+      (this.update(health = MaxHealth), Some(food.consume(foodToEat)))
   }
 
   /**
@@ -72,12 +70,12 @@ trait Animal extends Species with Placeable {
    *
    * @return a new animal, the same as before but with the parameter of thirst to the maximum.
    */
-  def drink(): Animal = this.update(thirst = maxThirst)
+  def drink(): Animal = this.update(thirst = MaxThirst)
 
   def quantityFromDeath(): Int = size match {
-    case Big => quantityForBig
-    case Medium => quantityForMedium
-    case Small => quantityForSmall
+    case Big => QuantityForBig
+    case Medium => QuantityForMedium
+    case Small => QuantityForSmall
   }
 
   /**
@@ -91,7 +89,7 @@ trait Animal extends Species with Placeable {
 /**
  * Object that represent an animal of a specific species.
  */
-object Animal { //todo va bene private per non far creare un animal?
+object Animal {
 
   /**
    * Apply method for an Animal.
@@ -103,12 +101,12 @@ object Animal { //todo va bene private per non far creare un animal?
    * @param thirst    the parameter that indicates whether the animal is thirsty.
    * @return a new implementation of Animal.
    */
-  private def apply(s: Species, position: (Int, Int), direction: (Int, Int), health: Int = maxHealth, thirst: Int = maxThirst): Animal =
+  private def apply(s: Species, position: (Int, Int), direction: (Int, Int), health: Int = MaxHealth, thirst: Int = MaxThirst): Animal =
     new AnimalImpl(s.icon, s.name, s.size, s.strength, s.sight, health, thirst, position, direction)
 
-  //todo aggiungere erbivoro/carnivoro come campo in specie e differenziare i due nell'apply di animal
+  //todo aggiungere erbivoro/carnivoro come un campo in specie e differenziare i due nell'apply di animal?
 
-  private class AnimalImpl(override val icon: BufferedImage,
+  private class AnimalImpl(override val icon: String,
                            override val name: String,
                            override val size: Size,
                            override val strength: Int,

@@ -1,28 +1,23 @@
-import model.{NonWalkableArea, Probability, Rock, WalkableArea, Water}
+import model.{Area, Fertile, GrowFood, Probability, Vegetable}
 import org.scalatest.funsuite.AnyFunSuite
 
 class AreaTest extends AnyFunSuite{
 
-  test("Create empty WalkableArea with name"){
-    val name = "my classic walkable area"
-    val area = WalkableArea(name, (10,20), (15, 25), Probability(30), Probability(20))
-    assert(area.name == name)
+  val image = "vegetable.png"
+
+  test("Create illegal Fertile Area"){
+    assertThrows[IllegalArgumentException](Area(Fertile, (20,20), (15, 25)))
   }
 
-  test("Create empty WalkableArea without name"){
-    val area = WalkableArea((10,20), (15, 25), Probability(30), Probability(20))
-    assert(area.name == "Simple walkable area")
+  test("Create empty Fertile Area without name"){
+    val area = Area(Fertile, (10,20), (15, 25))
+    assert(area.areaType == Fertile)
   }
 
-
-  test("Create empty NonWalkableArea with name"){
-    val name = "my classic non walkable area"
-    val area = NonWalkableArea(name, (10,20), (15, 25), Water)
-    assert(area.name == name)
+  test("Create FertileArea with GrowFood"){
+    // TODO: work on it with a working manager for food and areas
+    val areaWithGrowFood = Area((10,20), (15, 25), Probability(30))
+    assert(areaWithGrowFood.isInstanceOf[Area with GrowFood])
   }
 
-  test("Create empty NonWalkableArea without name"){
-    val area = NonWalkableArea((10,20), (15, 25), Rock)
-    assert(area.name == "Simple non walkable area")
-  }
 }

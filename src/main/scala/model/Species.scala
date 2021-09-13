@@ -1,11 +1,9 @@
 package model
 
-import java.awt.image.BufferedImage
-
 /**
  * Trait that represent the size of a species.
  */
-trait Size
+sealed trait Size
 
 /**
  * Object that contains the possible size of a species.
@@ -44,10 +42,10 @@ object Species {
    * @param sight    the visual range of the species.
    * @return an implementation of Species.
    */
-  def apply(icon: BufferedImage, name: String, size: Size, strength: Int, sight: Int): Species =
+  def apply(icon: String, name: String, size: Size, strength: Int, sight: Int): Species =
     new SpeciesImpl(icon, name, size, strength, sight)
 
-  private class SpeciesImpl(override val icon: BufferedImage,
+  private class SpeciesImpl(override val icon: String,
                             override val name: String,
                             override val size: Size,
                             override val strength: Int,

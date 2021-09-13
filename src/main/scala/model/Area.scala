@@ -1,76 +1,99 @@
 package model
 
-trait Area {
+import scala.util.Random
 
+sealed trait AreaType
+
+case object Fertile extends AreaType
+
+case object Water extends AreaType
+
+case object Rock extends AreaType
+
+case object Volcano extends AreaType
+
+sealed trait Area {
   val name: String
-  val dimensions: (Int, Int)
-  val position: (Int, Int)
+  val areaType: AreaType
+  val topLeft: (Int, Int)
+  val bottomRight: (Int, Int)
+  require(topLeft._1 < bottomRight._1 && topLeft._2 < bottomRight._2, "inserted illegal corners")
 }
 
 object Area {
-  def apply(
-             name: String,
-             dimensions: (Int, Int),
-             position: (Int, Int)): Area = SimpleArea(name, dimensions, position)
 
-  private case class SimpleArea(  name: String ,
-                                  dimensions: (Int, Int),
-                                  position: (Int, Int)) extends Area {
+  def apply(areaType: AreaType, topLeft: (Int, Int), bottomRight: (Int, Int)): Area = areaType match {
+    case Fertile => FertileArea(areaType, topLeft, bottomRight)
+    case Water => WaterArea(areaType, topLeft, bottomRight)
+    case Rock => RockArea(areaType, topLeft, bottomRight)
+    case Volcano => VolcanoArea(areaType, topLeft, bottomRight)
   }
-}
 
-sealed trait WalkableArea extends Area {
-  val fertility: Probability
-  val hospitality: Probability
-}
+  def apply(name: String, areaType: AreaType, topLeft: (Int, Int), bottomRight: (Int, Int)): Area = areaType match {
+    case Fertile => FertileArea(areaType, topLeft, bottomRight, name)
+    case Water => WaterArea(areaType, topLeft, bottomRight, name)
+    case Rock => RockArea(areaType, topLeft, bottomRight, name)
+    case Volcano => VolcanoArea(areaType, topLeft, bottomRight, name)
+  }
 
-object WalkableArea {
-  def apply(dimensions: (Int, Int),
-            position: (Int, Int),
-            fertility: Probability,
-            hospitality: Probability): WalkableArea =
-    new SimpleWalkableArea(dimensions = dimensions, position = position, fertility = fertility, hospitality = hospitality)
+  def apply(topLeft: (Int, Int), bottomRight: (Int, Int), fertility: Probability
+//            , foods: Set[Food]
+           ): Area =
+    new FertileAreaGrowFood(topLeft, bottomRight, fertility
+//      , foods
+    )
 
-  def apply( name: String,
-             dimensions: (Int, Int),
-             position: (Int, Int),
-             fertility: Probability,
-             hospitality: Probability): WalkableArea =
-    new SimpleWalkableArea(name, dimensions, position, fertility, hospitality)
 
-  private class SimpleWalkableArea( override val name: String = "Simple walkable area",
-                                    override val dimensions: (Int, Int),
-                                    override val position: (Int, Int),
+  private case class FertileArea(areaType: AreaType,
+                                 topLeft: (Int, Int),
+                                 bottomRight: (Int, Int),
+                                 name: String = "a fertile area") extends Area
+
+  private class FertileAreaGrowFood(topLeft: (Int, Int),
+                                    bottomRight: (Int, Int),
                                     override val fertility: Probability,
-                                    override val hospitality: Probability) extends WalkableArea {}
+//                                    override val foods: Set[Food]
+                                   ) extends FertileArea(Fertile, topLeft, bottomRight, "a fertile area which can grow food") with GrowFood {
+    require(areaType == Fertile)
+
+    override def growFood(optFood: Option[Food]): Option[FoodInstance] = {
+      if (optFood.isDefined){
+        val food = optFood.get
+        if (fertility.calculate) {
+          val random = new Random
+          val _1 = topLeft._1 + random.nextInt((bottomRight._1 - topLeft._1) +1)
+          val _2 = topLeft._2 + random.nextInt((bottomRight._2 - topLeft._2) +1)
+
+          // TODO: DELETE THE MAGIC NUMBER IN QUANTITY
+          val quantity = random.nextInt(10)
+          return Some(FoodInstance(food, quantity, (_1 ,_2)))
+        }
+      }
+      None
+    }
+  }
+
+  private case class WaterArea(areaType: AreaType,
+                               topLeft: (Int, Int),
+                               bottomRight: (Int, Int),
+                               name: String = "a bit of water") extends Area
+
+  private case class RockArea(areaType: AreaType,
+                              topLeft: (Int, Int),
+                              bottomRight: (Int, Int),
+                              name: String = "a rock area") extends Area
+
+  private case class VolcanoArea(areaType: AreaType,
+                                 topLeft: (Int, Int),
+                                 bottomRight: (Int, Int),
+                                 name: String = "a volcano") extends Area
 }
 
+// TODO: work on it with a working manager for food and areas
+sealed trait GrowFood {
+  val fertility: Probability
+//  val foods: Set[Food]
+// TODO: make it return a food (possibly from foods if the probability is true
 
-sealed trait TypeOfNonWalkableArea
-case object Water extends TypeOfNonWalkableArea
-case object Rock extends TypeOfNonWalkableArea
-case object Volcano extends TypeOfNonWalkableArea
-
-
-sealed trait NonWalkableArea extends Area {
-  val typeOfNonWalkableArea: TypeOfNonWalkableArea
-}
-
-object NonWalkableArea {
-
-  def apply(dimensions: (Int, Int),
-            position: (Int, Int),
-            typeOfNonWalkableArea: TypeOfNonWalkableArea): NonWalkableArea =
-    new SimpleNonWalkableArea(dimensions = dimensions, position = position,typeOfNonWalkableArea = typeOfNonWalkableArea)
-
-  def apply(name: String,
-              dimensions: (Int, Int),
-              position: (Int, Int),
-              typeOfNonWalkableArea: TypeOfNonWalkableArea): NonWalkableArea =
-      new SimpleNonWalkableArea(name, dimensions, position, typeOfNonWalkableArea)
-
-  private class SimpleNonWalkableArea( override val name: String = "Simple non walkable area",
-                                       override val dimensions: (Int, Int),
-                                       override val position: (Int, Int),
-                                       override val typeOfNonWalkableArea: TypeOfNonWalkableArea) extends NonWalkableArea {}
+  def growFood(food: Option[Food]):Option[FoodInstance]
 }
