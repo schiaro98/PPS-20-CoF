@@ -1,5 +1,6 @@
 package model
 // TODO: we could add to Food a maxQuantity so that when we create a new FoodInstance we can use a random from 1 to maxQuantity
+
 /**
  * Trait that represent a food.
  */
@@ -22,7 +23,7 @@ object Food {
     FoodImpl(icon, energy)
 
   private case class FoodImpl(override val icon: String,
-                         override val energy: Int) extends Food
+                              override val energy: Int) extends Food
 }
 
 
@@ -44,7 +45,8 @@ trait FoodInstance extends Food with Placeable {
  */
 object FoodInstance {
   /**
-   * Apply method for a Food.
+   * Apply method for a Food; it's private because it must be impossible to instantiate a general food,
+   * it must be a meat or a vegetable
    *
    * @param icon     the image to draw in the map.
    * @param energy   the health it returns to an animal.
@@ -52,11 +54,11 @@ object FoodInstance {
    * @param position the location on the map, where the food is.
    * @return an implementation of FoodInstance.
    */
-  def apply(icon: String, energy: Int, quantity: Int, position: (Int, Int)): FoodInstance =
+  private def apply(icon: String, energy: Int, quantity: Int, position: (Int, Int)): FoodInstance =
     new FoodInstanceImpl(icon, energy, quantity, position)
 
   //todo serve il secondo apply?
-  def apply(food: Food, quantity: Int, position: (Int, Int)): FoodInstance =
+  private def apply(food: Food, quantity: Int, position: (Int, Int)): FoodInstance =
     new FoodInstanceImpl(food.icon, food.energy, quantity, position)
 
   private class FoodInstanceImpl(override val icon: String,

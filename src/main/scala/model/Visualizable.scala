@@ -6,6 +6,7 @@ package model
 trait Visualizable {
   val icon: String
 }
+
 /**
  * Object that represent an element viewable on the map.
  */

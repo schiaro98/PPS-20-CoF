@@ -92,7 +92,8 @@ trait Animal extends Species with Placeable {
 object Animal {
 
   /**
-   * Apply method for an Animal.
+   * Apply method for an Animal; it's private because it must be impossible to instantiate a general animal,
+   * it must be a carnivorous or a herbivore
    *
    * @param s         the species of the animal.
    * @param position  the location on the map, where the animal is.
@@ -103,8 +104,6 @@ object Animal {
    */
   private def apply(s: Species, position: (Int, Int), direction: (Int, Int), health: Int = MaxHealth, thirst: Int = MaxThirst): Animal =
     new AnimalImpl(s.icon, s.name, s.size, s.strength, s.sight, health, thirst, position, direction)
-
-  //todo aggiungere erbivoro/carnivoro come un campo in specie e differenziare i due nell'apply di animal?
 
   private class AnimalImpl(override val icon: String,
                            override val name: String,
