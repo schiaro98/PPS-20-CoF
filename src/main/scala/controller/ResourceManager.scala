@@ -73,7 +73,7 @@ object ResourceManager {
 
     override def writeFoodsToFile(filename: String): Unit = {
       val serializer: Serializer = Serializer(OfFood)
-      serializer.serializeManyToFile(growableFoods)(Constants.FOODS_FILE_PATH)
+      serializer.serializeManyToFile(growableFoods)(Constants.FoodsFilePath)
     }
   }
 }

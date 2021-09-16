@@ -40,8 +40,8 @@ class ResourceManagerTest extends AnyFunSuite{
 
   test("ResourceManager write food to file"){
     val resMan = ResourceManager(habitat, Set(Food(icon, 5), Food(icon, 10), Food(icon, 15), Food(icon, 50)))
-    resMan.writeFoodsToFile(Constants.FOODS_FILE_PATH)
-    val path = Path.of("res"+File.separator+"serialization"+File.separator+Constants.FOODS_FILE_PATH)
+    resMan.writeFoodsToFile(Constants.FoodsFilePath)
+    val path = Path.of("res"+File.separator+"serialization"+File.separator+Constants.FoodsFilePath)
     val json = Files.readString(path, StandardCharsets.UTF_8)
 //    println(json)
     assert(json == "{\"icon\":\"icon.png\",\"energy\":5}{\"icon\":\"icon.png\",\"energy\":10}{\"icon\":\"icon.png\",\"energy\":15}{\"icon\":\"icon.png\",\"energy\":50}")
@@ -49,7 +49,7 @@ class ResourceManagerTest extends AnyFunSuite{
 
   test("ResourceManager import food from file"){
     val resMan = ResourceManager(habitat)
-    val newResMan = resMan.importFoodsFromFile(Constants.FOODS_FILE_PATH)
+    val newResMan = resMan.importFoodsFromFile(Constants.FoodsFilePath)
 //    println(newResMan.growableFoods)
     assert(newResMan.growableFoods.nonEmpty)
   }

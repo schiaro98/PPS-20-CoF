@@ -1,5 +1,7 @@
 package model
 
+import utility.Constants._
+
 /**
  * Trait that represent a vegetable.
  */
@@ -16,9 +18,9 @@ object Vegetable {
    * @param energy   the health it returns to an animal.
    * @param quantity the number of times it returns health before running out.
    * @param position the location on the map, where the food is.
-   * @return an implementation of Vegetable
+   * @return an implementation of Vegetable.
    */
-  def apply(icon: String, energy: Int, quantity: Int, position: (Int, Int)): Vegetable =
+  def apply(quantity: Int, position: (Int, Int), energy: Int = DefaultEnergyOfVegetable, icon: String = DefaultIconOfVegetable): Vegetable =
     new VegetableImpl(icon, energy, quantity, position)
 
   private class VegetableImpl(override val icon: String,

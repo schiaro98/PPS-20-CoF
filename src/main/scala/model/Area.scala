@@ -66,7 +66,8 @@ object Area {
 
           // TODO: DELETE THE MAGIC NUMBER IN QUANTITY
           val quantity = random.nextInt(10)
-          return Some(FoodInstance(food, quantity, (_1 ,_2)))
+          //todo: ho messo non istanziabile "FoodInstance", così l'ho cambiato in un vegetable; p.s. IZ back
+          return Some(Vegetable(quantity, (_1 ,_2), food.energy, food.icon))
         }
       }
       None
