@@ -1,5 +1,5 @@
 import controller.ResourceManager
-import model.{Area, Fertile, Food, Habitat, Probability, Rock, Volcano, Water}
+import model._
 import org.scalatest.funsuite.AnyFunSuite
 import utility.Constants
 
@@ -17,7 +17,7 @@ class ResourceManagerTest extends AnyFunSuite{
   val volcanoArea: Area = Area(Volcano, (70,70), (80,80))
   val area: Area = Area((60,60), (65, 65), Probability(100))
 
-  val habitat: Habitat = Habitat( Probability(1), (100, 100), Seq(fertileArea, waterArea, rockArea, volcanoArea, area))
+  val habitat: Habitat = Habitat(SimpleHabitatType, Probability(1), (100, 100), Seq(fertileArea, waterArea, rockArea, volcanoArea, area))
 
   test("ResourceManager grow() with no growable foods"){
     val resMan = ResourceManager(habitat)
