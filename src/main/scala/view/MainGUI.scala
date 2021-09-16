@@ -25,6 +25,12 @@ object MainGUI extends SimpleSwingApplication {
 
     val startButton: Button = new Button("Start simulation") {
       tooltip = "Click to start the simulation"
+      reactions += {
+        case _: ButtonClicked => new SimulationGui(logic){
+          top.visible = true
+          close()
+        }
+      }
     }
 
     val leftPanel: BorderPanel = new BorderPanel {
@@ -90,7 +96,6 @@ object MainGUI extends SimpleSwingApplication {
 
       initGrid(logic.species)
     }
-
 
     contents = new BorderPanel() {
       layout(leftPanel) = Center
