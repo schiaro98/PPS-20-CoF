@@ -88,6 +88,11 @@ object Area {
                                  topLeft: (Int, Int),
                                  bottomRight: (Int, Int),
                                  name: String = "a volcano") extends Area
+
+  def randomType: AreaType = {
+    val choices: Seq[AreaType] = Seq(Fertile, Water, Rock, Volcano)
+    Random.shuffle(choices).head
+  }
 }
 
 // TODO: work on it with a working manager for food and areas

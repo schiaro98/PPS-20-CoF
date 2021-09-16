@@ -1,5 +1,13 @@
 package model
 
+import scala.util.Random
+
+sealed trait HabitatType
+
+case object EmptyHabitatType extends HabitatType
+case object SimpleHabitatType extends HabitatType
+case object RandomHabitatType extends HabitatType
+
 trait Habitat {
   val unexpectedEvents: Probability
   val dimensions: (Int, Int)
@@ -32,16 +40,81 @@ trait Habitat {
   require(checkDimensionsOfAreas(areas), "areas don't fit in current habitat")
 }
 
+
 object Habitat {
 
 
-  def apply(unexpectedEvents: Probability,
+  def apply(habitatType: HabitatType,
+            unexpectedEvents: Probability,
             dimensions: (Int, Int),
-            areas: Seq[Area] = Seq.empty): Habitat = SimpleHabitat(unexpectedEvents, dimensions, areas)
+            areas: Seq[Area]): Habitat = habitatType match {
+    case EmptyHabitatType => EmptyHabitat(unexpectedEvents, dimensions, areas)
+    case SimpleHabitatType => SimpleHabitat(unexpectedEvents, dimensions, Seq.empty)
+    case RandomHabitatType => RandomHabitat(unexpectedEvents, dimensions, createRandomAreas(dimensions, 10))
+  }
+
+  def apply(unexpectedEvent: Probability, dimensions: (Int, Int)): RandomHabitat =
+    RandomHabitat(unexpectedEvent, dimensions, createRandomAreas(dimensions, 20))
 
   private case class SimpleHabitat(override val unexpectedEvents: Probability,
                                    override val dimensions: (Int, Int),
                                    override val areas: Seq[Area]) extends Habitat
+
+  private case class EmptyHabitat(override val unexpectedEvents: Probability,
+                                  override val dimensions: (Int, Int),
+                                  override val areas: Seq[Area] ) extends Habitat
+
+  private case class RandomHabitat(override val unexpectedEvents: Probability,
+                                  override val dimensions: (Int, Int),
+                                  override val areas: Seq[Area] ) extends Habitat
+
+  /**
+   * This method create an habitat, of given dimension, with diven areas, arranged in a grid
+   * @param dimension dimension of the habitat
+   * @param numberOfAreas num of areas in the grid
+   * @return
+   * TODO non viene controllato l'overlapping
+   */
+  def createRandomAreas(dimension: (Int, Int), numberOfAreas: Int) : Seq[Area] = {
+    var grid = List.empty[Area]
+    val habitatArea = dimension._1 * dimension._2
+    require(dimension._1 * dimension._2 > numberOfAreas * 10)
+    val maxAreaDimension = habitatArea / 2 * numberOfAreas
+
+    for (_ <- 0 to numberOfAreas){
+      val point = (Random.nextInt(dimension._1 - maxAreaDimension), Random.nextInt(dimension._2 - maxAreaDimension))
+      val areaWidth = Random.shuffle(Range(1, maxAreaDimension).toList).head
+      val areaHeigth = Random.shuffle(Range(1, maxAreaDimension).toList).head
+      val newArea: Area = Area(Area.randomType, (point._1, point._2), (point._1 + areaWidth, point._2 + areaHeigth))
+
+      grid = grid.::(newArea)
+    }
+    grid
+  }
+
+  def createGridArea(dimension: (Int, Int), numberOfAreas: Int) : Seq[Area] = {
+    var grid = List.empty[Area]
+    val habitatArea = dimension._1 * dimension._2
+    require(dimension._1 * dimension._2 > numberOfAreas * 10)
+
+    val maxAreaDimension = habitatArea / 2 * numberOfAreas
+
+    for (i <- 0 to numberOfAreas/2){
+      for(j <- 0 to numberOfAreas/2){
+        val point = (i* maxAreaDimension, i* maxAreaDimension)
+        val areaWidth = Random.shuffle(Range(1, maxAreaDimension).toList).head
+        val areaHeigth = Random.shuffle(Range(1, maxAreaDimension).toList).head
+        val newArea: Area = Area(Area.randomType, (point._1, point._2), (point._1 + areaWidth, point._2 + areaHeigth))
+        grid = grid.::(newArea)
+      }
+    }
+    println(grid)
+    grid
+  }
+
 }
+
+
+
 
 //creare degli enum e delle factory per avere mappe sempre diverse, o mappe statiche
