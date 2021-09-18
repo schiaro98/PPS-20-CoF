@@ -12,10 +12,6 @@ object Aliases {
   type FoodInstances = Seq[FoodInstance]
 }
 
-sealed trait ResourceManagerType
-case object FoodsFromFile extends ResourceManagerType
-case object DefaultResourceManager extends ResourceManagerType
-
 sealed trait ResourceManager {
 
   import Aliases._
@@ -25,19 +21,19 @@ sealed trait ResourceManager {
   val foods: FoodInstances
 
   def importFoodsFromFile(fileName: String): ResourceManager
-  def writeFoodsToFile(filename: String)
+  def writeFoodsToFile(filename: String): Unit
   def grow(): ResourceManager
 }
 
 object ResourceManager {
 
-  def apply(habitat: Habitat, growableFoods: Set[Food] = Set.empty[Food], foods: FoodInstances = Seq.empty[FoodInstance]): ResourceManager =
+  def apply(habitat: Habitat,
+            growableFoods: Set[Food] = Set.empty[Food],
+            foods: FoodInstances = Seq.empty[FoodInstance]): ResourceManager =
     new ResourceManagerImpl(habitat, growableFoods, foods)
 
-  def apply(resourceManagerType: ResourceManagerType, habitat: Habitat, fileName: String): ResourceManager = resourceManagerType match {
-    case FoodsFromFile => new ResourceManagerImpl(habitat,Set.empty[Food], Seq.empty[FoodInstance]).importFoodsFromFile(fileName)
-    case _ => new ResourceManagerImpl(habitat, Set.empty[Food], Seq.empty[FoodInstance])
-  }
+  def apply(habitat: Habitat, fileName: String): ResourceManager =
+    new ResourceManagerImpl(habitat,Set.empty[Food], Seq.empty[FoodInstance]).importFoodsFromFile(fileName)
 
   class ResourceManagerImpl(override val habitat: Habitat,
                             override val growableFoods: Set[Food],
@@ -46,11 +42,8 @@ object ResourceManager {
 
 
     private def randomFood(): Option[Food] = {
-      @tailrec
-      def randomFoodImpl(set: Set[Food])(n: Int): Food = if (n == 0) set.head else randomFoodImpl(set.tail)(n - 1)
-
       if (growableFoods.nonEmpty) {
-        Some(randomFoodImpl(growableFoods)(new Random().nextInt(growableFoods.size)))
+        Some(growableFoods.toSeq(new Random().nextInt(growableFoods.size)))
       } else None
     }
 

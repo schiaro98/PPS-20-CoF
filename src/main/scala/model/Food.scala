@@ -1,6 +1,6 @@
 package model
 // TODO: we could add to Food a maxQuantity so that when we create a new FoodInstance we can use a random from 1 to maxQuantity
-
+// TODO: add name to Food?
 /**
  * Trait that represent a food.
  */
@@ -29,7 +29,7 @@ object Food {
 
 trait FoodInstance extends Food with Placeable {
   val quantity: Int
-
+  // TODO: qui ritorno un foodInstance che non esiste altrove
   /**
    * Method to decrease the quantity of the food.
    *
@@ -57,7 +57,6 @@ object FoodInstance {
   private def apply(icon: String, energy: Int, quantity: Int, position: (Int, Int)): FoodInstance =
     new FoodInstanceImpl(icon, energy, quantity, position)
 
-  //todo serve il secondo apply?
   private def apply(food: Food, quantity: Int, position: (Int, Int)): FoodInstance =
     new FoodInstanceImpl(food.icon, food.energy, quantity, position)
 

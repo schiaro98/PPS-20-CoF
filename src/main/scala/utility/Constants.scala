@@ -5,6 +5,8 @@ object Constants {
 
 
   // ------- Food -------
+  val DefaultFoodQuantity = 10
+
   val DefaultIconOfMeat = "res/images/tiger-icon.jpg"
   val DefaultEnergyOfMeat = 20
 

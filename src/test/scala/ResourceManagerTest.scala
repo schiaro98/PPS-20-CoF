@@ -29,7 +29,7 @@ class ResourceManagerTest extends AnyFunSuite{
   test("ResourceManager grow()"){
     val resMan = ResourceManager(habitat, Set(Food(icon, 5), Food(icon, 10), Food(icon, 15), Food(icon, 50)))
     val newResMan = resMan.grow()
-//    println(newResMan.foods)
+    println(newResMan.foods)
     assert(newResMan.foods.nonEmpty)
   }
 

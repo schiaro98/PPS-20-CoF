@@ -43,6 +43,9 @@ trait Habitat {
 
 object Habitat {
 
+  def apply(unexpectedEvents: Probability,
+            dimensions: (Int, Int),
+            areas: Seq[Area]): Habitat = SimpleHabitat(unexpectedEvents, dimensions, areas)
 
   def apply(habitatType: HabitatType,
             unexpectedEvents: Probability,
@@ -103,8 +106,8 @@ object Habitat {
       for(j <- 0 to numberOfAreas/2){
         val point = (i* maxAreaDimension, i* maxAreaDimension)
         val areaWidth = Random.shuffle(Range(1, maxAreaDimension).toList).head
-        val areaHeigth = Random.shuffle(Range(1, maxAreaDimension).toList).head
-        val newArea: Area = Area(Area.randomType, (point._1, point._2), (point._1 + areaWidth, point._2 + areaHeigth))
+        val areaHeight = Random.shuffle(Range(1, maxAreaDimension).toList).head
+        val newArea: Area = Area(Area.randomType, (point._1, point._2), (point._1 + areaWidth, point._2 + areaHeight))
         grid = grid.::(newArea)
       }
     }
