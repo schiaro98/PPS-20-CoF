@@ -74,7 +74,6 @@ object Area {
           val _2 = topLeft._2 + random.nextInt((bottomRight._2 - topLeft._2) + 1)
 
           val quantity = random.nextInt(DefaultFoodQuantity)
-          //todo: ho messo non istanziabile "FoodInstance", così l'ho cambiato in un vegetable; p.s. IZ back
           return Some(Vegetable(quantity, (_1, _2), food.energy, food.icon))
         }
       }
