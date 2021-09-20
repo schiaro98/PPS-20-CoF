@@ -12,12 +12,3 @@ class Rectangle(
     }
 
 }
-
-class Circle(xCircle: Int, yCircle: Int, radius: Int)
-  extends Shape(xCircle, yCircle, radius, radius) {
-
-  override def draw(g: Graphics2D) {
-    g.fillOval(x, y, width, height)
-  }
-
-}
