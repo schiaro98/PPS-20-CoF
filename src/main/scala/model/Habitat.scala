@@ -14,7 +14,7 @@ trait Habitat {
   val dimensions: (Int, Int)
   val areas: Seq[Area]
 
-  def checkForOverlappingAreas(areas: Seq[Area]): Boolean = areas match {
+  /*def checkForOverlappingAreas(areas: Seq[Area]): Boolean = areas match {
     case h :: t =>
       for (area <- areas.filterNot(elem => elem == h)) {
         if (h.topLeft._1 > area.topLeft._1 && h.topLeft._1 < area.bottomRight._1 && h.topLeft._2 > area.topLeft._2 && h.topLeft._2 < area.bottomRight._2 ||
@@ -25,12 +25,29 @@ trait Habitat {
       }
       checkForOverlappingAreas(t)
     case _ => true
+  }*/
+
+  def checkForOverlappingAreas(areas: Seq[Area]): Boolean = areas match {
+    case h :: t =>
+      for (area <- areas.filterNot(elem => elem == h)) {
+        if(h.topLeft._1 >= area.bottomRight._1 && h.bottomRight._1 <= area.bottomRight._1 && h.topLeft._2 >= area.bottomRight._2 && h.bottomRight._2 <= area.bottomRight._2){
+          println(s"A with coordinates (${h.topLeft}, ${h.bottomRight} is overlapping with B ${area.topLeft}, ${area.bottomRight}")
+          return true
+        }
+      }
+      checkForOverlappingAreas(t)
+    case _ => true
   }
 
   def checkDimensionsOfAreas(areas: Seq[Area]): Boolean = areas match {
     case h :: t =>
-      if (h.topLeft._1 < 0 || h.topLeft._2 < 0 ||
-        h.bottomRight._1 > this.dimensions._1 || h.bottomRight._2 > this.dimensions._2) {
+
+      if(h.topLeft._1 < 0 || h.topLeft._2 <0){
+        println("Invalid area point, below 0")
+        return false
+      }
+      if( h.bottomRight._1 > this.dimensions._1 || h.bottomRight._2 > this.dimensions._2){
+        println("Invalid area point, exceed habitat limits")
         return false
       }
       checkDimensionsOfAreas(t)
@@ -112,11 +129,12 @@ object Habitat {
     val habitatArea = dimension._1 * dimension._2
     require(dimension._1 * dimension._2 > numberOfAreas * 10)
 
-    val maxAreaDimension = habitatArea / 2 * numberOfAreas
-
-    for (i <- 0 to numberOfAreas/2){
-      for(j <- 0 to numberOfAreas/2){
-        val point = (i* maxAreaDimension, j* maxAreaDimension)
+    val maxAreaDimension = habitatArea / 10000  * numberOfAreas
+    println(s"habitat area : $habitatArea")
+    println(s"max area dim: $maxAreaDimension")
+    for (i <- 0 until numberOfAreas/2){
+      for(j <- 0 until numberOfAreas/2){
+        val point = (i * maxAreaDimension, j* maxAreaDimension)
         val areaWidth = Random.shuffle(Range(1, maxAreaDimension).toList).head
         val areaHeight = Random.shuffle(Range(1, maxAreaDimension).toList).head
         val newArea: Area = Area(Area.randomType, (point._1, point._2), (point._1 + areaWidth, point._2 + areaHeight))
