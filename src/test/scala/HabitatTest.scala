@@ -1,4 +1,4 @@
-import model.{Area, EmptyHabitatType, Fertile, Habitat, Probability, RandomHabitatType, Rock, SimpleHabitatType, Volcano, Water}
+import model.{Area, EmptyHabitatType, Fertile, GridHabitatType, Habitat, Probability, RandomHabitatType, Rock, SimpleHabitatType, Volcano, Water}
 import org.scalatest.funsuite.AnyFunSuite
 
 class HabitatTest extends AnyFunSuite{
@@ -35,4 +35,8 @@ class HabitatTest extends AnyFunSuite{
     assert(habitat.areas.length == 4)
   }
 
+  test("Create a grid Habitat with areas"){
+    //TODO grid areas are overlapping
+    val habitat = Habitat( GridHabitatType, Probability(1), (100, 100), Seq.empty)
+  }
 }

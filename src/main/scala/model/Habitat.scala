@@ -7,13 +7,14 @@ sealed trait HabitatType
 case object EmptyHabitatType extends HabitatType
 case object SimpleHabitatType extends HabitatType
 case object RandomHabitatType extends HabitatType
+case object GridHabitatType extends HabitatType
 
 trait Habitat {
   val unexpectedEvents: Probability
   val dimensions: (Int, Int)
   val areas: Seq[Area]
 
-  def checkForOverlappingAreas(areas: Seq[Area]): Boolean = areas match {
+  /*def checkForOverlappingAreas(areas: Seq[Area]): Boolean = areas match {
     case h :: t =>
       for (area <- areas.filterNot(elem => elem == h)) {
         if (h.topLeft._1 > area.topLeft._1 && h.topLeft._1 < area.bottomRight._1 && h.topLeft._2 > area.topLeft._2 && h.topLeft._2 < area.bottomRight._2 ||
@@ -24,12 +25,29 @@ trait Habitat {
       }
       checkForOverlappingAreas(t)
     case _ => true
+  }*/
+
+  def checkForOverlappingAreas(areas: Seq[Area]): Boolean = areas match {
+    case h :: t =>
+      for (area <- areas.filterNot(elem => elem == h)) {
+        if(h.topLeft._1 >= area.bottomRight._1 && h.bottomRight._1 <= area.bottomRight._1 && h.topLeft._2 >= area.bottomRight._2 && h.bottomRight._2 <= area.bottomRight._2){
+          println(s"A with coordinates (${h.topLeft}, ${h.bottomRight} is overlapping with B ${area.topLeft}, ${area.bottomRight}")
+          return true
+        }
+      }
+      checkForOverlappingAreas(t)
+    case _ => true
   }
 
   def checkDimensionsOfAreas(areas: Seq[Area]): Boolean = areas match {
     case h :: t =>
-      if (h.topLeft._1 < 0 || h.topLeft._2 < 0 ||
-        h.bottomRight._1 > this.dimensions._1 || h.bottomRight._2 > this.dimensions._2) {
+
+      if(h.topLeft._1 < 0 || h.topLeft._2 <0){
+        println("Invalid area point, below 0")
+        return false
+      }
+      if( h.bottomRight._1 > this.dimensions._1 || h.bottomRight._2 > this.dimensions._2){
+        println("Invalid area point, exceed habitat limits")
         return false
       }
       checkDimensionsOfAreas(t)
@@ -54,6 +72,7 @@ object Habitat {
     case EmptyHabitatType => EmptyHabitat(unexpectedEvents, dimensions, Seq.empty)
     case SimpleHabitatType => SimpleHabitat(unexpectedEvents, dimensions, areas)
     case RandomHabitatType => RandomHabitat(unexpectedEvents, dimensions, createRandomAreas(dimensions, 10))
+    case GridHabitatType => GridHabitat(unexpectedEvents, dimensions, createGridArea(dimensions, 10))
   }
 
   def apply(unexpectedEvent: Probability, dimensions: (Int, Int)): Habitat =
@@ -71,8 +90,12 @@ object Habitat {
                                   override val dimensions: (Int, Int),
                                   override val areas: Seq[Area] ) extends Habitat
 
+  private case class GridHabitat(override val unexpectedEvents: Probability,
+                                   override val dimensions: (Int, Int),
+                                   override val areas: Seq[Area] ) extends Habitat
+
   /**
-   * This method create an habitat, of given dimension, with diven areas, arranged in a grid
+   * This method create an habitat, of given dimension, with diven areas, arranged in a randow way
    * @param dimension dimension of the habitat
    * @param numberOfAreas num of areas in the grid
    * @return
@@ -95,16 +118,23 @@ object Habitat {
     grid
   }
 
+  /**
+   * This method create an habitat, of given dimension, with diven areas, arranged in a grid
+   * @param dimension dimension of the habitat
+   * @param numberOfAreas num of areas in the grid
+   * @return
+   */
   def createGridArea(dimension: (Int, Int), numberOfAreas: Int) : Seq[Area] = {
     var grid = List.empty[Area]
     val habitatArea = dimension._1 * dimension._2
     require(dimension._1 * dimension._2 > numberOfAreas * 10)
 
-    val maxAreaDimension = habitatArea / 2 * numberOfAreas
-
-    for (i <- 0 to numberOfAreas/2){
-      for(j <- 0 to numberOfAreas/2){
-        val point = (i* maxAreaDimension, i* maxAreaDimension)
+    val maxAreaDimension = habitatArea / 10000  * numberOfAreas
+    println(s"habitat area : $habitatArea")
+    println(s"max area dim: $maxAreaDimension")
+    for (i <- 0 until numberOfAreas/2){
+      for(j <- 0 until numberOfAreas/2){
+        val point = (i * maxAreaDimension, j* maxAreaDimension)
         val areaWidth = Random.shuffle(Range(1, maxAreaDimension).toList).head
         val areaHeight = Random.shuffle(Range(1, maxAreaDimension).toList).head
         val newArea: Area = Area(Area.randomType, (point._1, point._2), (point._1 + areaWidth, point._2 + areaHeight))
