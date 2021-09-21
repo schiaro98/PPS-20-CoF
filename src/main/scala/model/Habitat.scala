@@ -68,7 +68,7 @@ object Habitat {
   def apply(habitatType: HabitatType,
             unexpectedEvents: Probability,
             dimensions: (Int, Int),
-            areas: Seq[Area]): Habitat = habitatType match {
+            areas: Seq[Area] = Seq.empty): Habitat = habitatType match {
     case EmptyHabitatType => EmptyHabitat(unexpectedEvents, dimensions, Seq.empty)
     case SimpleHabitatType => SimpleHabitat(unexpectedEvents, dimensions, areas)
     case RandomHabitatType => RandomHabitat(unexpectedEvents, dimensions, createRandomAreas(dimensions, 10))
@@ -76,7 +76,7 @@ object Habitat {
   }
 
   def apply(unexpectedEvent: Probability, dimensions: (Int, Int)): Habitat =
-    RandomHabitat(unexpectedEvent, dimensions, createRandomAreas(dimensions, 20))
+    SimpleHabitat(unexpectedEvent, dimensions, Seq.empty)
 
   private case class SimpleHabitat(override val unexpectedEvents: Probability,
                                    override val dimensions: (Int, Int),

@@ -23,13 +23,12 @@ object MainGUI extends SimpleSwingApplication {
       }
     }
 
-    val startButton: Button = new Button("Start simulation") {
-      tooltip = "Click to start the simulation"
+    val startButton: Button = new Button("Choose the habitat") {
+      tooltip = "Click to choose the habitat"
       reactions += {
-        case _: ButtonClicked => new SimulationGui(logic){
-          top.visible = true
+        case _: ButtonClicked =>
+          new ChooseHabitatGUI(new ChooseHabitatLogic(logic.species))
           close()
-        }
       }
     }
 
