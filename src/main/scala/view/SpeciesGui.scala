@@ -13,9 +13,13 @@ class SpeciesGui(logic: LogicGui) extends SimpleSwingApplication {
     title = "Create species"
     preferredSize = new Dimension(350, 200)
 
+    val nameLabel = new Label("Name of the species")
     val nameField = new TextField("Name")
+    val strengthLabel = new Label("Strength of the species")
     val strengthField = new TextField("Strength")
+    val sightLabel = new Label("Sight of the species")
     val sightField = new TextField("Sight")
+    val sizeLabel = new Label("Size of the species")
     val sizeField = new ComboBox[String](Seq(Size.Small.toString, Size.Medium.toString, Size.Big.toString))
 
     val confirm: Button = new Button("Confirm"){
@@ -48,8 +52,11 @@ class SpeciesGui(logic: LogicGui) extends SimpleSwingApplication {
       }
     }
 
-    val panel: FlowPanel = new FlowPanel() {
-      contents addAll List(nameField, strengthField, sightField, sizeField, confirm, existingSpecies, removeSpecies)
+    val panel: BoxPanel = new BoxPanel(Orientation.Vertical) {
+      contents addAll List(nameLabel, nameField, strengthLabel, strengthField, sightLabel, sightField, sizeLabel,
+        sizeField, confirm, existingSpecies, removeSpecies)
+      centerOnScreen()
+//      open()
     }
 
     contents = new BorderPanel() {
