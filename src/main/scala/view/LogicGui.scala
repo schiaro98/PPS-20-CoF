@@ -74,6 +74,7 @@ class LogicGui(speciesFile: String) {
     Species("icon.txt", name,  toSize(size), tryToInt(strength), tryToInt(sight))
   }
 
+  // TODO: gestire meglio la gestione degli input da utente
   /**
     Convert int to String
    @throws Exception if string is not a number
