@@ -65,6 +65,11 @@ object Habitat {
             dimensions: (Int, Int),
             areas: Seq[Area]): Habitat = SimpleHabitat(unexpectedEvents, dimensions, areas)
 
+  /*
+  TODO sarebbe da mettere che un apply senza aree nel campo areas possa creare aree random/grid/ empty ma dia eccezione se si prova a creare
+  un habitat simple, mentre togliere la possibilita di creare un habitat non semplice se si specifica areas
+  Pensiamoci
+   */
   def apply(habitatType: HabitatType,
             unexpectedEvents: Probability,
             dimensions: (Int, Int),
@@ -91,20 +96,10 @@ object Habitat {
    * TODO non viene controllato l'overlapping
    */
   def createRandomAreas(dimension: (Int, Int), numberOfAreas: Int) : Seq[Area] = {
-    var grid = List.empty[Area]
-    val habitatArea = dimension._1 * dimension._2
-    require(dimension._1 * dimension._2 > numberOfAreas * 10)
-    val maxAreaDimension = habitatArea / 2 * numberOfAreas
-
-    for (_ <- 0 to numberOfAreas){
-      val point = (Random.nextInt(dimension._1 - maxAreaDimension), Random.nextInt(dimension._2 - maxAreaDimension))
-      val areaWidth = Random.shuffle(Range(1, maxAreaDimension).toList).head
-      val areaHeigth = Random.shuffle(Range(1, maxAreaDimension).toList).head
-      val newArea: Area = Area(Area.randomType, (point._1, point._2), (point._1 + areaWidth, point._2 + areaHeigth))
-
-      grid = grid.::(newArea)
-    }
-    grid
+    /*
+    TODO per la creazione di habitat random, creaiamo una grid area molto fitta e cancelliamo randomicamente fino ad avere n aree
+     */
+    Seq.empty
   }
 
   /**

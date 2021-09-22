@@ -11,7 +11,7 @@ class SpeciesGui(logic: LogicGui) extends SimpleSwingApplication {
 
   def top: Frame = new Frame {
     title = "Create species"
-    preferredSize = new Dimension(350, 200)
+    preferredSize = new Dimension(350, 300)
 
     val nameLabel = new Label("Name of the species")
     val nameField = new TextField("Name")
