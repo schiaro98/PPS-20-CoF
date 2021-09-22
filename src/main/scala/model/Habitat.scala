@@ -69,30 +69,19 @@ object Habitat {
             unexpectedEvents: Probability,
             dimensions: (Int, Int),
             areas: Seq[Area]): Habitat = habitatType match {
-    case EmptyHabitatType => EmptyHabitat(unexpectedEvents, dimensions, Seq.empty)
+    case EmptyHabitatType => SimpleHabitat(unexpectedEvents, dimensions, Seq.empty)
     case SimpleHabitatType => SimpleHabitat(unexpectedEvents, dimensions, areas)
-    case RandomHabitatType => RandomHabitat(unexpectedEvents, dimensions, createRandomAreas(dimensions, 10))
-    case GridHabitatType => GridHabitat(unexpectedEvents, dimensions, createGridArea(dimensions, 10))
+    case RandomHabitatType => SimpleHabitat(unexpectedEvents, dimensions, createRandomAreas(dimensions, 10))
+    case GridHabitatType => SimpleHabitat(unexpectedEvents, dimensions, createGridArea(dimensions, 10))
   }
 
   def apply(unexpectedEvent: Probability, dimensions: (Int, Int)): Habitat =
-    RandomHabitat(unexpectedEvent, dimensions, createRandomAreas(dimensions, 20))
+    SimpleHabitat(unexpectedEvent, dimensions, createRandomAreas(dimensions, 20))
 
   private case class SimpleHabitat(override val unexpectedEvents: Probability,
                                    override val dimensions: (Int, Int),
                                    override val areas: Seq[Area]) extends Habitat
 
-  private case class EmptyHabitat(override val unexpectedEvents: Probability,
-                                  override val dimensions: (Int, Int),
-                                  override val areas: Seq[Area] ) extends Habitat
-
-  private case class RandomHabitat(override val unexpectedEvents: Probability,
-                                  override val dimensions: (Int, Int),
-                                  override val areas: Seq[Area] ) extends Habitat
-
-  private case class GridHabitat(override val unexpectedEvents: Probability,
-                                   override val dimensions: (Int, Int),
-                                   override val areas: Seq[Area] ) extends Habitat
 
   /**
    * This method create an habitat, of given dimension, with diven areas, arranged in a randow way

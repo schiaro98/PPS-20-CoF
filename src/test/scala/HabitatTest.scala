@@ -37,6 +37,8 @@ class HabitatTest extends AnyFunSuite{
 
   test("Create a grid Habitat with areas"){
     //TODO grid areas are overlapping
-    val habitat = Habitat( GridHabitatType, Probability(1), (100, 100), Seq.empty)
+    val a1 = Area(Water, (40,40), (46,63))
+    val a2 = Area(Water, (30,40), (35,46))
+    val habitat = Habitat( SimpleHabitatType, Probability(1), (100, 100), Seq(a1, a2))
   }
 }
