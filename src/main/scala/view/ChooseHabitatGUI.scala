@@ -4,6 +4,7 @@ import model.{EmptyHabitatType, HabitatType, RandomHabitatType, SimpleHabitatTyp
 
 import javax.swing.Box
 import scala.swing._
+import scala.swing.event.ButtonClicked
 
 class ChooseHabitatGUI(val l :ChooseHabitatLogic ) {
 
@@ -18,21 +19,21 @@ class ChooseHabitatGUI(val l :ChooseHabitatLogic ) {
   val ours: RadioButton = new RadioButton("The habitat that we made"){
     doClick
     reactions += {
-      case event.ButtonClicked(_) =>
+      case _: ButtonClicked =>
         setVisibility(false)
     }
   }
 
   val empty: RadioButton = new RadioButton("An habitat without any area in it, food won't grow and there is no water to drink"){
     reactions += {
-      case event.ButtonClicked(_) =>
+      case _: ButtonClicked =>
         setVisibility(true)
     }
   }
 
   val random: RadioButton = new RadioButton("An habitat with randomly placed areas"){
     reactions += {
-      case event.ButtonClicked(_) =>
+      case _: ButtonClicked =>
         setVisibility(true)
     }
   }
@@ -68,11 +69,17 @@ class ChooseHabitatGUI(val l :ChooseHabitatLogic ) {
 
       contents += new Button("Start Simulation") {
         reactions += {
-          case event.ButtonClicked(_) =>
+          case _: ButtonClicked =>
             val optHabitat = l.createHabitat(getType, w.text, h.text, ue.text)
             if (optHabitat.isDefined) {
-              val habitat = optHabitat.get
-            } else Dialog.showMessage(contents.head, "Some input is not valid", title = "Try again!")
+              //val habitat = optHabitat.get
+              new SimulationGui(){
+                top.visible = true
+                close()
+              }
+            } else {
+              Dialog.showMessage(contents.head, "Some input is not valid", title = "Try again!")
+            }
         }
       }
 //      println(s.selected)

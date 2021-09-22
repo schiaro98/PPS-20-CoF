@@ -1,16 +1,16 @@
 package view
 
 import model.{GridHabitatType, Habitat, Probability}
+import utility.Constants.defaultSimulationDimension
 
-import scala.::
 import scala.swing.{Dimension, Frame, SimpleSwingApplication}
 
-class SimulationGui(logic: LogicGui) extends SimpleSwingApplication {
+class SimulationGui() extends SimpleSwingApplication {
 
   override def top: Frame = new Frame {
 
     title = "Simulation"
-    preferredSize = new Dimension(800, 400)
+    preferredSize = defaultSimulationDimension
 
     /**
      * Map containing list of animals (String) and quantity

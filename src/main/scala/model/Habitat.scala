@@ -47,7 +47,7 @@ trait Habitat {
         return false
       }
       if( h.bottomRight._1 > this.dimensions._1 || h.bottomRight._2 > this.dimensions._2){
-        println("Invalid area point, exceed habitat limits")
+        println(s"A with coordinates (${h.topLeft}, ${h.bottomRight} is exceeding limits of ${this.dimensions._1}, ${this.dimensions._2}")
         return false
       }
       checkDimensionsOfAreas(t)
@@ -77,7 +77,7 @@ object Habitat {
     case EmptyHabitatType => SimpleHabitat(unexpectedEvents, dimensions, Seq.empty)
     case SimpleHabitatType => SimpleHabitat(unexpectedEvents, dimensions, areas)
     case RandomHabitatType => SimpleHabitat(unexpectedEvents, dimensions, createRandomAreas(dimensions, 10))
-    case GridHabitatType => SimpleHabitat(unexpectedEvents, dimensions, createGridArea(dimensions, 10))
+    case GridHabitatType => SimpleHabitat(unexpectedEvents, dimensions, createGridArea(dimensions, 20))
   }
 
   def apply(unexpectedEvent: Probability, dimensions: (Int, Int)): Habitat =
@@ -110,17 +110,34 @@ object Habitat {
    */
   def createGridArea(dimension: (Int, Int), numberOfAreas: Int) : Seq[Area] = {
     var grid = List.empty[Area]
-    val habitatArea = dimension._1 * dimension._2
+    val spacing = numberOfAreas / 2
     require(dimension._1 * dimension._2 > numberOfAreas * 10)
 
-    val maxAreaDimension = habitatArea / 10000  * numberOfAreas
-    println(s"habitat area : $habitatArea")
-    println(s"max area dim: $maxAreaDimension")
-    for (i <- 0 until numberOfAreas/2){
-      for(j <- 0 until numberOfAreas/2){
-        val point = (i * maxAreaDimension, j* maxAreaDimension)
-        val areaWidth = Random.shuffle(Range(1, maxAreaDimension).toList).head
-        val areaHeight = Random.shuffle(Range(1, maxAreaDimension).toList).head
+    /*
+    IL magic number regola quanto grandi siano le singole aree
+     */
+    val maxWidth = dimension._1 / (numberOfAreas / 2)
+    val maxHeigth = dimension._2 / (numberOfAreas / 2)
+
+
+    println(s"habitat area : $dimension")
+    println(s"max area dim: ${(maxWidth, maxHeigth)}")
+
+    /*
+    for (i <- 0 until Math.round(Math.sqrt(numberOfAreas).toFloat)){
+      for(j <- 0 until Math.round(Math.sqrt(numberOfAreas).toFloat)){
+        val point = (i * maxWidth * spacing , j * maxHeigth * spacing)
+        val newArea: Area = Area(Area.randomType, (point._1, point._2), (point._1 + areaWidth, point._2 + areaHeight))
+        grid = grid.::(newArea)
+      }
+    }
+*/
+
+    for(i <- 100 until  dimension._1 by (dimension._1 / Math.round(Math.sqrt(numberOfAreas).toFloat))){
+      for(j <- 100 until  dimension._2 by (dimension._2 / Math.round(Math.sqrt(numberOfAreas).toFloat))){
+        val point = (i, j)
+        val areaWidth = Random.shuffle(Range(maxWidth/2, maxWidth).toList).head
+        val areaHeight = Random.shuffle(Range(maxHeigth/2, maxHeigth).toList).head
         val newArea: Area = Area(Area.randomType, (point._1, point._2), (point._1 + areaWidth, point._2 + areaHeight))
         grid = grid.::(newArea)
       }

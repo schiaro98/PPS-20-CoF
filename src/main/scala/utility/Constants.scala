@@ -1,5 +1,7 @@
 package utility
 
+import scala.swing.Dimension
+
 object Constants {
   val FoodsFilePath = "foods.txt"
 
@@ -21,4 +23,7 @@ object Constants {
   val QuantityForBig = 8
   val QuantityForMedium = 5
   val QuantityForSmall = 2
+
+  // ------- Gui --------
+  val defaultSimulationDimension = new Dimension(1000, 1000)
 }
