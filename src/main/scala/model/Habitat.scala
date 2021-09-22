@@ -77,7 +77,7 @@ object Habitat {
     case EmptyHabitatType => SimpleHabitat(unexpectedEvents, dimensions, Seq.empty)
     case SimpleHabitatType => SimpleHabitat(unexpectedEvents, dimensions, areas)
     case RandomHabitatType => SimpleHabitat(unexpectedEvents, dimensions, createRandomAreas(dimensions, 10))
-    case GridHabitatType => SimpleHabitat(unexpectedEvents, dimensions, createGridArea(dimensions, 20))
+    case GridHabitatType => SimpleHabitat(unexpectedEvents, dimensions, createGridArea(dimensions, 100))
   }
 
   def apply(unexpectedEvent: Probability, dimensions: (Int, Int)): Habitat =
@@ -110,7 +110,6 @@ object Habitat {
    */
   def createGridArea(dimension: (Int, Int), numberOfAreas: Int) : Seq[Area] = {
     var grid = List.empty[Area]
-    val spacing = numberOfAreas / 2
     require(dimension._1 * dimension._2 > numberOfAreas * 10)
 
     /*
@@ -118,20 +117,6 @@ object Habitat {
      */
     val maxWidth = dimension._1 / (numberOfAreas / 2)
     val maxHeigth = dimension._2 / (numberOfAreas / 2)
-
-
-    println(s"habitat area : $dimension")
-    println(s"max area dim: ${(maxWidth, maxHeigth)}")
-
-    /*
-    for (i <- 0 until Math.round(Math.sqrt(numberOfAreas).toFloat)){
-      for(j <- 0 until Math.round(Math.sqrt(numberOfAreas).toFloat)){
-        val point = (i * maxWidth * spacing , j * maxHeigth * spacing)
-        val newArea: Area = Area(Area.randomType, (point._1, point._2), (point._1 + areaWidth, point._2 + areaHeight))
-        grid = grid.::(newArea)
-      }
-    }
-*/
 
     for(i <- 100 until  dimension._1 by (dimension._1 / Math.round(Math.sqrt(numberOfAreas).toFloat))){
       for(j <- 100 until  dimension._2 by (dimension._2 / Math.round(Math.sqrt(numberOfAreas).toFloat))){
