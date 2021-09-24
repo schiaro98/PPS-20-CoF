@@ -61,6 +61,6 @@ class HabitatTest extends AnyFunSuite{
     // (900,900), (910,916) is overlapping with B (900,800), (911,813)
     val a1 = Area(Water, (900,900), (910,916))
     val a2 = Area(Water, (900,800), (911,813))
-    val habitat = Habitat( SimpleHabitatType, Probability(1), (100, 100), Seq(a1, a2))
+    val habitat = Habitat( SimpleHabitatType, Probability(1), (1000, 1000), Seq(a1, a2))
   }
 }
