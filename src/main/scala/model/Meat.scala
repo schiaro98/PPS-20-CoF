@@ -1,30 +1,11 @@
 package model
 
-import utility.Constants._
+import utility.Constants
 
-/**
- * Trait that represent the meat that can be eaten by Carnivores.
- */
-trait Meat extends FoodInstance
+case class Meat(override val quantity: Int,
+                override val position: (Int, Int),
+                override val energy: Int = Constants.DefaultEnergyOfMeat,
+                override val icon: String = Constants.DefaultIconOfMeat) extends FoodInstance {
 
-/**
- * Object that represent the meat that can be eaten by Carnivores.
- */
-object Meat {
-  /**
-   * Apply method for a Meat.
-   *
-   * @param icon     the image to draw in the map.
-   * @param energy   the health it returns to an animal.
-   * @param quantity the number of times it returns health before running out.
-   * @param position the location on the map, where the food is.
-   * @return an implementation of Meat.
-   */
-  def apply(quantity: Int, position: (Int, Int), energy: Int = DefaultEnergyOfMeat, icon: String = DefaultIconOfMeat): Meat =
-    new MeatImpl(icon, energy, quantity, position)
-
-  private class MeatImpl(override val icon: String,
-                         override val energy: Int,
-                         override val quantity: Int,
-                         override val position: (Int, Int)) extends Meat
+  override def consume[F >: FoodInstance](amount: Int): F = if (quantity > amount) Meat(quantity - amount, position, energy, icon) else throw new IllegalArgumentException
 }
