@@ -14,25 +14,20 @@ trait Habitat {
   val dimensions: (Int, Int)
   val areas: Seq[Area]
 
-  /*def checkForOverlappingAreas(areas: Seq[Area]): Boolean = areas match {
-    case h :: t =>
-      for (area <- areas.filterNot(elem => elem == h)) {
-        if (h.topLeft._1 > area.topLeft._1 && h.topLeft._1 < area.bottomRight._1 && h.topLeft._2 > area.topLeft._2 && h.topLeft._2 < area.bottomRight._2 ||
-          h.bottomRight._1 > area.topLeft._1 && h.bottomRight._1 < area.bottomRight._1 && h.bottomRight._2 > area.topLeft._2 && h.bottomRight._2 < area.bottomRight._2 ||
-          h.topLeft._1 == area.topLeft._1 && h.topLeft._2 == area.topLeft._2 || h.bottomRight._1 > area.bottomRight._1 && h.bottomRight._2 < area.bottomRight._2) {
-          return false
-        }
-      }
-      checkForOverlappingAreas(t)
-    case _ => true
-  }*/
-
   def checkForOverlappingAreas(areas: Seq[Area]): Boolean = areas match {
     case h :: t =>
       for (area <- areas.filterNot(elem => elem == h)) {
-        if(h.topLeft._1 >= area.bottomRight._1 && h.bottomRight._1 <= area.bottomRight._1 && h.topLeft._2 >= area.bottomRight._2 && h.bottomRight._2 <= area.bottomRight._2){
+        val x1 = h.topLeft._1
+        val width1 = h.bottomRight._1 - h.topLeft._1
+        val x2 = area.topLeft._1
+        val width2 = area.bottomRight._1 - area.topLeft._1
+        val y1 = h.bottomRight._2
+        val height1 = h.bottomRight._2 + h.topLeft._2
+        val y2 = area.bottomRight._2
+        val height2 = area.bottomRight._2 + area.topLeft._2
+        if(!(x1 + width1 <= x2 || x1 >= x2 + width2 || y1 + height1 <= y2 || y1 >= y2 + height2) ){
           println(s"A with coordinates (${h.topLeft}, ${h.bottomRight} is overlapping with B ${area.topLeft}, ${area.bottomRight}")
-          return true
+          return false
         }
       }
       checkForOverlappingAreas(t)

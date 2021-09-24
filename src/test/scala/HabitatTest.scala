@@ -3,13 +3,13 @@ import org.scalatest.funsuite.AnyFunSuite
 
 class HabitatTest extends AnyFunSuite{
 
+  val centerArea: Area = Area(Rock, (3, 2), (7, 5))
+
   test("Create empty Habitat"){
     val habitat = Habitat(EmptyHabitatType, Probability(1), (100, 100), Seq.empty)
     assert(habitat.areas.isEmpty)
   }
 
-  //le aree possono accavallarsi, non so se va bene
-  //posso creare delle aree piu grandi dell'habitat stesso
   test("Create Habitat with overlapping areas"){
     val fertileArea = Area(Fertile, (0,0), (10,10))
     val waterArea = Area(Water, (0,0), (10,10))
@@ -17,6 +17,26 @@ class HabitatTest extends AnyFunSuite{
     val volcanoArea = Area(Volcano, (0,0), (10,10))
 
     assertThrows[IllegalArgumentException](Habitat(SimpleHabitatType, Probability(1), (100, 100), Seq(fertileArea, waterArea, rockArea, volcanoArea)))
+  }
+
+  test("Overlapping on left upper corner"){
+    val a = Area(Water, (2,1), (4,3))
+    assertThrows[IllegalArgumentException](Habitat(SimpleHabitatType, Probability(1), (100, 100), Seq(a, centerArea)))
+  }
+
+  test("Overlapping on left bottom corner"){
+    val b = Area(Water, (2,4), (4,6))
+    assertThrows[IllegalArgumentException](Habitat(SimpleHabitatType, Probability(1), (100, 100), Seq(b, centerArea)))
+  }
+
+  test("Overlapping on right upper corner"){
+    val c = Area(Water, (6,1), (8,3))
+    assertThrows[IllegalArgumentException](Habitat(SimpleHabitatType, Probability(1), (100, 100), Seq(c, centerArea)))
+  }
+
+  test("Overlapping on right bottom corner"){
+    val d = Area(Water, (6,4), (8,6))
+    assertThrows[IllegalArgumentException](Habitat(SimpleHabitatType, Probability(1), (100, 100), Seq(d, centerArea)))
   }
 
   test("Create Habitat with too big areas"){
@@ -37,6 +57,7 @@ class HabitatTest extends AnyFunSuite{
 
   test("Create a grid Habitat with areas"){
     //TODO grid areas are overlapping
+    // TODO: manca l'assert schia
     val a1 = Area(Water, (40,40), (46,63))
     val a2 = Area(Water, (30,40), (35,46))
     val habitat = Habitat( SimpleHabitatType, Probability(1), (100, 100), Seq(a1, a2))
