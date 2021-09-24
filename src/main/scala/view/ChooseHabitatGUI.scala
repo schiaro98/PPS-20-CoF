@@ -2,7 +2,7 @@ package view
 
 import model.{EmptyHabitatType, HabitatType, RandomHabitatType, SimpleHabitatType}
 
-import javax.swing.Box
+import javax.swing.{Box, WindowConstants}
 import scala.swing._
 import scala.swing.event.ButtonClicked
 
@@ -87,6 +87,7 @@ class ChooseHabitatGUI(val l :ChooseHabitatLogic ) {
 
 
     //    this.preferredSize = new Dimension(1000, 1000)
+    peer.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE)
     pack()
     centerOnScreen()
     open()

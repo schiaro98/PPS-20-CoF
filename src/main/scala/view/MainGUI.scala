@@ -1,6 +1,7 @@
 package view
 
 import java.awt.Dimension
+import javax.swing.WindowConstants
 import scala.swing.BorderPanel.Position._
 import scala.swing._
 import scala.swing.event.ButtonClicked
@@ -32,7 +33,7 @@ object MainGUI extends SimpleSwingApplication {
       }
     }
 
-    val leftPanel: BorderPanel = new BorderPanel {
+    val rigthPanel: BorderPanel = new BorderPanel {
       layout(createButton) = North
       layout(startButton) = South
     }
@@ -97,18 +98,13 @@ object MainGUI extends SimpleSwingApplication {
     }
 
     contents = new BorderPanel() {
-      layout(leftPanel) = Center
+      layout(rigthPanel) = Center
       layout(grid) = West
     }
 
+    peer.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE)
     pack()
     centerOnScreen()
     open()
-  }
-
-  def update(): Unit ={
-    /*
-      TODO trovare il modo di chiamare updateGrid()
-     */
   }
 }

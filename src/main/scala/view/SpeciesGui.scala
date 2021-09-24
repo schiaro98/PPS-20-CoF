@@ -66,7 +66,6 @@ class SpeciesGui(logic: LogicGui) extends SimpleSwingApplication {
     def closeAndUpdate(): Unit = {
       close()
       this.visible = false
-      MainGUI.update()
     }
   }
 }
