@@ -1,5 +1,7 @@
 package model
 
+import utility.{Point, RectangleArea}
+
 import scala.util.Random
 
 sealed trait HabitatType
@@ -19,11 +21,9 @@ trait Habitat {
 
   def checkForOverlappingAreas(areas: Seq[Area]): Boolean = areas match {
     case h :: t =>
-      for (area <- areas.filterNot(elem => elem == h))
-        if (h.topLeft._1 < area.bottomRight._1 &&
-        h.bottomRight._1 > area.topLeft._1 &&
-        h.topLeft._2 < area.bottomRight._2 &&
-        h.bottomRight._2 > area.topLeft._2) return false
+      for (a <- areas.filterNot(elem => elem == h)) {
+        if(h.area.overlap(a.area)) return false
+      }
       checkForOverlappingAreas(t)
     case _ => true
   }
@@ -31,12 +31,12 @@ trait Habitat {
   def checkDimensionsOfAreas(areas: Seq[Area]): Boolean = areas match {
     case h :: t =>
 
-      if (h.topLeft._1 < 0 || h.topLeft._2 < 0) {
+      if (h.area.topLeft.x < 0 || h.area.topLeft.y < 0) {
         println("Invalid area point, below 0")
         return false
       }
-      if (h.bottomRight._1 > this.dimensions._1 || h.bottomRight._2 > this.dimensions._2) {
-        println(s"A with coordinates (${h.topLeft}, ${h.bottomRight} is exceeding limits of ${this.dimensions._1}, ${this.dimensions._2}")
+      if (h.area.bottomRight.x > this.dimensions._1 || h.area.bottomRight.y > this.dimensions._2) {
+        println(s"A with coordinates (${h.area.topLeft}, ${h.area.bottomRight} is exceeding limits of ${this.dimensions._1}, ${this.dimensions._2}")
         return false
       }
       checkDimensionsOfAreas(t)
@@ -111,10 +111,11 @@ object Habitat {
 
     for (i <- 100 until dimension._1 by (dimension._1 / Math.round(Math.sqrt(numberOfAreas).toFloat))) {
       for (j <- 100 until dimension._2 by (dimension._2 / Math.round(Math.sqrt(numberOfAreas).toFloat))) {
-        val point = (i, j)
+        val point = Point(i, j)
         val areaWidth = Random.shuffle(Range(maxWidth / 2, maxWidth).toList).head
         val areaHeight = Random.shuffle(Range(maxHeigth / 2, maxHeigth).toList).head
-        val newArea: Area = Area(Area.randomType, (point._1, point._2), (point._1 + areaWidth, point._2 + areaHeight))
+        val rectangle = RectangleArea(point, new Point(point.x + areaWidth, point.y + areaHeight))
+        val newArea: Area = Area(Area.randomType, rectangle)
         grid = grid.::(newArea)
       }
     }

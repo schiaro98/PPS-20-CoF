@@ -1,22 +1,23 @@
-import model.{Area, Fertile, GrowFood, Probability, Vegetable}
+import model.{Area, Fertile, GrowFood, Probability}
 import org.scalatest.funsuite.AnyFunSuite
+import utility.{Point, RectangleArea}
 
 class AreaTest extends AnyFunSuite{
 
   val image = "vegetable.png"
 
   test("Create illegal Fertile Area"){
-    assertThrows[IllegalArgumentException](Area(Fertile, (20,20), (15, 25)))
+    assertThrows[IllegalArgumentException](Area(Fertile, RectangleArea(Point(20,20), Point(15, 25))))
   }
 
   test("Create empty Fertile Area without name"){
-    val area = Area(Fertile, (10,20), (15, 25))
+    val area = Area(Fertile, RectangleArea(Point(10,20), Point(15, 25)))
     assert(area.areaType == Fertile)
   }
 
   test("Create FertileArea with GrowFood"){
     // TODO: work on it with a working manager for food and areas
-    val areaWithGrowFood = Area((10,20), (15, 25), Probability(30))
+    val areaWithGrowFood = Area(RectangleArea(Point(10,20), Point(15, 25)), Probability(30))
     assert(areaWithGrowFood.isInstanceOf[Area with GrowFood])
   }
 
