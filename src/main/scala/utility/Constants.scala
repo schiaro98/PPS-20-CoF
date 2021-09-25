@@ -26,4 +26,10 @@ object Constants {
 
   // ------- Gui --------
   val defaultSimulationDimension = new Dimension(1000, 1000)
+  val defaultStartingX = 100
+  val defaultStartingY = 100
+
+  // ------- Habitat ------
+  val defaultRandomSize = 10
+  val defaultGridSize = 100
 }
