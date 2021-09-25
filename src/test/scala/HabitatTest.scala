@@ -56,12 +56,19 @@ class HabitatTest extends AnyFunSuite{
     assert(habitat.areas.length == 4)
   }
 
-  test("Create a grid Habitat with areas"){
-    //TODO grid areas are overlapping
-    // TODO: manca l'assert schia
-    // (900,900), (910,916) is overlapping with B (900,800), (911,813)
-    val a1 = Area(Water, RectangleArea(Point(900,900), Point(910,916)))
-    val a2 = Area(Water, RectangleArea(Point(900,800), Point(911,813)))
-    val habitat = Habitat( SimpleHabitatType, Probability(1), (1000, 1000), Seq(a1, a2))
+  test("Create a grid Habitat with areas, and test it with different number of areas"){
+    val tollerance = 5 //Ten % of size is an acceptable tollerance, some areas cannot be drawn because of limit of space
+    val sizes = Seq(10, 20, 50, 100, 500)
+    sizes.foreach(size => {
+      val habitat = Habitat(GridHabitatType, Probability(1), (1000, 1000), size)
+      assert(habitat.areas.size >= (size - (size/tollerance)))
+    })
+  }
+
+  test("Create a random Habitat with areas, and test it with different number of areas"){
+    val tollerance = 5 //Ten % of size is an acceptable tollerance, some areas cannot be drawn because of limit of space
+    val size = 10
+    val habitat = Habitat(RandomHabitatType, Probability(1), (1000, 1000), size)
+    assert(habitat.areas.size >= (size - (size/tollerance)))
   }
 }
