@@ -1,5 +1,7 @@
 package model
 
+import model.Habitat.{SimpleHabitat, createGridArea, createRandomAreas}
+import utility.Constants.{defaultGridSize, defaultRandomSize, defaultStartingX, defaultStartingY}
 import utility.{Point, RectangleArea}
 
 import scala.util.Random
@@ -65,8 +67,18 @@ object Habitat {
             areas: Seq[Area]): Habitat = habitatType match {
     case EmptyHabitatType => SimpleHabitat(unexpectedEvents, dimensions, Seq.empty)
     case SimpleHabitatType => SimpleHabitat(unexpectedEvents, dimensions, areas)
-    case RandomHabitatType => SimpleHabitat(unexpectedEvents, dimensions, createRandomAreas(dimensions, 10))
-    case GridHabitatType => SimpleHabitat(unexpectedEvents, dimensions, createGridArea(dimensions, 100))
+    case RandomHabitatType => SimpleHabitat(unexpectedEvents, dimensions, createRandomAreas(dimensions, defaultRandomSize))
+    case GridHabitatType => SimpleHabitat(unexpectedEvents, dimensions, createGridArea(dimensions, defaultGridSize))
+    case _ => throw new IllegalArgumentException("Habitat type error on method apply")
+  }
+
+      def apply(habitatType: HabitatType,
+                unexpectedEvents: Probability,
+                dimensions: (Int, Int),
+                size: Int): Habitat = habitatType match {
+        case RandomHabitatType => SimpleHabitat(unexpectedEvents, dimensions, createRandomAreas(dimensions, size))
+        case GridHabitatType => SimpleHabitat(unexpectedEvents, dimensions, createGridArea(dimensions, size))
+        case _ => throw new IllegalArgumentException("Habitat type error on method apply")
   }
 
   def apply(unexpectedEvent: Probability, dimensions: (Int, Int)): Habitat =
@@ -83,13 +95,17 @@ object Habitat {
    * @param dimension     dimension of the habitat
    * @param numberOfAreas num of areas in the grid
    * @return
-   * TODO non viene controllato l'overlapping
    */
   def createRandomAreas(dimension: (Int, Int), numberOfAreas: Int): Seq[Area] = {
-    /*
-    TODO per la creazione di habitat random, creaiamo una grid area molto fitta e cancelliamo randomicamente fino ad avere n aree
-     */
-    Seq.empty
+    var grid: Seq[Area] = createGridArea(dimension, numberOfAreas * 10)
+    while (grid.size > numberOfAreas){
+      val areaToRemove = grid(Random.nextInt(grid.size))
+      grid = grid.filterNot(area => area == areaToRemove)
+    }
+    grid.foreach(grid => {
+      grid.area.bottomRight + (100,100)
+    })
+    grid
   }
 
   /**
@@ -103,29 +119,20 @@ object Habitat {
     var grid = List.empty[Area]
     require(dimension._1 * dimension._2 > numberOfAreas * 10)
 
-    /*
-    IL magic number regola quanto grandi siano le singole aree
-     */
+    //Il magic number regola quanto grandi siano le singole aree
     val maxWidth = dimension._1 / (numberOfAreas / 2)
     val maxHeigth = dimension._2 / (numberOfAreas / 2)
 
-    for (i <- 100 until dimension._1 by (dimension._1 / Math.round(Math.sqrt(numberOfAreas).toFloat))) {
-      for (j <- 100 until dimension._2 by (dimension._2 / Math.round(Math.sqrt(numberOfAreas).toFloat))) {
-        val point = Point(i, j)
-        val areaWidth = Random.shuffle(Range(maxWidth / 2, maxWidth).toList).head
-        val areaHeight = Random.shuffle(Range(maxHeigth / 2, maxHeigth).toList).head
-        val rectangle = RectangleArea(point, new Point(point.x + areaWidth, point.y + areaHeight))
-        val newArea: Area = Area(Area.randomType, rectangle)
+    for (i <- defaultStartingX until dimension._1 by (dimension._1 / Math.round(Math.sqrt(numberOfAreas).toFloat))) {
+      for (j <- defaultStartingY until dimension._2 by (dimension._2 / Math.round(Math.sqrt(numberOfAreas).toFloat))) {
+        val startingPoint = Point(i, j)
+        val areaWidth = Random.between(maxWidth/2, maxWidth)
+        val areaHeight = Random.between(maxHeigth/2, maxHeigth)
+        val rectangle = RectangleArea(startingPoint, Point(startingPoint.x + areaWidth, startingPoint.y + areaHeight))
+        val newArea: Area = Area(Area.randomType, rectangle, Probability(Random.between(1,100)))
         grid = grid.::(newArea)
       }
     }
-    println(grid)
     grid
   }
-
 }
-
-
-
-
-//creare degli enum e delle factory per avere mappe sempre diverse, o mappe statiche
