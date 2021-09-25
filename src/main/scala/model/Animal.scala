@@ -84,6 +84,13 @@ trait Animal extends Species with Placeable {
    * @return a new food, the meat that can be eaten
    */
   def die(): Meat = Meat(quantityFromDeath(), position)
+
+  /**
+   *
+   * @param pos the new position of the animal
+   * @return new Animal with the specified position
+   */
+  def shift(pos: (Int, Int)): Animal = this.update(position = pos)
 }
 
 /**
