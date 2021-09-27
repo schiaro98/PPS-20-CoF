@@ -1,7 +1,7 @@
 package model
 
 import utility.Constants.DefaultFoodQuantity
-import utility.RectangleArea
+import utility.{Point, RectangleArea}
 
 import scala.util.Random
 
@@ -72,7 +72,7 @@ object Area {
           val _2 = area.topLeft.y + random.nextInt((area.bottomRight.y - area.topLeft.y) + 1)
 
           val quantity = random.nextInt(DefaultFoodQuantity)
-          return Some(Vegetable(quantity, (_1, _2), food.energy, food.icon))
+          return Some(Vegetable(quantity, Point(_1, _2), food.energy, food.icon))
         }
       }
       None

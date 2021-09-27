@@ -4,6 +4,7 @@ import org.scalatest.funsuite.AnyFunSuite
 import java.awt.image.BufferedImage
 import java.io.File
 import javax.imageio.ImageIO
+import utility.Point
 
 class VisualizableTest extends AnyFunSuite {
 
@@ -24,7 +25,7 @@ class VisualizableTest extends AnyFunSuite {
   }
 
   test("A food is a visualizable with energy and quantity") {
-    val f: Food = Vegetable(10, (0,0), 10, path)
+    val f: Food = Vegetable(10, Point(0,0), 10, path)
     assert(path == f.icon)
     assert(10 == f.energy )
   }
