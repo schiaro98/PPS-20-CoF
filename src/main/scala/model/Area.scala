@@ -19,7 +19,6 @@ sealed trait Area {
   val name: String
   val areaType: AreaType
   val area: RectangleArea
-  require(area.isValid, "inserted illegal corners")
 }
 
 object Area {
