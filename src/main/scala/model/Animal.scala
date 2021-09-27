@@ -1,7 +1,7 @@
 package model
 
 import model.Size._
-import utility.Constants
+import utility.{Constants, Point}
 import utility.Constants._
 
 /**
@@ -26,7 +26,6 @@ object Age {
 trait Animal extends Species with Placeable {
   val health: Int
   val thirst: Int
-  val direction: (Int, Int) // (+1,0) va a destra,(0,-1) in basso,(-1,-1) diagonale basso-sinistra, ecc
 
   /**
    * Method to check if the animal is alive.
@@ -41,14 +40,12 @@ trait Animal extends Species with Placeable {
    * @param health    the new health updated after any clashes.
    * @param thirst    the new thirst.
    * @param position  the new position after a possible move.
-   * @param direction the new direction.
    * @return a new animal, the same as before but with the updated parameters for the next iteration of the simulation.
    */
   def update(health: Int = health,
              thirst: Int = thirst,
-             position: (Int, Int) = position,
-             direction: (Int, Int) = direction): Animal =
-    Animal(Species(icon, name, size, strength, sight), position, direction, health, thirst)
+             position: Point = position): Animal =
+    Animal(Species(icon, name, size, strength, sight), position, health, thirst)
 
   /**
    * Method to restore health to an animal by eating food.
@@ -90,7 +87,7 @@ trait Animal extends Species with Placeable {
    * @param pos the new position of the animal
    * @return new Animal with the specified position
    */
-  def shift(pos: (Int, Int)): Animal = this.update(position = pos)
+  def shift(pos: Point): Animal = this.update(position = pos)
 }
 
 /**
@@ -104,13 +101,12 @@ object Animal {
    *
    * @param s         the species of the animal.
    * @param position  the location on the map, where the animal is.
-   * @param direction the direction in which the animal is moving.
    * @param health    the parameter that indicates whether the animal is healthy.
    * @param thirst    the parameter that indicates whether the animal is thirsty.
    * @return a new implementation of Animal.
    */
-  private def apply(s: Species, position: (Int, Int), direction: (Int, Int), health: Int = MaxHealth, thirst: Int = MaxThirst): Animal =
-    new AnimalImpl(s.icon, s.name, s.size, s.strength, s.sight, health, thirst, position, direction)
+  private def apply(s: Species, position: Point, health: Int = MaxHealth, thirst: Int = MaxThirst): Animal =
+    new AnimalImpl(s.icon, s.name, s.size, s.strength, s.sight, health, thirst, position)
 
   private class AnimalImpl(override val icon: String,
                            override val name: String,
@@ -119,6 +115,5 @@ object Animal {
                            override val sight: Int,
                            override val health: Int,
                            override val thirst: Int,
-                           override val position: (Int, Int),
-                           override val direction: (Int, Int)) extends Animal
+                           override val position: Point) extends Animal
 }

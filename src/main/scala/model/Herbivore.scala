@@ -1,6 +1,7 @@
 package model
 
 import utility.Constants._
+import utility.Point
 
 /**
  * Trait that represent an herbivorous animal.
@@ -30,13 +31,12 @@ object Herbivore {
    *
    * @param s         the species of the animal.
    * @param position  the location on the map, where the animal is.
-   * @param direction the direction in which the animal is moving.
    * @param health    the parameter that indicates whether the animal is healthy.
    * @param thirst    the parameter that indicates whether the animal is thirsty.
    * @return a new implementation of Herbivore.
    */
-  def apply(s: Species, position: (Int, Int), direction: (Int, Int), health: Int = MaxHealth, thirst: Int = MaxThirst): Herbivore =
-    new HerbivoreImpl(s.icon, s.name, s.size, s.strength, s.sight, health, thirst, position, direction)
+  def apply(s: Species, position: Point, health: Int = MaxHealth, thirst: Int = MaxThirst): Herbivore =
+    new HerbivoreImpl(s.icon, s.name, s.size, s.strength, s.sight, health, thirst, position)
 
   private class HerbivoreImpl(override val icon: String,
                               override val name: String,
@@ -45,6 +45,5 @@ object Herbivore {
                               override val sight: Int,
                               override val health: Int,
                               override val thirst: Int,
-                              override val position: (Int, Int),
-                              override val direction: (Int, Int)) extends Herbivore
+                              override val position: Point) extends Herbivore
 }
