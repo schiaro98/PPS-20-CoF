@@ -1,5 +1,5 @@
 import org.scalatest.funsuite.AnyFunSuite
-import utility.{Point, RectangleArea}
+import utility.Point
 
 class PointRectangleTest extends AnyFunSuite{
   test("Use + on Point"){
@@ -12,12 +12,6 @@ class PointRectangleTest extends AnyFunSuite{
     val pointOne = Point(1,1)
     val pointZero = pointOne - (1,1)
     assert(pointZero == Point(0,0))
-  }
-
-  test("Create a rectangle area"){
-    val rectangle = RectangleArea(Point(0,0), Point(1,1))
-    assert(rectangle.width == 1)
-    assert(rectangle.height == 1)
   }
 
   test("Distance between two points"){
