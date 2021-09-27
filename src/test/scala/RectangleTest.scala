@@ -8,4 +8,8 @@ class RectangleTest extends AnyFunSuite{
     assert(rectangle.width == 1)
     assert(rectangle.height == 1)
   }
+
+  test("Create an illegal rectangle"){
+    assertThrows[IllegalArgumentException](RectangleArea(Point(1,1), Point(0,0)))
+  }
 }

@@ -1,7 +1,7 @@
 import org.scalatest.funsuite.AnyFunSuite
 import utility.Point
 
-class PointRectangleTest extends AnyFunSuite{
+class PointTest extends AnyFunSuite{
   test("Use + on Point"){
     val pointZero = Point(0,0)
     val pointOne = pointZero + (1,1)
