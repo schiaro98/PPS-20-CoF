@@ -1,6 +1,5 @@
 package model
 
-import model.Habitat.{SimpleHabitat, createGridArea, createRandomAreas}
 import utility.Constants.{defaultGridSize, defaultRandomSize, defaultStartingX, defaultStartingY}
 import utility.{Point, RectangleArea}
 
@@ -98,14 +97,16 @@ object Habitat {
    */
   def createRandomAreas(dimension: (Int, Int), numberOfAreas: Int): Seq[Area] = {
     var grid: Seq[Area] = createGridArea(dimension, numberOfAreas * 10)
+
+    /*
+      Remove elements from grid map until there are *numberOfAreas areas
+     */
     while (grid.size > numberOfAreas){
       val areaToRemove = grid(Random.nextInt(grid.size))
       grid = grid.filterNot(area => area == areaToRemove)
     }
-    grid.foreach(grid => {
-      grid.area.bottomRight + (100,100)
-    })
     grid
+    //TODO non funziona perchè non posso modificare i valori di un val grid.map(areas => areas.area.bottomRight + (100,100))
   }
 
   /**
@@ -116,7 +117,7 @@ object Habitat {
    * @return
    */
   def createGridArea(dimension: (Int, Int), numberOfAreas: Int): Seq[Area] = {
-    var grid = List.empty[Area]
+    var grid = List[Area]()
     require(dimension._1 * dimension._2 > numberOfAreas * 10)
 
     //Il magic number regola quanto grandi siano le singole aree
