@@ -88,6 +88,8 @@ trait Animal extends Species with Placeable {
    * @return new Animal with the specified position
    */
   def shift(pos: Point): Animal = this.update(position = pos)
+
+  override def toString: String = s"Animal: $name, $size $strength pos:($position)"
 }
 
 /**
