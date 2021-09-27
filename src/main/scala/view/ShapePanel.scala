@@ -23,7 +23,7 @@ class ShapePanel() extends Panel {
     }
   }
 
-  var shapes = new ArrayBuffer[Shape]
+  val shapes = new ArrayBuffer[Shape]
 
   new Timer(10, (_: ActionEvent) => {
     for (s <- shapes) {
