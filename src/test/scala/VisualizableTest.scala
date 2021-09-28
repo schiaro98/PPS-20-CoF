@@ -1,16 +1,15 @@
 import model._
 import org.scalatest.funsuite.AnyFunSuite
+import utility.Point
 
 import java.awt.image.BufferedImage
 import java.io.File
 import javax.imageio.ImageIO
-import utility.Point
 
 class VisualizableTest extends AnyFunSuite {
 
   val path = "res/images/tiger-icon.jpg"
   val img: BufferedImage = ImageIO.read(new File(path))
-//  val img = new BufferedImage(100, 100, BufferedImage.TYPE_INT_RGB)
 
   test("A visualizable must provide an image") {
     //todo mettere il costruttore di Visualizable private?

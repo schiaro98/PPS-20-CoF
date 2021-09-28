@@ -16,8 +16,6 @@ class LogicGuiTest extends AnyFunSuite {
 
   test("Should be possible add an animal"){
     mng.add("TestName")
-    println(mng.species)
-    println(mng.speciesSeq)
     assert(mng.species.size == 4)
   }
 

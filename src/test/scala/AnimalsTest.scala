@@ -1,7 +1,7 @@
-import utility.Constants._
 import model.Size._
 import model._
 import org.scalatest.funsuite.AnyFunSuite
+import utility.Constants._
 import utility.Point
 
 import java.awt.image.BufferedImage

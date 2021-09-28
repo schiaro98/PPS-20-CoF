@@ -1,4 +1,4 @@
-import model.{Area, EmptyHabitatType, Fertile, GridHabitatType, Habitat, Probability, RandomHabitatType, Rock, SimpleHabitatType, Volcano, Water}
+import model._
 import org.scalatest.funsuite.AnyFunSuite
 import utility.{Point, RectangleArea}
 

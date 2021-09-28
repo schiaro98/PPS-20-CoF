@@ -1,5 +1,4 @@
 import model.{Size, Species}
-import org.scalatest.Ignore
 import org.scalatest.funsuite.AnyFunSuite
 import view.LogicGui
 
