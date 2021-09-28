@@ -1,6 +1,6 @@
 package controller
 
-import model.Animal
+import model.{Animal, Probability, Size}
 
 sealed trait BattleManager {
   val animals: Seq[Animal]
@@ -10,6 +10,10 @@ sealed trait BattleManager {
   def canSee(a1: Animal, a2: Animal) : Boolean
 
   def battle(a1: Animal, a2: Animal) : Boolean
+
+  def sureBattle(probability: Probability) : Boolean
+
+  def startBattle(a1: Animal, a2: Animal): Boolean
 }
 
 object BattleManager {
@@ -39,12 +43,41 @@ private case class SimpleBattleManager(animals: Seq[Animal]) extends BattleManag
 
   /**
    * Execute battle/figth between two animals
-   * @param a1 animal who figth
-   * @param a2 animal who has been figthed
-   * @return true if animal a1 wins, false otherwise
+   * @param attacker animal who figth
+   * @param defender animal who has been figthed
+   * @return true if animal attacker wins, false otherwise
    */
-  override def battle(a1: Animal, a2: Animal): Boolean = {
-    require(canSee(a1, a2))
-    ???
+  override def battle(attacker: Animal, defender: Animal): Boolean = {
+    var probability = Probability(50)
+    if(attacker.strength > defender.strength){
+      probability = attacker.size match {
+        case Size.Big => defender.size match {
+          case Size.Medium => probability.increase(20)
+          case Size.Small => probability.increase(50)
+          case _ => probability
+        }
+        case Size.Medium => defender.size match {
+          case Size.Big => probability.decrease(20)
+          case Size.Small => probability.increase(20)
+          case _ => probability
+        }
+        case Size.Small => defender.size match {
+          case Size.Big => probability.decrease(80)
+          case Size.Medium => probability.decrease(50)
+          case _ => Probability(probability.probability)
+        }
+      }
+    }
+    probability.calculate //Esito della battaglia
+  }
+
+  override def startBattle(attacker: Animal, defender: Animal): Boolean = {
+    require(canSee(attacker, defender))
+    if(battle(attacker, defender)) defender.die()
+    //else defender.scappa ?!?! TODO
+  }
+
+  override def sureBattle(probability: Probability): Boolean = {
+    probability.calculate
   }
 }

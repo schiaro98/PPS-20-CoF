@@ -26,4 +26,8 @@ class BattleManagerTest extends AnyFunSuite{
   test("Test battle between animals that cannot see each other"){
     assertThrows[IllegalArgumentException](bm.battle(a1, unreachableAnimal))
   }
+
+  /*
+  TODO test probabilities for battles
+   */
 }
