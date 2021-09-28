@@ -9,7 +9,9 @@ sealed trait BattleManager {
 
   def canSee(a1: Animal, a2: Animal) : Boolean
 
-  def battle(a1: Animal, a2: Animal) : Boolean
+  def battle(probability: Probability) : Boolean
+
+  def calculateProbability(a1: Animal, a2: Animal) : Probability
 
   def sureBattle(probability: Probability) : Boolean
 
@@ -47,7 +49,7 @@ private case class SimpleBattleManager(animals: Seq[Animal]) extends BattleManag
    * @param defender animal who has been figthed
    * @return true if animal attacker wins, false otherwise
    */
-  override def battle(attacker: Animal, defender: Animal): Boolean = {
+  override def calculateProbability(attacker: Animal, defender: Animal): Probability = {
     var probability = Probability(50)
     if(attacker.strength > defender.strength){
       probability = attacker.size match {
@@ -68,17 +70,19 @@ private case class SimpleBattleManager(animals: Seq[Animal]) extends BattleManag
         }
       }
     }
-    probability.calculate //Esito della battaglia
+    probability
   }
 
   override def startBattle(attacker: Animal, defender: Animal): Boolean = {
     require(canSee(attacker, defender))
     //if(battle(attacker, defender)) //defender.die()
     //else defender.scappa ?!?! TODO
-    battle(attacker, defender)
+    battle(calculateProbability(attacker, defender))
   }
 
   override def sureBattle(probability: Probability): Boolean = {
     probability.calculate
   }
+
+  override def battle(probability: Probability): Boolean = probability.calculate
 }
