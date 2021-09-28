@@ -4,10 +4,8 @@ import controller.Aliases.FoodInstances
 import model.{Area, Food, FoodInstance, GrowFood, Habitat}
 import utility.Constants
 
-import scala.annotation.tailrec
 import scala.util.Random
 
-// TODO: this may be not necessary but it's cool
 object Aliases {
   type FoodInstances = Seq[FoodInstance]
 }
@@ -20,8 +18,23 @@ sealed trait ResourceManager {
   val growableFoods: Set[Food]
   val foods: FoodInstances
 
+  /**
+   * Creates an Habitat with foods written on some file
+   * @param fileName of the resource with foods
+   * @return a ResourceManager with Foods
+   */
   def importFoodsFromFile(fileName: String): ResourceManager
+
+  /**
+   * Writes foods of the current ResourceManager to file
+   * @param filename of the resource in which the foods wil be saved
+   */
   def writeFoodsToFile(filename: String): Unit
+
+  /**
+   * Grow foods in the current habitat
+   * @return new ResourceManager with updated fields
+   */
   def grow(): ResourceManager
 }
 
