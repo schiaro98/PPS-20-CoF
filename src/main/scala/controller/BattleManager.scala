@@ -73,8 +73,9 @@ private case class SimpleBattleManager(animals: Seq[Animal]) extends BattleManag
 
   override def startBattle(attacker: Animal, defender: Animal): Boolean = {
     require(canSee(attacker, defender))
-    if(battle(attacker, defender)) defender.die()
+    //if(battle(attacker, defender)) //defender.die()
     //else defender.scappa ?!?! TODO
+    battle(attacker, defender)
   }
 
   override def sureBattle(probability: Probability): Boolean = {
