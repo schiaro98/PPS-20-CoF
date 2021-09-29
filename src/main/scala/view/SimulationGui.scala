@@ -18,10 +18,7 @@ class SimulationGui() extends SimpleSwingApplication {
     var areasRectangles = List.empty[Rectangle]
     val habitat: Habitat = Habitat( RandomHabitatType, Probability(1), (1000, 1000), 10)
     habitat.areas.foreach(area => {
-      val tl = area.area.topLeft
-      val br = area.area.bottomRight
-      val rect = new Rectangle(tl.x, tl.y, br.x - tl.x, br.y - tl.y)
-      areasRectangles = areasRectangles.::(rect)
+      areasRectangles = areasRectangles.::(new Rectangle(area.area.topLeft, area.area.bottomRight))
     })
 
     val shapePanel = new ShapePanel()
