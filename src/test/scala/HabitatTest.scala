@@ -66,9 +66,9 @@ class HabitatTest extends AnyFunSuite{
   }
 
   test("Create a random Habitat with areas, and test it with different number of areas"){
-    val tollerance = 5 //Ten % of size is an acceptable tollerance, some areas cannot be drawn because of limit of space
-    val size = 10
-    val habitat = Habitat(RandomHabitatType, Probability(1), (1000, 1000), size)
-    assert(habitat.areas.size >= (size - (size/tollerance)))
+    for(_ <- 0 to 1000){
+      val habitat = Habitat(RandomHabitatType, Probability(1), (1000, 1000), 4)
+      assert(habitat.areas.size == 4)
+    }
   }
 }

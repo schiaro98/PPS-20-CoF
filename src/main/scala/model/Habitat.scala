@@ -74,10 +74,18 @@ object Habitat {
       def apply(habitatType: HabitatType,
                 unexpectedEvents: Probability,
                 dimensions: (Int, Int),
-                size: Int): Habitat = habitatType match {
-        case RandomHabitatType => SimpleHabitat(unexpectedEvents, dimensions, createRandomAreas(dimensions))
-        case GridHabitatType => SimpleHabitat(unexpectedEvents, dimensions, createGridArea(dimensions, size))
+                numberOfAreas: Int): Habitat = habitatType match {
+        case RandomHabitatType => SimpleHabitat(unexpectedEvents, dimensions, createRandomAreas(dimensions, numberOfAreas))
+        case GridHabitatType => SimpleHabitat(unexpectedEvents, dimensions, createGridArea(dimensions, numberOfAreas))
         case _ => throw new IllegalArgumentException("Habitat type error on method apply")
+  }
+
+  def apply(habitatType: HabitatType,
+            unexpectedEvents: Probability,
+            dimensions: (Int, Int)): Habitat = habitatType match {
+    case RandomHabitatType => SimpleHabitat(unexpectedEvents, dimensions, createRandomAreas(dimensions))
+    case GridHabitatType => SimpleHabitat(unexpectedEvents, dimensions, createGridArea(dimensions, 10))
+    case _ => throw new IllegalArgumentException("Habitat type error on method apply")
   }
 
   def apply(unexpectedEvent: Probability, dimensions: (Int, Int)): Habitat =
@@ -95,10 +103,16 @@ object Habitat {
    * @return
    */
   def createRandomAreas(dimension: (Int, Int)): Seq[Area] = {
-    createRandomWithSize(dimension, 4)
+    createRandomAreas(dimension, 4)
   }
 
-  def createRandomWithSize(dimension: (Int, Int), numberOfAreas: Int): Seq[Area] = {
+  /**
+   * This method create an habitat, of given dimension, with diven areas, arranged in a randow way
+   * @param dimension Dimension of habitat
+   * @param numberOfAreas Number of areas in the habitat TODO now num is blocked to 4
+   * @return
+   */
+  def createRandomAreas(dimension: (Int, Int), numberOfAreas: Int): Seq[Area] = {
     var grid = List[Area]()
     require(dimension._1 * dimension._2 > numberOfAreas * 10)
     val r = RectangleArea(Point(0,0), Point(1,1))
