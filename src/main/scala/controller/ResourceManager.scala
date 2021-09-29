@@ -14,7 +14,7 @@ object Aliases {
 
 sealed trait ResourceManager {
 
-  import Aliases._
+  import controller.Aliases._
 
   val habitat: Habitat
   val growableFoods: Set[Food]
@@ -22,6 +22,7 @@ sealed trait ResourceManager {
 
   def importFoodsFromFile(fileName: String): ResourceManager
   def writeFoodsToFile(filename: String): Unit
+
   def grow(): ResourceManager
 }
 

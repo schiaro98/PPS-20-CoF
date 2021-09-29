@@ -3,7 +3,7 @@ import org.scalatest.funsuite.AnyFunSuite
 import view.LogicGui
 
 class LogicGuiTest extends AnyFunSuite {
-  var mng = new LogicGui("speciesTest.txt")
+  val mng = new LogicGui("speciesTest.txt")
   mng.removeAllSpecies()
   mng.addSpecies(Species("null","Lion", Size.Medium, 10, 10))
   mng.addSpecies(Species("null","Ippo", Size.Big, 10, 10))

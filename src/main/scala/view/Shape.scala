@@ -14,7 +14,7 @@ abstract class Shape(topLeft: Point, bottomRigth: Point) {
 
   val width: Int = bottomRigth.x - topLeft.x
   val height: Int = bottomRigth.y - topLeft.y
-  def draw(g: Graphics2D) {
+  def draw(g: Graphics2D): Unit = {
     g.fillRect(topLeft.x, topLeft.y, bottomRigth.x - topLeft.x, bottomRigth.y - topLeft.y)
   }
 

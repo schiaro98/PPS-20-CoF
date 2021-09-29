@@ -3,7 +3,7 @@ import org.scalatest.funsuite.AnyFunSuite
 import view.LogicGui
 
 class LogicGuiFileTest extends AnyFunSuite {
-  var mng = new LogicGui("speciesTest.txt")
+  val mng = new LogicGui("speciesTest.txt")
   mng.removeAllSpecies()
 
   val exampleSpecies: Species = Species("", "TestName", Size.Small, 10, 10)
