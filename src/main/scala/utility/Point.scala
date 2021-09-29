@@ -16,11 +16,11 @@ case class Point(x: Int, y: Int) {
 
   def distance(p: Point): Double = Math.sqrt(Math.pow(x - p.x, 2) + Math.pow(y - p.y, 2))
 
-  def getRandomPoint(limits: (Int, Int)): Point = getRandomPoint((0,0), limits)
+  def getRandomPoint(limits: Point): Point = getRandomPoint(Point(0,0), limits)
 
-  def getRandomPoint(start: (Int, Int), ends: (Int, Int)) : Point = {
-    require(ends._1 > start._1, "Illegal random point x")
-    require(ends._2 > start._2, "Illegal random point y")
-    Point(Random.between(start._1, ends._1), Random.between(start._2, ends._2))
+  def getRandomPoint(start: Point, ends: Point) : Point = {
+    require(ends.x > start.x, "Illegal random point x")
+    require(ends.y > start.y, "Illegal random point y")
+    Point(Random.between(start.x, ends.x), Random.between(start.y, ends.y))
   }
 }

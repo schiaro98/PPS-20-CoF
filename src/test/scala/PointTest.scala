@@ -25,26 +25,26 @@ class PointTest extends AnyFunSuite{
   }
 
   test("Find random points between 0 and limits"){
-    val size = (1000, 1000)
+    val size = Point(1000, 1000)
     val testQ = 1000
     var p = Point(0,0)
     for (_ <- 0 to testQ) {
       p = p.getRandomPoint(size)
       assert(p.x >= 0 && p.y >= 0)
-      assert(p.x <= size._1 && p.y <= size._2)
+      assert(p.x <= size.x && p.y <= size.y)
     }
   }
 
   test("Find random points between limits"){
-    val size = (1000, 1000)
+    val size = Point(1000, 1000)
     val testQ = 1000
     var p = Point(0,0)
     for (_ <- 0 to testQ) {
-      val limits = (Random.between(0, size._1), Random.between(0, size._2))
+      val limits = p.getRandomPoint(size)
       p = p.getRandomPoint(limits, size)
       assert(p.x >= 0 && p.y >= 0)
-      assert(p.x >= limits._1 && p.y >= limits._2)
-      assert(p.x <= size._1 && p.y <= size._2)
+      assert(p.x >= limits.x && p.y >= limits.y)
+      assert(p.x <= size.y && p.y <= size.y)
     }
   }
 }

@@ -20,34 +20,35 @@ case class RectangleArea(topLeft: Point, bottomRight: Point) {
     val centerY = maxY * 2
     val endX = size._1
     val endY = size._2
-    val centerFirstQuadrant = (maxX, maxY)
-    val centerSecondQuadrant = (maxX*3, maxY)
-    val centerThirdQuadrant = (maxX, maxY*3)
-    val centerFourthQuadrant = (maxX*3, maxY*3)
-    val center = (centerX, centerY)
+    val centerFirstQuadrant = Point(maxX, maxY)
+    val centerSecondQuadrant = Point(maxX*3, maxY)
+    val centerThirdQuadrant = Point(maxX, maxY*3)
+    val centerFourthQuadrant = Point(maxX*3, maxY*3)
+    val center = Point(centerX, centerY)
     val p = Point(0,0)
+
     //Alto a sx
     rectangles = rectangles :+ RectangleArea(
-      p.getRandomPoint((0, 0), centerFirstQuadrant),
+      p.getRandomPoint(Point(0, 0), centerFirstQuadrant),
       p.getRandomPoint(centerFirstQuadrant, center)
     )
 
     //Alto a dx
     rectangles = rectangles :+ RectangleArea(
-      p.getRandomPoint((centerX, 0), centerSecondQuadrant),
-      p.getRandomPoint(centerSecondQuadrant, (endX, centerY))
+      p.getRandomPoint(Point(centerX, 0), centerSecondQuadrant),
+      p.getRandomPoint(centerSecondQuadrant, Point(endX, centerY))
     )
 
     //Basso a sx
     rectangles = rectangles :+ RectangleArea(
-      p.getRandomPoint((0, centerY), centerThirdQuadrant),
-      p.getRandomPoint(centerThirdQuadrant, (centerX, endY))
+      p.getRandomPoint(Point(0, centerY), centerThirdQuadrant),
+      p.getRandomPoint(centerThirdQuadrant, Point(centerX, endY))
     )
 
     //Basso a dx
     rectangles = rectangles :+ RectangleArea(
       p.getRandomPoint(center, centerFourthQuadrant),
-      p.getRandomPoint(centerFourthQuadrant, size)
+      p.getRandomPoint(centerFourthQuadrant, Point(size._1, size._2))
     )
 
     rectangles
