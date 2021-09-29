@@ -1,5 +1,5 @@
 import controller.ResourceManager
-import model.{Area, Fertile, Food, Habitat, Probability, Rock, Volcano, Water}
+import model._
 import org.scalatest.funsuite.AnyFunSuite
 import utility.{Constants, Point, RectangleArea}
 

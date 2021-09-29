@@ -3,7 +3,7 @@ import org.scalatest.funsuite.AnyFunSuite
 import view.LogicGui
 
 class LogicGuiTest extends AnyFunSuite {
-  var mng = new LogicGui("speciesTest.txt")
+  val mng = new LogicGui("speciesTest.txt")
   mng.removeAllSpecies()
   mng.addSpecies(Species("null","Lion", Size.Medium, 10, 10))
   mng.addSpecies(Species("null","Ippo", Size.Big, 10, 10))
@@ -11,13 +11,11 @@ class LogicGuiTest extends AnyFunSuite {
   mng.initialize()
 
   test("List should be populated with basic species after initialize"){
-    assert(mng.speciesSeq.size == 3)
+    assert(mng.speciesSeq.lengthIs == 3)
   }
 
   test("Should be possible add an animal"){
     mng.add("TestName")
-    println(mng.species)
-    println(mng.speciesSeq)
     assert(mng.species.size == 4)
   }
 

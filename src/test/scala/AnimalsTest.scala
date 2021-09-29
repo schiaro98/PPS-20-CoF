@@ -1,7 +1,8 @@
-import utility.Constants._
 import model.Size._
 import model._
 import org.scalatest.funsuite.AnyFunSuite
+import utility.Constants._
+import utility.Point
 
 import java.awt.image.BufferedImage
 import java.io.File
@@ -11,8 +12,8 @@ class AnimalsTest extends AnyFunSuite{
 
   val path = "res/images/tiger-icon.jpg"
   val img: BufferedImage = ImageIO.read(new File(path))
-  val p: (Int, Int) = (0,0)
-  val a: Animal = Carnivorous(Species(path, "tiger", Medium, 10, 10), p, p)
+  val p: Point = Point(0,0)
+  val a: Animal = Carnivorous(Species(path, "tiger", Medium, 10, 10), p)
 
   test("An animal is an entity with personal parameters and belong to a species") {
     assert(path == a.icon)

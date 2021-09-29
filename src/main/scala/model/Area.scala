@@ -1,7 +1,7 @@
 package model
 
 import utility.Constants.DefaultFoodQuantity
-import utility.RectangleArea
+import utility.{Point, RectangleArea}
 
 import java.awt.Color
 import scala.util.Random
@@ -17,11 +17,10 @@ case object Rock extends AreaType
 case object Volcano extends AreaType
 
 sealed trait Area {
-  val area: RectangleArea
   val name: String
   val color: Color
   val areaType: AreaType
-  require(area.isValid, "inserted illegal corners")
+  val area: RectangleArea
 }
 
 object Area {
@@ -50,12 +49,12 @@ object Area {
                                     override val areaType: AreaType) extends SimpleArea
 
   private class FertileAreaGrowFood(override val area: RectangleArea,
-                            override val fertility: Probability,
-                            override val name: String = "a fertile area",
-                            override val color: Color = Color.green,
-                            override val areaType: AreaType = Fertile
-                            //                                    override val foods: Set[Food]
-                           ) extends SimpleArea with GrowFood {
+                                    override val fertility: Probability,
+                                    override val name: String = "a fertile area",
+                                    override val color: Color = Color.green,
+                                    override val areaType: AreaType = Fertile
+//                                    override val foods: Set[Food]
+                                   ) extends SimpleArea with GrowFood {
     require(areaType == Fertile)
 
     override def growFood(optFood: Option[Food]): Option[FoodInstance] = {
@@ -67,7 +66,7 @@ object Area {
           val _2 = area.topLeft.y + random.nextInt((area.bottomRight.y - area.topLeft.y) + 1)
 
           val quantity = random.nextInt(DefaultFoodQuantity)
-          return Some(Vegetable(quantity, (_1, _2), food.energy, food.icon))
+          return Some(Vegetable(quantity, Point(_1, _2), food.energy, food.icon))
         }
       }
       None

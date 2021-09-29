@@ -1,6 +1,7 @@
 package view
 
 import model._
+
 import scala.swing.{Frame, SimpleSwingApplication}
 
 class SimulationGui(val habitat: Habitat) extends SimpleSwingApplication {
@@ -18,14 +19,12 @@ class SimulationGui(val habitat: Habitat) extends SimpleSwingApplication {
     var areasRectangles = List.empty[Rectangle]
 
     habitat.areas.foreach(area => {
-      val tl = area.area.topLeft
-      val br = area.area.bottomRight
-      val rect = new Rectangle(tl.x, tl.y, br.x - tl.x, br.y - tl.y, area.color)
-      areasRectangles = areasRectangles.::(rect)
+      areasRectangles = areasRectangles.::(new Rectangle(area.area.topLeft, area.area.bottomRight, area.color))
     })
 
     val shapePanel = new ShapePanel(habitat.dimensions._1, habitat.dimensions._2)
     shapePanel.addAllShapes(areasRectangles)
     contents = shapePanel
   }
+
 }

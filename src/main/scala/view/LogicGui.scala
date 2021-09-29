@@ -20,7 +20,7 @@ class LogicGui(speciesFile: String) {
    */
   var speciesSeq = Seq.empty[Species]
 
-  def initialize(): Unit = {
+  def initialize() {
     speciesSeq = serializer.deserializeManyFromFile(speciesFile)(classOf[Species])
     speciesSeq.foreach(speciesOnFile => { species += (speciesOnFile.name -> 1) }) //e li leggo
   }
@@ -29,7 +29,7 @@ class LogicGui(speciesFile: String) {
   Add a new animal if it doesn't exist
   @param str name of the animal
    */
-  def add(str: String): Unit = {
+  def add(str: String) {
     if(!species.contains(str)) {
       species += str -> 1
     }
@@ -40,7 +40,7 @@ class LogicGui(speciesFile: String) {
     if it doesn't exist, add it
   @param str name of the animal
    */
-  def increase(str: String): Unit = {
+  def increase(str: String) {
     if(species.contains(str)){
       species += str -> species(str).+(1)
     } else {
@@ -52,7 +52,9 @@ class LogicGui(speciesFile: String) {
   Remove an animal
   @param str name of the animal
    */
-  def remove(str: String): Unit = species = species - str
+  def remove(str: String) {
+    species = species - str
+  }
 
   /**
    * Decrease quantity of an animal, deleting it if it's equal to zero
@@ -100,7 +102,7 @@ class LogicGui(speciesFile: String) {
    * Add species to species file
    * @param species to be added
    */
-  def addSpecies(species: Species): Unit = {
+  def addSpecies(species: Species) {
     speciesSeq = speciesSeq :+ species
     serializer.serializeManyToFile(speciesSeq)(speciesFile)
   }
@@ -109,7 +111,7 @@ class LogicGui(speciesFile: String) {
    * Remove species in species file
    * @param species to be removed
    */
-  def removeSpecies(species: Species): Unit = {
+  def removeSpecies(species: Species) {
     speciesSeq = speciesSeq.filterNot(x => x == species)
     serializer.serializeManyToFile(speciesSeq)(speciesFile)
   }
@@ -117,7 +119,7 @@ class LogicGui(speciesFile: String) {
   /**
    * Remove all species from species file, basicaly it clean the species file
    */
-  def removeAllSpecies(): Unit = {
+  def removeAllSpecies() {
     serializer.serializeManyToFile(Seq.empty[Species])(speciesFile)
   }
 

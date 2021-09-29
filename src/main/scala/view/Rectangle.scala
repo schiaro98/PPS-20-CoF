@@ -1,15 +1,13 @@
 package view
 
+import utility.Point
+
 import java.awt.{Color, Graphics2D}
 
-class Rectangle(
-                   xRectangle: Int, yRectangle: Int,
-                   wRectangle: Int, hRectangle: Int,
-                   color: Color)
-    extends Shape(xRectangle, yRectangle, wRectangle, hRectangle, color) {
+class Rectangle(topLeft: Point, bottomRigth: Point, color: Color) extends Shape(topLeft, bottomRigth, color) {
 
-    override def draw(g: Graphics2D) {
-      g.fillRect(x, y, width, height)
+    override def draw(g: Graphics2D): Unit = {
+      g.fillRect(topLeft.x, topLeft.y, bottomRigth.x - topLeft.x, bottomRigth.y - topLeft.y)
     }
 
 }

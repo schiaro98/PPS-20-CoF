@@ -30,5 +30,12 @@ object Constants {
   val defaultSimulationDimension = new Dimension(1000, 1000)
 
   val mainMap = "map.txt"
-  val mainMapDimension = (500, 500)
+  val mainMapDimension: (Int, Int) = (500, 500)
+
+  val defaultStartingX = 100
+  val defaultStartingY = 100
+
+  // ------- Habitat ------
+  val defaultRandomSize = 10
+  val defaultGridSize = 100
 }

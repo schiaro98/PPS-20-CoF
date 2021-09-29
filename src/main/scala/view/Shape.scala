@@ -1,17 +1,27 @@
 package view
 
+import utility.Point
+
 import java.awt.{Color, Graphics2D}
 
-abstract class Shape(var x: Int, var y:Int, var width:Int, var height:Int, val color: Color) {
+abstract class Shape(topLeft: Point, bottomRight: Point, val color: Color) {
 
   protected var xSpeed = 3
   protected var ySpeed = 3
 
-  def draw(g: Graphics2D) {
-    g.fillRect(x, y, width, height)
+  var x: Int = topLeft.x
+  var y: Int = topLeft.y
+
+  val width: Int = bottomRight.x - topLeft.x
+  val height: Int = bottomRight.y - topLeft.y
+  def draw(g: Graphics2D): Unit = {
+    g.fillRect(topLeft.x, topLeft.y, bottomRight.x - topLeft.x, bottomRight.y - topLeft.y)
   }
 
-  def move(panelWidth: Int, panelHeight: Int) {
+  /*
+  TODO potrebbe non servire sto metodo
+   */
+  def move(panelWidth: Int, panelHeight: Int): Unit = {
     if (x >= panelWidth - this.width || x <= 0) {
       xSpeed *= -1
     }

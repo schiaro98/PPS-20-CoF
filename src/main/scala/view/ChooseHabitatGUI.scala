@@ -104,8 +104,8 @@ class ChooseHabitatGUI(val l :ChooseHabitatLogic ) {
   }
 
   def getType: HabitatType = {
-    case _ if ours.selected => SimpleHabitatType
-    case _ if empty.selected => EmptyHabitatType
-    case _ if random.selected => RandomHabitatType
+    if (ours.selected) SimpleHabitatType
+    else if (empty.selected) EmptyHabitatType
+    else RandomHabitatType
   }
 }

@@ -1,9 +1,9 @@
 package model
 
-import utility.Constants
+import utility.{Constants, Point}
 
 case class Vegetable(override val quantity: Int,
-                     override val position: (Int, Int),
+                     override val position: Point,
                      override val energy: Int,
                      override val icon: String = Constants.DefaultIconOfVegetable) extends FoodInstance {
 

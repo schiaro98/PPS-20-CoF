@@ -79,7 +79,7 @@ object MainGUI extends SimpleSwingApplication {
             case _: ButtonClicked =>
               if (cb.selection.item != null) {
                 logic.increase(cb.selection.item)
-                updateGrid()
+                 updateGrid()
               }
           }
         }
