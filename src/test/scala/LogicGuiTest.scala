@@ -11,7 +11,7 @@ class LogicGuiTest extends AnyFunSuite {
   mng.initialize()
 
   test("List should be populated with basic species after initialize"){
-    assert(mng.speciesSeq.size == 3)
+    assert(mng.speciesSeq.lengthIs == 3)
   }
 
   test("Should be possible add an animal"){

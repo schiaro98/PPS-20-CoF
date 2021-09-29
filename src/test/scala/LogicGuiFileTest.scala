@@ -16,14 +16,14 @@ class LogicGuiFileTest extends AnyFunSuite {
     mng.addSpecies(exampleSpecies)
     mng.add("TestName")
     assert(mng.species.size == 1)
-    assert(mng.speciesSeq.size == 1)
+    assert(mng.speciesSeq.lengthIs == 1)
   }
 
   test("Should be possible increase quantity of an animal"){
     mng.add("TestName")
     mng.increase("TestName")
     assert(mng.species.size == 1)
-    assert(mng.speciesSeq.size == 1)
+    assert(mng.speciesSeq.lengthIs == 1)
     assert(mng.species(exampleSpecies.name) == 2)
   }
 
