@@ -1,6 +1,8 @@
 package view
 
-import model.{EmptyHabitatType, HabitatType, RandomHabitatType, SimpleHabitatType}
+import controller.{OfArea, Serializer}
+import model.{Area, EmptyHabitatType, Habitat, HabitatType, Probability, RandomHabitatType, SimpleHabitatType}
+import utility.Constants
 
 import javax.swing.{Box, WindowConstants}
 import scala.swing._
@@ -8,10 +10,10 @@ import scala.swing.event.ButtonClicked
 
 class ChooseHabitatGUI(val l :ChooseHabitatLogic ) {
 
-  val w: TextField = new TextField("1000"){
+  val w: TextField = new TextField("500"){
     editable = false
   }
-  val h: TextField = new TextField("1000"){
+  val h: TextField = new TextField("500"){
     editable = false
   }
   val ue: TextField = new TextField("10")
@@ -72,17 +74,20 @@ class ChooseHabitatGUI(val l :ChooseHabitatLogic ) {
           case _: ButtonClicked =>
             val optHabitat = l.createHabitat(getType, w.text, h.text, ue.text)
             if (optHabitat.isDefined) {
-              //val habitat = optHabitat.get
-              new SimulationGui(){
-                top.visible = true
-                close()
+              radios.selected.get match {
+                case v : RadioButton if v == ours =>
+                  val areas = Serializer(OfArea).deserializeManyFromFile(Constants.mainMap)(classOf[Area])
+                  val habitat: Habitat = Habitat(getType, Probability(ue.text.toInt), Constants.mainMapDimension, areas)
+                  new SimulationGui(habitat) { top.visible = true; /* close() */ } //TODO - decommentare i close()
+                case v : RadioButton if v == empty => new SimulationGui(optHabitat.get) { top.visible = true; /* close() */ }
+                case v : RadioButton if v == random => new SimulationGui(optHabitat.get) { top.visible = true; /* close() */ }
+                case _ => throw new IllegalArgumentException
               }
             } else {
               Dialog.showMessage(contents.head, "Some input is not valid", title = "Try again!")
             }
         }
       }
-//      println(s.selected)
     }
 
 
@@ -98,12 +103,9 @@ class ChooseHabitatGUI(val l :ChooseHabitatLogic ) {
     h.editable = editable
   }
 
-  def getType: HabitatType =
-    if (ours.enabled) {
-      SimpleHabitatType
-    } else if (empty.enabled){
-      EmptyHabitatType
-    } else {
-      RandomHabitatType
-    }
+  def getType: HabitatType = {
+    case _ if ours.selected => SimpleHabitatType
+    case _ if empty.selected => EmptyHabitatType
+    case _ if random.selected => RandomHabitatType
+  }
 }

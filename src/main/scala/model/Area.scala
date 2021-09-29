@@ -3,6 +3,7 @@ package model
 import utility.Constants.DefaultFoodQuantity
 import utility.RectangleArea
 
+import java.awt.Color
 import scala.util.Random
 
 sealed trait AreaType
@@ -16,34 +17,24 @@ case object Rock extends AreaType
 case object Volcano extends AreaType
 
 sealed trait Area {
-  val name: String
-  val areaType: AreaType
   val area: RectangleArea
+  val name: String
+  val color: Color
+  val areaType: AreaType
   require(area.isValid, "inserted illegal corners")
 }
 
 object Area {
-  def apply(areaType: AreaType, area: RectangleArea): Area = areaType match {
-    case Fertile =>  new FertileAreaGrowFood(area, Probability(0), "a fertile area")
-    case Water => SimpleArea(areaType, area, "a bit of water")
-    case Rock => SimpleArea(areaType, area, "a rock area")
-    case Volcano => SimpleArea(areaType, area, "a volcano")
+  //TODO - simo - ho tolto gli altri due apply mettendo opzionali il nome e la probabilità
+  def apply(areaType: AreaType, area: RectangleArea, probability: Probability = Probability(0), name: String = ""): Area =
+    areaType match {
+    case Fertile =>  new FertileAreaGrowFood(area, probability, name)
+    case Water => SimpleAreaImpl(area, if (name == "") "a bit of water" else name, Color.blue,areaType )
+    case Rock => SimpleAreaImpl(area, if (name == "") "a rock area" else name, new Color(102,51,0), areaType)
+    case Volcano => SimpleAreaImpl(area, if (name == "") "a volcano" else name, Color.red, areaType)
   }
 
-  def apply(name: String, areaType: AreaType, area: RectangleArea): Area = areaType match {
-    case Fertile => new FertileAreaGrowFood(area, Probability(0),  name)
-    case Water => SimpleArea(areaType, area, name)
-    case Rock => SimpleArea(areaType, area, name)
-    case Volcano => SimpleArea(areaType, area, name)
-  }
-
-  def apply(areaType: AreaType, area: RectangleArea, probability: Probability): Area = areaType match {
-    case Fertile => new FertileAreaGrowFood(area, probability, "a fertile area which can grow food")
-    case Water => SimpleArea(areaType, area, "a bit of water")
-    case Rock => SimpleArea(areaType, area, "a rock area")
-    case Volcano => SimpleArea(areaType, area, "a volcano")
-  }
-
+  //TODO - simo - questo penso si possa cancellare ma non so se serve questa cosa del cibo commentata (e c'è un nome diverso per le fertili)
   def apply(area: RectangleArea, fertility: Probability
             //            , foods: Set[Food]
            ): Area =
@@ -51,16 +42,20 @@ object Area {
       //      , foods
     )
 
+  private trait SimpleArea extends Area
 
-  private case class SimpleArea(areaType: AreaType,
-                                area: RectangleArea,
-                                name: String) extends Area
+  private case class SimpleAreaImpl(override val area: RectangleArea,
+                                    override val name: String,
+                                    override val color: Color,
+                                    override val areaType: AreaType) extends SimpleArea
 
-  private class FertileAreaGrowFood(area: RectangleArea,
-                                    override val fertility: Probability,
-                                    name: String
-                                    //                                    override val foods: Set[Food]
-                                   ) extends SimpleArea(Fertile, area: RectangleArea, name) with GrowFood {
+  private class FertileAreaGrowFood(override val area: RectangleArea,
+                            override val fertility: Probability,
+                            override val name: String = "a fertile area",
+                            override val color: Color = Color.green,
+                            override val areaType: AreaType = Fertile
+                            //                                    override val foods: Set[Food]
+                           ) extends SimpleArea with GrowFood {
     require(areaType == Fertile)
 
     override def growFood(optFood: Option[Food]): Option[FoodInstance] = {

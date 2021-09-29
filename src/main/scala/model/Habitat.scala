@@ -89,7 +89,8 @@ object Habitat {
     /*
     TODO per la creazione di habitat random, creaiamo una grid area molto fitta e cancelliamo randomicamente fino ad avere n aree
      */
-    Seq.empty
+    println("QUII")
+    createGridArea(dimension, 100)
   }
 
   /**

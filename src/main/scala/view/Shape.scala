@@ -1,8 +1,8 @@
 package view
 
-import java.awt.Graphics2D
+import java.awt.{Color, Graphics2D}
 
-abstract class Shape(var x: Int, var y:Int, var width:Int, var height:Int) {
+abstract class Shape(var x: Int, var y:Int, var width:Int, var height:Int, val color: Color) {
 
   protected var xSpeed = 3
   protected var ySpeed = 3
