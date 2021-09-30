@@ -103,7 +103,6 @@ object MainGUI extends SimpleSwingApplication {
     }
 
     peer.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE)
-    pack()
     centerOnScreen()
     open()
   }

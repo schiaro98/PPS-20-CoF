@@ -101,7 +101,6 @@ class ChooseHabitatGUI(val l :ChooseHabitatLogic ) {
 
     //    this.preferredSize = new Dimension(1000, 1000)
     peer.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE)
-    pack()
     centerOnScreen()
     open()
   }
@@ -118,5 +117,5 @@ class ChooseHabitatGUI(val l :ChooseHabitatLogic ) {
     else GridHabitatType
   }
 
-  def startSimulation(habitat: Habitat): SimulationGui = new SimulationGui(habitat) { top.visible = true }
+  def startSimulation(habitat: Habitat): SimulationGui = new SimulationGui(habitat) {top.visible = true }
 }

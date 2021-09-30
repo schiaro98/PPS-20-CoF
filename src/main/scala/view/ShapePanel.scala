@@ -8,7 +8,8 @@ import scala.swing.Panel
 
 class ShapePanel(val width: Int, val height: Int) extends Panel {
 
-  preferredSize = new Dimension(width, height)
+  peer.setPreferredSize(new Dimension(width, height))
+
   opaque = true
   background = Color.white
 
@@ -37,4 +38,5 @@ class ShapePanel(val width: Int, val height: Int) extends Panel {
   def addAllShapes(shapesSeq: Seq[Shape]): Unit ={
     shapesSeq.foreach(s => addShape(s))
   }
+
 }

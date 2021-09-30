@@ -2,16 +2,15 @@ package view
 
 import model._
 
-import scala.swing.{Frame, SimpleSwingApplication}
+import javax.swing.WindowConstants
+import scala.swing.{Dimension, Frame, SimpleSwingApplication}
 
 class SimulationGui(val habitat: Habitat) extends SimpleSwingApplication {
 
   override def top: Frame = new Frame {
-
+    this.resizable = false
+    this.size = new Dimension(habitat.dimensions._1, habitat.dimensions._2)
     title = "Simulation"
-
-    // preferredSize e la dimensione del Panel non coincidono anche se si mette lo stesso valore
-//    preferredSize = defaultSimulationDimension
 
     /**
      * Map containing list of animals (String) and quantity
@@ -25,6 +24,8 @@ class SimulationGui(val habitat: Habitat) extends SimpleSwingApplication {
     val shapePanel = new ShapePanel(habitat.dimensions._1, habitat.dimensions._2)
     shapePanel.addAllShapes(areasRectangles)
     contents = shapePanel
+    peer.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE)
+
   }
 
 }
