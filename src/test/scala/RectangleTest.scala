@@ -1,6 +1,8 @@
 import org.scalatest.funsuite.AnyFunSuite
 import utility.{Point, RectangleArea}
 
+import scala.util.Random
+
 class RectangleTest extends AnyFunSuite{
 
   test("Create a rectangle area"){
@@ -19,6 +21,14 @@ class RectangleTest extends AnyFunSuite{
     val r = RectangleArea(Point(0, 0), Point(1, 1))
     for (_ <- 0 to testQ) {
       r.getIn4Quadrant(size).foreach(rect => assert(rect.isValid))
+    }
+  }
+
+  test("Find random rectangles in not squared habitat "){
+    val testQ = 1000
+    val r = RectangleArea(Point(0, 0), Point(1, 1))
+    for (_ <- 0 to testQ) {
+      r.getIn4Quadrant((Random.between(100, 1000), Random.between(100, 1000))).foreach(rect => assert(rect.isValid))
     }
   }
 }

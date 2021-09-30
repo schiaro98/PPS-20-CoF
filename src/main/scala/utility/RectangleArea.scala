@@ -15,7 +15,7 @@ case class RectangleArea(topLeft: Point, bottomRight: Point) {
   def getIn4Quadrant(size: (Int, Int)) : Seq[RectangleArea] = {
     var rectangles = Seq.empty[RectangleArea]
     val maxX = size._1 / 4
-    val maxY = size._1 / 4
+    val maxY = size._2 / 4
     val centerX = maxX * 2
     val centerY = maxY * 2
     val endX = size._1
@@ -32,7 +32,6 @@ case class RectangleArea(topLeft: Point, bottomRight: Point) {
       p.getRandomPoint(Point(0, 0), centerFirstQuadrant),
       p.getRandomPoint(centerFirstQuadrant, center)
     )
-
     //Alto a dx
     rectangles = rectangles :+ RectangleArea(
       p.getRandomPoint(Point(centerX, 0), centerSecondQuadrant),
