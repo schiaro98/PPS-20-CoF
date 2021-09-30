@@ -1,7 +1,7 @@
 package view
 
 import controller.{OfArea, Serializer}
-import model.{Area, EmptyHabitatType, Habitat, HabitatType, Probability, RandomHabitatType, SimpleHabitatType}
+import model.{Area, EmptyHabitatType, GridHabitatType, Habitat, HabitatType, Probability, RandomHabitatType, SimpleHabitatType}
 import utility.Constants
 
 import javax.swing.{Box, WindowConstants}
@@ -40,10 +40,18 @@ class ChooseHabitatGUI(val l :ChooseHabitatLogic ) {
     }
   }
 
+  val grid: RadioButton = new RadioButton("An habitat with grid shaped-placed areas"){
+    reactions += {
+      case _: ButtonClicked =>
+        setVisibility(true)
+    }
+  }
+
   val radios: ButtonGroup = new ButtonGroup{
     buttons +=  ours
     buttons += empty
     buttons += random
+    buttons += grid
   }
 
   val f: Frame = new Frame {
@@ -78,11 +86,11 @@ class ChooseHabitatGUI(val l :ChooseHabitatLogic ) {
                 case v : RadioButton if v == ours =>
                   val areas = Serializer(OfArea).deserializeManyFromFile(Constants.mainMap)(classOf[Area])
                   val habitat: Habitat = Habitat(getType, Probability(ue.text.toInt), Constants.mainMapDimension, areas)
-                  new SimulationGui(habitat) { top.visible = true; /* close() */ } //TODO - decommentare i close()
-                case v : RadioButton if v == empty => new SimulationGui(optHabitat.get) { top.visible = true; /* close() */ }
-                case v : RadioButton if v == random => new SimulationGui(optHabitat.get) { top.visible = true; /* close() */ }
+                  startSimulation(habitat)
+                case _ : RadioButton => startSimulation(optHabitat.get)
                 case _ => throw new IllegalArgumentException
               }
+              close()
             } else {
               Dialog.showMessage(contents.head, "Some input is not valid", title = "Try again!")
             }
@@ -106,6 +114,9 @@ class ChooseHabitatGUI(val l :ChooseHabitatLogic ) {
   def getType: HabitatType = {
     if (ours.selected) SimpleHabitatType
     else if (empty.selected) EmptyHabitatType
-    else RandomHabitatType
+    else if (random.selected) RandomHabitatType
+    else GridHabitatType
   }
+
+  def startSimulation(habitat: Habitat): SimulationGui = new SimulationGui(habitat) { top.visible = true }
 }
