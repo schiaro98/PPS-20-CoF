@@ -77,6 +77,6 @@ class SerializeTest extends AnyFunSuite{
   test("Test serialize many from file for Species"){
     val fileName = "speciesSerializerTest.txt"
     val species = speciesSerializer.deserializeManyFromFile(fileName)(classOf[Species])
-    assert(species.length == 3)
+    assert(species.lengthIs == 3)
   }
 }

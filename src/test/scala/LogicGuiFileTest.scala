@@ -3,7 +3,7 @@ import org.scalatest.funsuite.AnyFunSuite
 import view.LogicGui
 
 class LogicGuiFileTest extends AnyFunSuite {
-  var mng = new LogicGui("speciesTest.txt")
+  val mng = new LogicGui("speciesTest.txt")
   mng.removeAllSpecies()
 
   val exampleSpecies: Species = Species("", "TestName", Size.Small, 10, 10)
@@ -16,14 +16,14 @@ class LogicGuiFileTest extends AnyFunSuite {
     mng.addSpecies(exampleSpecies)
     mng.add("TestName")
     assert(mng.species.size == 1)
-    assert(mng.speciesSeq.size == 1)
+    assert(mng.speciesSeq.lengthIs == 1)
   }
 
   test("Should be possible increase quantity of an animal"){
     mng.add("TestName")
     mng.increase("TestName")
     assert(mng.species.size == 1)
-    assert(mng.speciesSeq.size == 1)
+    assert(mng.speciesSeq.lengthIs == 1)
     assert(mng.species(exampleSpecies.name) == 2)
   }
 

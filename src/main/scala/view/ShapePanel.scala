@@ -6,10 +6,8 @@ import javax.swing._
 import java.awt.event._
 import scala.swing.Panel
 
-class ShapePanel() extends Panel {
+class ShapePanel(val width: Int, val height: Int) extends Panel {
 
-  val width = 800
-  val height = 400
   preferredSize = new Dimension(width, height)
   opaque = true
   background = Color.white
@@ -18,7 +16,7 @@ class ShapePanel() extends Panel {
     g.clearRect(0, 0, width, height)
 
     for(s <- shapes) {
-      g.setColor(Color.red)
+      g.setColor(s.color)
       s.draw(g)
     }
   }

@@ -1,6 +1,6 @@
 package model
 
-import utility.Constants.{defaultGridSize, defaultRandomSize, defaultStartingX, defaultStartingY}
+import utility.Constants.{defaultGridSize, defaultStartingX, defaultStartingY}
 import utility.{Point, RectangleArea}
 
 import scala.util.Random
@@ -66,7 +66,7 @@ object Habitat {
             areas: Seq[Area]): Habitat = habitatType match {
     case EmptyHabitatType => SimpleHabitat(unexpectedEvents, dimensions, Seq.empty)
     case SimpleHabitatType => SimpleHabitat(unexpectedEvents, dimensions, areas)
-    case RandomHabitatType => SimpleHabitat(unexpectedEvents, dimensions, createRandomAreas(dimensions, defaultRandomSize))
+    case RandomHabitatType => SimpleHabitat(unexpectedEvents, dimensions, createRandomAreas(dimensions))
     case GridHabitatType => SimpleHabitat(unexpectedEvents, dimensions, createGridArea(dimensions, defaultGridSize))
     case _ => throw new IllegalArgumentException("Habitat type error on method apply")
   }
@@ -74,14 +74,22 @@ object Habitat {
       def apply(habitatType: HabitatType,
                 unexpectedEvents: Probability,
                 dimensions: (Int, Int),
-                size: Int): Habitat = habitatType match {
-        case RandomHabitatType => SimpleHabitat(unexpectedEvents, dimensions, createRandomAreas(dimensions, size))
-        case GridHabitatType => SimpleHabitat(unexpectedEvents, dimensions, createGridArea(dimensions, size))
+                numberOfAreas: Int): Habitat = habitatType match {
+        case RandomHabitatType => SimpleHabitat(unexpectedEvents, dimensions, createRandomAreas(dimensions, numberOfAreas))
+        case GridHabitatType => SimpleHabitat(unexpectedEvents, dimensions, createGridArea(dimensions, numberOfAreas))
         case _ => throw new IllegalArgumentException("Habitat type error on method apply")
   }
 
+  def apply(habitatType: HabitatType,
+            unexpectedEvents: Probability,
+            dimensions: (Int, Int)): Habitat = habitatType match {
+    case RandomHabitatType => SimpleHabitat(unexpectedEvents, dimensions, createRandomAreas(dimensions))
+    case GridHabitatType => SimpleHabitat(unexpectedEvents, dimensions, createGridArea(dimensions, 10))
+    case _ => throw new IllegalArgumentException("Habitat type error on method apply")
+  }
+
   def apply(unexpectedEvent: Probability, dimensions: (Int, Int)): Habitat =
-    SimpleHabitat(unexpectedEvent, dimensions, createRandomAreas(dimensions, 20))
+    SimpleHabitat(unexpectedEvent, dimensions, createRandomAreas(dimensions))
 
   private case class SimpleHabitat(override val unexpectedEvents: Probability,
                                    override val dimensions: (Int, Int),
@@ -92,23 +100,25 @@ object Habitat {
    * This method create an habitat, of given dimension, with diven areas, arranged in a randow way
    *
    * @param dimension     dimension of the habitat
-   * @param numberOfAreas num of areas in the grid
+   * @return
+   */
+  def createRandomAreas(dimension: (Int, Int)): Seq[Area] = {
+    createRandomAreas(dimension, 4)
+  }
+
+  /**
+   * This method create an habitat, of given dimension, with diven areas, arranged in a randow way
+   * @param dimension Dimension of habitat
+   * @param numberOfAreas Number of areas in the habitat TODO now num is blocked to 4
    * @return
    */
   def createRandomAreas(dimension: (Int, Int), numberOfAreas: Int): Seq[Area] = {
-    var grid: Seq[Area] = createGridArea(dimension, numberOfAreas * 10)
-
-    /*
-      Remove elements from grid map until there are *numberOfAreas areas
-     */
-    while (grid.size > numberOfAreas){
-      val areaToRemove = grid(Random.nextInt(grid.size))
-      grid = grid.filterNot(area => area == areaToRemove)
-    }
+    var grid = List[Area]()
+    require(dimension._1 * dimension._2 > numberOfAreas * 10)
+    val r = RectangleArea(Point(0,0), Point(1,1))
+    r.getIn4Quadrant(dimension).foreach(rectangle => grid = grid.::(Area(Area.randomType, rectangle, Probability(Random.between(1,100)))))
     grid
-    //TODO non funziona perchè non posso modificare i valori di un val grid.map(areas => areas.area.bottomRight + (100,100))
   }
-
   /**
    * This method create an habitat, of given dimension, with diven areas, arranged in a grid
    *
@@ -136,4 +146,5 @@ object Habitat {
     }
     grid
   }
+
 }
