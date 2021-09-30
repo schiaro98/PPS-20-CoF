@@ -15,7 +15,7 @@ class ResourceManagerTest extends AnyFunSuite{
   val waterArea: Area = Area(Water, RectangleArea(Point(0, 15), Point(15,30)))
   val rockArea: Area = Area(Rock, RectangleArea(Point(40,40), Point(50,50)))
   val volcanoArea: Area = Area(Volcano, RectangleArea(Point(70,70), Point(80,80)))
-  val area: Area = Area(RectangleArea(Point(60,60), Point(65, 65)), Probability(100))
+  val area: Area = Area(Fertile, RectangleArea(Point(60,60), Point(65, 65)), Probability(100))
 
   val habitat: Habitat = Habitat( Probability(1), (100, 100), Seq(fertileArea, waterArea, rockArea, volcanoArea, area))
 

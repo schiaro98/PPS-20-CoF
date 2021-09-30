@@ -16,8 +16,7 @@ class AreaTest extends AnyFunSuite{
   }
 
   test("Create FertileArea with GrowFood"){
-    // TODO: work on it with a working manager for food and areas
-    val areaWithGrowFood = Area(RectangleArea(Point(10,20), Point(15, 25)), Probability(30))
+    val areaWithGrowFood = Area(Fertile, RectangleArea(Point(10,20), Point(15, 25)), Probability(50))
     assert(areaWithGrowFood.isInstanceOf[Area with GrowFood])
   }
 

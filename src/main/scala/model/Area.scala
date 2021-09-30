@@ -24,7 +24,6 @@ sealed trait Area {
 }
 
 object Area {
-  //TODO - simo - ho tolto gli altri due apply mettendo opzionali il nome e la probabilità
   def apply(areaType: AreaType, area: RectangleArea, probability: Probability = Probability(0), name: String = ""): Area =
     areaType match {
     case Fertile =>  new FertileAreaGrowFood(area, probability, name)
@@ -33,20 +32,10 @@ object Area {
     case Volcano => SimpleAreaImpl(area, if (name == "") "a volcano" else name, Color.red, areaType)
   }
 
-  //TODO - simo - questo penso si possa cancellare ma non so se serve questa cosa del cibo commentata (e c'è un nome diverso per le fertili)
-  def apply(area: RectangleArea, fertility: Probability
-            //            , foods: Set[Food]
-           ): Area =
-    new FertileAreaGrowFood(area, fertility, "a fertile area which can grow food"
-      //      , foods
-    )
-
-  private trait SimpleArea extends Area
-
   private case class SimpleAreaImpl(override val area: RectangleArea,
                                     override val name: String,
                                     override val color: Color,
-                                    override val areaType: AreaType) extends SimpleArea
+                                    override val areaType: AreaType) extends Area
 
   private class FertileAreaGrowFood(override val area: RectangleArea,
                                     override val fertility: Probability,
@@ -54,7 +43,7 @@ object Area {
                                     override val color: Color = Color.green,
                                     override val areaType: AreaType = Fertile
 //                                    override val foods: Set[Food]
-                                   ) extends SimpleArea with GrowFood {
+                                   ) extends Area with GrowFood {
     require(areaType == Fertile)
 
     override def growFood(optFood: Option[Food]): Option[FoodInstance] = {
