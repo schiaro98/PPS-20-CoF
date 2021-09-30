@@ -82,14 +82,7 @@ class ChooseHabitatGUI(val l :ChooseHabitatLogic ) {
           case _: ButtonClicked =>
             val optHabitat = l.createHabitat(getType, w.text, h.text, ue.text)
             if (optHabitat.isDefined) {
-              radios.selected.get match {
-                case v : RadioButton if v == ours =>
-                  val areas = Serializer(OfArea).deserializeManyFromFile(Constants.mainMap)(classOf[Area])
-                  val habitat: Habitat = Habitat(getType, Probability(ue.text.toInt), Constants.mainMapDimension, areas)
-                  startSimulation(habitat)
-                case _ : RadioButton => startSimulation(optHabitat.get)
-                case _ => throw new IllegalArgumentException
-              }
+              startSimulation(optHabitat.get)
               close()
             } else {
               Dialog.showMessage(contents.head, "Some input is not valid", title = "Try again!")

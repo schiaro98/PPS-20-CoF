@@ -1,7 +1,8 @@
 package model
 
+import controller.{OfArea, Serializer}
 import utility.Constants.{defaultGridSize, defaultStartingX, defaultStartingY}
-import utility.{Point, RectangleArea}
+import utility.{Constants, Point, RectangleArea}
 
 import scala.util.Random
 
@@ -23,7 +24,7 @@ trait Habitat {
   def checkForOverlappingAreas(areas: Seq[Area]): Boolean = areas match {
     case h :: t =>
       for (a <- areas.filterNot(elem => elem == h)) {
-        if(h.area.overlap(a.area)) return false
+        if (h.area.overlap(a.area)) return false
       }
       checkForOverlappingAreas(t)
     case _ => true
@@ -50,6 +51,13 @@ trait Habitat {
 
 
 object Habitat {
+  // TODO: fin troppi apply
+
+  //our default habitat
+  def apply(unexpectedEvents: Probability): Habitat = {
+    val areas = Serializer(OfArea).deserializeManyFromFile(Constants.mainMap)(classOf[Area])
+     SimpleHabitat(unexpectedEvents, Constants.mainMapDimension, areas)
+  }
 
   def apply(unexpectedEvents: Probability,
             dimensions: (Int, Int),
@@ -71,13 +79,13 @@ object Habitat {
     case _ => throw new IllegalArgumentException("Habitat type error on method apply")
   }
 
-      def apply(habitatType: HabitatType,
-                unexpectedEvents: Probability,
-                dimensions: (Int, Int),
-                numberOfAreas: Int): Habitat = habitatType match {
-        case RandomHabitatType => SimpleHabitat(unexpectedEvents, dimensions, createRandomAreas(dimensions, numberOfAreas))
-        case GridHabitatType => SimpleHabitat(unexpectedEvents, dimensions, createGridArea(dimensions, numberOfAreas))
-        case _ => throw new IllegalArgumentException("Habitat type error on method apply")
+  def apply(habitatType: HabitatType,
+            unexpectedEvents: Probability,
+            dimensions: (Int, Int),
+            numberOfAreas: Int): Habitat = habitatType match {
+    case RandomHabitatType => SimpleHabitat(unexpectedEvents, dimensions, createRandomAreas(dimensions, numberOfAreas))
+    case GridHabitatType => SimpleHabitat(unexpectedEvents, dimensions, createGridArea(dimensions, numberOfAreas))
+    case _ => throw new IllegalArgumentException("Habitat type error on method apply")
   }
 
   def apply(habitatType: HabitatType,
@@ -99,7 +107,7 @@ object Habitat {
   /**
    * This method create an habitat, of given dimension, with diven areas, arranged in a randow way
    *
-   * @param dimension     dimension of the habitat
+   * @param dimension dimension of the habitat
    * @return
    */
   def createRandomAreas(dimension: (Int, Int)): Seq[Area] = {
@@ -108,17 +116,19 @@ object Habitat {
 
   /**
    * This method create an habitat, of given dimension, with diven areas, arranged in a randow way
-   * @param dimension Dimension of habitat
+   *
+   * @param dimension     Dimension of habitat
    * @param numberOfAreas Number of areas in the habitat TODO now num is blocked to 4
    * @return
    */
   def createRandomAreas(dimension: (Int, Int), numberOfAreas: Int): Seq[Area] = {
     var grid = List[Area]()
     require(dimension._1 * dimension._2 > numberOfAreas * 10)
-    val r = RectangleArea(Point(0,0), Point(1,1))
-    r.getIn4Quadrant(dimension).foreach(rectangle => grid = grid.::(Area(Area.randomType, rectangle, Probability(Random.between(1,100)))))
+    val r = RectangleArea(Point(0, 0), Point(1, 1))
+    r.getIn4Quadrant(dimension).foreach(rectangle => grid = grid.::(Area(Area.randomType, rectangle, Probability(Random.between(1, 100)))))
     grid
   }
+
   /**
    * This method create an habitat, of given dimension, with diven areas, arranged in a grid
    *
@@ -132,15 +142,15 @@ object Habitat {
 
     //Il magic number regola quanto grandi siano le singole aree
     val maxWidth = dimension._1 / (numberOfAreas / 2)
-    val maxHeigth = dimension._2 / (numberOfAreas / 2)
+    val maxHeight = dimension._2 / (numberOfAreas / 2)
 
     for (i <- defaultStartingX until dimension._1 by (dimension._1 / Math.round(Math.sqrt(numberOfAreas).toFloat))) {
       for (j <- defaultStartingY until dimension._2 by (dimension._2 / Math.round(Math.sqrt(numberOfAreas).toFloat))) {
         val startingPoint = Point(i, j)
-        val areaWidth = Random.between(maxWidth/2, maxWidth)
-        val areaHeight = Random.between(maxHeigth/2, maxHeigth)
+        val areaWidth = Random.between(maxWidth / 2, maxWidth)
+        val areaHeight = Random.between(maxHeight / 2, maxHeight)
         val rectangle = RectangleArea(startingPoint, Point(startingPoint.x + areaWidth, startingPoint.y + areaHeight))
-        val newArea: Area = Area(Area.randomType, rectangle, Probability(Random.between(1,100)))
+        val newArea: Area = Area(Area.randomType, rectangle, Probability(Random.between(1, 100)))
         grid = grid.::(newArea)
       }
     }
