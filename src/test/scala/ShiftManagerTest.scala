@@ -17,7 +17,7 @@ class ShiftManagerTest extends AnyFunSuite{
 
   test("Testing walk in ShiftManager"){
     val sm: ShiftManager = ShiftManager(Map(c->Some(Point(55,100)), h->None))
-    val fuck = sm.walk
+    val fuck = sm.walk()
     println(fuck.foreach(println))
   }
 
