@@ -1,6 +1,6 @@
 import controller.BattleManager
-import model.Size.Medium
-import model.{Animal, Carnivorous, Species}
+import model.Size.{Big, Medium, Small}
+import model.{Animal, Carnivorous, Probability, Species}
 import org.scalatest.funsuite.AnyFunSuite
 import utility.Point
 
@@ -27,7 +27,28 @@ class BattleManagerTest extends AnyFunSuite{
     assertThrows[IllegalArgumentException](bm.startBattle(a1, unreachableAnimal))
   }
 
-  /*
-  TODO test probabilities for battles
-   */
+  test("Calculate Probabilities based on Strength"){
+    val strongAnimal = Carnivorous(Species("Null", "tiger", Medium, 10, 10), Point(0,0))
+    val normalAnimal = Carnivorous(Species("Null", "tiger", Medium, 7, 10), Point(0,0))
+    val weakAnimal = Carnivorous(Species("Null", "tiger", Medium, 0, 10), Point(0,0))
+    assert(bm.calculateProbabilityFromStrength(strongAnimal, weakAnimal) == Probability(75))
+    assert(bm.calculateProbabilityFromStrength(weakAnimal, strongAnimal) == Probability(25))
+    assert(bm.calculateProbabilityFromStrength(normalAnimal, strongAnimal) == Probability(38))
+    assert(bm.calculateProbabilityFromStrength(strongAnimal, normalAnimal) == Probability(62))
+  }
+
+  test("Calculate Probabilities based on Distance"){
+    val animalBig = Carnivorous(Species("Null", "tiger", Big, 10, 10), Point(0,0))
+    val animalSmall = Carnivorous(Species("Null", "tiger", Small, 10, 10), Point(1,1))
+    val animalNotSoFar = Carnivorous(Species("Null", "tiger", Small, 10, 10), Point(2,2))
+    val farAnimal = Carnivorous(Species("Null", "tiger", Medium, 10, 10), Point(100,100))
+    assert(bm.calculateProbabilityFromDistance(animalBig, animalSmall) == Probability(75))
+    assert(bm.calculateProbabilityFromDistance(animalBig, farAnimal) == Probability(87))
+    assert(bm.calculateProbabilityFromDistance(animalBig, animalNotSoFar) == Probability(40))
+    assert(bm.calculateProbabilityFromDistance(animalSmall, animalNotSoFar) == Probability(75))
+  }
+
+  test("Calculate Probabilities based on Size"){
+
+  }
 }

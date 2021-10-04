@@ -11,7 +11,11 @@ sealed trait BattleManager {
 
   def battle(probability: Probability) : Boolean
 
-  def calculateProbability(a1: Animal, a2: Animal) : Probability
+  def calculateProbabilityFromSize(a1: Animal, a2: Animal) : Probability
+
+  def calculateProbabilityFromDistance(a1: Animal, a2: Animal) : Probability
+
+  def calculateProbabilityFromStrength(a1: Animal, a2: Animal) : Probability
 
   def sureBattle(probability: Probability) : Boolean
 
@@ -24,6 +28,12 @@ object BattleManager {
 }
 
 private case class SimpleBattleManager(animals: Seq[Animal]) extends BattleManager {
+
+  /**
+   * TODO controllare che gli animali che attaccano
+   * siano solamente i carnivori
+   *
+   */
 
   /**
    * Return a sequence of tuples of every animal an animal can see
@@ -44,12 +54,12 @@ private case class SimpleBattleManager(animals: Seq[Animal]) extends BattleManag
   override def canSee(a1: Animal, a2: Animal): Boolean = a1.position.distance(a2.position) <= a1.sight
 
   /**
-   * Execute battle/figth between two animals
+   * Calculate the probability that animal 1, attacker wins, given only the two sizes
    * @param attacker animal who figth
    * @param defender animal who has been figthed
-   * @return true if animal attacker wins, false otherwise
+   * @return probability of the attacker to win
    */
-  override def calculateProbability(attacker: Animal, defender: Animal): Probability = {
+  override def calculateProbabilityFromSize(attacker: Animal, defender: Animal): Probability = {
     var probability = Probability(50)
     if(attacker.strength > defender.strength){
       probability = attacker.size match {
@@ -73,11 +83,25 @@ private case class SimpleBattleManager(animals: Seq[Animal]) extends BattleManag
     probability
   }
 
+  /**
+   * Execute the battle between the attacker and the defender animal
+   * @param attacker Attacking animal
+   * @param defender Defending animal
+   * @return
+   */
   override def startBattle(attacker: Animal, defender: Animal): Boolean = {
     require(canSee(attacker, defender))
     //if(battle(attacker, defender)) //defender.die()
     //else defender.scappa ?!?! TODO
-    battle(calculateProbability(attacker, defender))
+
+    val probabilities = List(
+      calculateProbabilityFromSize(attacker, defender),
+      calculateProbabilityFromDistance(attacker, defender),
+      calculateProbabilityFromStrength(attacker, defender)
+    )
+
+
+    battle(Probability(probabilities.map(a => a.probability).sum / probabilities.length))
   }
 
   override def sureBattle(probability: Probability): Boolean = {
@@ -85,4 +109,43 @@ private case class SimpleBattleManager(animals: Seq[Animal]) extends BattleManag
   }
 
   override def battle(probability: Probability): Boolean = probability.calculate
+
+  /**
+   * Given a probability, it increase if the defending animal is fast (deducted by it's size) and far away. But it can
+   * increase if the attacking animal is near or fast
+   * @param attacker attacking animal
+   * @param defender defending animal
+   * @return Output probability of winning the battle
+   */
+  override def calculateProbabilityFromDistance(attacker: Animal, defender: Animal): Probability = {
+    val probability = Probability(50)
+    attacker.position.distance(defender.position).toInt match {
+      case x if x <= 1 => probability.increase(50)
+      case x if x <= 5 && x > 1 =>
+        if (attacker.size != Size.Big && defender.size == Size.Big) probability.increase(20)
+        else if (attacker.size == Size.Big && defender.size == Size.Small) probability.decrease(20)
+        else probability
+      case x if x <= 10 && x > 5 =>
+        if (attacker.size != Size.Big && defender.size == Size.Big) probability
+        else if (attacker.size == Size.Big && defender.size == Size.Small) probability.decrease(50)
+        else probability
+      case x if x > 10 => probability.increase(75)
+    }
+  }
+
+  /**
+   * Given a probability, it decrease if the defending animal is stronger.
+   * @param attacker attacking animal
+   * @param defender defending animal
+   * @return Output probability of winning the battle
+   */
+  override def calculateProbabilityFromStrength(attacker: Animal, defender: Animal): Probability = {
+    val probability = Probability(50)
+    attacker.strength - defender.strength match {
+      case x if x > 5 => probability.increase(50) //Attacking molto più forte
+      case x if x > 0 && x <= 5 => probability.increase(20)
+      case x if x <= 0 && x > -5 => probability.decrease(20)
+      case x if x <= -5 => probability.decrease(50) //Defending molto più forte
+    }
+  }
 }
