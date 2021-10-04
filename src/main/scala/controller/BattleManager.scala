@@ -5,44 +5,16 @@ import model.{Animal, Probability, Size}
 sealed trait BattleManager {
   val animals: Seq[Animal]
 
-  /**
-   * This method gives a sequence of tuples of animals
-   * Every tuple is formed by an animal x, and another animal y, visibile from x
-   *
-   * @param animals sequence of animal present
-   * @return sequence of tuples
-   */
   def visibleAnimals(animals: Seq[Animal]) : Seq[(Animal, Animal)]
 
-  /**
-   * Given two animals, return true if the first is able to see the second
-   * @param a1 First animal
-   * @param a2 second animal
-   * @return
-   */
   def canSee(a1: Animal, a2: Animal) : Boolean
 
-  /**
-   * Return trues with a given probability (Rappresent the win of a battle)
-   * @param probability of winning a battle
-   * @return true if the battle is win
-   */
   def battle(probability: Probability) : Boolean
 
-  /**
-   * Calculate the probabilty that animal a1 wins the battle
-   * @param a1 Attacking animal
-   * @param a2 Defending animal
-   * @return a probability
-   */
   def calculateProbability(a1: Animal, a2: Animal) : Probability
 
-  /**
-   * Start a battle between two animals
-   * @param a1 attacking animal
-   * @param a2 defending animal
-   * @return true if the battle is win by a1
-   */
+  def sureBattle(probability: Probability) : Boolean
+
   def startBattle(a1: Animal, a2: Animal): Boolean
 }
 
@@ -53,6 +25,11 @@ object BattleManager {
 
 private case class SimpleBattleManager(animals: Seq[Animal]) extends BattleManager {
 
+  /**
+   * Return a sequence of tuples of every animal an animal can see
+   * @param animals sequence of animals present
+   * @return Sequence of tuples
+   */
   override def visibleAnimals(animals: Seq[Animal]): Seq[(Animal, Animal)] = {
     var visible: Seq[(Animal, Animal)] = Seq.empty
     for( a <- animals; b <- animals.filterNot(animal => a == animal)) {
@@ -61,8 +38,17 @@ private case class SimpleBattleManager(animals: Seq[Animal]) extends BattleManag
     visible
   }
 
+  /**
+   * Return true if animal a1 can see animal a2
+   */
   override def canSee(a1: Animal, a2: Animal): Boolean = a1.position.distance(a2.position) <= a1.sight
 
+  /**
+   * Execute battle/figth between two animals
+   * @param attacker animal who figth
+   * @param defender animal who has been figthed
+   * @return true if animal attacker wins, false otherwise
+   */
   override def calculateProbability(attacker: Animal, defender: Animal): Probability = {
     var probability = Probability(50)
     if(attacker.strength > defender.strength){
@@ -92,6 +78,10 @@ private case class SimpleBattleManager(animals: Seq[Animal]) extends BattleManag
     //if(battle(attacker, defender)) //defender.die()
     //else defender.scappa ?!?! TODO
     battle(calculateProbability(attacker, defender))
+  }
+
+  override def sureBattle(probability: Probability): Boolean = {
+    probability.calculate
   }
 
   override def battle(probability: Probability): Boolean = probability.calculate
