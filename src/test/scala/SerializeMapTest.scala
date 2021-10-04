@@ -92,8 +92,7 @@ class SerializeMapTest extends AnyFunSuite {
   }
 
   test("deserialize the map") {
-    val fileName = "map.txt"
-    val deserializedAreas = areasSerializer.deserializeManyFromFile(fileName)(classOf[Area])
+    val deserializedAreas = areasSerializer.deserializeManyFromFile(Constants.mainMap)(classOf[Area])
     assert(deserializedAreas.head.area == areas.head.area)
   }
 }

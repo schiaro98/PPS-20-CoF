@@ -80,8 +80,7 @@ object Serializer {
         override def serialize(src: Size, typeOfSrc: Type, context: JsonSerializationContext): JsonElement =  new JsonPrimitive(src.toString)
       }
 
-    //TODO - simo - refactor in SpeciesDeserializer?
-      object SizeDeserializer extends JsonDeserializer[Species]{
+      object SpeciesDeserializer extends JsonDeserializer[Species]{
         override def deserialize(json: JsonElement, typeOfT: Type, context: JsonDeserializationContext): Species = {
           val res = json match {
             case obj: JsonObject if obj.has("size") =>
@@ -104,7 +103,7 @@ object Serializer {
       }
 
       override val gson: Gson = new GsonBuilder().registerTypeHierarchyAdapter(classOf[Size], SizeSerializer)
-        .registerTypeHierarchyAdapter(classOf[Species], SizeDeserializer).setPrettyPrinting().create()
+        .registerTypeHierarchyAdapter(classOf[Species], SpeciesDeserializer).setPrettyPrinting().create()
   }
 
   private class FoodsSerializer extends SerializerImpl {
