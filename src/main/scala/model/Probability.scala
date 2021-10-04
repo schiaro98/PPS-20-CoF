@@ -15,9 +15,9 @@ trait Probability {
 }
 
 object Probability {
-  def apply(probability: Int): Probability = new ProbabilityImpl(probability)
+  def apply(probability: Int): Probability = ProbabilityImpl(probability)
 
-  private class ProbabilityImpl(override val probability: Int) extends Probability {
+  private case class ProbabilityImpl(override val probability: Int) extends Probability {
     require(probability >= 0 && probability <= 100 )
 
     override def calculate: Boolean = probability match {
@@ -25,8 +25,9 @@ object Probability {
       case _ => probability - new Random().nextInt(100) > 0
     }
 
-    override def increase(x: Int): Probability = new ProbabilityImpl(probability + ((probability * x) / 100))
+    override def increase(x: Int): Probability = ProbabilityImpl(probability + ((probability * x) / 100))
 
-    override def decrease(x: Int): Probability = new ProbabilityImpl(probability - ((probability * x) / 100))
+    override def decrease(x: Int): Probability = ProbabilityImpl(probability - ((probability * x) / 100))
+
   }
 }
