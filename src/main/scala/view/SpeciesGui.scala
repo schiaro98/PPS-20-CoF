@@ -34,6 +34,7 @@ class SpeciesGui(logic: LogicGui) extends SimpleSwingApplication {
               sizeField.selection.item,
               strengthField.text,
               sightField.text)
+            println(newSpecie)
             logic.addSpeciesInTheFile(newSpecie)
           }
           closeAndUpdate()

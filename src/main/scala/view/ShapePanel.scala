@@ -45,7 +45,7 @@ class ShapePanel(val width: Int, val height: Int) extends Panel {
 
   def addAnimals(species: Map[Species, Int]): Unit = {
     species.foreach(v => {
-      for (_ <- 0 to v._2) {
+      for (_ <- 1 to v._2) {
         val x = Random.nextInt(width)
         val y = Random.nextInt(height)
         shapes.append(new Rectangle(Point(x, y), Point(x+10, y+10), Color.black))

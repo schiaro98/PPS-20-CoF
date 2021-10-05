@@ -28,4 +28,10 @@
   "size": "Small",
   "strength": 0,
   "sight": 0
+}{
+  "icon": "icon.txt",
+  "name": "Prova",
+  "size": "Small",
+  "strength": 10,
+  "sight": 10
 }

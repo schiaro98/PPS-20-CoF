@@ -109,7 +109,7 @@ class LogicGui(speciesFile: String) {
    * @param s species to be added
    */
   def addSpeciesInTheFile(s: Species): Unit = {
-    val speciesFromFile = serializer.deserializeManyFromFile(speciesFile)(classOf[Species]) // :+ s
+    val speciesFromFile = serializer.deserializeManyFromFile(speciesFile)(classOf[Species]) :+ s
     serializer.serializeManyToFile(speciesFromFile)(speciesFile)
   }
 

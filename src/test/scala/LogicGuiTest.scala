@@ -6,11 +6,8 @@ class LogicGuiTest extends AnyFunSuite {
   val mng = new LogicGui("speciesTest.txt")
   val exampleSpecies: Species = Species("", "TestName", Size.Small, 10, 10)
   mng.removeAllSpeciesFromFile()
-  mng.add(Species("null","Lion", Size.Medium, 10, 10))
   mng.addSpeciesInTheFile(Species("null","Lion", Size.Medium, 10, 10))
-  mng.add(Species("null","Ippo", Size.Big, 10, 10))
   mng.addSpeciesInTheFile(Species("null","Ippo", Size.Big, 10, 10))
-  mng.add(Species("null","Zebra", Size.Small, 10, 10))
   mng.addSpeciesInTheFile(Species("null","Zebra", Size.Small, 10, 10))
   mng.initialize()
 
