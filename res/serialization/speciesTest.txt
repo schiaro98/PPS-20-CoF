@@ -1,7 +1,0 @@
-{
-  "icon": "",
-  "name": "TestName",
-  "size": "Small",
-  "strength": 10,
-  "sight": 10
-}

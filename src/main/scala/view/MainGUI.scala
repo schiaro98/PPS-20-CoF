@@ -1,5 +1,8 @@
 package view
 
+import model.Species
+import utility.Constants
+
 import java.awt.Dimension
 import javax.swing.WindowConstants
 import scala.swing.BorderPanel.Position._
@@ -8,7 +11,7 @@ import scala.swing.event.ButtonClicked
 
 object MainGUI extends SimpleSwingApplication {
 
-  val logic = new LogicGui("species.txt")
+  val logic = new LogicGui(Constants.SavedSpecies)
   logic.initialize()
 
   override def top: Frame = new Frame {
@@ -18,7 +21,7 @@ object MainGUI extends SimpleSwingApplication {
     val createButton: Button = new Button("Create new specie") {
       tooltip = "Click to create new species"
       reactions += {
-        case _: ButtonClicked => new SpeciesGui(logic){
+        case _: ButtonClicked => new SpeciesGui(logic) {
           top.visible = true
         }
       }
@@ -40,11 +43,11 @@ object MainGUI extends SimpleSwingApplication {
 
     val grid: GridPanel = new GridPanel(0, 4) {
 
-      def initGrid(animals: Map[String, Int]): Unit = {
+      def initGrid(animals: Map[Species, Int]): Unit = {
 
         animals.foreach(animal => {
 
-          val nameField = new TextField(animal._1) {
+          val nameField = new TextField(animal._1.name) {
             editable = false
           }
 
@@ -71,15 +74,15 @@ object MainGUI extends SimpleSwingApplication {
           contents addAll List(nameField, quantityField, increase, decrease)
         })
 
-        val speciesOnFile = logic.speciesSeq
-        val cb: ComboBox[String] = new ComboBox[String](speciesOnFile.map(species => species.name) diff logic.species.keySet.toSeq ) //diff
+        val speciesOnFile = logic.species.keySet
+        val cb: ComboBox[String] = new ComboBox[String](speciesOnFile.map(species => species.name).toSeq diff logic.species.keySet.map(v => v.name).toSeq)
 
         val chooseButton = new Button("Add") {
           reactions += {
             case _: ButtonClicked =>
               if (cb.selection.item != null) {
-                logic.increase(cb.selection.item)
-                 updateGrid()
+                logic.increase(animals.keySet.find(s => s.name == cb.selection.item).getOrElse(throw new IllegalArgumentException))
+                updateGrid()
               }
           }
         }
@@ -87,7 +90,7 @@ object MainGUI extends SimpleSwingApplication {
         contents addAll List(cb, chooseButton)
       }
 
-       def updateGrid(): Unit = {
+      def updateGrid(): Unit = {
         grid.peer.removeAll()
         grid.revalidate()
         grid.repaint()

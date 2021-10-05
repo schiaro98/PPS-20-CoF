@@ -85,14 +85,14 @@ class SerializeMapTest extends AnyFunSuite {
   }
 
   test("serialize the map"){
-    areasSerializer.serializeManyToFile(areas)(Constants.mainMap)
-    val path = Path.of("res"+File.separator+"serialization"+File.separator+Constants.mainMap)
+    areasSerializer.serializeManyToFile(areas)(Constants.MainMap)
+    val path = Path.of("res"+File.separator+"serialization"+File.separator+Constants.MainMap)
     val json = Files.readString(path, StandardCharsets.UTF_8)
     assert(json != "")
   }
 
   test("deserialize the map") {
-    val deserializedAreas = areasSerializer.deserializeManyFromFile(Constants.mainMap)(classOf[Area])
+    val deserializedAreas = areasSerializer.deserializeManyFromFile(Constants.MainMap)(classOf[Area])
     assert(deserializedAreas.head.area == areas.head.area)
   }
 }

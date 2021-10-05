@@ -13,58 +13,61 @@ class LogicGui(speciesFile: String) {
   /**
    * Species is used to store the number of animal for every species
    */
-  var species = Map.empty[String, Int]
+  var species = Map.empty[Species, Int]
 
   /**
-   * SpeciesSeq is where the different species are stored on runtime
+   * Save the Species present in the file in a variable
    */
-  var speciesSeq = Seq.empty[Species]
-
-  def initialize() {
-    speciesSeq = serializer.deserializeManyFromFile(speciesFile)(classOf[Species])
-    speciesSeq.foreach(speciesOnFile => { species += (speciesOnFile.name -> 1) }) //e li leggo
+  def initialize(): Unit = {
+    val speciesFromFile = serializer.deserializeManyFromFile(speciesFile)(classOf[Species])
+    speciesFromFile.foreach(s => {
+      species += (s -> 1)
+    })
   }
 
   /**
-  Add a new animal if it doesn't exist
-  @param str name of the animal
+   * Add a new species if it doesn't exist
+   *
+   * @param s species of the animal
    */
-  def add(str: String) {
-    if(!species.contains(str)) {
-      species += str -> 1
+  def add(s: Species): Unit = {
+    if (!species.contains(s)) {
+      species += s -> 1
     }
   }
 
   /**
-  Increase quantity of an animal
-    if it doesn't exist, add it
-  @param str name of the animal
+   * Increase the number of animal of a species; if it doesn't exist, it adds it
+   *
+   * @param s species of the animal
    */
-  def increase(str: String) {
-    if(species.contains(str)){
-      species += str -> species(str).+(1)
+  def increase(s: Species): Unit = {
+    if (species.contains(s)) {
+      species += s -> species(s).+(1)
     } else {
-      add(str)
+      add(s)
     }
   }
 
   /**
-  Remove an animal
-  @param str name of the animal
+   * Remove a species
+   *
+   * @param s species of the animal
    */
-  def remove(str: String) {
-    species = species - str
+  def remove(s: Species): Unit = {
+    species = species - s
   }
 
   /**
    * Decrease quantity of an animal, deleting it if it's equal to zero
-   * @param str name of the animal
+   *
+   * @param s species of the animal
    */
-  def decrease(str: String): AnyVal = {
-    val value = species get str
+  def decrease(s: Species): AnyVal = {
+    val value = species get s
     value match {
-      case Some(value) if value > 1 => species += str -> species(str).-(1)
-      case Some(_) => remove(str)
+      case Some(value) if value > 1 => species += s -> species(s).-(1)
+      case Some(_) => remove(s)
       case None => println("Animal not found") //TODO maybe exception, in the future
     }
   }
@@ -73,13 +76,15 @@ class LogicGui(speciesFile: String) {
    * Given the Species parameters, give an istance of Species
    */
   def captionSpecies(name: String, size: String, strength: String, sight: String): Species = {
-    Species("icon.txt", name,  toSize(size), tryToInt(strength), tryToInt(sight))
+    Species("icon.txt", name, toSize(size), tryToInt(strength), tryToInt(sight))
   }
 
   // TODO: gestire meglio la gestione degli input da utente
+
   /**
-    Convert int to String
-   @throws Exception if string is not a number
+   * Convert int to String
+   *
+   * @throws Exception if string is not a number
    */
   def tryToInt(s: String): Int = {
     try {
@@ -90,7 +95,7 @@ class LogicGui(speciesFile: String) {
   }
 
   /**
-  Convert string into Size type
+   * Convert string into Size type
    */
   def toSize(s: String): Size = s match {
     case "Small" => Size.Small
@@ -100,34 +105,55 @@ class LogicGui(speciesFile: String) {
 
   /**
    * Add species to species file
-   * @param species to be added
+   *
+   * @param s species to be added
    */
-  def addSpecies(species: Species) {
-    speciesSeq = speciesSeq :+ species
-    serializer.serializeManyToFile(speciesSeq)(speciesFile)
+  def addSpeciesInTheFile(s: Species): Unit = {
+    val speciesFromFile = serializer.deserializeManyFromFile(speciesFile)(classOf[Species]) // :+ s
+    serializer.serializeManyToFile(speciesFromFile)(speciesFile)
   }
 
   /**
    * Remove species in species file
-   * @param species to be removed
+   *
+   * @param s species to be removed
    */
-  def removeSpecies(species: Species) {
-    speciesSeq = speciesSeq.filterNot(x => x == species)
+  def removeSpeciesFromFile(s: Species): Unit = {
+    val speciesSeq = species.keySet.filterNot(x => x == s)
     serializer.serializeManyToFile(speciesSeq)(speciesFile)
   }
 
   /**
-   * Remove all species from species file, basicaly it clean the species file
+   * Remove all species from species file, basically it clean the species file
    */
-  def removeAllSpecies() {
+  def removeAllSpeciesFromFile(): Unit = {
     serializer.serializeManyToFile(Seq.empty[Species])(speciesFile)
   }
 
   /**
    * Return the species, given the name
    */
-  def getSpecies(name: String): Option[Species] ={
-    speciesSeq.find(species => species.name == name)
+  def getSpecies(name: String): Option[Species] = {
+    species.keySet.find(species => species.name == name)
   }
 
+//  /**
+//   * Add a new species if it doesn't exist and add it also to species file
+//   *
+//   * @param s species to be added
+//   */
+//  def addAndUpdateFile(s: Species): Unit = {
+//    add(s)
+//    addSpeciesInTheFile(s)
+//  }
+//
+//  /**
+//   * Remove a species, also from species file
+//   *
+//   * @param s species of the animal
+//   */
+//  def removeAndUpdateFile(s: Species): Unit = {
+//    remove(s)
+//    removeSpeciesFromFile(s)
+//  }
 }

@@ -71,7 +71,7 @@ object Serializer {
 
       val path = Path.of("res"+File.separator+"serialization"+File.separator+fileName)
       val json = Files.readString(path, StandardCharsets.UTF_8)
-      deserializeMany(json)(classOfT)
+      if (json == "") Seq.empty[T] else deserializeMany(json)(classOfT)
     }
   }
 

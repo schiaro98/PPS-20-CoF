@@ -1,14 +1,12 @@
 package view
 
-import controller.{OfArea, Serializer}
-import model.{Area, EmptyHabitatType, GridHabitatType, Habitat, HabitatType, Probability, RandomHabitatType, SimpleHabitatType}
-import utility.Constants
+import model._
 
 import javax.swing.{Box, WindowConstants}
 import scala.swing._
 import scala.swing.event.ButtonClicked
 
-class ChooseHabitatGUI(val l :ChooseHabitatLogic ) {
+class ChooseHabitatGUI(val l :ChooseHabitatLogic) {
 
   val w: TextField = new TextField("500"){
     editable = false
@@ -110,5 +108,5 @@ class ChooseHabitatGUI(val l :ChooseHabitatLogic ) {
     else GridHabitatType
   }
 
-  def startSimulation(habitat: Habitat): SimulationGui = new SimulationGui(habitat) {top.visible = true }
+  def startSimulation(habitat: Habitat): SimulationGui = new SimulationGui(habitat, l.species) {top.visible = true }
 }

@@ -1,10 +1,8 @@
 package view
 
-import controller.{OfArea, Serializer}
-import model.{Area, Habitat, HabitatType, Probability, SimpleHabitatType}
-import utility.Constants
+import model._
 
-class ChooseHabitatLogic(val species:Map[String, Int]) {
+class ChooseHabitatLogic(val species:Map[Species, Int]) {
 
   def createHabitat(ht: HabitatType, w: String, h: String, ue: String, areas: Seq[Area] = Seq.empty): Option[Habitat] =
     if (isNumber(w) && isNumber(h) && isNumber(ue) && ue.toInt >= 0  && ue.toInt <= 100) {

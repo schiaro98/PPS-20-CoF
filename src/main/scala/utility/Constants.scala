@@ -3,8 +3,11 @@ package utility
 import scala.swing.Dimension
 
 object Constants {
-  val FoodsFilePath = "foods.txt"
 
+  // ------- Text files -------
+  val FoodsFilePath = "foods.txt"
+  val MainMap = "map.txt"
+  val SavedSpecies = "species.txt"
 
   // ------- Food -------
   val DefaultFoodQuantity = 10
@@ -27,14 +30,13 @@ object Constants {
   val MaxShift = 15
 
   // ------- Gui --------
-  val defaultSimulationDimension = new Dimension(1000, 1000)
-  val mainMap = "map.txt"
-  val mainMapDimension: (Int, Int) = (500, 500)
+  val DefaultSimulationDimension = new Dimension(1000, 1000)
+  val MainMapDimension: (Int, Int) = (500, 500)
 
-  val defaultStartingX = 100
-  val defaultStartingY = 100
+  val DefaultStartingX = 100
+  val DefaultStartingY = 100
 
   // ------- Habitat ------
-  val defaultRandomSize = 10
-  val defaultGridSize = 100
+  val DefaultRandomSize = 10
+  val DefaultGridSize = 100
 }

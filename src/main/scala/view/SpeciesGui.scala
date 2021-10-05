@@ -27,27 +27,26 @@ class SpeciesGui(logic: LogicGui) extends SimpleSwingApplication {
         case _ : ButtonClicked =>
           if(nameField.text == "Name"){
             println("Default species, please retry...")
-          } else if(logic.speciesSeq.map(species => species.name).contains(nameField.text)){
+          } else if(logic.species.keySet.map(s => s.name).contains(nameField.text)){
             println("Nome già assegnato")
           } else {
             val newSpecie = logic.captionSpecies(nameField.text,
               sizeField.selection.item,
               strengthField.text,
               sightField.text)
-
-            logic.addSpecies(newSpecie)
+            logic.addSpeciesInTheFile(newSpecie)
           }
           closeAndUpdate()
       }
     }
 
-    val existingSpecies = new ComboBox[String](logic.speciesSeq.map(species => species.name))
+    val existingSpecies = new ComboBox[String](logic.species.keySet.map(s => s.name).toSeq)
     val removeSpecies: Button = new Button("Remove"){
       reactions += {
         case _ : ButtonClicked =>
-          val speciesName = existingSpecies.selection.item
-          logic.removeSpecies(logic.getSpecies(speciesName).get)
-          logic.remove(speciesName)
+          val species = logic.getSpecies(existingSpecies.selection.item).get
+          logic.removeSpeciesFromFile(species)
+          logic.remove(species)
           closeAndUpdate()
       }
     }

@@ -1,7 +1,7 @@
 package model
 
 import controller.{OfArea, Serializer}
-import utility.Constants.{defaultGridSize, defaultStartingX, defaultStartingY}
+import utility.Constants.{DefaultGridSize, DefaultStartingX, DefaultStartingY}
 import utility.{Constants, Point, RectangleArea}
 
 import scala.util.Random
@@ -55,8 +55,8 @@ object Habitat {
 
   //our default habitat
   def apply(unexpectedEvents: Probability): Habitat = {
-    val areas = Serializer(OfArea).deserializeManyFromFile(Constants.mainMap)(classOf[Area])
-     SimpleHabitat(unexpectedEvents, Constants.mainMapDimension, areas)
+    val areas = Serializer(OfArea).deserializeManyFromFile(Constants.MainMap)(classOf[Area])
+     SimpleHabitat(unexpectedEvents, Constants.MainMapDimension, areas)
   }
 
   def apply(unexpectedEvents: Probability,
@@ -75,7 +75,7 @@ object Habitat {
     case EmptyHabitatType => SimpleHabitat(unexpectedEvents, dimensions, Seq.empty)
     case SimpleHabitatType => SimpleHabitat(unexpectedEvents, dimensions, areas)
     case RandomHabitatType => SimpleHabitat(unexpectedEvents, dimensions, createRandomAreas(dimensions))
-    case GridHabitatType => SimpleHabitat(unexpectedEvents, dimensions, createGridArea(dimensions, defaultGridSize))
+    case GridHabitatType => SimpleHabitat(unexpectedEvents, dimensions, createGridArea(dimensions, DefaultGridSize))
     case _ => throw new IllegalArgumentException("Habitat type error on method apply")
   }
 
@@ -144,8 +144,8 @@ object Habitat {
     val maxWidth = dimension._1 / (numberOfAreas / 2)
     val maxHeight = dimension._2 / (numberOfAreas / 2)
 
-    for (i <- defaultStartingX until dimension._1 by (dimension._1 / Math.round(Math.sqrt(numberOfAreas).toFloat))) {
-      for (j <- defaultStartingY until dimension._2 by (dimension._2 / Math.round(Math.sqrt(numberOfAreas).toFloat))) {
+    for (i <- DefaultStartingX until dimension._1 by (dimension._1 / Math.round(Math.sqrt(numberOfAreas).toFloat))) {
+      for (j <- DefaultStartingY until dimension._2 by (dimension._2 / Math.round(Math.sqrt(numberOfAreas).toFloat))) {
         val startingPoint = Point(i, j)
         val areaWidth = Random.between(maxWidth / 2, maxWidth)
         val areaHeight = Random.between(maxHeight / 2, maxHeight)
