@@ -3,7 +3,6 @@ package controller
 import model.{Animal, Habitat}
 import utility.{Constants, Point}
 
-import scala.collection.mutable
 import scala.util.Random
 
 sealed trait ShiftManager {
@@ -24,20 +23,20 @@ object ShiftManager {
 
   private class ShiftManagerImpl(override val habitat: Habitat, override var animalsDestinations: Map[Animal, Option[Point]]) extends ShiftManager {
 
+    // TODO: try to do it with for yield
     override def walk(): Unit = {
-      var map = scala.collection.mutable.Map.empty[Animal, Option[Point]]
+      val map = scala.collection.mutable.Map.empty[Animal, Option[Point]]
       val travelDistance: (Int, Int) = (Random.nextInt(Constants.MaxShift), Random.nextInt(Constants.MaxShift))
       for (a <- animals) {
-        println(a.name, animalsDestinations.getOrElse(a, None))
         //animal has a destination
         if (animalsDestinations(a).isDefined) {
-          println("animal has a destination")
+//          println("animal has a destination")
           val dest = animalsDestinations(a).get
           if (canTravel(a.position, dest, travelDistance)) {
+            println(a.name, " is arriving")
             map += (a.shift(dest) ->None)
           } else map += a.shift(calcNewPoint(a.position, dest, travelDistance))->Some(dest)
           //animal doesn't have a destination
-
         } else map += (a -> None)
       }
       animalsDestinations = map.toMap
@@ -70,7 +69,7 @@ object ShiftManager {
       
       val x = if(px < 0) 0 else if (px >habitat.dimensions._1) habitat.dimensions._1 else px
       val y = if(py <0) 0 else if (py> habitat.dimensions._2) habitat.dimensions._2 else py
-      println("new point is ", x, " ", y )
+//      println("new point is ", x, " ", y )
       Point(x,y)
     }
 
