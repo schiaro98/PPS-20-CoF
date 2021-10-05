@@ -12,6 +12,9 @@ case class RectangleArea(topLeft: Point, bottomRight: Point) {
       topLeft.y < otherArea.bottomRight.y &&
       bottomRight.y > otherArea.topLeft.y
 
+  def contains(p: Point): Boolean = p.isLeft(bottomRight) && p.isRight(topLeft)&& p.isUnder(topLeft) && p.isOver(bottomRight)
+
+
   def getIn4Quadrant(size: (Int, Int)) : Seq[RectangleArea] = {
     var rectangles = Seq.empty[RectangleArea]
     val maxX = size._1 / 4

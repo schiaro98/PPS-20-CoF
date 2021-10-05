@@ -14,6 +14,18 @@ case class Point(x: Int, y: Int) {
 
   def ==(p: Point): Boolean = x == p.x && y == p.y
 
+  /**
+   * @param p the point of reference
+   * @return true if the other point has a lower y
+   */
+  def isUnder(p:Point):Boolean = p.y < y
+
+  def isOver(p:Point): Boolean = !isUnder(p)
+
+  def isRight(p:Point): Boolean = p.x < x
+
+  def isLeft(p:Point):Boolean = !isRight(p)
+
   def distance(p: Point): Double = Math.sqrt(Math.pow(x - p.x, 2) + Math.pow(y - p.y, 2))
 
   def getRandomPoint(limits: Point): Point = getRandomPoint(Point(0,0), limits)
