@@ -71,4 +71,24 @@ class ShiftManagerTest extends AnyFunSuite{
     assert(sm.animals.count(a => a.position == dest) == sm.animals.size)
   }
 
+
+  test("Multiple animals arrive at different random destinations in ours habitat"){
+    val r = (x:Int) => Random.nextInt(x)
+    val dest1 = Point(r(MaxX),r(MaxY))
+    val dest2 = Point(r(MaxX),r(MaxY))
+    val dest3 = Point(r(MaxX),r(MaxY))
+    val dest4 = Point(r(MaxX),r(MaxY))
+    val destinations = Set(dest1,dest2,dest3,dest4)
+    val sm: ShiftManager = ShiftManager(ourHabitat,
+      Map(tiger->Some(dest1),
+        elephant->Some(dest2),
+        dog->Some(dest3),
+        cat->Some(dest4)
+      ))
+    //100 iterations should be enough
+    for(i <- 0 to 100){
+      sm.walk()
+    }
+    assert(sm.animals.count(a => destinations.contains(a.position)) == sm.animals.size)
+  }
 }

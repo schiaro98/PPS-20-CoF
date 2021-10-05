@@ -8,7 +8,7 @@ import scala.util.Random
 sealed trait ShiftManager {
   val habitat: Habitat
   var animalsDestinations: Map[Animal, Option[Point]]
-
+  // TODO: find a way to require animals outside NonWalkableAreas
 
   def walk(): Unit
 
@@ -55,17 +55,28 @@ object ShiftManager {
     }
 
     // TODO: now simplifing saing that there are only walkableAreas
-    
+
+    // TODO: refactor calcNewPoint
+
     //cambiare nome a questi 2?
     def calcNewPoint(from: Point, to: Point, travelDistance: (Int, Int)): Point = {
-
-      //else
+      //calculating potential points
       val px = if (to.isRight(from)) from.x + travelDistance._1 else from.x - travelDistance._1
       val py = if (to.isUnder(from)) from.y + travelDistance._2 else from.y - travelDistance._2
-      
+
+      val potP = Point(px,py)
+      //if points are inside a NonWalkableArea
+      if(habitat.areas.count(a => a.contains(potP)) > 0){
+        println("you shouldn't be walking here")
+//        trovo la distanza minore dalla x per aggirarlo
+//        trovo la distanza minore dalla y per aggirarlo
+      }
+
+      //if everything is ok check that points are inside the habitat else make them inside
       val x = if(px < 0) 0 else if (px >habitat.dimensions._1) habitat.dimensions._1 else px
       val y = if(py <0) 0 else if (py> habitat.dimensions._2) habitat.dimensions._2 else py
 //      println("new point is ", x, " ", y )
+      //the real point
       Point(x,y)
     }
 
