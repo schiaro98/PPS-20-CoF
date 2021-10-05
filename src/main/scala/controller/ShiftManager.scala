@@ -34,11 +34,11 @@ object ShiftManager {
           println("animal has a destination")
           val dest = animalsDestinations(a).get
           if (canTravel(a.position, dest, travelDistance)) {
-            map.+= (a.shift(dest) ->None)
+            map += (a.shift(dest) ->None)
           } else map += a.shift(calcNewPoint(a.position, dest, travelDistance))->Some(dest)
           //animal doesn't have a destination
 
-        } //else seq :+= a.shift(calcRandomPoint(a.position, travelDistance))
+        } else map += (a -> None)
       }
       animalsDestinations = map.toMap
     }
