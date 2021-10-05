@@ -8,7 +8,7 @@ import scala.util.Random
 
 sealed trait ShiftManager {
   val habitat: Habitat
-  var animalsDestinations: mutable.Map[Animal, Option[Point]]
+  var animalsDestinations: Map[Animal, Option[Point]]
 
 
   def walk(): Unit
@@ -19,10 +19,10 @@ sealed trait ShiftManager {
 
 
 object ShiftManager {
-  def apply(habitat: Habitat, animalsDestinations: mutable.Map[Animal, Option[Point]]): ShiftManager =
+  def apply(habitat: Habitat, animalsDestinations: Map[Animal, Option[Point]]): ShiftManager =
     new ShiftManagerImpl(habitat: Habitat, animalsDestinations)
 
-  private class ShiftManagerImpl(override val habitat: Habitat, override var animalsDestinations: mutable.Map[Animal, Option[Point]]) extends ShiftManager {
+  private class ShiftManagerImpl(override val habitat: Habitat, override var animalsDestinations: Map[Animal, Option[Point]]) extends ShiftManager {
 
     override def walk(): Unit = {
       var map = scala.collection.mutable.Map.empty[Animal, Option[Point]]
@@ -40,7 +40,7 @@ object ShiftManager {
 
         } //else seq :+= a.shift(calcRandomPoint(a.position, travelDistance))
       }
-      animalsDestinations = map
+      animalsDestinations = map.toMap
     }
 
     /**
