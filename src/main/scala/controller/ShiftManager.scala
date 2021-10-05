@@ -58,11 +58,7 @@ object ShiftManager {
     
     //cambiare nome a questi 2?
     def calcNewPoint(from: Point, to: Point, travelDistance: (Int, Int)): Point = {
-      // TODO: fix if animal can arrive in same x or y, do not have to go further
-//   todo   do I need all the travelDistance?
-      //if not
-      
-      
+
       //else
       val px = if (to.isRight(from)) from.x + travelDistance._1 else from.x - travelDistance._1
       val py = if (to.isUnder(from)) from.y + travelDistance._2 else from.y - travelDistance._2
