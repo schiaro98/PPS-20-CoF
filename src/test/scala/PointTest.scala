@@ -51,25 +51,25 @@ class PointTest extends AnyFunSuite{
   test("Test isUnder"){
     val up = Point(10,20)
     val down = Point(10,30)
-    assert(down.isUnder(up),true)
+    assert(down.isUnder(up))
   }
 
   test("Test isOver"){
     val up = Point(10,20)
     val down = Point(10,30)
-    assert(up.isOver(down),true)
+    assert(up.isOver(down))
   }
 
   test("Test isLeft"){
     val left = Point(5, 10)
     val right = Point(10,10)
-    assert(left.isLeft(right), true )
+    assert(left.isLeft(right))
   }
 
   test("isRight"){
     val left = Point(5, 10)
     val right = Point(10,10)
-    assert(right.isRight(left),true)
+    assert(right.isRight(left))
   }
 
 }
