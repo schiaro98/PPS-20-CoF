@@ -21,6 +21,8 @@ sealed trait Area {
   val color: Color
   val areaType: AreaType
   val area: RectangleArea
+
+  def contains(p: Point): Boolean = area.contains(p)
 }
 
 object Area {

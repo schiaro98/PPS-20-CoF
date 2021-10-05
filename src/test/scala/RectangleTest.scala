@@ -31,4 +31,9 @@ class RectangleTest extends AnyFunSuite{
       r.getIn4Quadrant((Random.between(100, 1000), Random.between(100, 1000))).foreach(rect => assert(rect.isValid))
     }
   }
+
+  test("Check if a Point is inside a rectangle"){
+    val r = RectangleArea(Point(0,0), Point(100,100))
+    assert(r.contains(Point(50,50)))
+  }
 }

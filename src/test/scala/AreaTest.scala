@@ -20,4 +20,9 @@ class AreaTest extends AnyFunSuite{
     assert(areaWithGrowFood.isInstanceOf[Area with GrowFood])
   }
 
+  test("Test if area contains a Point"){
+    val areaWithGrowFood = Area(Fertile, RectangleArea(Point(10,20), Point(15, 25)), Probability(50))
+    assert(areaWithGrowFood.contains(Point(13,23)))
+  }
+
 }
