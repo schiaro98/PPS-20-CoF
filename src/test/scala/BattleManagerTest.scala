@@ -7,8 +7,8 @@ import utility.Point
 class BattleManagerTest extends AnyFunSuite{
 
   val a1: Animal = Carnivorous(Species("", "tiger", Medium, 10, 10), Point(0,0))
-  val a2: Animal = Carnivorous(Species("", "tiger", Medium, 10, 10), Point(1,1))
-  val a3: Animal = Carnivorous(Species("", "tiger", Medium, 10, 10), Point(2,2))
+  val a2: Animal = Carnivorous(Species("", "tiger", Small, 10, 10), Point(1,1))
+  val a3: Animal = Carnivorous(Species("", "tiger", Small, 10, 10), Point(2,2))
   val unreachableAnimal: Animal = Carnivorous(Species("", "tiger", Medium, 10, 10), Point(100,100))
   val bm: BattleManager = BattleManager()
 
@@ -50,5 +50,10 @@ class BattleManagerTest extends AnyFunSuite{
 
   test("Calculate Probabilities based on Size"){
 
+  }
+
+  test("Execute a simple battle"){
+    val bm = BattleManager(Seq(a1, a2, a3))
+    bm.calculateBattles()
   }
 }
