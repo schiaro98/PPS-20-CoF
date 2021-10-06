@@ -9,12 +9,12 @@ import scala.swing.BorderPanel.Position._
 import scala.swing._
 import scala.swing.event.ButtonClicked
 
-object MainGUI extends SimpleSwingApplication {
+object MainGUI {
 
   val logic = new LogicGui(Constants.SavedSpecies)
   logic.initialize()
 
-  override def top: Frame = new Frame {
+  val frame: Frame = new Frame {
     title = "Circle of life"
     preferredSize = new Dimension(450, 200)
 
