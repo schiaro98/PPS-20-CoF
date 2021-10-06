@@ -1,6 +1,6 @@
 package view
 
-import utility.Point
+import utility.{Point, RectangleArea}
 
 import java.awt.{Color, Graphics2D}
 

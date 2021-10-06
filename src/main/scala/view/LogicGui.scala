@@ -18,16 +18,12 @@ class LogicGui(speciesFile: String) {
   /**
    * Save the Species present in the file in a variable
    */
-  def initialize(): Unit = {
-    val speciesFromFile = serializer.deserializeManyFromFile(speciesFile)(classOf[Species])
-    speciesFromFile.foreach(s => {
-      species += (s -> 1)
-    })
-  }
+  def initialize(): Unit = getAllSpecies.foreach(s => species += (s -> 1))
+
+  def getAllSpecies: Seq[Species] = serializer.deserializeManyFromFile(speciesFile)(classOf[Species])
 
   /**
    * Add a new species if it doesn't exist
-   *
    * @param s species of the animal
    */
   def add(s: Species): Unit = {

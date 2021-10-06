@@ -50,4 +50,5 @@ object Species {
                             override val size: Size,
                             override val strength: Int,
                             override val sight: Int) extends Species
+
 }

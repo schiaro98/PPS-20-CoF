@@ -74,12 +74,14 @@ object MainGUI {
           contents addAll List(nameField, quantityField, increase, decrease)
         })
 
-        val speciesOnFile = logic.species.keySet
-        val cb: ComboBox[String] = new ComboBox[String](speciesOnFile.map(species => species.name).toSeq diff logic.species.keySet.map(v => v.name).toSeq)
+        val allNames = logic.getAllSpecies.map(species => species.name)
+        val deletedByGui = logic.species.keySet.map(species => species.name).toSeq
+        val cb: ComboBox[String] = new ComboBox[String](allNames diff deletedByGui) //TODO worka ma all'add da errore
 
         val chooseButton = new Button("Add") {
           reactions += {
             case _: ButtonClicked =>
+              println("What i should see on combobox " + allNames diff deletedByGui)
               if (cb.selection.item != null) {
                 logic.increase(animals.keySet.find(s => s.name == cb.selection.item).getOrElse(throw new IllegalArgumentException))
                 updateGrid()

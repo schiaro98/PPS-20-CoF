@@ -26,22 +26,22 @@ class SpeciesGui(logic: LogicGui) extends SimpleSwingApplication {
       reactions += {
         case _ : ButtonClicked =>
           if(nameField.text == "Name"){
-            println("Default species, please retry...")
+            Dialog.showMessage(contents.head, "Choose a name, please", title = "Try again!")
           } else if(logic.species.keySet.map(s => s.name).contains(nameField.text)){
-            println("Nome già assegnato")
+            Dialog.showMessage(contents.head, "A species with the given name already exist", title = "Try again!")
           } else {
             val newSpecie = logic.captionSpecies(nameField.text,
               sizeField.selection.item,
               strengthField.text,
               sightField.text)
-            println(newSpecie)
             logic.addSpeciesInTheFile(newSpecie)
+            closeAndUpdate()
           }
-          closeAndUpdate()
       }
     }
 
     val existingSpecies = new ComboBox[String](logic.species.keySet.map(s => s.name).toSeq)
+
     val removeSpecies: Button = new Button("Remove"){
       reactions += {
         case _ : ButtonClicked =>
@@ -56,7 +56,6 @@ class SpeciesGui(logic: LogicGui) extends SimpleSwingApplication {
       contents addAll List(nameLabel, nameField, strengthLabel, strengthField, sightLabel, sightField, sizeLabel,
         sizeField, confirm, existingSpecies, removeSpecies)
       centerOnScreen()
-//      open()
     }
 
     contents = new BorderPanel() {

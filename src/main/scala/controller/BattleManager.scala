@@ -152,8 +152,9 @@ private case class SimpleBattleManager(animals: Seq[Animal]) extends BattleManag
     probability
   }
 
+
   override def calculateBattles(): Unit = {
-    visibleAnimals().filter(couple => couple._1.isInstanceOf[Carnivorous]).foreach(couple => startBattle(couple._1, couple._2))
+    visibleAnimals().filter(couple => isCarnivorous(couple._1)).foreach(couple => startBattle(couple._1, couple._2))
   }
 
   override def isCarnivorous(animal: Animal): Boolean = animal.isInstanceOf[Carnivorous]
