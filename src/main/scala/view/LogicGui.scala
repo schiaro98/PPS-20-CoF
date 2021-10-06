@@ -68,7 +68,7 @@ class LogicGui(speciesFile: String) {
     value match {
       case Some(value) if value > 1 => species += s -> species(s).-(1)
       case Some(_) => remove(s)
-      case None => println("Animal not found") //TODO maybe exception, in the future
+      case None => throw new IllegalArgumentException("Animal not found")
     }
   }
 

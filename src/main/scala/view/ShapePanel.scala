@@ -28,13 +28,14 @@ class ShapePanel(val width: Int, val height: Int) extends Panel {
 
   val shapes = new ArrayBuffer[Shape]
 
+  /*
   new Timer(10, (_: ActionEvent) => {
     for (s <- shapes) {
       s.move(width, height)
     }
     repaint
-  }) //.start() TODO valutare il farlo con più thread se serve il movimento, sicuramente senza timer
-
+  }) //.start()
+  */
   def addShape(shape: Shape): Unit = {
     shapes.append(shape)
   }

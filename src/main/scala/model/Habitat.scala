@@ -115,10 +115,10 @@ object Habitat {
   }
 
   /**
-   * This method create an habitat, of given dimension, with diven areas, arranged in a randow way
+   * This method create an habitat, of given dimension, with 4 areas
    *
    * @param dimension     Dimension of habitat
-   * @param numberOfAreas Number of areas in the habitat TODO now num is blocked to 4
+   * @param numberOfAreas Number of areas in the habitat
    * @return
    */
   def createRandomAreas(dimension: (Int, Int), numberOfAreas: Int): Seq[Area] = {
@@ -140,7 +140,6 @@ object Habitat {
     var grid = List[Area]()
     require(dimension._1 * dimension._2 > numberOfAreas * 10)
 
-    //Il magic number regola quanto grandi siano le singole aree
     val maxWidth = dimension._1 / (numberOfAreas / 2)
     val maxHeight = dimension._2 / (numberOfAreas / 2)
 

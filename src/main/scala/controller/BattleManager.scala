@@ -21,6 +21,8 @@ sealed trait BattleManager {
   def startBattle(a1: Animal, a2: Animal): Unit
 
   def calculateBattles(): Unit
+
+  def isCarnivorous(animal: Animal): Boolean
 }
 
 object BattleManager {
@@ -63,9 +65,9 @@ private case class SimpleBattleManager(animals: Seq[Animal]) extends BattleManag
    * @return
    */
   override def startBattle(attacker: Animal, defender: Animal): Unit = {
+    require(isCarnivorous(attacker))
+    require(attacker.health > 0)
     require(canSee(attacker, defender))
-    //if(battle(attacker, defender)) //defender.die()
-    //else defender.scappa ?!?! TODO
 
     val probabilities = List(
       calculateProbabilityFromSize(attacker, defender),
@@ -74,7 +76,7 @@ private case class SimpleBattleManager(animals: Seq[Animal]) extends BattleManag
     )
 
     if(battle(Probability(probabilities.map(a => a.probability).sum / probabilities.length))){
-      //TODO Do something about the two animals
+      //TODO Do something about the two animals, togliere vita iniziale all'animale
       println("Attacking animal: " + attacker + "has won")
     } else {
       println("Defending animal: " + defender + "has won")
@@ -130,7 +132,6 @@ private case class SimpleBattleManager(animals: Seq[Animal]) extends BattleManag
    */
   override def calculateProbabilityFromSize(attacker: Animal, defender: Animal): Probability = {
     var probability = Probability(50)
-    if(attacker.strength > defender.strength){
       probability = attacker.size match {
         case Size.Big => defender.size match {
           case Size.Medium => probability.increase(20)
@@ -148,11 +149,12 @@ private case class SimpleBattleManager(animals: Seq[Animal]) extends BattleManag
           case _ => Probability(probability.probability)
         }
       }
-    }
     probability
   }
 
   override def calculateBattles(): Unit = {
     visibleAnimals().filter(couple => couple._1.isInstanceOf[Carnivorous]).foreach(couple => startBattle(couple._1, couple._2))
   }
+
+  override def isCarnivorous(animal: Animal): Boolean = animal.isInstanceOf[Carnivorous]
 }

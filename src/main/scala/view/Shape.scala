@@ -6,8 +6,8 @@ import java.awt.{Color, Graphics2D}
 
 abstract class Shape(topLeft: Point, bottomRight: Point, val color: Color) {
 
-  protected var xSpeed = 3
-  protected var ySpeed = 3
+  //protected var xSpeed = 3
+  //protected var ySpeed = 3
 
   var x: Int = topLeft.x
   var y: Int = topLeft.y
@@ -19,8 +19,6 @@ abstract class Shape(topLeft: Point, bottomRight: Point, val color: Color) {
   }
 
   /*
-  TODO potrebbe non servire sto metodo
-   */
   def move(panelWidth: Int, panelHeight: Int): Unit = {
     if (x >= panelWidth - this.width || x <= 0) {
       xSpeed *= -1
@@ -32,4 +30,5 @@ abstract class Shape(topLeft: Point, bottomRight: Point, val color: Color) {
     x += xSpeed
     y += ySpeed
   }
+  */
 }
