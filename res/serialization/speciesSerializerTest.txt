@@ -1,0 +1,19 @@
+{
+  "icon": "dog.png",
+  "name": "dog",
+  "size": "Small",
+  "strength": 100,
+  "sight": 10
+}{
+  "icon": "cat.png",
+  "name": "cat",
+  "size": "Small",
+  "strength": 80,
+  "sight": 60
+}{
+  "icon": "cow.png",
+  "name": "cow",
+  "size": "Medium",
+  "strength": 40,
+  "sight": 50
+}

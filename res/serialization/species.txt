@@ -1,0 +1,37 @@
+{
+  "icon": "img",
+  "name": "Ippo",
+  "size": "Medium",
+  "strength": 10,
+  "sight": 10
+}{
+  "icon": "img",
+  "name": "Zebra",
+  "size": "Small",
+  "strength": 10,
+  "sight": 10
+}{
+  "icon": "icon.txt",
+  "name": "Lion",
+  "size": "Medium",
+  "strength": 10,
+  "sight": 10
+}{
+  "icon": "icon.txt",
+  "name": "Cat",
+  "size": "Small",
+  "strength": 10,
+  "sight": 10
+}{
+  "icon": "icon.txt",
+  "name": "Dog",
+  "size": "Small",
+  "strength": 0,
+  "sight": 0
+}{
+  "icon": "icon.txt",
+  "name": "Prova",
+  "size": "Small",
+  "strength": 10,
+  "sight": 10
+}
