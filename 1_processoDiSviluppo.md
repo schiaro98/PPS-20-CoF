@@ -1,1 +1,10 @@
-modalità di divisione in itinere dei task, meeting/interazioni pianificate, modalità di revisione in itinere dei task, scelta degli strumenti di test/build/continuous integration
+# Processo di sviluppo
+Fico il markdown
+
+## Modalità di divisione in itinere dei task
+
+## Meeting/Interazioni pianificate
+
+## Modalità di revisione in itinere dei task
+
+## Scelta degli strumenti di test/build/continuous integration
