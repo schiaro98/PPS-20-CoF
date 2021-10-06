@@ -19,4 +19,4 @@ jobs:
     - name: Run tests
       run: sbt test
     - name: Create Jar
-      run: sbt package
+      run: sbt clean assembly
