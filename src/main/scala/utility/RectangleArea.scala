@@ -17,40 +17,37 @@ case class RectangleArea(topLeft: Point, bottomRight: Point) {
 
   def getIn4Quadrant(size: (Int, Int)) : Seq[RectangleArea] = {
     var rectangles = Seq.empty[RectangleArea]
-    val maxX = size._1 / 4
-    val maxY = size._2 / 4
-    val centerX = maxX * 2
-    val centerY = maxY * 2
-    val endX = size._1
-    val endY = size._2
-    val centerFirstQuadrant = Point(maxX, maxY)
-    val centerSecondQuadrant = Point(maxX*3, maxY)
-    val centerThirdQuadrant = Point(maxX, maxY*3)
-    val centerFourthQuadrant = Point(maxX*3, maxY*3)
-    val center = Point(centerX, centerY)
+    val max = Point(size._1 / 4, size._2 / 4)
+    val center = Point(max.x * 2, max.y * 2)
+    val end = Point(size._1, size._2)
+    val centerFirstQuadrant = Point(max.x, max.y)
+    val centerSecondQuadrant = Point(max.x*3, max.y)
+    val centerThirdQuadrant = Point(max.x, max.y * 3)
+    val centerFourthQuadrant = Point(max.x*3, max.y*3)
     val p = Point(0,0)
 
     //Alto a sx
     rectangles = rectangles :+ RectangleArea(
-      p.getRandomPoint(Point(0, 0), centerFirstQuadrant),
+      p.getRandomPoint(p, centerFirstQuadrant),
       p.getRandomPoint(centerFirstQuadrant, center)
     )
+
     //Alto a dx
     rectangles = rectangles :+ RectangleArea(
-      p.getRandomPoint(Point(centerX, 0), centerSecondQuadrant),
-      p.getRandomPoint(centerSecondQuadrant, Point(endX, centerY))
+      p.getRandomPoint(Point(center.x, 0), centerSecondQuadrant),
+      p.getRandomPoint(centerSecondQuadrant, Point(end.x, center.y))
     )
 
     //Basso a sx
     rectangles = rectangles :+ RectangleArea(
-      p.getRandomPoint(Point(0, centerY), centerThirdQuadrant),
-      p.getRandomPoint(centerThirdQuadrant, Point(centerX, endY))
+      p.getRandomPoint(Point(0, center.y), centerThirdQuadrant),
+      p.getRandomPoint(centerThirdQuadrant, Point(center.x, end.y))
     )
 
     //Basso a dx
     rectangles = rectangles :+ RectangleArea(
       p.getRandomPoint(center, centerFourthQuadrant),
-      p.getRandomPoint(centerFourthQuadrant, Point(size._1, size._2))
+      p.getRandomPoint(centerFourthQuadrant, end)
     )
 
     rectangles

@@ -33,8 +33,8 @@ class BattleManagerTest extends AnyFunSuite{
     val weakAnimal = Carnivorous(Species("Null", "tiger", Medium, 0, 10), Point(0,0))
     assert(bm.calculateProbabilityFromStrength(strongAnimal, weakAnimal) == Probability(75))
     assert(bm.calculateProbabilityFromStrength(weakAnimal, strongAnimal) == Probability(25))
-    assert(bm.calculateProbabilityFromStrength(normalAnimal, strongAnimal) == Probability(38))
-    assert(bm.calculateProbabilityFromStrength(strongAnimal, normalAnimal) == Probability(62))
+    assert(bm.calculateProbabilityFromStrength(normalAnimal, strongAnimal) == Probability(40))
+    assert(bm.calculateProbabilityFromStrength(strongAnimal, normalAnimal) == Probability(60))
   }
 
   test("Calculate Probabilities based on Distance"){
