@@ -1,1 +1,7 @@
-scelte rilevanti, pattern di progettazione, organizzazione del codice -- corredato da pochi ma efficaci diagrammi
+# Design di dettaglio
+
+## Scelte rilevanti, 
+## Pattern di progettazione, 
+## Organizzazione del codice 
+corredato da pochi ma efficaci diagrammi
+
