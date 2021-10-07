@@ -28,7 +28,7 @@ object Constants {
   val QuantityForSmall = 2
 
   val MaxShift = 15
-
+  val MinShift = 5
   // ------- Gui --------
   val DefaultSimulationDimension = new Dimension(1000, 1000)
   val MainMapDimension: (Int, Int) = (500, 500)
