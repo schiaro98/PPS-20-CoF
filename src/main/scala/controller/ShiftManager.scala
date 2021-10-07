@@ -24,6 +24,7 @@ object ShiftManager {
 
   private class ShiftManagerImpl(override val habitat: Habitat, override var animalsDestinations: Map[Animal, Seq[Point]]) extends ShiftManager {
 
+    animals.foreach(animal => require(habitat.areas.filterNot(a => a.areaType == Fertile).count(a => a.contains(animal.position))==0))
     val randShift: Int => Int = (x: Int) => Random.nextInt(x)
     // TODO: try to do it with for yield
 
@@ -44,6 +45,9 @@ object ShiftManager {
             //animal has to cal a new point closer to destination
           } else {
             val destinations = tryWalk(a.position, dest, travelDistance)
+            if (!canTravel(a.position,destinations.head,travelDistance)){
+              println("fok")
+            }
             map += a.shift(destinations.head) -> destinations.tail
           }
           //animal doesn't have a destination
@@ -56,12 +60,12 @@ object ShiftManager {
     def tryWalk(animalPosition: Point, dest:Seq[Point], travelDistance: (Int,Int)): Seq[Point] = {
       val closerPoint = calcNewPoint(animalPosition, dest.head, travelDistance)
       //the point I found is inside an area in which i can't go
-      if (habitat.areas.filterNot(a => a.areaType == Fertile).count(a => a.contains(closerPoint)) > 0) {
-        println("point in a non walkable area")
-        val  nextP = circumnavigate(closerPoint)()
-        tryWalk(animalPosition, nextP+:dest, travelDistance)
-      }
-       closerPoint+:dest
+      val illegalPoint = habitat.areas.filterNot(a => a.areaType == Fertile).count(a => a.contains(closerPoint)) > 0
+      if (illegalPoint) {
+//        println("point in a non walkable area")
+        circumnavigate(closerPoint)()+:dest
+        //tryWalk(animalPosition, nextP+:dest, travelDistance)
+      } else closerPoint+:dest
     }
 
     /**
