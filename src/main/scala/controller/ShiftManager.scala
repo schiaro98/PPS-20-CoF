@@ -9,8 +9,6 @@ import scala.util.Random
 sealed trait ShiftManager {
   val habitat: Habitat
   var animalsDestinations: Map[Animal, Seq[Point]]
-  // TODO: find a way to require animals outside NonWalkableAreas
-
   def walk(): Unit
 
   def animals: collection.Set[Animal] = animalsDestinations.keySet
@@ -25,10 +23,10 @@ object ShiftManager {
   private class ShiftManagerImpl(override val habitat: Habitat, override var animalsDestinations: Map[Animal, Seq[Point]]) extends ShiftManager {
 
     animals.foreach(animal => require(habitat.areas.filterNot(a => a.areaType == Fertile).count(a => a.contains(animal.position))==0))
-    val randShift: Int => Int = (x: Int) => Random.nextInt(x)
+
+    val randShift: Int => Int = (x: Int) => Random.between(Constants.MinShift, x)
     // TODO: try to do it with for yield
 
-    // TODO: check that changes work, changed dest, now it is a list
     //if I can't go to the first point create another, go to that point and when arrived go to the first one
     override def walk(): Unit = {
       val map = scala.collection.mutable.Map.empty[Animal, Seq[Point]]
@@ -45,6 +43,7 @@ object ShiftManager {
             //animal has to cal a new point closer to destination
           } else {
             val destinations = tryWalk(a.position, dest, travelDistance)
+            // TODO: ogni tanto fa piu distanza di quanta dovrebbe
             if (!canTravel(a.position,destinations.head,travelDistance)){
               println("fok")
             }
@@ -57,6 +56,7 @@ object ShiftManager {
       animalsDestinations = map.toMap
     }
 
+    // TODO: refactor questa e falla davvero ricorsiva, a quanto pare non lo e'
     def tryWalk(animalPosition: Point, dest:Seq[Point], travelDistance: (Int,Int)): Seq[Point] = {
       val closerPoint = calcNewPoint(animalPosition, dest.head, travelDistance)
       //the point I found is inside an area in which i can't go
@@ -79,10 +79,6 @@ object ShiftManager {
       val distance = to - from
       travelDistance._1 - distance.x.abs >= 0 && travelDistance._2 - distance.y.abs >= 0
     }
-
-    // TODO: now simplifing saing that there are only walkableAreas
-
-    // TODO: refactor calcNewPoint
 
     //cambiare nome a questi 2?
     private def calcNewPoint(from: Point, to: Point, travelDistance: (Int, Int)): Point = {
