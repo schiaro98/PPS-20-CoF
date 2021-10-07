@@ -13,10 +13,10 @@ class ShiftManagerTest extends AnyFunSuite{
   val ourHabitat: Habitat = Habitat(Probability(0))
 
   val path = "res/images/tiger-icon.jpg"
-  val tiger: Animal = Carnivorous(Species(path, "tiger", Medium, 10, 10), Point(15,15))
-  val elephant: Animal = Herbivore(Species(path, "elephant", Medium, 10, 10),  Point(40,40))
-  val dog: Animal = Carnivorous(Species(path, "dog", Medium, 20,20), Point(200,200))
-  val cat: Animal = Carnivorous(Species(path, "cat", Small, 15,10), Point(100,20))
+  val tiger: Animal = Carnivorous(Species(path, "tiger", Medium, 10, 10), getPointInFertileAreas(ourHabitat))
+  val elephant: Animal = Herbivore(Species(path, "elephant", Medium, 10, 10),  getPointInFertileAreas(ourHabitat))
+  val dog: Animal = Carnivorous(Species(path, "dog", Medium, 20,20), getPointInFertileAreas(ourHabitat))
+  val cat: Animal = Carnivorous(Species(path, "cat", Small, 15,10), getPointInFertileAreas(ourHabitat))
   val MaxX = 500
   val MaxY = 500
 
@@ -78,10 +78,6 @@ class ShiftManagerTest extends AnyFunSuite{
     val dest2 = getPointInFertileAreas(ourHabitat)
     val dest3 = getPointInFertileAreas(ourHabitat)
     val dest4 = getPointInFertileAreas(ourHabitat)
-    val tiger: Animal = Carnivorous(Species(path, "tiger", Medium, 10, 10), getPointInFertileAreas(ourHabitat))
-    val elephant: Animal = Herbivore(Species(path, "elephant", Medium, 10, 10),  getPointInFertileAreas(ourHabitat))
-    val dog: Animal = Carnivorous(Species(path, "dog", Medium, 20,20), getPointInFertileAreas(ourHabitat))
-    val cat: Animal = Carnivorous(Species(path, "cat", Small, 15,10), getPointInFertileAreas(ourHabitat))
     val destinations = Set(dest1,dest2,dest3,dest4)
     val sm: ShiftManager = ShiftManager(ourHabitat,
       Map(tiger->Seq(dest1),
