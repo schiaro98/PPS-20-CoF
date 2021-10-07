@@ -27,33 +27,41 @@ object ShiftManager {
     val randShift: Int => Int = (x: Int) => Random.nextInt(x)
     // TODO: try to do it with for yield
 
+    // TODO: check that changes work, changed dest, now it is a list
     //if I can't go to the first point create another, go to that point and when arrived go to the first one
     override def walk(): Unit = {
-
       val map = scala.collection.mutable.Map.empty[Animal, Seq[Point]]
       val travelDistance: (Int, Int) = (randShift(Constants.MaxShift), randShift(Constants.MaxShift))
       for (a <- animals) {
         //animal has a destination
         if (animalsDestinations(a).nonEmpty) {
           //          println("animal has a destination")
-          val dest = animalsDestinations(a).head
+          val dest = animalsDestinations(a)
           //animal can arrive to destination in this iteration
-          if (canTravel(a.position, dest, travelDistance)) {
+          if (canTravel(a.position, dest.head, travelDistance)) {
             println(a.name, " is arriving")
-            map += (a.shift(dest) -> Seq.empty)
+            map += (a.shift(dest.head) -> dest.tail)
             //animal has to cal a new point closer to destination
           } else {
-            val closerPoint = calcNewPoint(a.position, dest, travelDistance)
-            //the point I found is inside an area in which i can't go
-            if (habitat.areas.filterNot(a => a.areaType == Fertile).count(a => a.contains(closerPoint)) > 0) {
-              println("point in a non walkable area")
-            }
-            map += a.shift(closerPoint) -> Seq(dest)
+            val destinations = tryWalk(a.position, dest, travelDistance)
+            map += a.shift(destinations.head) -> destinations.tail
           }
           //animal doesn't have a destination
+          // TODO: implement this
         } else map += (a -> Seq.empty)
       }
       animalsDestinations = map.toMap
+    }
+
+    def tryWalk(animalPosition: Point, dest:Seq[Point], travelDistance: (Int,Int)): Seq[Point] = {
+      val closerPoint = calcNewPoint(animalPosition, dest.head, travelDistance)
+      //the point I found is inside an area in which i can't go
+      if (habitat.areas.filterNot(a => a.areaType == Fertile).count(a => a.contains(closerPoint)) > 0) {
+        println("point in a non walkable area")
+        val  nextP = circumnavigate(closerPoint)()
+        tryWalk(animalPosition, nextP+:dest, travelDistance)
+      }
+       closerPoint+:dest
     }
 
     /**
