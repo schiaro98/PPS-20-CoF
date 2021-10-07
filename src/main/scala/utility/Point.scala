@@ -35,4 +35,18 @@ case class Point(x: Int, y: Int) {
     require(ends.y > start.y, "Illegal random point y")
     Point(Random.between(start.x, ends.x), Random.between(start.y, ends.y))
   }
+
+  /**
+   * Calculate distance upon x axis
+   * @param p the point from which to calculate the distance
+   * @return the distance upon the x axis
+   */
+  def fromX(p: Point): Int = Math.abs(p.x - x)
+
+  /**
+   * Calculate distance upon y axis
+   * @param p the point from which to calculate the distance
+   * @return the distance upon the y axis
+   */
+  def fromY(p: Point): Int = Math.abs(p.y - y)
 }
