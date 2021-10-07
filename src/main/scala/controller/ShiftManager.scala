@@ -1,13 +1,14 @@
 package controller
 
-import model.{Animal, Habitat}
+import model.{Animal, Fertile, Habitat}
 import utility.{Constants, Point}
 
+import scala.annotation.tailrec
 import scala.util.Random
 
 sealed trait ShiftManager {
   val habitat: Habitat
-  var animalsDestinations: Map[Animal, Option[Point]]
+  var animalsDestinations: Map[Animal, Seq[Point]]
   // TODO: find a way to require animals outside NonWalkableAreas
 
   def walk(): Unit
@@ -18,26 +19,39 @@ sealed trait ShiftManager {
 
 
 object ShiftManager {
-  def apply(habitat: Habitat, animalsDestinations: Map[Animal, Option[Point]]): ShiftManager =
+  def apply(habitat: Habitat, animalsDestinations: Map[Animal, Seq[Point]]): ShiftManager =
     new ShiftManagerImpl(habitat: Habitat, animalsDestinations)
 
-  private class ShiftManagerImpl(override val habitat: Habitat, override var animalsDestinations: Map[Animal, Option[Point]]) extends ShiftManager {
+  private class ShiftManagerImpl(override val habitat: Habitat, override var animalsDestinations: Map[Animal, Seq[Point]]) extends ShiftManager {
 
+    val randShift: Int => Int = (x: Int) => Random.nextInt(x)
     // TODO: try to do it with for yield
+
+    //if I can't go to the first point create another, go to that point and when arrived go to the first one
     override def walk(): Unit = {
-      val map = scala.collection.mutable.Map.empty[Animal, Option[Point]]
-      val travelDistance: (Int, Int) = (Random.nextInt(Constants.MaxShift), Random.nextInt(Constants.MaxShift))
+
+      val map = scala.collection.mutable.Map.empty[Animal, Seq[Point]]
+      val travelDistance: (Int, Int) = (randShift(Constants.MaxShift), randShift(Constants.MaxShift))
       for (a <- animals) {
         //animal has a destination
-        if (animalsDestinations(a).isDefined) {
-//          println("animal has a destination")
-          val dest = animalsDestinations(a).get
+        if (animalsDestinations(a).nonEmpty) {
+          //          println("animal has a destination")
+          val dest = animalsDestinations(a).head
+          //animal can arrive to destination in this iteration
           if (canTravel(a.position, dest, travelDistance)) {
             println(a.name, " is arriving")
-            map += (a.shift(dest) ->None)
-          } else map += a.shift(calcNewPoint(a.position, dest, travelDistance))->Some(dest)
+            map += (a.shift(dest) -> Seq.empty)
+            //animal has to cal a new point closer to destination
+          } else {
+            val closerPoint = calcNewPoint(a.position, dest, travelDistance)
+            //the point I found is inside an area in which i can't go
+            if (habitat.areas.filterNot(a => a.areaType == Fertile).count(a => a.contains(closerPoint)) > 0) {
+              println("point in a non walkable area")
+            }
+            map += a.shift(closerPoint) -> Seq(dest)
+          }
           //animal doesn't have a destination
-        } else map += (a -> None)
+        } else map += (a -> Seq.empty)
       }
       animalsDestinations = map.toMap
     }
@@ -49,7 +63,7 @@ object ShiftManager {
      * @param travelDistance distance that the animal can travel in this iteration
      * @return true if the animal can make it to the destination
      */
-    def canTravel(from: Point, to: Point, travelDistance: (Int, Int)): Boolean = {
+    private def canTravel(from: Point, to: Point, travelDistance: (Int, Int)): Boolean = {
       val distance = to - from
       travelDistance._1 - distance.x.abs > 0 && travelDistance._2 - distance.y.abs > 0
     }
@@ -59,28 +73,51 @@ object ShiftManager {
     // TODO: refactor calcNewPoint
 
     //cambiare nome a questi 2?
-    def calcNewPoint(from: Point, to: Point, travelDistance: (Int, Int)): Point = {
+    private def calcNewPoint(from: Point, to: Point, travelDistance: (Int, Int)): Point = {
       //calculating potential points
-      val px = if (to.isRight(from)) from.x + travelDistance._1 else from.x - travelDistance._1
-      val py = if (to.isUnder(from)) from.y + travelDistance._2 else from.y - travelDistance._2
-
-      val potP = Point(px,py)
-      //if points are inside a NonWalkableArea
-      if(habitat.areas.count(a => a.contains(potP)) > 0){
-        println("you shouldn't be walking here")
-//        trovo la distanza minore dalla x per aggirarlo
-//        trovo la distanza minore dalla y per aggirarlo
-      }
-
-      //if everything is ok check that points are inside the habitat else make them inside
-      val x = if(px < 0) 0 else if (px >habitat.dimensions._1) habitat.dimensions._1 else px
-      val y = if(py <0) 0 else if (py> habitat.dimensions._2) habitat.dimensions._2 else py
-//      println("new point is ", x, " ", y )
-      //the real point
-      Point(x,y)
+      val x = if (to.isRight(from)) from.x + travelDistance._1 else from.x - travelDistance._1
+      val y = if (to.isUnder(from)) from.y + travelDistance._2 else from.y - travelDistance._2
+      makeInBounds(x, y)
     }
 
-    def calcRandomPoint(from: Point, travelDistance: (Int, Int)): Point = ???
-  }
-}
+    /**
+     * @param from point inside an area in which the animal can't walk
+     * @param optP a possible point that could be out of the area of interest
+     * @return a Point outside a NonWalkableArea
+     */
+    @tailrec
+    private def circumnavigate(from: Point)(optP: Option[Point] = None): Point = optP match {
+      case Some(value) => if (habitat.areas
+        .filterNot(a => a.areaType == Fertile)
+        .count(a => a.contains(value)) > 0) circumnavigate(value)(None) else value
+      case None => circumnavigate(from)(Some(calcPointOutOfNonWalkableArea(from)))
+    }
 
+    private def calcPointOutOfNonWalkableArea(p: Point): Point = {
+      val DefDist = 10
+      val a = habitat.areas.filter(a => a.contains(p)).head.area
+      val dl = p.fromX(a.topLeft)
+      val dr = p.fromX(a.bottomRight)
+      val du = p.fromY(a.topLeft)
+      val db = p.fromY(a.bottomRight)
+      //if left distance >right distance create point to the right, left otherwise
+      // TODO: Can have problems with bounds?
+      val x = if (dl > dr) p.x + dr + DefDist else p.x - dl - DefDist
+      val y = if (du > db) p.y + db + DefDist else p.y - du - DefDist
+      makeInBounds(x,y)
+    }
+
+    /**
+     * Make coordinates be inside of the habitat
+     * @param px the possible x
+     * @param py the possible y
+     * @return a Point inside the habitat
+     */
+    private def makeInBounds(px: Int, py: Int):Point = {
+      val x = if (px < 0) 0 else if (px > habitat.dimensions._1) habitat.dimensions._1 else px
+      val y = if (py < 0) 0 else if (py > habitat.dimensions._2) habitat.dimensions._2 else py
+      Point(x,y)
+    }
+  }
+
+}

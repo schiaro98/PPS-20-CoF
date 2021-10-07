@@ -19,14 +19,14 @@ class ShiftManagerTest extends AnyFunSuite{
   val MaxY = 500
 
   test("Create ShiftManager"){
-    val sm: ShiftManager = ShiftManager(ourHabitat, Map(tiger->Some(Point(55,100)), elephant->None))
+    val sm: ShiftManager = ShiftManager(ourHabitat, Map(tiger->Seq(Point(55,100)), elephant->Seq.empty))
     assert(sm.animals.size == 2)
   }
 
   test("Single animal arrives at destination in empty habitat"){
     val dest = Point(55,100)
     val habitat = Habitat(EmptyHabitatType,Probability(0),(500,500), Seq.empty[Area])
-    val sm: ShiftManager = ShiftManager(habitat, Map(tiger->Some(dest)))
+    val sm: ShiftManager = ShiftManager(habitat, Map(tiger->Seq(dest)))
     for(i <- 0 to 40){
       sm.walk()
     }
@@ -42,10 +42,10 @@ class ShiftManagerTest extends AnyFunSuite{
     val destinations = Set(dest1,dest2,dest3,dest4)
     val habitat = Habitat(EmptyHabitatType,Probability(0),(MaxX, MaxY), Seq.empty[Area])
     val sm: ShiftManager = ShiftManager(habitat,
-      Map(tiger->Some(dest1),
-        elephant->Some(dest2),
-        dog->Some(dest3),
-        cat->Some(dest4)
+      Map(tiger->Seq(dest1),
+        elephant->Seq(dest2),
+        dog->Seq(dest3),
+        cat->Seq(dest4)
       ))
       //100 iterations should be enough
     for(i <- 0 to 100){
@@ -59,10 +59,10 @@ class ShiftManagerTest extends AnyFunSuite{
     val dest = Point(r(500),r(500))
     val habitat = Habitat(EmptyHabitatType,Probability(0),(500,500), Seq.empty[Area])
     val sm: ShiftManager = ShiftManager(habitat,
-      Map(tiger->Some(dest),
-        elephant->Some(dest),
-        dog->Some(dest),
-        cat->Some(dest)
+      Map(tiger->Seq(dest),
+        elephant->Seq(dest),
+        dog->Seq(dest),
+        cat->Seq(dest)
       ))
     //100 iterations should be enough
     for(i <- 0 to 100){
@@ -80,10 +80,10 @@ class ShiftManagerTest extends AnyFunSuite{
     val dest4 = Point(r(MaxX),r(MaxY))
     val destinations = Set(dest1,dest2,dest3,dest4)
     val sm: ShiftManager = ShiftManager(ourHabitat,
-      Map(tiger->Some(dest1),
-        elephant->Some(dest2),
-        dog->Some(dest3),
-        cat->Some(dest4)
+      Map(tiger->Seq(dest1),
+        elephant->Seq(dest2),
+        dog->Seq(dest3),
+        cat->Seq(dest4)
       ))
     //100 iterations should be enough
     for(i <- 0 to 100){
