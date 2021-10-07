@@ -77,7 +77,7 @@ object ShiftManager {
      */
     private def canTravel(from: Point, to: Point, travelDistance: (Int, Int)): Boolean = {
       val distance = to - from
-      travelDistance._1 - distance.x.abs > 0 && travelDistance._2 - distance.y.abs > 0
+      travelDistance._1 - distance.x.abs >= 0 && travelDistance._2 - distance.y.abs >= 0
     }
 
     // TODO: now simplifing saing that there are only walkableAreas
