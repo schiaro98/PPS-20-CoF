@@ -1,8 +1,6 @@
 package view
 
-import controller.{OfSpecies, Serializer}
 import model._
-import utility.Constants
 
 import javax.swing.WindowConstants
 import scala.swing.{Dimension, Frame, SimpleSwingApplication}
@@ -25,7 +23,7 @@ class SimulationGui(val habitat: Habitat, val species: Map[Species, Int]) extend
 
     val shapePanel = new ShapePanel(habitat.dimensions._1, habitat.dimensions._2)
     shapePanel.addAllShapes(areasRectangles)
-    shapePanel.addAnimals(species)
+    shapePanel.addAnimals(species, habitat.areas)
     contents = shapePanel
     peer.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE)
   }
