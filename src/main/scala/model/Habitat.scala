@@ -64,9 +64,7 @@ object Habitat {
             areas: Seq[Area]): Habitat = SimpleHabitat(unexpectedEvents, dimensions, areas)
 
   /*
-  TODO sarebbe da mettere che un apply senza aree nel campo areas possa creare aree random/grid/ empty ma dia eccezione se si prova a creare
-  un habitat simple, mentre togliere la possibilita di creare un habitat non semplice se si specifica areas
-  Pensiamoci
+    Questi ultimi due apply sarebbero da tenere, il primo dovrebbe permettere, dando la possibilità di dare input una sequenza di aree solamente un habitat semplice,
    */
   def apply(habitatType: HabitatType,
             unexpectedEvents: Probability,
@@ -87,17 +85,6 @@ object Habitat {
     case GridHabitatType => SimpleHabitat(unexpectedEvents, dimensions, createGridArea(dimensions, numberOfAreas))
     case _ => throw new IllegalArgumentException("Habitat type error on method apply")
   }
-
-  def apply(habitatType: HabitatType,
-            unexpectedEvents: Probability,
-            dimensions: (Int, Int)): Habitat = habitatType match {
-    case RandomHabitatType => SimpleHabitat(unexpectedEvents, dimensions, createRandomAreas(dimensions))
-    case GridHabitatType => SimpleHabitat(unexpectedEvents, dimensions, createGridArea(dimensions, 10))
-    case _ => throw new IllegalArgumentException("Habitat type error on method apply")
-  }
-
-  def apply(unexpectedEvent: Probability, dimensions: (Int, Int)): Habitat =
-    SimpleHabitat(unexpectedEvent, dimensions, createRandomAreas(dimensions))
 
   private case class SimpleHabitat(override val unexpectedEvents: Probability,
                                    override val dimensions: (Int, Int),
