@@ -3,7 +3,7 @@ package view
 import model._
 
 import javax.swing.WindowConstants
-import scala.swing.{Dimension, Frame, Point, SimpleSwingApplication}
+import scala.swing.{Dimension, Frame, SimpleSwingApplication}
 
 class SimulationGui(val habitat: Habitat, val species: Map[Species, Int]) extends SimpleSwingApplication {
 

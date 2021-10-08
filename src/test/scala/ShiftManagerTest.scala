@@ -1,12 +1,10 @@
 import controller.ShiftManager
 import model.Size.{Medium, Small}
-import model.{Animal, Area, Carnivorous, EmptyHabitatType, Fertile, Habitat, Herbivore, Probability, Species}
+import model._
 import org.scalatest.funsuite.AnyFunSuite
 import utility.Point
 
-import scala.collection.immutable.{AbstractSeq, LinearSeq}
 import scala.util.Random
-import scala.xml.NodeSeq
 
 class ShiftManagerTest extends AnyFunSuite{
 
@@ -29,7 +27,7 @@ class ShiftManagerTest extends AnyFunSuite{
     val dest = Point(55,100)
     val habitat = Habitat(EmptyHabitatType,Probability(0),(500,500), Seq.empty[Area])
     val sm: ShiftManager = ShiftManager(habitat, Map(tiger->Seq(dest)))
-    for(i <- 0 to 40){
+    for(_ <- 0 to 40){
       sm.walk()
     }
     assert(sm.animals.count(a => a.position == dest) == 1)
@@ -50,7 +48,7 @@ class ShiftManagerTest extends AnyFunSuite{
         cat->Seq(dest4)
       ))
       //100 iterations should be enough
-    for(i <- 0 to 100){
+    for(_ <- 0 to 100){
       sm.walk()
     }
     assert(sm.animals.count(a => destinations.contains(a.position)) == sm.animals.size)
@@ -67,7 +65,7 @@ class ShiftManagerTest extends AnyFunSuite{
         cat->Seq(dest)
       ))
     //100 iterations should be enough
-    for(i <- 0 to 100){
+    for(_ <- 0 to 100){
       sm.walk()
     }
     assert(sm.animals.count(a => a.position == dest) == sm.animals.size)
@@ -86,9 +84,11 @@ class ShiftManagerTest extends AnyFunSuite{
         cat->Seq(dest4)
       ))
     //100 iterations should be enough
-    for(i <- 0 to 3000){
+    for(_ <- 0 to 3000){
       sm.walk()
-      sm.animals.foreach(animal => require(ourHabitat.areas.filterNot(a => a.areaType == Fertile).count(a => a.contains(animal.position))==0))
+      sm.animals
+        .foreach(animal => require(ourHabitat.areas.filterNot(a => a.areaType == Fertile)
+          .count(a => a.contains(animal.position))==0))
     }
     assert(sm.animals.count(a => destinations.contains(a.position)) == sm.animals.size)
   }
@@ -96,7 +96,7 @@ class ShiftManagerTest extends AnyFunSuite{
   def getPointInFertileAreas(h: Habitat):Point = {
 //    val r = (x:Int) => Random.nextInt(x)
     val p = Point(Random.nextInt(h.dimensions._1), Random.nextInt(h.dimensions._2))
-    if (h.areas.filter(a => a.areaType == Fertile).count(a=>a.contains(p))==1) return p else getPointInFertileAreas(h)
+    if (h.areas.filter(a => a.areaType == Fertile).count(a=>a.contains(p))==1) p else getPointInFertileAreas(h)
   }
 
 }
