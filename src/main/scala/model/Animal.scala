@@ -27,6 +27,8 @@ trait Animal extends Species with Placeable {
   val health: Int
   val thirst: Int
 
+  def canSee(otherAnimal: Animal): Boolean = this.position.distance(otherAnimal.position) <= this.sight
+
   /**
    * Method to check if the animal is alive.
    *
