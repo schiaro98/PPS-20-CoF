@@ -6,9 +6,8 @@ sealed trait BattleManager {
   val animals: Seq[Animal]
 
   def visibleAnimals() : Seq[(Animal, Animal)]
-  def visibleAnimals(animals: Seq[Animal]) : Seq[(Animal, Animal)]
 
-  def canSee(a1: Animal, a2: Animal) : Boolean
+  def visibleAnimals(animals: Seq[Animal]) : Seq[(Animal, Animal)]
 
   def battle(probability: Probability) : Boolean
 
@@ -48,15 +47,10 @@ private case class SimpleBattleManager(animals: Seq[Animal]) extends BattleManag
   def visibleAnimals(seqOfAnimals : Seq[Animal]): Seq[(Animal, Animal)] = {
     var visible: Seq[(Animal, Animal)] = Seq.empty
     for( a <- seqOfAnimals; b <- seqOfAnimals.filterNot(animal => a == animal)) {
-      if(canSee(a,b)) visible = visible :+ (a,b)
+      if(a canSee b) visible = visible :+ (a,b)
     }
     visible
   }
-
-  /**
-   * Return true if animal a1 can see animal a2
-   */
-  override def canSee(a1: Animal, a2: Animal): Boolean = a1.position.distance(a2.position) <= a1.sight
 
   /**
    * Execute the battle between the attacker and the defender animal
@@ -66,8 +60,8 @@ private case class SimpleBattleManager(animals: Seq[Animal]) extends BattleManag
    */
   override def startBattle(attacker: Animal, defender: Animal): Unit = {
     require(isCarnivorous(attacker))
-    require(attacker.health > 0)
-    require(canSee(attacker, defender))
+    require(attacker.isAlive)
+    require(attacker canSee defender)
 
     val probabilities = List(
       calculateProbabilityFromSize(attacker, defender),

@@ -4,6 +4,7 @@ import utility.{Point, RectangleArea}
 
 class HabitatTest extends AnyFunSuite{
 
+  val testQ = 100
   val centerArea: Area = Area(Rock, RectangleArea(Point(3, 2), Point(7, 5)))
 
   test("Create empty Habitat"){
@@ -58,8 +59,8 @@ class HabitatTest extends AnyFunSuite{
 
   test("Create a grid Habitat with areas, and test it with different number of areas"){
     val tollerance = 5 //Ten % of size is an acceptable tollerance, some areas cannot be drawn because of limit of space
-    val sizes = Seq(10, 20, 50, 100, 500)
-    for(_ <- 0 to 1000) {
+    val sizes = Seq(100, 500)
+    for(_ <- 0 to testQ) {
       sizes.foreach(size => {
         val habitat = Habitat(GridHabitatType, Probability(1), (1000, 1000), size)
         assert(habitat.areas.lengthIs >= (size - (size / tollerance)))
@@ -68,7 +69,7 @@ class HabitatTest extends AnyFunSuite{
   }
 
   test("Create a random Habitat with areas, and test it with different number of areas"){
-    for(_ <- 0 to 1000){
+    for(_ <- 0 to testQ){
       val habitat = Habitat(RandomHabitatType, Probability(1), (1000, 1000), 4)
       assert(habitat.areas.lengthIs == 4)
     }
