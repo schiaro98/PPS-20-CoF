@@ -81,7 +81,7 @@ object MainGUI {
         val chooseButton = new Button("Add") {
           reactions += {
             case _: ButtonClicked =>
-              println("What i should see on combobox " + allNames diff deletedByGui)
+              //println("What i should see on combobox " + allNames diff deletedByGui)
               if (cb.selection.item != null) {
                 logic.increase(animals.keySet.find(s => s.name == cb.selection.item).getOrElse(throw new IllegalArgumentException))
                 updateGrid()
