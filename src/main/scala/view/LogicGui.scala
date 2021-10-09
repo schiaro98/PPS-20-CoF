@@ -45,6 +45,11 @@ class LogicGui(speciesFile: String) {
     }
   }
 
+  def increase(s: String): Unit = {
+    val foundSpecies = getAllSpecies.find(species => species.name == s)
+    increase(foundSpecies.getOrElse(throw new IllegalArgumentException("Trying to manage a species never seen before")))
+  }
+
   /**
    * Remove a species
    *
@@ -133,23 +138,4 @@ class LogicGui(speciesFile: String) {
     species.keySet.find(species => species.name == name)
   }
 
-//  /**
-//   * Add a new species if it doesn't exist and add it also to species file
-//   *
-//   * @param s species to be added
-//   */
-//  def addAndUpdateFile(s: Species): Unit = {
-//    add(s)
-//    addSpeciesInTheFile(s)
-//  }
-//
-//  /**
-//   * Remove a species, also from species file
-//   *
-//   * @param s species of the animal
-//   */
-//  def removeAndUpdateFile(s: Species): Unit = {
-//    remove(s)
-//    removeSpeciesFromFile(s)
-//  }
 }
