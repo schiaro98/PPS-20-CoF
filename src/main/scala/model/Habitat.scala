@@ -51,21 +51,12 @@ trait Habitat {
 
 
 object Habitat {
-  // TODO: fin troppi apply
-
-  //our default habitat
-  def apply(unexpectedEvents: Probability): Habitat = {
-    val areas = Serializer(OfArea).deserializeManyFromFile(Constants.MainMap)(classOf[Area])
-     SimpleHabitat(unexpectedEvents, Constants.MainMapDimension, areas)
-  }
 
   def apply(unexpectedEvents: Probability,
-            dimensions: (Int, Int),
-            areas: Seq[Area]): Habitat = SimpleHabitat(unexpectedEvents, dimensions, areas)
+            dimensions: (Int, Int) = Constants.MainMapDimension,
+            areas: Seq[Area] = Serializer(OfArea).deserializeManyFromFile(Constants.MainMap)(classOf[Area])
+           ): Habitat = SimpleHabitat(unexpectedEvents, dimensions, areas)
 
-  /*
-    Questi ultimi due apply sarebbero da tenere, il primo dovrebbe permettere, dando la possibilità di dare input una sequenza di aree solamente un habitat semplice,
-   */
   def apply(habitatType: HabitatType,
             unexpectedEvents: Probability,
             dimensions: (Int, Int),
@@ -74,15 +65,6 @@ object Habitat {
     case SimpleHabitatType => SimpleHabitat(unexpectedEvents, dimensions, areas)
     case RandomHabitatType => SimpleHabitat(unexpectedEvents, dimensions, createRandomAreas(dimensions))
     case GridHabitatType => SimpleHabitat(unexpectedEvents, dimensions, createGridArea(dimensions, DefaultGridSize))
-    case _ => throw new IllegalArgumentException("Habitat type error on method apply")
-  }
-
-  def apply(habitatType: HabitatType,
-            unexpectedEvents: Probability,
-            dimensions: (Int, Int),
-            numberOfAreas: Int): Habitat = habitatType match {
-    case RandomHabitatType => SimpleHabitat(unexpectedEvents, dimensions, createRandomAreas(dimensions, numberOfAreas))
-    case GridHabitatType => SimpleHabitat(unexpectedEvents, dimensions, createGridArea(dimensions, numberOfAreas))
     case _ => throw new IllegalArgumentException("Habitat type error on method apply")
   }
 
