@@ -1,5 +1,6 @@
 package view
 
+import controller.GameLoop
 import model._
 
 import javax.swing.WindowConstants
@@ -24,11 +25,12 @@ class SimulationGui(val habitat: Habitat, val species: Map[Species, Int]) extend
     habitat.areas.foreach(area => {
       areasRectangles = areasRectangles.::(new Rectangle(area.area.topLeft, area.area.bottomRight, area.color))
     })
-
+    val loop: GameLoop = new GameLoop(species, habitat)
     val shapePanel = new ShapePanel(habitat.dimensions._1, habitat.dimensions._2, () => this.location)
     shapePanel.addAllShapes(areasRectangles)
     shapePanel.addAnimals(species, habitat.areas)
     contents = shapePanel
     peer.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE)
+    loop.run()
   }
 }

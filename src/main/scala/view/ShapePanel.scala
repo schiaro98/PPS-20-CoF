@@ -62,7 +62,6 @@ class ShapePanel(val width: Int, val height: Int, location: () => swing.Point) e
           y = Random.nextInt(height - size)
         }
         shapes.append(new Rectangle(Point(x, y), Point(x+size, y+size), color))
-
         val p = new AnimalPopup(
           s"Species: ${v._1.name}\nSize: ${v._1.size}\nStrength: ${v._1.strength}\nSight: ${v._1.sight}",
           () => new java.awt.Point(x + location().x + Constants.OffsetX, y + location().y + Constants.OffsetY)
