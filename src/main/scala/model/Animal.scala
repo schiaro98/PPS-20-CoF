@@ -47,7 +47,7 @@ trait Animal extends Species with Placeable {
   def update(health: Int = health,
              thirst: Int = thirst,
              position: Point = position): Animal =
-    Animal(Species(icon, name, size, strength, sight), position, health, thirst)
+    Animal(Species(icon, name, size, strength, sight, alimentationType), position, health, thirst)
 
   /**
    * Method to restore health to an animal by eating food.
@@ -55,7 +55,7 @@ trait Animal extends Species with Placeable {
    * @param food The food to eat.
    * @return a pair that contains the animal with the health restored and the remaining food, if there is still any.
    */
-  def eat(food: FoodInstance): (Animal, Option[FoodInstance]) = health match {
+  private def consume(food: FoodInstance): (Animal, Option[FoodInstance]) = health match {
     //todo se il controllo viene fatto altrove (ad es. mangi solo se hai meno salute di MaxHealth) non serve
     case Constants.MaxHealth => (this, Some(food))
     case _ if MaxHealth - this.health > food.energy * food.quantity => (this.update(health = health + food.energy * food.quantity), None)
@@ -91,6 +91,12 @@ trait Animal extends Species with Placeable {
    */
   def shift(pos: Point): Animal = this.update(position = pos)
 
+  def eat(food: FoodInstance): (Animal, Option[FoodInstance]) = food match {
+      case _ : Meat if this.alimentationType == Type.Carnivore => consume(food)
+      case _ : Vegetable if this.alimentationType == Type.Herbivore => consume(food)
+      case _ => throw new IllegalArgumentException("Illegal food type")
+  }
+
   override def toString: String = s"Animal: $name, $size $strength pos:($position)"
 }
 
@@ -98,7 +104,6 @@ trait Animal extends Species with Placeable {
  * Object that represent an animal of a specific species.
  */
 object Animal {
-
   /**
    * Apply method for an Animal; it's private because it must be impossible to instantiate a general animal,
    * it must be a carnivorous or a herbivore
@@ -109,15 +114,17 @@ object Animal {
    * @param thirst    the parameter that indicates whether the animal is thirsty.
    * @return a new implementation of Animal.
    */
-  private def apply(s: Species, position: Point, health: Int = MaxHealth, thirst: Int = MaxThirst): Animal =
-    new AnimalImpl(s.icon, s.name, s.size, s.strength, s.sight, health, thirst, position)
+  def apply(s: Species, position: Point,  health: Int = MaxHealth, thirst: Int = MaxThirst): Animal = new AnimalImpl(
+    s.icon, s.name, s.size, s.strength, s.sight, health, thirst, position, s.alimentationType)
 
-  private class AnimalImpl(override val icon: String,
+
+  case class AnimalImpl(override val icon: String,
                            override val name: String,
                            override val size: Size,
                            override val strength: Int,
                            override val sight: Int,
                            override val health: Int,
                            override val thirst: Int,
-                           override val position: Point) extends Animal
+                           override val position: Point,
+                           override val alimentationType: Type) extends Animal
 }

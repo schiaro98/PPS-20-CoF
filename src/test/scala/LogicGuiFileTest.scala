@@ -1,3 +1,4 @@
+import model.Type.Carnivore
 import model.{Size, Species}
 import org.scalatest.funsuite.AnyFunSuite
 import view.LogicGui
@@ -6,7 +7,7 @@ class LogicGuiFileTest extends AnyFunSuite {
   val mng = new LogicGui("speciesTest.txt")
   mng.removeAllSpeciesFromFile()
 
-  val exampleSpecies: Species = Species("", "TestName", Size.Small, 10, 10)
+  val exampleSpecies: Species = Species("", "TestName", Size.Small, 10, 10, Carnivore)
 
   test("File initially must be empty") {
     assert(mng.species.isEmpty)

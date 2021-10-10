@@ -1,6 +1,6 @@
 package controller
 
-import model.{Animal, Carnivorous, Probability, Size}
+import model.{Animal, Probability, Size, Type}
 
 sealed trait BattleManager {
   val animals: Seq[Animal]
@@ -151,5 +151,5 @@ private case class SimpleBattleManager(animals: Seq[Animal]) extends BattleManag
     visibleAnimals().filter(couple => isCarnivorous(couple._1)).foreach(couple => startBattle(couple._1, couple._2))
   }
 
-  override def isCarnivorous(animal: Animal): Boolean = animal.isInstanceOf[Carnivorous]
+  override def isCarnivorous(animal: Animal): Boolean = animal.alimentationType == Type.Carnivore
 }

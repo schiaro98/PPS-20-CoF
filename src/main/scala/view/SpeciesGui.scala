@@ -1,11 +1,11 @@
 package view
 
-import model.Size
+import model.{Size, Type}
 
 import java.awt.Dimension
 import scala.swing.BorderPanel.Position.Center
-import scala.swing.event.ButtonClicked
 import scala.swing._
+import scala.swing.event.ButtonClicked
 
 class SpeciesGui(logic: LogicGui) extends SimpleSwingApplication {
 
@@ -21,6 +21,8 @@ class SpeciesGui(logic: LogicGui) extends SimpleSwingApplication {
     val sightField = new TextField("Sight")
     val sizeLabel = new Label("Size of the species")
     val sizeField = new ComboBox[String](Seq(Size.Small.toString, Size.Medium.toString, Size.Big.toString))
+    val typeLabel = new Label("Type of the species")
+    val typeField = new ComboBox[String](Seq("Herbivore", "Carnivore"))
 
     val confirm: Button = new Button("Confirm"){
       reactions += {
@@ -30,11 +32,27 @@ class SpeciesGui(logic: LogicGui) extends SimpleSwingApplication {
           } else if(logic.species.keySet.map(s => s.name).contains(nameField.text)){
             Dialog.showMessage(contents.head, "A species with the given name already exist", title = "Try again!")
           } else {
+            val size: Size = sizeField.selection.item match {
+              case "Big" => Size.Big
+              case "Medium" => Size.Medium
+              case "Small" => Size.Small
+              case _ => throw new IllegalArgumentException("Illegal type on Size")
+            }
+
+            val alimentationType: Type = typeField.selection.item match {
+              case "Herbivore" => Type.Herbivore
+              case "Carnivore" => Type.Carnivore
+              case _ => throw new IllegalArgumentException("Illegal type on Type")
+            }
+
             val newSpecie = logic.captionSpecies(nameField.text,
-              sizeField.selection.item,
+              size,
               strengthField.text,
-              sightField.text)
+              sightField.text,
+              alimentationType
+            )
             logic.addSpeciesInTheFile(newSpecie)
+
             closeAndUpdate()
           }
       }
@@ -54,7 +72,7 @@ class SpeciesGui(logic: LogicGui) extends SimpleSwingApplication {
 
     val panel: BoxPanel = new BoxPanel(Orientation.Vertical) {
       contents addAll List(nameLabel, nameField, strengthLabel, strengthField, sightLabel, sightField, sizeLabel,
-        sizeField, confirm, existingSpecies, removeSpecies)
+        sizeField, typeLabel, typeField, confirm, existingSpecies, removeSpecies)
       centerOnScreen()
     }
 

@@ -1,4 +1,5 @@
 import model.Size._
+import model.Type.Carnivore
 import model._
 import org.scalatest.funsuite.AnyFunSuite
 import utility.Constants._
@@ -13,7 +14,7 @@ class AnimalsTest extends AnyFunSuite{
   val path = "res/images/tiger-icon.jpg"
   val img: BufferedImage = ImageIO.read(new File(path))
   val p: Point = Point(0,0)
-  val a: Animal = Carnivorous(Species(path, "tiger", Medium, 10, 10), p)
+  val a: Animal = Animal(Species(path, "tiger", Medium, 10, 10, Carnivore), p)
 
   test("An animal is an entity with personal parameters and belong to a species") {
     assert(path == a.icon)
@@ -31,8 +32,8 @@ class AnimalsTest extends AnyFunSuite{
 
   test("An animal that eats regains health") {
     val animal0 = a.update(MaxHealth, MaxThirst)
-    val food1 = Vegetable(5, p, 10)
-    assert((animal0, Some(food1)) == animal0.eat(food1))
+    val food1 = Meat(5, p, 10)
+    assert((animal0, Option(food1)) == animal0.eat(food1))
 
     val animal1 = a.update(MaxHealth - 90, MaxThirst)
     val res1 = animal1.eat(food1)
