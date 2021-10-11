@@ -71,7 +71,9 @@ private case class SimpleBattleManager(animals: Seq[Animal]) extends BattleManag
 
     if(battle(Probability(probabilities.map(a => a.probability).sum / probabilities.length))){
       println("Attacking animal: " + attacker + "has won")
-      attacker.eat(defender.die())
+      //attacker.eat(defender.die())
+      //TODO come rilascio la risorsa? defender.die()
+
     } else {
       println("Defending animal: " + defender + "has won")
     }
