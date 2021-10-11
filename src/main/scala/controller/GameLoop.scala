@@ -10,6 +10,8 @@ case class GameLoop(speciesInMap : Map[Species, Int], habitat: Habitat) extends 
 
   val pool: ExecutorService = Executors.newFixedThreadPool(Runtime.getRuntime.availableProcessors())
   val foodInMap: Seq[FoodInstance] = generateFood()
+  val battleManager: BattleManager = BattleManager(getAnimalsInMap)
+  val shiftManager: ShiftManager = ShiftManager(habitat, Map.empty )
 
   //TODO creare mappa animale -> Rettangolo che lo rappresenta
   //TODO pausa come fermare il gioco senza sprecare cpu?
@@ -17,7 +19,7 @@ case class GameLoop(speciesInMap : Map[Species, Int], habitat: Habitat) extends 
   override def run(): Unit = {
     init()
     try {
-      pool.execute(GameLoopHandler(getAnimalsInMap))
+      pool.execute(GameLoopHandler(getAnimalsInMap, battleManager, shiftManager))
     } finally {
       pool.shutdown()
     }
