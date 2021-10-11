@@ -114,7 +114,7 @@ object Animal {
    * @param thirst    the parameter that indicates whether the animal is thirsty.
    * @return a new implementation of Animal.
    */
-  def apply(s: Species, position: Point,  health: Int = MaxHealth, thirst: Int = MaxThirst): Animal = new AnimalImpl(
+  def apply(s: Species, position: Point,  health: Int = MaxHealth, thirst: Int = MaxThirst): Animal = AnimalImpl(
     s.icon, s.name, s.size, s.strength, s.sight, health, thirst, position, s.alimentationType)
 
 

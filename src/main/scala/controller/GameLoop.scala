@@ -1,46 +1,48 @@
 package controller
 
-import model.{Animal, Area, Fertile, FoodInstance, Habitat, Size, Species}
+import model._
 import utility.{Constants, Point}
 
 import java.lang.Thread.sleep
+import java.util.concurrent.{ExecutorService, Executors}
 import scala.util.Random
 
-class GameLoop(val speciesInMap : Map[Species, Int],  val habitat: Habitat) extends Runnable {
+case class GameLoop(speciesInMap : Map[Species, Int], habitat: Habitat) extends Runnable {
 
-  val animalsInMap: Seq[Animal] = getAnimalsInMap(speciesInMap)
-  val condition: () => Boolean = () => animalsInMap.lengthIs > 1
-
-
+  val pool: ExecutorService = Executors.newFixedThreadPool(Runtime.getRuntime.availableProcessors())
   val foodInMap: Seq[FoodInstance] = generateFood()
+
   //TODO creare mappa animale -> Rettangolo che lo rappresenta
   //TODO pausa come fermare il gioco senza sprecare cpu?
 
   override def run(): Unit = {
     init()
-    while(condition()) {
-      val timeStart = System.currentTimeMillis()
-      //Prendo dallo shiftmanager il primo movimento per ogni animale
-      //TODO shift manager dovrebbe gestire l'eat se l'animale finisce vicino al cibo e acqua??
-      //Battle manager calcola possibili
-      //Calcolo eventi inaspettati
-      //new ShapePanel
-      val timeEnd = System.currentTimeMillis()
-      sleep(timeStart + Constants.tickTime - timeEnd)
-      //sleep
+    try {
+      pool.execute(GameLoopHandler(getAnimalsInMap))
+    } finally {
+      pool.shutdown()
     }
   }
 
   def init(): Unit = {
-    //prendo la mappa di animali, che è stata inizializzata in simulationGui e chiamo su ShapePanel addAllAnimals.
+    generateFood()
   }
 
-  def getAnimalsInMap(species: Map[Species, Int]): Seq[Animal] = {
-    val animals = Seq.empty
-    species.foreach(s => for (_ <- 1 to s._2) animals.+:(Animal(s = s._1, placeAnimal(s._1))))
+  def getAnimalsInMap: Seq[Animal] = {
+    var animals = Seq.empty[Animal]
+    speciesInMap foreach (s => {
+      for (_ <- 1 to s._2) {
+        animals = animals :+ Animal(s = s._1, placeAnimal(s._1))
+      }
+    })
     animals
   }
 
+  /**
+   * Given an habitat, place a species in a free space
+   * @param species of the animals
+   * @return
+   */
   def placeAnimal(species: Species): Point = {
     val size = species.size match {
       case Size.Big => 12
@@ -65,4 +67,21 @@ class GameLoop(val speciesInMap : Map[Species, Int],  val habitat: Habitat) exte
 
   def generateFood(): Seq[FoodInstance] = Seq.empty
 
+}
+
+case class GameLoopHandler(animals: Seq[Animal]) extends Runnable {
+  override def run(): Unit = {
+    while(animals.lengthIs > 1) {
+      val timeStart: Long = System.currentTimeMillis()
+      //Prendo dallo shiftmanager il primo movimento per ogni animale
+      //TODO shift manager dovrebbe gestire l'eat se l'animale finisce vicino al cibo e acqua??
+      //Battle manager calcola possibili
+      //Calcolo eventi inaspettati
+      //new ShapePanel
+      val timeEnd: Long = System.currentTimeMillis()
+      println("FPS: " + (timeEnd - timeStart))
+      sleep(timeStart + Constants.tickTime - timeEnd)
+      //sleep
+    }
+  }
 }
