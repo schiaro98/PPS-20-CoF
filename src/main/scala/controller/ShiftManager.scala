@@ -1,6 +1,6 @@
 package controller
 
-import model.{Animal, Fertile, Habitat}
+import model.{Animal, Area, Fertile, Habitat}
 import utility.{Constants, Point}
 
 import scala.annotation.tailrec
@@ -9,6 +9,7 @@ import scala.util.Random
 sealed trait ShiftManager {
   val habitat: Habitat
   var animalsDestinations: Map[Animal, Seq[Point]]
+
   def walk(): Unit
 
   def animals: collection.Set[Animal] = animalsDestinations.keySet
@@ -17,34 +18,36 @@ sealed trait ShiftManager {
 
 
 object ShiftManager {
+  def apply(habitat: Habitat, animalDestinations: (Animal, Point)*):ShiftManager =
+    new ShiftManagerImpl(habitat, animalDestinations.map(c => (c._1, Seq(c._2))).toMap)
+
   def apply(habitat: Habitat, animalsDestinations: Map[Animal, Seq[Point]]): ShiftManager =
     new ShiftManagerImpl(habitat: Habitat, animalsDestinations)
 
+
   private class ShiftManagerImpl(override val habitat: Habitat, override var animalsDestinations: Map[Animal, Seq[Point]]) extends ShiftManager {
 
-    animals.foreach(animal => require(habitat.areas.filterNot(a => a.areaType == Fertile).count(a => a.contains(animal.position))==0))
+    val nonWalkableAreas: Seq[Area] = habitat.areas.filterNot(a => a.areaType == Fertile)
+    animals.foreach(animal => require(nonWalkableAreas.count(a => a.contains(animal.position)) == 0))
 
-    val randShift: Int => Int = (x: Int) => Random.between(Constants.MinShift, x)
+    val randShift: Unit => Int = _ => Random.between(Constants.MinShift, Constants.MaxShift)
     // TODO: try to do it with for yield
-
     //if I can't go to the first point create another, go to that point and when arrived go to the first one
     override def walk(): Unit = {
       val map = scala.collection.mutable.Map.empty[Animal, Seq[Point]]
-      val travelDistance: (Int, Int) = (randShift(Constants.MaxShift), randShift(Constants.MaxShift))
       for (a <- animals) {
+        val travelDistance: (Int, Int) = (randShift(), randShift())
         //animal has a destination
         if (animalsDestinations(a).nonEmpty) {
-          //          println("animal has a destination")
           val dest = animalsDestinations(a)
           //animal can arrive to destination in this iteration
           if (canTravel(a.position, dest.head, travelDistance)) {
             println(a.name, " is arriving")
             map += (a.shift(dest.head) -> dest.tail)
-            //animal has to cal a new point closer to destination
+            //animal has to calc a new point closer to destination
           } else {
             val destinations = tryWalk(a.position, dest, travelDistance)
-            // TODO: ogni tanto fa piu distanza di quanta dovrebbe
-            if (!canTravel(a.position,destinations.head,travelDistance)){
+            if (!canTravel(a.position, destinations.head, travelDistance)) {
               println("fok")
             }
             map += a.shift(destinations.head) -> destinations.tail
@@ -56,16 +59,11 @@ object ShiftManager {
       animalsDestinations = map.toMap
     }
 
-    // TODO: refactor questa e falla davvero ricorsiva, a quanto pare non lo e'
-    def tryWalk(animalPosition: Point, dest:Seq[Point], travelDistance: (Int,Int)): Seq[Point] = {
-      val closerPoint = calcNewPoint(animalPosition, dest.head, travelDistance)
-      //the point I found is inside an area in which i can't go
-      val illegalPoint = habitat.areas.filterNot(a => a.areaType == Fertile).count(a => a.contains(closerPoint)) > 0
-      if (illegalPoint) {
-//        println("point in a non walkable area")
-        circumnavigate(closerPoint)()+:dest
-        //tryWalk(animalPosition, nextP+:dest, travelDistance)
-      } else closerPoint+:dest
+    @tailrec
+    private def tryWalk(position: Point, dest: Seq[Point], travelDistance: (Int, Int)): Seq[Point] = {
+      val nextP = calcNextDest(position, dest.head, travelDistance)
+      println(isLegal(nextP))
+      if (isLegal(nextP)) nextP +: dest else tryWalk(position, calcLegalRandomPointInRectangle(dest.head, position) +: dest, travelDistance)
     }
 
     /**
@@ -80,8 +78,7 @@ object ShiftManager {
       travelDistance._1 - distance.x.abs >= 0 && travelDistance._2 - distance.y.abs >= 0
     }
 
-    //cambiare nome a questi 2?
-    private def calcNewPoint(from: Point, to: Point, travelDistance: (Int, Int)): Point = {
+    private def calcNextDest(from: Point, to: Point, travelDistance: (Int, Int)): Point = {
       //calculating potential points
       val x = if (to.isRight(from)) from.x + travelDistance._1 else from.x - travelDistance._1
       val y = if (to.isUnder(from)) from.y + travelDistance._2 else from.y - travelDistance._2
@@ -89,43 +86,27 @@ object ShiftManager {
     }
 
     /**
-     * @param from point inside an area in which the animal can't walk
-     * @param optP a possible point that could be out of the area of interest
-     * @return a Point outside a NonWalkableArea
-     */
-    @tailrec
-    private def circumnavigate(from: Point)(optP: Option[Point] = None): Point = optP match {
-      case Some(value) => if (habitat.areas
-        .filterNot(a => a.areaType == Fertile)
-        .count(a => a.contains(value)) > 0) circumnavigate(value)(None) else value
-      case None => circumnavigate(from)(Some(calcPointOutOfNonWalkableArea(from)))
-    }
-
-    private def calcPointOutOfNonWalkableArea(p: Point): Point = {
-      val DefDist = 10
-      val a = habitat.areas.filter(a => a.contains(p)).head.area
-      val dl = p.fromX(a.topLeft)
-      val dr = p.fromX(a.bottomRight)
-      val du = p.fromY(a.topLeft)
-      val db = p.fromY(a.bottomRight)
-      //if left distance >right distance create point to the right, left otherwise
-      // TODO: Can have problems with bounds?
-      val x = if (dl > dr) p.x + dr + DefDist else p.x - dl - DefDist
-      val y = if (du > db) p.y + db + DefDist else p.y - du - DefDist
-      makeInBounds(x,y)
-    }
-
-    /**
      * Make coordinates be inside of the habitat
+     *
      * @param px the possible x
      * @param py the possible y
      * @return a Point inside the habitat
      */
-    private def makeInBounds(px: Int, py: Int):Point = {
+    private def makeInBounds(px: Int, py: Int): Point = {
       val x = if (px < 0) 0 else if (px > habitat.dimensions._1) habitat.dimensions._1 else px
       val y = if (py < 0) 0 else if (py > habitat.dimensions._2) habitat.dimensions._2 else py
-      Point(x,y)
+      Point(x, y)
     }
+
+    @tailrec
+    private def calcLegalRandomPointInRectangle(p1: Point, p2: Point, tries: Int = 0): Point = {
+      val x = if (p1.x != p2.x) Random.between(Ordering.Int.min(p1.x, p2.x), Ordering.Int.max(p1.x, p2.x)) else p1.x
+      val y = if (p1.y != p2.y) Random.between(Ordering.Int.min(p1.y, p2.y), Ordering.Int.max(p1.y, p2.y)) else p2.y
+      val p = Point(x, y)
+      if (isLegal(p)) p else calcLegalRandomPointInRectangle(p1, p2)
+    }
+
+    private def isLegal(p: Point): Boolean = !nonWalkableAreas.exists(a => a.contains(p))
   }
 
 }
