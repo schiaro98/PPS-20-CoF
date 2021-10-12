@@ -1,5 +1,6 @@
 import controller.ShiftManager
 import model.Size.{Medium, Small}
+import model.Type.{Carnivore, Herbivore}
 import model._
 import org.scalatest.funsuite.AnyFunSuite
 import utility.Point
@@ -11,10 +12,10 @@ class ShiftManagerTest extends AnyFunSuite {
   val ourHabitat: Habitat = Habitat(Probability(0))
 
   val path = "res/images/tiger-icon.jpg"
-  val tiger: Animal = Carnivorous(Species(path, "tiger", Medium, 10, 10), getPointInFertileAreas(ourHabitat))
-  val elephant: Animal = Herbivore(Species(path, "elephant", Medium, 10, 10), getPointInFertileAreas(ourHabitat))
-  val dog: Animal = Carnivorous(Species(path, "dog", Medium, 20, 20), getPointInFertileAreas(ourHabitat))
-  val cat: Animal = Carnivorous(Species(path, "cat", Small, 15, 10), getPointInFertileAreas(ourHabitat))
+  val tiger: Animal = Animal(Species(path, "tiger", Medium, 10, 10, Herbivore), getLegalRandomPoint(ourHabitat))
+  val elephant: Animal = Animal(Species(path, "elephant", Medium, 10, 10, Herbivore), getLegalRandomPoint(ourHabitat))
+  val dog: Animal = Animal(Species(path, "dog", Medium, 20, 20, Carnivore ), getLegalRandomPoint(ourHabitat))
+  val cat: Animal = Animal(Species(path, "cat", Small, 15, 10, Carnivore), getLegalRandomPoint(ourHabitat))
   val MaxX = 500
   val MaxY = 500
 
