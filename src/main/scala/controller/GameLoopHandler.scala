@@ -26,18 +26,4 @@ case class GameLoopHandler(animals: Seq[Animal], battleManager: BattleManager, s
   }
 }
 
-/*
- * Perchè spostare gli animali, per farli avvicinare a risorse(cibo, acqua), per farli scappare? e per farli combattere
- * con altri animali oppure casualmente. Il come ci pensa lo shiftmanager. Il destinationManager si occupa di vedere se l'animale
- * è in grado di "vedere" altre risorse o bersagli. In caso delle risorse si avvicina. Se vedo una preda mi avvicino.
- * Se vedo un attaccante scappo?
- * Ogni animale, se non ha altro motivo per muoversi, si muove randomicamente in una direzione
- *
- * Per ogni animale quindi prendo la posizione e ne tiro fuori un altra calcolata in base alle varie condizioni
- * (cose che vede o random)
- *
- * Se vedo delle risorse gli do come destinazione quella più vicine, se vedo una preda gli do come destinazione la preda
- *
- * I CARNIVORI SONO PIU' veloci, i carnivori hanno una hitbox, cioè una distanza massima entro il quale le prede vengono
- *  uccise decapitate molestate per prenderne la carne
- */
+
