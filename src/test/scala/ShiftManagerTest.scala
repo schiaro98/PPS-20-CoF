@@ -99,9 +99,9 @@ class ShiftManagerTest extends AnyFunSuite {
 
 
 
-  def getPointInFertileAreas(h: Habitat): Point = {
+  def getLegalRandomPoint(h: Habitat): Point = {
     val p = Point(Random.nextInt(h.dimensions._1), Random.nextInt(h.dimensions._2))
-    if (h.areas.filterNot(a => a.areaType == Fertile).count(a => a.contains(p)) == 0) p else getPointInFertileAreas(h)
+    if (h.areas.filterNot(a => a.areaType == Fertile).count(a => a.contains(p)) == 0) p else getLegalRandomPoint(h)
   }
 
 }
