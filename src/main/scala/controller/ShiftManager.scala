@@ -18,7 +18,7 @@ sealed trait ShiftManager {
 
 
 object ShiftManager {
-  def apply(habitat: Habitat, animalDestinations: (Animal, Point)*):ShiftManager =
+  def apply(habitat: Habitat, animalDestinations: (Animal, Point)*): ShiftManager =
     new ShiftManagerImpl(habitat, animalDestinations.map(c => (c._1, Seq(c._2))).toMap)
 
   def apply(habitat: Habitat, animalsDestinations: Map[Animal, Seq[Point]]): ShiftManager =
@@ -32,6 +32,7 @@ object ShiftManager {
     animals.foreach(animal => require(nonWalkableAreas.count(a => a.contains(animal.position)) == 0))
 
     val randShift: Unit => Int = _ => Random.between(Constants.MinShift, Constants.MaxShift)
+
     // TODO: try to do it with for yield
     //if I can't go to the first point create another, go to that point and when arrived go to the first one
     override def walk(): Unit = {
@@ -108,8 +109,37 @@ object ShiftManager {
     }
 
     private def isLegal(p: Point): Boolean = !nonWalkableAreas.exists(a => a.contains(p))
+
+
+    @tailrec
+    private def initWalks(animals:Seq[Animal], map: Map[Animal, Seq[Point]] = Map.empty ): Map[Animal, Seq[Point]] = animals match {
+      case h::t => initWalks(t, Map(h -> createPath(h.position, animalsDestinations(h).head)))
+      case _ => map
+    }
+
+
+    @tailrec
+    private def createPath(from: Point, dest:Point, path: Seq[Point] = Seq.empty):Seq[Point] = path match {
+      case h::_ if h == dest => path.reverse
+      case _ =>
+        val travelDistance = (randShift(), randShift())
+        val topLeft = makeInBounds(from.x - travelDistance._1, from.y - travelDistance._2)
+        val bottomRight = makeInBounds(from.x + travelDistance._1, from.y + travelDistance._2)
+        val legalPoints = for (x <- topLeft.x to bottomRight.x;
+                               y <- topLeft.y to bottomRight.y if isLegal(Point(x, y)) && from != Point(x, y))
+        yield Point(x, y)
+        val closerPoint = findCloserPoint(legalPoints, dest)
+        createPath(closerPoint,dest, closerPoint+:path)
+     }
+
+
+    @tailrec
+    private def findCloserPoint(points: Seq[Point], dest: Point, closestP: Option[Point] = None, minDist:Double = Double.MaxValue):Point = points match {
+      case h::t =>
+        val d = h.distance(dest)
+        if (d < minDist) findCloserPoint(t, dest, Some(h), d) else findCloserPoint(t, dest, closestP, minDist)
+      case _ => closestP.getOrElse(throw new RuntimeException("LIKE IN LIFE, THERE ISN'T A POINT"))
+    }
+
   }
-
-
-
 }
