@@ -1,9 +1,12 @@
 package controller
 
-import model.{Animal, FoodInstance, Type}
+import model._
+import model.Type._
 import utility.Point
 
-sealed trait DestinationManager {
+import scala.util.Random
+
+sealed trait DestinationManager[P <: Placeable] {
   /**
    * For any given animals, calculate the target of the movement
    * For an herbivore, it should point to the more near vegetables or a random location if it can't see anything
@@ -12,25 +15,34 @@ sealed trait DestinationManager {
    * @param resources the resources present in the map
    * @return
    */
-  def calculateDestination(animals: Seq[Animal],resources: Seq[FoodInstance]) : Map[Animal, Point]
+  def calculateDestination(animals: Seq[Animal], resources: Seq[P]) : Map[Animal, Point]
+
 }
 
 object DestinationManager {
-  def apply(animals: Seq[Animal], resources: Seq[FoodInstance]) : DestinationManager = DestinationManagerImpl(animals, resources)
+  def apply[P <: Placeable](animals: Seq[Animal], resources: Seq[P], habitat: Habitat) : DestinationManager[P] =
+    DestinationManagerImpl(animals, resources, habitat)
 
-private case class DestinationManagerImpl(animals: Seq[Animal], resources: Seq[FoodInstance]) extends DestinationManager {
-  override def calculateDestination(animals: Seq[Animal], resources: Seq[FoodInstance]): Map[Animal, Point] = {
+private case class DestinationManagerImpl[P <: Placeable](animals: Seq[Animal], food: Seq[P], habitat: Habitat) extends DestinationManager[P] {
+
+  override def calculateDestination(animals: Seq[Animal], food: Seq[P]): Map[Animal, Point] = {
     val destination: Map[Animal, Point] = Map.empty
     animals.foreach(animal => {
-      val animalPos = animal.position
       animal.alimentationType match {
-        case Type.Herbivore => findNextResource(animal, resources).getOrElse())
-        case Type.Carnivore =>
+        case Herbivore => findNearestResource(animal, food.filter(resource => resource.isInstanceOf[Vegetable]))
+          .getOrElse(getLegalRandomPoint(habitat))
+        case Carnivore =>
+          findNearestResource(animal, animals.filter(animal => animal.alimentationType == Herbivore))
+            .getOrElse(findNearestResource(animal, food.filter(resource => resource.isInstanceOf[Meat]))
+              .getOrElse(getLegalRandomPoint(habitat)))
       }
     })
+    destination
   }
 
-  private def findNextResource(animal: Animal, resources: Seq[FoodInstance]): Option[Point] = {
+  /** TODO Si puoò fare in modo più funzionale
+   */
+   def findNearestResource[P <: Placeable](animal: Animal, resources: Seq[P]): Option[Point] = {
     var nextResource: Option[Point] = Option.empty
     resources.foreach(res => {
       val distance = res.position.distance(animal.position)
@@ -44,10 +56,9 @@ private case class DestinationManagerImpl(animals: Seq[Animal], resources: Seq[F
     nextResource
   }
 
-  private def getRandomMovement(animal: Animal): Point = {
-    val actualPosition = animal.position
-    val shift: Int = 10 //TODO massimo spostamento per un animale? oppure si può anche mettere qualsiasi punto nei limiti della mappa
-    actualPosition.getRandomPoint(actualPosition, actualPosition + Point(shift, shift))
+  def getLegalRandomPoint(h: Habitat): Point = {
+    val p = Point(Random.nextInt(h.dimensions._1), Random.nextInt(h.dimensions._2))
+    if (h.areas.filterNot(a => a.areaType == Fertile).count(a => a.contains(p)) == 0) p else getLegalRandomPoint(h)
   }
 }
 
@@ -56,6 +67,7 @@ private case class DestinationManagerImpl(animals: Seq[Animal], resources: Seq[F
  * con altri animali oppure casualmente. Il come ci pensa lo shiftmanager. Il destinationManager si occupa di vedere se l'animale
  * è in grado di "vedere" altre risorse o bersagli. In caso delle risorse si avvicina. Se vedo una preda mi avvicino.
  * Se vedo un attaccante scappo?
+
  * Ogni animale, se non ha altro motivo per muoversi, si muove randomicamente in una direzione
  *
  * Per ogni animale quindi prendo la posizione e ne tiro fuori un altra calcolata in base alle varie condizioni

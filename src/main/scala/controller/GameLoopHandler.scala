@@ -5,9 +5,9 @@ import utility.Constants
 
 import java.lang.Thread.sleep
 
-case class GameLoopHandler(animals: Seq[Animal], battleManager: BattleManager, shiftManager: ShiftManager) extends Runnable {
+case class GameLoopHandler(animals: Seq[Animal], battleManager: BattleManager, shiftManager: ShiftManager) extends Runnable{
 
-  override def run(): Unit = {
+   def run(): Unit = {
     while(animals.lengthIs > 1) {
       val timeStart: Long = System.currentTimeMillis()
 
@@ -20,7 +20,7 @@ case class GameLoopHandler(animals: Seq[Animal], battleManager: BattleManager, s
       //Calcolo eventi inaspettati
       //new ShapePanel
       val timeEnd: Long = System.currentTimeMillis()
-      println("FPS: " + (timeEnd - timeStart))
+      println("Time elapsed for the computation: " + (timeEnd - timeStart))
       sleep(timeStart + Constants.tickTime - timeEnd)
     }
   }
