@@ -40,20 +40,10 @@ private case class DestinationManagerImpl[P <: Placeable](animals: Seq[Animal], 
     destination
   }
 
-  /** TODO Si puoò fare in modo più funzionale
-   */
    def findNearestResource[P <: Placeable](animal: Animal, resources: Seq[P]): Option[Point] = {
-    var nextResource: Option[Point] = Option.empty
-    resources.foreach(res => {
-      val distance = res.position.distance(animal.position)
-      if (distance < animal.sight){
-        if(nextResource.get.distance(animal.position) > distance){
-          nextResource = Some(res.position)
-        }
-      }
-    }
-    )
-    nextResource
+     Option(resources
+       .filter(resource => resource.position.distance(animal.position) < animal.sight)
+       .minByOption(resources => resources.position.distance(animal.position)).get.position)
   }
 
   def getLegalRandomPoint(h: Habitat): Point = {
