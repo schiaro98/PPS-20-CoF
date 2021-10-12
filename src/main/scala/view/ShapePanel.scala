@@ -1,11 +1,11 @@
 package view
 
-import model.{Area, Fertile, Size, Species}
+import model.{Animal, Area, Fertile, Size}
 import utility.{Constants, Point}
 
 import java.awt.event.{MouseEvent, MouseMotionListener}
-import scala.collection.mutable.ArrayBuffer
 import java.awt.{Color, Dimension, Graphics2D}
+import scala.collection.mutable.ArrayBuffer
 import scala.swing.Panel
 import scala.util.Random
 
@@ -43,42 +43,34 @@ class ShapePanel(val width: Int, val height: Int, location: () => swing.Point) e
     shapesSeq.foreach(s => addShape(s))
   }
 
-  def addAnimals(species: Map[Species, Int], areas: Seq[Area]): Unit = {
-    species.foreach(v => {
+  def addAnimals(animals: Seq[Animal]): Unit = {
+    animals.foreach(animal => {
       val color = new Color(Random.nextFloat(), Random.nextFloat(), Random.nextFloat())
-      val size = v._1.size match {
+      val point = animal.position
+      val size = animal.size match {
         case Size.Big => 12
         case Size.Medium => 9
         case Size.Small => 6
       }
-
-      for (_ <- 1 to v._2) {
-        //TODO cercare un metodo più funzionale per farlo
-        var x = Random.nextInt(width - size)
-        var y = Random.nextInt(height - size)
-        while (isNotPlaceable(Point(x,y),areas) || isNotPlaceable(Point(x+size,y+size),areas)
-          || isNotPlaceable(Point(x+size,y),areas) || isNotPlaceable(Point(x,y+size),areas)) {
-          x = Random.nextInt(width - size)
-          y = Random.nextInt(height - size)
-        }
-        shapes.append(new Rectangle(Point(x, y), Point(x+size, y+size), color))
-
-        val p = new AnimalPopup(
-          s"Species: ${v._1.name}\nSize: ${v._1.size}\nStrength: ${v._1.strength}\nSight: ${v._1.sight}",
-          () => new java.awt.Point(x + location().x + Constants.OffsetX, y + location().y + Constants.OffsetY)
-        )
-        peer.addMouseMotionListener(new MouseMotionListener {
-          override def mouseDragged(e: MouseEvent): Unit = {}
-          override def mouseMoved(e: MouseEvent): Unit = {
-            val mx = e.getX; val my = e.getY
-            if (mx > x && mx < x+size && my > y && my < y+size) {
-              p.setVisible(true)
-            } else {
-              p.setVisible(false)
-            }
+      shapes.append(new Rectangle(point, point + (size, size), color))
+      val p = new AnimalPopup(
+        s"Species: ${animal.name}\nSize: ${animal.size}\nStrength: ${animal.strength}\nSight: ${animal.sight}",
+        () => new java.awt.Point(point.x + location().x + Constants.OffsetX, point.y + location().y + Constants.OffsetY)
+      )
+      /*
+      TODO questo dovrebbe esser fatto con reactions += come nelle altre classi di gui
+       */
+      peer.addMouseMotionListener(new MouseMotionListener {
+        override def mouseDragged(e: MouseEvent): Unit = {}
+        override def mouseMoved(e: MouseEvent): Unit = {
+          val mx = e.getX; val my = e.getY
+          if (mx > point.x && mx < point.x+size && my > point.y && my < point.y+size) {
+            p.setVisible(true)
+          } else {
+            p.setVisible(false)
           }
-        })
-      }
+        }
+      })
     })
   }
 

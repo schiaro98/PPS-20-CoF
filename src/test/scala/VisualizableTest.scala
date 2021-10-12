@@ -1,3 +1,4 @@
+import model.Type.Carnivore
 import model._
 import org.scalatest.funsuite.AnyFunSuite
 import utility.Point
@@ -18,7 +19,7 @@ class VisualizableTest extends AnyFunSuite {
   }
 
   test("A species is a visualizable with more information") {
-    val s: Species = Species(path, "tiger", Size.Medium, 10, 10)
+    val s: Species = Species(path, "tiger", Size.Medium, 10, 10, Carnivore)
     assert(path == s.icon)
     assert("tiger" == s.name )
   }

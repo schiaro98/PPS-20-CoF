@@ -1,7 +1,7 @@
 package view
 
 import controller.{OfSpecies, Serializer}
-import model.{Size, Species}
+import model.{Size, Species, Type}
 
 class LogicGui(speciesFile: String) {
 
@@ -76,8 +76,8 @@ class LogicGui(speciesFile: String) {
   /**
    * Given the Species parameters, give an istance of Species
    */
-  def captionSpecies(name: String, size: String, strength: String, sight: String): Species = {
-    Species("icon.txt", name, toSize(size), tryToInt(strength), tryToInt(sight))
+  def captionSpecies(name: String, size: Size, strength: String, sight: String, alimentationType: Type): Species = {
+    Species("icon.txt", name, size, tryToInt(strength), tryToInt(sight), alimentationType)
   }
 
   // TODO: gestire meglio la gestione degli input da utente
@@ -93,15 +93,6 @@ class LogicGui(speciesFile: String) {
     } catch {
       case _: Exception => 0
     }
-  }
-
-  /**
-   * Convert string into Size type
-   */
-  def toSize(s: String): Size = s match {
-    case "Small" => Size.Small
-    case "Medium" => Size.Medium
-    case "Big" => Size.Big
   }
 
   /**

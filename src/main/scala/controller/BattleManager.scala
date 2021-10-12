@@ -1,6 +1,6 @@
 package controller
 
-import model.{Animal, Carnivorous, Probability, Size}
+import model.{Animal, Probability, Size, Type}
 
 sealed trait BattleManager {
   val animals: Seq[Animal]
@@ -71,7 +71,9 @@ private case class SimpleBattleManager(animals: Seq[Animal]) extends BattleManag
 
     if(battle(Probability(probabilities.map(a => a.probability).sum / probabilities.length))){
       println("Attacking animal: " + attacker + "has won")
-      attacker.eat(defender.die())
+      //attacker.eat(defender.die())
+      //TODO come rilascio la risorsa? defender.die()
+
     } else {
       println("Defending animal: " + defender + "has won")
     }
@@ -126,23 +128,23 @@ private case class SimpleBattleManager(animals: Seq[Animal]) extends BattleManag
    */
   override def calculateProbabilityFromSize(attacker: Animal, defender: Animal): Probability = {
     var probability = Probability(50)
-      probability = attacker.size match {
-        case Size.Big => defender.size match {
-          case Size.Medium => probability.increase(20)
-          case Size.Small => probability.increase(50)
-          case _ => probability
-        }
-        case Size.Medium => defender.size match {
-          case Size.Big => probability.decrease(20)
-          case Size.Small => probability.increase(20)
-          case _ => probability
-        }
-        case Size.Small => defender.size match {
-          case Size.Big => probability.decrease(80)
-          case Size.Medium => probability.decrease(50)
-          case _ => Probability(probability.probability)
-        }
+    probability = attacker.size match {
+      case Size.Big => defender.size match {
+        case Size.Medium => probability.increase(20)
+        case Size.Small => probability.increase(50)
+        case _ => probability
       }
+      case Size.Medium => defender.size match {
+        case Size.Big => probability.decrease(20)
+        case Size.Small => probability.increase(20)
+        case _ => probability
+      }
+      case Size.Small => defender.size match {
+        case Size.Big => probability.decrease(80)
+        case Size.Medium => probability.decrease(50)
+        case _ => Probability(probability.probability)
+      }
+    }
     probability
   }
 
@@ -151,5 +153,5 @@ private case class SimpleBattleManager(animals: Seq[Animal]) extends BattleManag
     visibleAnimals().filter(couple => isCarnivorous(couple._1)).foreach(couple => startBattle(couple._1, couple._2))
   }
 
-  override def isCarnivorous(animal: Animal): Boolean = animal.isInstanceOf[Carnivorous]
+  override def isCarnivorous(animal: Animal): Boolean = animal.alimentationType == Type.Carnivore
 }

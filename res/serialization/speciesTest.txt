@@ -3,5 +3,6 @@
   "name": "TestName",
   "size": "Small",
   "strength": 10,
-  "sight": 10
+  "sight": 10,
+  "alimentationType": "Carnivore"
 }

@@ -39,6 +39,8 @@ object Constants {
   val OffsetX = 20
   val OffsetY = 45
 
+  val tickTime = 120
+
   // ------- Habitat ------
   val DefaultRandomSize = 10
   val DefaultGridSize = 100
