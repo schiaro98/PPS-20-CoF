@@ -1,6 +1,6 @@
 package view
 
-import model.{Animal, Area, Fertile, Size}
+import model.{Animal, Area, AreaType, Fertile, Rock, Size, Volcano, Water}
 import utility.{Constants, Point}
 
 import java.awt.event.{MouseEvent, MouseMotionListener}
@@ -75,6 +75,6 @@ class ShapePanel(val width: Int, val height: Int, location: () => swing.Point) e
   }
 
   def isNotPlaceable(p: Point, areas: Seq[Area]): Boolean = {
-    areas.find(a => a.area.contains(p)).getOrElse(return false).areaType != Fertile
+    Set[AreaType](Volcano,Rock,Water).contains(areas.find(a => a.area.contains(p)).getOrElse(return false).areaType)
   }
 }

@@ -1,5 +1,6 @@
 package view
 
+import controller.GameLoop
 import model._
 
 import javax.swing.{Box, WindowConstants}
@@ -108,5 +109,5 @@ class ChooseHabitatGUI(val l :ChooseHabitatLogic) {
     else GridHabitatType
   }
 
-  def startSimulation(habitat: Habitat): SimulationGui = new SimulationGui(habitat, l.species) {top.visible = true }
+  def startSimulation(habitat: Habitat): GameLoop = GameLoop(l.species, habitat)
 }

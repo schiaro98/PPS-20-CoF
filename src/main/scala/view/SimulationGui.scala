@@ -19,12 +19,11 @@ class SimulationGui(val habitat: Habitat, val species: Map[Species, Int]) extend
     habitat.areas.foreach(area => {
       shapePanel.addShape(new Rectangle(area.area.topLeft, area.area.bottomRight, area.color))
     })
-
     shapePanel.addAnimals(loop.getAnimalsInMap)
 
     contents = shapePanel
     peer.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE)
-    loop.init()
+
     loop.run()
   }
 }

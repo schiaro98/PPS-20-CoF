@@ -2,11 +2,12 @@ package controller
 
 import model._
 import utility.Point
+import view.SimulationGui
 
 import java.util.concurrent.{ExecutorService, Executors}
 import scala.util.Random
 
-case class GameLoop(speciesInMap : Map[Species, Int], habitat: Habitat) extends Runnable {
+case class GameLoop(species : Map[Species, Int], habitat: Habitat) {
 
   val pool: ExecutorService = Executors.newFixedThreadPool(Runtime.getRuntime.availableProcessors())
   val foodInMap: Seq[FoodInstance] = generateFood()
@@ -16,22 +17,21 @@ case class GameLoop(speciesInMap : Map[Species, Int], habitat: Habitat) extends 
   //TODO creare mappa animale -> Rettangolo che lo rappresenta
   //TODO pausa come fermare il gioco senza sprecare cpu?
 
-  override def run(): Unit = {
-    init()
-    try {
-      pool.execute(GameLoopHandler(getAnimalsInMap, battleManager, shiftManager))
-    } finally {
-      pool.shutdown()
-    }
+  init()
+  try {
+    pool.execute(GameLoopHandler(getAnimalsInMap, battleManager, shiftManager))
+  } finally {
+    pool.shutdown()
   }
 
-  def init(): Unit = {
+  private def init(): Unit = {
+    new SimulationGui(habitat, l.species) {top.visible = true }
     generateFood()
   }
 
   def getAnimalsInMap: Seq[Animal] = {
     var animals = Seq.empty[Animal]
-    speciesInMap foreach (s => {
+    species foreach (s => {
       for (_ <- 1 to s._2) {
         animals = animals :+ Animal(s = s._1, placeAnimal(s._1))
       }
