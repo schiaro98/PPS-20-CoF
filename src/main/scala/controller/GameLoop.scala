@@ -4,28 +4,23 @@ import model._
 import utility.Point
 import view.SimulationGui
 
-import java.util.concurrent.{ExecutorService, Executors}
 import scala.util.Random
 
 case class GameLoop(species : Map[Species, Int], habitat: Habitat) {
 
-  val pool: ExecutorService = Executors.newFixedThreadPool(Runtime.getRuntime.availableProcessors())
   val foodInMap: Seq[FoodInstance] = generateFood()
   val battleManager: BattleManager = BattleManager(getAnimalsInMap)
-  val shiftManager: ShiftManager = ShiftManager(habitat, Map.empty )
+  val shiftManager: ShiftManager = ShiftManager(habitat, Map.empty[Animal, Seq[Point]])
 
   //TODO creare mappa animale -> Rettangolo che lo rappresenta
+  //Instanziare bene shiftmanager
   //TODO pausa come fermare il gioco senza sprecare cpu?
 
   init()
-  try {
-    pool.execute(GameLoopHandler(getAnimalsInMap, battleManager, shiftManager))
-  } finally {
-    pool.shutdown()
-  }
+  new Thread(GameLoopHandler(getAnimalsInMap, battleManager, shiftManager)).start()
 
   private def init(): Unit = {
-    new SimulationGui(habitat, l.species) {top.visible = true }
+    new SimulationGui(habitat, species) {top.visible = true }
     generateFood()
   }
 

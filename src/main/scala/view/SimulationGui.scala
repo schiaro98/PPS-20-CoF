@@ -12,7 +12,7 @@ class SimulationGui(val habitat: Habitat, val species: Map[Species, Int]) extend
     this.resizable = false
     this.size = new Dimension(habitat.dimensions._1, habitat.dimensions._2)
     this.title = "Simulation"
-
+    //TODO Shape panel deve essere creato dal gameloop
     val shapePanel = new ShapePanel(habitat.dimensions._1, habitat.dimensions._2, () => this.location)
     val loop: GameLoop = GameLoop(species, habitat)
 
