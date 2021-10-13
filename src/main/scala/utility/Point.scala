@@ -49,6 +49,7 @@ case class Point(x: Int, y: Int) {
    * @return a random point, between (0,0) and limits
    */
   def getRandomPoint(limits: Point): Point = getRandomPoint(Point(0,0), limits)
+  def getRandomPoint(limits: (Int, Int)): Point = getRandomPoint(Point(0,0), Point(limits._1, limits._2))
 
   /**
    * @param start are the point min coordinates
