@@ -26,4 +26,6 @@ class AnimalPopup(textToDisplay: String, location: () => Point) {
       SwingUtilities.invokeLater(() => f.setVisible(false))
     }
   }
+
+  def deletePopup(): Unit = f.dispose()
 }

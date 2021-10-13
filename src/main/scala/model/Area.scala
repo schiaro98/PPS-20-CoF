@@ -28,7 +28,7 @@ sealed trait Area {
 object Area {
   def apply(areaType: AreaType, area: RectangleArea, probability: Probability = Probability(0), name: String = ""): Area =
     areaType match {
-    case Fertile =>  new FertileAreaGrowFood(area, probability, name)
+    case Fertile => new FertileAreaGrowFood(area, probability, name) //TODO brutto che questa è l'unica a cui serve il "new"
     case Water => SimpleAreaImpl(area, if (name == "") "a bit of water" else name, Color.blue,areaType )
     case Rock => SimpleAreaImpl(area, if (name == "") "a rock area" else name, new Color(102,51,0), areaType)
     case Volcano => SimpleAreaImpl(area, if (name == "") "a volcano" else name, Color.red, areaType)

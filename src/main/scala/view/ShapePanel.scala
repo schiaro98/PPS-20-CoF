@@ -1,18 +1,22 @@
 package view
 
-import model.{Animal, Area, AreaType, Fertile, Rock, Size, Volcano, Water}
-import utility.{Constants, Point}
+import model.{Animal, Habitat}
+import utility.Constants
 
 import java.awt.event.{MouseEvent, MouseMotionListener}
-import java.awt.{Color, Dimension, Graphics2D}
+import java.awt.{Color, Dimension, Graphics2D, Point}
+import javax.swing.SwingUtilities
 import scala.collection.mutable.ArrayBuffer
 import scala.swing.Panel
-import scala.util.Random
 
-class ShapePanel(val width: Int, val height: Int, location: () => swing.Point) extends Panel {
+class ShapePanel(val width: Int, val height: Int) extends Panel {
+
+  var getLocation: () => swing.Point = () => new swing.Point(0,0)
+  val shapes = new ArrayBuffer[Shape]
+  var popups: Seq[AnimalPopup] = Seq.empty //TODO lasciare var?
+  var listener: Seq[MouseMotionListener] = Seq.empty //TODO lasciare var?
 
   peer.setPreferredSize(new Dimension(width, height))
-
   opaque = true
   background = Color.white
 
@@ -25,16 +29,6 @@ class ShapePanel(val width: Int, val height: Int, location: () => swing.Point) e
     }
   }
 
-  val shapes = new ArrayBuffer[Shape]
-
-  /*
-  new Timer(10, (_: ActionEvent) => {
-    for (s <- shapes) {
-      s.move(width, height)
-    }
-    repaint
-  }) //.start()
-  */
   def addShape(shape: Shape): Unit = {
     shapes.append(shape)
   }
@@ -43,38 +37,51 @@ class ShapePanel(val width: Int, val height: Int, location: () => swing.Point) e
     shapesSeq.foreach(s => addShape(s))
   }
 
-  def addAnimals(animals: Seq[Animal]): Unit = {
-    animals.foreach(animal => {
-      val color = new Color(Random.nextFloat(), Random.nextFloat(), Random.nextFloat())
-      val point = animal.position
-      val size = animal.size match {
-        case Size.Big => 12
-        case Size.Medium => 9
-        case Size.Small => 6
-      }
-      shapes.append(new Rectangle(point, point + (size, size), color))
-      val p = new AnimalPopup(
-        s"Species: ${animal.name}\nSize: ${animal.size}\nStrength: ${animal.strength}\nSight: ${animal.sight}",
-        () => new java.awt.Point(point.x + location().x + Constants.OffsetX, point.y + location().y + Constants.OffsetY)
-      )
-      /*
-      TODO questo dovrebbe esser fatto con reactions += come nelle altre classi di gui
-       */
-      peer.addMouseMotionListener(new MouseMotionListener {
+  def drawHabitat(habitat: Habitat): Unit = {
+    habitat.areas.foreach(area => {
+      addShape(new Rectangle(area.area.topLeft, area.area.bottomRight, area.color))
+    })
+  }
+
+  def drawAnimals(animalsAndRectangles: Map[Animal, Rectangle]): Unit = {
+    eliminateOldPopup()
+    animalsAndRectangles.foreach(v => {
+      val animal = v._1
+      val rectangle = v._2
+      shapes.append(rectangle)
+
+      val p = new AnimalPopup(textToDisplay(animal), () => new Point(
+        rectangle.topLeft.x + Constants.OffsetX + SwingUtilities.getWindowAncestor(this.peer).getLocation().x,
+        rectangle.topLeft.y + Constants.OffsetY + SwingUtilities.getWindowAncestor(this.peer).getLocation().y
+      ))
+      val mouseListener = new MouseMotionListener {
         override def mouseDragged(e: MouseEvent): Unit = {}
         override def mouseMoved(e: MouseEvent): Unit = {
-          val mx = e.getX; val my = e.getY
-          if (mx > point.x && mx < point.x+size && my > point.y && my < point.y+size) {
+          val xMouse = e.getX
+          val yMouse = e.getY
+          if (xMouse > v._2.topLeft.x && xMouse < v._2.bottomRigth.x && yMouse > v._2.topLeft.y && yMouse < v._2.bottomRigth.y) {
             p.setVisible(true)
           } else {
             p.setVisible(false)
           }
         }
-      })
+      }
+      //TODO questo dovrebbe esser fatto con reactions += come nelle altre classi di gui
+      peer.addMouseMotionListener(mouseListener)
+      popups = popups :+ p
+      listener = listener :+ mouseListener
     })
   }
 
-  def isNotPlaceable(p: Point, areas: Seq[Area]): Boolean = {
-    Set[AreaType](Volcano,Rock,Water).contains(areas.find(a => a.area.contains(p)).getOrElse(return false).areaType)
+  def textToDisplay(animal: Animal): String = {
+    s"Species: ${animal.name}\nHealth: ${animal.health}\nThirst: ${animal.thirst}\nStrength: ${animal.strength}\nSight: ${animal.sight}\nSize: ${animal.size}"
   }
+
+  def eliminateOldPopup(): Unit = {
+    popups.foreach(p => p.deletePopup())
+    popups = Seq.empty
+    listener.foreach(l => peer.removeMouseMotionListener(l))
+    listener = Seq.empty
+  }
+
 }

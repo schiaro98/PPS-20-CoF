@@ -109,5 +109,5 @@ class ChooseHabitatGUI(val l :ChooseHabitatLogic) {
     else GridHabitatType
   }
 
-  def startSimulation(habitat: Habitat): GameLoop = GameLoop(l.species, habitat)
+  def startSimulation(habitat: Habitat): Unit = new Thread(GameLoop(l.species, habitat)).start()
 }

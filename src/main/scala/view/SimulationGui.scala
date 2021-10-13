@@ -1,29 +1,27 @@
 package view
 
-import controller.GameLoop
-import model._
+import model.{Animal, Habitat}
 
 import javax.swing.WindowConstants
 import scala.swing.{Dimension, Frame, SimpleSwingApplication}
 
-class SimulationGui(val habitat: Habitat, val species: Map[Species, Int]) extends SimpleSwingApplication {
+class SimulationGui(habitat: Habitat, val shapePanel: ShapePanel) extends SimpleSwingApplication {
+
+  val (width, height) = habitat.dimensions
 
   override def top: Frame = new Frame {
     this.resizable = false
-    this.size = new Dimension(habitat.dimensions._1, habitat.dimensions._2)
+    this.size = new Dimension(width, height)
     this.title = "Simulation"
-    //TODO Shape panel deve essere creato dal gameloop
-    val shapePanel = new ShapePanel(habitat.dimensions._1, habitat.dimensions._2, () => this.location)
-    val loop: GameLoop = GameLoop(species, habitat)
-
-    habitat.areas.foreach(area => {
-      shapePanel.addShape(new Rectangle(area.area.topLeft, area.area.bottomRight, area.color))
-    })
-    shapePanel.addAnimals(loop.getAnimalsInMap)
-
     contents = shapePanel
     peer.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE)
+  }
 
-    loop.run()
+  def updatePanel(animalsAndRectangles: Map[Animal, Rectangle]): Unit = {
+    shapePanel.peer.removeAll()
+    shapePanel.drawHabitat(habitat)
+    shapePanel.drawAnimals(animalsAndRectangles)
+    shapePanel.revalidate()
+    shapePanel.repaint()
   }
 }
