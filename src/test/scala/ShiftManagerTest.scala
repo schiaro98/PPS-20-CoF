@@ -101,6 +101,23 @@ class ShiftManagerTest extends AnyFunSuite {
   }
 
 
+  test("Test 1000 times  multiple animals to random destinations in ours habitat"){
+    for (i <- 0 until 1000) {
+      val dest1 = getLegalRandomPoint(ourHabitat)
+      val dest2 = getLegalRandomPoint(ourHabitat)
+      val dest3 = getLegalRandomPoint(ourHabitat)
+      val dest4 = getLegalRandomPoint(ourHabitat)
+      val destinations = Set(dest1, dest2, dest3, dest4)
+      val sm: ShiftManager = ShiftManager(ourHabitat,(tiger, dest1), (elephant, dest2), (dog, dest3), (cat, dest4))
+      var i = 0
+      while(sm.animals.count(a => destinations.contains(a.position)) != sm.animals.size){
+        i += 1
+        sm.walk()
+        sm.animals.foreach(animal => require(ourHabitat.areas.filterNot(a => a.areaType == Fertile).count(a => a.contains(animal.position)) == 0))
+      }
+      assert(sm.animals.count(a => destinations.contains(a.position)) == sm.animals.size)
+    }
+  }
 
   def getLegalRandomPoint(h: Habitat): Point = {
     val p = Point(Random.nextInt(h.dimensions._1), Random.nextInt(h.dimensions._2))

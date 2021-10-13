@@ -29,9 +29,12 @@ object ShiftManager {
 
     val nonWalkableAreas: Seq[Area] = habitat.areas.filterNot(a => a.areaType == Fertile)
     val randShift: Unit => Int = _ => Random.between(Constants.MinShift, Constants.MaxShift)
+
     private def isLegal(p: Point): Boolean = !nonWalkableAreas.exists(a => a.contains(p))
+
     animalsDestinations.keySet.foreach(animal => require(nonWalkableAreas.count(a => a.contains(animal.position)) == 0))
     var mySupportAnimalsDestinations: Map[Animal, Seq[Point]] = initWalks(animalsDestinations.keySet.toSeq)
+
     override def animals: collection.Set[Animal] = mySupportAnimalsDestinations.keySet
 
 
@@ -44,6 +47,7 @@ object ShiftManager {
           } else recWalk(others, updatedAnimalsDestinations)
         case _ => updatedAnimalsDestinations
       }
+
       mySupportAnimalsDestinations = recWalk(mySupportAnimalsDestinations.keySet.toSeq)
     }
 
@@ -54,18 +58,41 @@ object ShiftManager {
     }
 
     @tailrec
-    private def createPath(from: Point, dest: Point, path: Seq[Point] = Seq.empty): Seq[Point] = path match {
+    private def createPath(from: Point, dest: Point, path: Seq[Point] = Seq.empty, fuckYou: Int = 0, travelDistance: (Int, Int) = (randShift(), randShift())): Seq[Point] = path match {
       case _ if from == dest => path.reverse
       case _ =>
-        val travelDistance = (randShift(), randShift())
-        //        println( "traveldistance ", travelDistance)
+        //        println(fuckYou)
         val topLeft = makeInBounds(from.x - travelDistance._1, from.y - travelDistance._2)
         val bottomRight = makeInBounds(from.x + travelDistance._1, from.y + travelDistance._2)
         val legalPoints = for (x <- topLeft.x to bottomRight.x;
                                y <- topLeft.y to bottomRight.y if isLegal(Point(x, y)))
         yield Point(x, y)
         val closerPoint = findCloserPoint(legalPoints, dest)
-        createPath(closerPoint, dest, closerPoint +: path)
+        if (fuckYou > 100) {
+          throw new RuntimeException(" FANCULO PUNTO STRONZO")
+        }
+        if (path.nonEmpty && path.contains(closerPoint)) {
+          println("dest", dest)
+          println("myPoint", closerPoint)
+//
+//          val minX = Math.min(dest.x, closerPoint.x)
+//          val maxX = Math.max(dest.x, closerPoint.x)
+//          val minY = Math.min(dest.y, closerPoint.y)
+//          val maxY = Math.max(dest.y, closerPoint.y)
+//
+//          val points = for (x <- minX to maxX;
+//                            y <- minY to maxY if !isLegal(Point(x, y)))
+//            yield Point(x,y)
+//
+//          val areas = habitat.areas.filter(a => a.contains(points.head))
+//
+//          println("number of areas", areas.size)
+//          println(areas.head.area.topLeft, areas.head.area.bottomRight)
+          val topLeft
+          createPath(from, dest, path, fuckYou + 1)
+        } else {
+          createPath(closerPoint, dest, closerPoint +: path, fuckYou = fuckYou + 1)
+        }
     }
 
 
