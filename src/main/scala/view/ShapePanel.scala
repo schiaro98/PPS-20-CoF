@@ -1,17 +1,17 @@
 package view
 
 import model.{Animal, Habitat}
-import utility.Constants
+import utility.{Constants, Point}
 
 import java.awt.event.{MouseEvent, MouseMotionListener}
-import java.awt.{Color, Dimension, Graphics2D, Point}
+import java.awt.{Color, Dimension, Graphics2D}
 import javax.swing.SwingUtilities
 import scala.collection.mutable.ArrayBuffer
 import scala.swing.Panel
 
 class ShapePanel(val width: Int, val height: Int) extends Panel {
 
-  var getLocation: () => swing.Point = () => new swing.Point(0,0)
+  val getLocation: () => swing.Point = () => new swing.Point(0,0)
   val shapes = new ArrayBuffer[Shape]
   var popups: Seq[AnimalPopup] = Seq.empty //TODO lasciare var?
   var listener: Seq[MouseMotionListener] = Seq.empty //TODO lasciare var?
@@ -50,26 +50,25 @@ class ShapePanel(val width: Int, val height: Int) extends Panel {
       val rectangle = v._2
       shapes.append(rectangle)
 
-      val p = new AnimalPopup(textToDisplay(animal), () => new Point(
+      val p = new AnimalPopup(textToDisplay(animal), () => new swing.Point(
         rectangle.topLeft.x + Constants.OffsetX + SwingUtilities.getWindowAncestor(this.peer).getLocation().x,
         rectangle.topLeft.y + Constants.OffsetY + SwingUtilities.getWindowAncestor(this.peer).getLocation().y
       ))
-      val mouseListener = new MouseMotionListener {
+
+      val mouseListener: MouseMotionListener = new MouseMotionListener {
         override def mouseDragged(e: MouseEvent): Unit = {}
         override def mouseMoved(e: MouseEvent): Unit = {
-          val xMouse = e.getX
-          val yMouse = e.getY
-          if (xMouse > v._2.topLeft.x && xMouse < v._2.bottomRigth.x && yMouse > v._2.topLeft.y && yMouse < v._2.bottomRigth.y) {
+          if (Point(e.getX, e.getY).isInside(v._2.topLeft, v._2.bottomRigth)) {
             p.setVisible(true)
           } else {
             p.setVisible(false)
           }
         }
       }
-      //TODO questo dovrebbe esser fatto con reactions += come nelle altre classi di gui
+
       peer.addMouseMotionListener(mouseListener)
       popups = popups :+ p
-      listener = listener :+ mouseListener
+      listener = listener.+:(mouseListener)
     })
   }
 
