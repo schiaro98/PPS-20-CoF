@@ -1,5 +1,3 @@
-import model.Size._
-import model.Type.Carnivore
 import model._
 import org.scalatest.funsuite.AnyFunSuite
 import utility.Constants._

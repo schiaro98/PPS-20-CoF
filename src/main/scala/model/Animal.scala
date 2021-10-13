@@ -1,24 +1,16 @@
 package model
 
-import model.Size._
 import utility.{Constants, Point}
 import utility.Constants._
 
-/**
- * Trait that represent the age of an animal.
- */
-trait Age
 
-/**
- * Object that contains the possible age of an animal.
- */
-object Age {
-  case object Young extends Age
+sealed trait Age
 
-  case object Adult extends Age
+case object Young extends Age
 
-  case object Old extends Age
-}
+case object Adult extends Age
+
+case object Old extends Age
 
 trait Animal extends Species with Placeable {
   val health: Int
@@ -124,8 +116,8 @@ object Animal {
     override def shift(pos: Point): Animal = this.update(position = pos)
 
     override def eat(food: FoodInstance): (Animal, Option[FoodInstance]) = food match {
-      case _ : Meat if this.alimentationType == Type.Carnivore => consume(food)
-      case _ : Vegetable if this.alimentationType == Type.Herbivore => consume(food)
+      case _ : Meat if this.alimentationType == Carnivore => consume(food)
+      case _ : Vegetable if this.alimentationType == Herbivore => consume(food)
       case _ => throw new IllegalArgumentException("Illegal food type")
     }
 

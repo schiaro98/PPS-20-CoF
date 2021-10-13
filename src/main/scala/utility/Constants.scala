@@ -54,6 +54,7 @@ object Constants {
   // ------- Habitat ------
   val DefaultRandomSize = 10
   val DefaultGridSize = 100
+
   val NonWalkableArea: Set[AreaType] = Set(Volcano,Rock,Water)
 
   // ------- Various ------

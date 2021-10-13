@@ -19,7 +19,9 @@ case class GameLoop(species : Map[Species, Int], habitat: Habitat) extends Runna
   val animalsInMap: Seq[Animal] = generateInitialAnimals()
   val foodInMap: Seq[FoodInstance] = generateInitialFood()
   val battleManager: BattleManager = BattleManager(animalsInMap)
-  val shiftManager: ShiftManager = ShiftManager(habitat, Map.empty[Animal, Seq[Point]])
+  val shiftManager: ShiftManager = ShiftManager(habitat, Map.empty[Animal, Point])
+
+//  val battleManager: BattleManager = BattleManager(getAnimalsInMap)
 
   override def run(): Unit = {
     val shapePanel = new ShapePanel(habitat.dimensions._1, habitat.dimensions._2)
@@ -88,9 +90,9 @@ case class GameLoop(species : Map[Species, Int], habitat: Habitat) extends Runna
     val (width, height) = habitat.dimensions
     val areas = habitat.areas
     val size = species.size match {
-      case Size.Big => Constants.PixelForBig
-      case Size.Medium => Constants.PixelForMedium
-      case Size.Small => Constants.PixelForSmall
+      case Big => Constants.PixelForBig
+      case Medium => Constants.PixelForMedium
+      case Small => Constants.PixelForSmall
     }
 
     var x = Random.nextInt(width - size)

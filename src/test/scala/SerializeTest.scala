@@ -1,6 +1,5 @@
 import controller.{DefaultSerializer, OfSpecies, Serializer}
-import model.Type.Carnivore
-import model.{Size, Species}
+import model._
 import org.scalatest.funsuite.AnyFunSuite
 
 import java.nio.charset.StandardCharsets
@@ -58,18 +57,18 @@ class SerializeTest extends AnyFunSuite{
 
 
   test("Test custom serializer for Species"){
-    val json = speciesSerializer.serializeOne(Species("dog.txt","dog",Size.Small, 100,10, Carnivore))
+    val json = speciesSerializer.serializeOne(Species("dog.txt","dog",Small, 100,10, Carnivore))
     assert( json == "{\n  \"icon\": \"dog.txt\",\n  \"name\": \"dog\",\n  \"size\": \"Small\",\n  \"strength\": 100,\n  \"sight\": 10,\n  \"alimentationType\": \"Carnivore\"\n}")
   }
 
   test("Test custom deserializer for Species"){
     val dog = speciesSerializer.deserializeOne("{\n  \"icon\": \"dog.txt\",\n  \"name\": \"dog\",\n  \"size\": \"Small\",\n  \"strength\": 100,\n  \"sight\": 10,\n  \"alimentationType\": \"Carnivore\"\n}")(classOf[Species])
-    assert(dog.size == Size.Small)
+    assert(dog.size == Small)
   }
 
   test("Test serialize many to file for Species"){
     val fileName = "speciesSerializerTest.txt"
-    speciesSerializer.serializeManyToFile(Seq(Species("dog.png","dog",Size.Small, 100,10, Carnivore), Species("cat.png","cat",Size.Small, 80,60, Carnivore), Species("cow.png", "cow", Size.Medium, 40,50, Carnivore)))(fileName)
+    speciesSerializer.serializeManyToFile(Seq(Species("dog.png","dog", Small, 100,10, Carnivore), Species("cat.png","cat", Small, 80,60, Carnivore), Species("cow.png", "cow", Medium, 40,50, Carnivore)))(fileName)
     val path = Path.of("res"+File.separator+"serialization"+File.separator+fileName)
     val json = Files.readString(path, StandardCharsets.UTF_8)
     assert(json == "{\n  \"icon\": \"dog.png\",\n  \"name\": \"dog\",\n  \"size\": \"Small\",\n  \"strength\": 100,\n  \"sight\": 10,\n  \"alimentationType\": \"Carnivore\"\n}{\n  \"icon\": \"cat.png\",\n  \"name\": \"cat\",\n  \"size\": \"Small\",\n  \"strength\": 80,\n  \"sight\": 60,\n  \"alimentationType\": \"Carnivore\"\n}{\n  \"icon\": \"cow.png\",\n  \"name\": \"cow\",\n  \"size\": \"Medium\",\n  \"strength\": 40,\n  \"sight\": 50,\n  \"alimentationType\": \"Carnivore\"\n}")

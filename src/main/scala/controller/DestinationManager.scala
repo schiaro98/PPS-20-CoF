@@ -1,21 +1,16 @@
 package controller
 
 import model._
-import model.Type._
 import utility.Point
-
-import scala.util.Random
 
 sealed trait DestinationManager[P <: Placeable] {
   /**
    * For any given animals, calculate the target of the movement
    * For an herbivore, it should point to the more near vegetables or a random location if it can't see anything
    * For a Carnivore, it should point to the more near herbivore animal, or a random location
-   * @param animals to be moved into a location
-   * @param resources the resources present in the map
    * @return
    */
-  def calculateDestination(animals: Seq[Animal], resources: Seq[P]) : Map[Animal, Point]
+  def calculateDestination() : Map[Animal, Point]
 
 }
 
@@ -25,29 +20,34 @@ object DestinationManager {
 
 private case class DestinationManagerImpl[P <: Placeable](animals: Seq[Animal], food: Seq[P], habitat: Habitat) extends DestinationManager[P] {
 
-  override def calculateDestination(animals: Seq[Animal], food: Seq[P]): Map[Animal, Point] = {
-    val destination: Map[Animal, Point] = Map.empty
+  override def calculateDestination(): Map[Animal, Point] = {
+    var destination: Map[Animal, Point] = Map.empty
     animals.foreach(animal => {
-      animal.alimentationType match {
+        val point = animal.alimentationType match {
         case Herbivore => findNearestResource(animal, food.filter(resource => resource.isInstanceOf[Vegetable]))
           .getOrElse(getLegalRandomPoint(habitat))
         case Carnivore =>
-          findNearestResource(animal, animals.filter(animal => animal.alimentationType == Herbivore))
-            .getOrElse(findNearestResource(animal, food.filter(resource => resource.isInstanceOf[Meat]))
+          findNearestResource(animal, animals.filter(animal => animal.alimentationType == Herbivore)).getOrElse(
+            findNearestResource(animal,
+              food.filter(resource => resource.isInstanceOf[Meat]))
               .getOrElse(getLegalRandomPoint(habitat)))
       }
+      destination = destination + (animal -> point)
     })
     destination
   }
 
    def findNearestResource[P <: Placeable](animal: Animal, resources: Seq[P]): Option[Point] = {
-     Option(resources
+     resources
        .filter(resource => resource.position.distance(animal.position) < animal.sight)
-       .minByOption(resources => resources.position.distance(animal.position)).get.position)
-  }
+       .minByOption(resources => resources.position.distance(animal.position)) match {
+       case Some(value) => Some(value.position)
+       case None => Option.empty
+     }
+   }
 
   def getLegalRandomPoint(h: Habitat): Point = {
-    val p = Point(Random.nextInt(h.dimensions._1), Random.nextInt(h.dimensions._2))
+    val p = Point(0,0).getRandomPoint(h.dimensions)
     if (h.areas.filterNot(a => a.areaType == Fertile).count(a => a.contains(p)) == 0) p else getLegalRandomPoint(h)
   }
 }

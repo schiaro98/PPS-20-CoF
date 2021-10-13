@@ -18,7 +18,7 @@ class ChooseHabitatGUI(val l :ChooseHabitatLogic) {
   val ue: TextField = new TextField("10")
 
   val ours: RadioButton = new RadioButton("The habitat that we made"){
-    doClick
+    doClick()
     reactions += {
       case _: ButtonClicked =>
         setVisibility(false)

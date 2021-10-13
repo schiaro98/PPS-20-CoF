@@ -52,7 +52,7 @@ trait Habitat {
 
 object Habitat {
 
-  def apply(unexpectedEvents: Probability,
+  def apply(unexpectedEvents: Probability = Probability(0),
             dimensions: (Int, Int) = Constants.MainMapDimension,
             areas: Seq[Area] = Serializer(OfArea).deserializeManyFromFile(Constants.MainMap)(classOf[Area])
            ): Habitat = SimpleHabitat(unexpectedEvents, dimensions, areas)

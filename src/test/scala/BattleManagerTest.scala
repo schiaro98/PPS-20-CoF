@@ -1,7 +1,5 @@
 import controller.BattleManager
-import model.Size.{Big, Medium, Small}
-import model.Type.{Carnivore, Herbivore}
-import model.{Animal, Probability, Species}
+import model._
 import org.scalatest.funsuite.AnyFunSuite
 import utility.Point
 
