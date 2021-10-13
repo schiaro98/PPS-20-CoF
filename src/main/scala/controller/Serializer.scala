@@ -92,15 +92,15 @@ object Serializer {
               val sizeAsString = obj.get("size").getAsString
               val alimentationAsString = obj.get("alimentationType").getAsString
               val size = sizeAsString match {
-                case "Big" => Size.Big
-                case "Medium" => Size.Medium
-                case "Small" => Size.Small
+                case "Big" => Big
+                case "Medium" => Medium
+                case "Small" => Small
                 case _ => null
               }
               val name = obj.get("name").getAsString
               val alimentationType = alimentationAsString match {
-                case "Herbivore" => model.Type.Herbivore
-                case "Carnivore" => model.Type.Carnivore
+                case "Herbivore" => Herbivore
+                case "Carnivore" => Carnivore
                 case _ => null
               }
               val strength = obj.get("strength").getAsInt

@@ -1,6 +1,6 @@
 package view
 
-import model.{Size, Type}
+import model._
 
 import java.awt.Dimension
 import scala.swing.BorderPanel.Position.Center
@@ -20,7 +20,7 @@ class SpeciesGui(logic: LogicGui) extends SimpleSwingApplication {
     val sightLabel = new Label("Sight of the species")
     val sightField = new TextField("Sight")
     val sizeLabel = new Label("Size of the species")
-    val sizeField = new ComboBox[String](Seq(Size.Small.toString, Size.Medium.toString, Size.Big.toString))
+    val sizeField = new ComboBox[String](Seq(Small.toString, Medium.toString, Big.toString))
     val typeLabel = new Label("Type of the species")
     val typeField = new ComboBox[String](Seq("Herbivore", "Carnivore"))
 
@@ -33,15 +33,15 @@ class SpeciesGui(logic: LogicGui) extends SimpleSwingApplication {
             Dialog.showMessage(contents.head, "A species with the given name already exist", title = "Try again!")
           } else {
             val size: Size = sizeField.selection.item match {
-              case "Big" => Size.Big
-              case "Medium" => Size.Medium
-              case "Small" => Size.Small
+              case "Big" => Big
+              case "Medium" => Medium
+              case "Small" => Small
               case _ => throw new IllegalArgumentException("Illegal type on Size")
             }
 
             val alimentationType: Type = typeField.selection.item match {
-              case "Herbivore" => Type.Herbivore
-              case "Carnivore" => Type.Carnivore
+              case "Herbivore" => Herbivore
+              case "Carnivore" => Carnivore
               case _ => throw new IllegalArgumentException("Illegal type on Type")
             }
 

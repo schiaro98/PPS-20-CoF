@@ -1,6 +1,4 @@
 package model
-
-import utility.{Constants, Point}
 // TODO: we could add to Food a maxQuantity so that when we create a new FoodInstance we can use a random from 1 to maxQuantity
 // TODO: add name to Food?
 /**

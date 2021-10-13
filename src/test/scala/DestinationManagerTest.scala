@@ -1,6 +1,4 @@
 import controller.DestinationManager
-import model.Size.Medium
-import model.Type.{Carnivore, Herbivore}
 import model._
 import org.scalatest.funsuite.AnyFunSuite
 import utility.Point

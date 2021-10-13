@@ -41,9 +41,9 @@ case class GameLoop(speciesInMap : Map[Species, Int], habitat: Habitat) extends 
    */
   def placeAnimal(species: Species): Point = {
     val size = species.size match {
-      case Size.Big => 12
-      case Size.Medium => 9
-      case Size.Small => 6
+      case Big => 12
+      case Medium => 9
+      case Small => 6
     }
     val (width, height) = habitat.dimensions
     val areas = habitat.areas

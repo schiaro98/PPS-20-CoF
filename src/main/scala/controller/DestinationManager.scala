@@ -1,6 +1,5 @@
 package controller
 
-import model.Type._
 import model._
 import utility.Point
 

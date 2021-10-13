@@ -1,25 +1,16 @@
 package model
 
 /**
- * Trait that represent the size of a species.
- */
-sealed trait Size
-
-/**
  * Object that contains the possible size of a species.
  */
-object Size {
+sealed trait Size
   case object Big extends Size
   case object Medium extends Size
   case object Small extends Size
-}
 
 sealed trait Type
-
-object Type {
   case object Herbivore extends Type
   case object Carnivore extends Type
-}
 
 /**
  * Trait that represent a specific species of animal.
