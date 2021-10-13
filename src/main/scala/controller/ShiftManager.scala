@@ -91,7 +91,7 @@ object ShiftManager {
 
           //TODO - simo - questo era stato pushato non commentato e dava errore
 //          val topLeft
-          
+
           createPath(from, dest, path, fuckYou + 1)
         } else {
           createPath(closerPoint, dest, closerPoint +: path, fuckYou = fuckYou + 1)
