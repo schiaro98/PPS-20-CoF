@@ -1,6 +1,6 @@
 package view
 
-import model.{Animal, Area, Fertile, Size}
+import model._
 import utility.{Constants, Point}
 
 import java.awt.event.{MouseEvent, MouseMotionListener}
@@ -48,9 +48,9 @@ class ShapePanel(val width: Int, val height: Int, location: () => swing.Point) e
       val color = new Color(Random.nextFloat(), Random.nextFloat(), Random.nextFloat())
       val point = animal.position
       val size = animal.size match {
-        case Size.Big => 12
-        case Size.Medium => 9
-        case Size.Small => 6
+        case Big => 12
+        case Medium => 9
+        case Small => 6
       }
       shapes.append(new Rectangle(point, point + (size, size), color))
       val p = new AnimalPopup(

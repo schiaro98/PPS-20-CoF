@@ -1,6 +1,7 @@
 package view
 
-import model.{Size, Type}
+import model._
+import utility.StringConverter
 
 import java.awt.Dimension
 import scala.swing.BorderPanel.Position.Center
@@ -20,7 +21,7 @@ class SpeciesGui(logic: LogicGui) extends SimpleSwingApplication {
     val sightLabel = new Label("Sight of the species")
     val sightField = new TextField("Sight")
     val sizeLabel = new Label("Size of the species")
-    val sizeField = new ComboBox[String](Seq(Size.Small.toString, Size.Medium.toString, Size.Big.toString))
+    val sizeField = new ComboBox[String](Seq(Small.toString, Medium.toString, Big.toString))
     val typeLabel = new Label("Type of the species")
     val typeField = new ComboBox[String](Seq("Herbivore", "Carnivore"))
 
@@ -32,18 +33,8 @@ class SpeciesGui(logic: LogicGui) extends SimpleSwingApplication {
           } else if(logic.species.keySet.map(s => s.name).contains(nameField.text)){
             Dialog.showMessage(contents.head, "A species with the given name already exist", title = "Try again!")
           } else {
-            val size: Size = sizeField.selection.item match {
-              case "Big" => Size.Big
-              case "Medium" => Size.Medium
-              case "Small" => Size.Small
-              case _ => throw new IllegalArgumentException("Illegal type on Size")
-            }
-
-            val alimentationType: Type = typeField.selection.item match {
-              case "Herbivore" => Type.Herbivore
-              case "Carnivore" => Type.Carnivore
-              case _ => throw new IllegalArgumentException("Illegal type on Type")
-            }
+            val size = StringConverter.getSize(sizeField.selection.item)
+            val alimentationType = StringConverter.getAlimentationType(typeField.selection.item)
 
             val newSpecie = logic.captionSpecies(nameField.text,
               size,

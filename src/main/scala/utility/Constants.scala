@@ -44,4 +44,5 @@ object Constants {
   // ------- Habitat ------
   val DefaultRandomSize = 10
   val DefaultGridSize = 100
+
 }
