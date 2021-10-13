@@ -12,3 +12,5 @@ libraryDependencies += "com.google.code.gson" % "gson" % "2.8.7"
 //scalaTest
 libraryDependencies += "org.scalactic" %% "scalactic" % "3.2.9"
 libraryDependencies += "org.scalatest" %% "scalatest" % "3.2.9" % "test"
+
+scalacOptions += "-deprecation"
