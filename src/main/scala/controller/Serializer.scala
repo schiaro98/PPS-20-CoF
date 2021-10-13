@@ -2,7 +2,7 @@ package controller
 
 import com.google.gson._
 import model._
-import utility.RectangleArea
+import utility.{RectangleArea, StringConverter}
 
 import java.io.PrintWriter
 import java.lang.reflect.Type
@@ -91,18 +91,9 @@ object Serializer {
             case obj: JsonObject if obj.has("size") =>
               val sizeAsString = obj.get("size").getAsString
               val alimentationAsString = obj.get("alimentationType").getAsString
-              val size = sizeAsString match {
-                case "Big" => Big
-                case "Medium" => Medium
-                case "Small" => Small
-                case _ => null
-              }
+              val size = StringConverter.getSize(sizeAsString)
+              val alimentationType = StringConverter.getAlimentationType(alimentationAsString)
               val name = obj.get("name").getAsString
-              val alimentationType = alimentationAsString match {
-                case "Herbivore" => Herbivore
-                case "Carnivore" => Carnivore
-                case _ => null
-              }
               val strength = obj.get("strength").getAsInt
               val sight = obj.get("sight").getAsInt
               val icon = obj.get("icon").getAsString
