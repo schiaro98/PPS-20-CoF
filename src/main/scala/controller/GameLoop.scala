@@ -9,7 +9,7 @@ case class GameLoop(speciesInMap : Map[Species, Int], habitat: Habitat) extends 
 
   val foodInMap: Seq[FoodInstance] = generateFood()
   val battleManager: BattleManager = BattleManager(getAnimalsInMap)
-  val shiftManager: ShiftManager = ShiftManager(habitat, Map.empty[Animal, Seq[Point]])
+  val shiftManager: ShiftManager = ShiftManager(habitat, Map.empty[Animal, Point])
 
   //TODO creare mappa animale -> Rettangolo che lo rappresenta
   //Instanziare bene shiftmanager
