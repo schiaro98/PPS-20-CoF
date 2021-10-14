@@ -3,7 +3,7 @@ package controller
 import model.Area.FertileAreaGrowFood
 import model._
 import utility.{Constants, Point}
-import view.{Rectangle, ShapePanel, SimulationGui}
+import view.{Rectangle, SimulationPanel, SimulationGui}
 
 import java.awt.Color
 import scala.util.Random
@@ -18,16 +18,18 @@ case class GameLoop(species: Map[Species, Int], habitat: Habitat) extends Runnab
 
   var animalsAndRectangles: Map[Animal, Rectangle] = Map.empty[Animal, Rectangle] //TODO lasciamo var?
   val animalsInMap: Seq[Animal] = generateInitialAnimals()
-  val foodInMap: Seq[FoodInstance] = generateInitialFood()
+  var foodInMap: Seq[FoodInstance] = generateInitialFood() //TODO lasciamo var
   val battleManager: BattleManager = BattleManager(animalsInMap)
   val shiftManager: ShiftManager = ShiftManager(habitat, Map.empty[Animal, Point])
 
+  /**
+   * Method that represents the core of the simulation, defines the actions that must be
+   * carried out at each unit of time.
+   */
   override def run(): Unit = {
-    val shapePanel = new ShapePanel(habitat.dimensions._1, habitat.dimensions._2)
-    val simulationGui = new SimulationGui(habitat, shapePanel) {
-      top.visible = true
-    }
-    simulationGui.updatePanel(animalsAndRectangles)
+    val shapePanel = new SimulationPanel(habitat.dimensions._1, habitat.dimensions._2)
+    val simulationGui = new SimulationGui(habitat, shapePanel) { top.visible = true }
+    simulationGui.updatePanel(animalsAndRectangles, foodInMap)
 
     var previous: Long = System.currentTimeMillis()
     while (animalsInMap.lengthIs > 1) { //TODO pausa come fermare il gioco senza sprecare cpu?
@@ -42,18 +44,25 @@ case class GameLoop(species: Map[Species, Int], habitat: Habitat) extends Runnab
       //crescita casuale dei vegetali
 
 
-      //---- solo per vedere che la gui cambia----|
-      animalsAndRectangles = Map.empty //         |
-      generateInitialAnimals() //                 |
-      //---- solo per vedere che la gui cambia----|
+
+      simulationGui.updatePanel(animalsAndRectangles, foodInMap)
 
 
-      simulationGui.updatePanel(animalsAndRectangles)
+
+      // ---- solo per vedere che la gui cambia----|
+      animalsAndRectangles = Map.empty //          |
+      generateInitialAnimals() //                  |
+      foodInMap = Seq.empty //                     |
+      foodInMap = generateInitialFood() //         |
+      // ---- solo per vedere che la gui cambia----|
+
+
+
       waitForNextFrame(current)
       previous = current
     }
 
-    //TODO mostra la gui con il riassunto
+    //mostrare la gui con il riassunto ?
   }
 
   /**
@@ -69,9 +78,14 @@ case class GameLoop(species: Map[Species, Int], habitat: Habitat) extends Runnab
     }
   }
 
+  /**
+   * Method to create the food to insert at the beginnig of the simulation.
+   *
+   * @return the created food.
+   */
   def generateInitialFood(): Seq[FoodInstance] = {
     var food = Seq.empty[FoodInstance]
-    //    habitat.areas.filter(a => a.isInstanceOf[FertileAreaGrowFood])
+//        habitat.areas.filter(a => a.isInstanceOf[FertileAreaGrowFood])
     food
   }
 
@@ -116,7 +130,6 @@ case class GameLoop(species: Map[Species, Int], habitat: Habitat) extends Runnab
     }
     (Point(x, y), Point(x + size, y + size))
   }
-
 
   /**
    * Check if a sequence of point is in a non-walkable area.
