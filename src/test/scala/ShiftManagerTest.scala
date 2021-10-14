@@ -89,9 +89,9 @@ class ShiftManagerTest extends AnyFunSuite {
   }
 
 
-  test("Test 1000 times  multiple animals to random destinations in ours habitat"){
+  test("Test 100 times  multiple animals to random destinations in ours habitat"){
     var i=0
-    for (_ <- 0 until 1000) {
+    for (_ <- 0 until 100) {
       val dest1 = getLegalRandomPoint(ourHabitat)
       val dest2 = getLegalRandomPoint(ourHabitat)
       val dest3 = getLegalRandomPoint(ourHabitat)
@@ -104,7 +104,7 @@ class ShiftManagerTest extends AnyFunSuite {
       }
       if (sm.animals.count(a => destinations.contains(a.position)) == sm.animals.size) i+= 1
     }
-    assert(i==1000)
+    assert(i==100)
   }
 
 
