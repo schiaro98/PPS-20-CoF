@@ -60,9 +60,9 @@ object Habitat {
   def apply(habitatType: HabitatType,
             unexpectedEvents: Probability,
             dimensions: (Int, Int),
-            areas: Seq[Area] = Seq.empty,
+            areas: Seq[Area],
            ): Habitat = habitatType match {
-    case EmptyHabitatType => SimpleHabitat(unexpectedEvents, dimensions, areas)
+    case EmptyHabitatType => SimpleHabitat(unexpectedEvents, dimensions, Seq.empty)
     case SimpleHabitatType => SimpleHabitat(unexpectedEvents, dimensions, areas)
     case RandomHabitatType => SimpleHabitat(unexpectedEvents, dimensions, createRandomAreas(dimensions))
     case GridHabitatType => SimpleHabitat(unexpectedEvents, dimensions, createGridArea(dimensions, DefaultGridSize))
