@@ -4,7 +4,7 @@ import model.{Animal, FoodInstance, Habitat}
 import utility.{Constants, Point}
 
 import java.awt.event.{MouseEvent, MouseMotionListener}
-import java.awt.{Color, Dimension, Graphics2D, Point}
+import java.awt.{Color, Dimension, Graphics2D}
 import javax.swing.SwingUtilities
 import scala.collection.mutable.ArrayBuffer
 import scala.swing.Panel

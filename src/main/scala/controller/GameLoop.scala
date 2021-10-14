@@ -34,7 +34,7 @@ case class GameLoop(species: Map[Species, Int], habitat: Habitat) extends Runnab
     var previous: Long = System.currentTimeMillis()
     while (animalsInMap.lengthIs > 1) { //TODO pausa come fermare il gioco senza sprecare cpu?
       val current: Long = System.currentTimeMillis()
-      val elapsed: Double = (current - previous) / Constants.MillisToSec
+      val elapsed: Double = (current - previous).toDouble / Constants.MillisToSec
 
       //Prendo dallo shiftmanager il primo movimento per ogni animale
       //TODO shift manager dovrebbe gestire l'eat se l'animale finisce vicino al cibo e acqua??
