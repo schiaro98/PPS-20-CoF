@@ -35,8 +35,8 @@ object ShiftManager {
 
   private class ShiftManagerImpl(override val habitat: Habitat, override var animalsDestinations: Map[Animal, Point]) extends ShiftManager {
 
-    val nonWalkableAreas: Seq[Area] = habitat.areas.filterNot(a => a.areaType == Fertile)
-    val randShift = (x:Int) => Random.between(Constants.MinShift, x)
+    private val nonWalkableAreas: Seq[Area] = habitat.areas.filterNot(a => a.areaType == Fertile)
+    private val randShift = (x:Int) => Random.between(Constants.MinShift, x)
 
     /**
      *
@@ -46,7 +46,7 @@ object ShiftManager {
     private def isLegal(p: Point): Boolean = !nonWalkableAreas.exists(a => a.contains(p))
 
     animalsDestinations.keySet.foreach(animal => require(nonWalkableAreas.count(a => a.contains(animal.position)) == 0))
-    var mySupportAnimalsDestinations: ParMap[Animal, Seq[Point]] = initWalks(animalsDestinations.keySet.toSeq)
+    private var mySupportAnimalsDestinations: ParMap[Animal, Seq[Point]] = initWalks(animalsDestinations.keySet.toSeq)
 
     override def animals: ParSet[Animal] = mySupportAnimalsDestinations.keySet
 
