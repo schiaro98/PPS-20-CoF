@@ -39,6 +39,8 @@ object Constants {
   val PixelForMedium = 9
   val PixelForSmall = 6
 
+  val PixelForFood = 6
+
   val IncCarnivoreVelocity = 5
   // ------- Gui --------
   val DefaultSimulationDimension = new Dimension(1000, 1000)

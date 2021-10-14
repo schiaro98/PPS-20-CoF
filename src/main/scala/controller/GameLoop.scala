@@ -1,6 +1,5 @@
 package controller
 
-import model.Area.FertileAreaGrowFood
 import model._
 import utility.{Constants, Point}
 import view.{Rectangle, SimulationPanel, SimulationGui}
@@ -17,8 +16,8 @@ import scala.util.Random
 case class GameLoop(species: Map[Species, Int], habitat: Habitat) extends Runnable {
 
   var animalsAndRectangles: Map[Animal, Rectangle] = Map.empty[Animal, Rectangle] //TODO lasciamo var?
-  val animalsInMap: Seq[Animal] = generateInitialAnimals()
   var foodInMap: Seq[FoodInstance] = generateInitialFood() //TODO lasciamo var
+  val animalsInMap: Seq[Animal] = generateInitialAnimals()
   val battleManager: BattleManager = BattleManager(animalsInMap)
   val shiftManager: ShiftManager = ShiftManager(habitat, Map.empty[Animal, Point])
 
@@ -70,7 +69,7 @@ case class GameLoop(species: Map[Species, Int], habitat: Habitat) extends Runnab
    *
    * @param current time at the beginning of current frame.
    */
-  def waitForNextFrame(current: Long): Unit = {
+  private def waitForNextFrame(current: Long): Unit = {
     val dt = System.currentTimeMillis() - current
     println("Time elapsed for the computation: " + dt)
     if (dt < Constants.Period) {
@@ -79,14 +78,13 @@ case class GameLoop(species: Map[Species, Int], habitat: Habitat) extends Runnab
   }
 
   /**
-   * Method to create the food to insert at the beginnig of the simulation.
+   * Method to create the food to insert at the beginning of the simulation.
    *
    * @return the created food.
    */
-  def generateInitialFood(): Seq[FoodInstance] = {
-    var food = Seq.empty[FoodInstance]
-//        habitat.areas.filter(a => a.isInstanceOf[FertileAreaGrowFood])
-    food
+  private def generateInitialFood(): Seq[FoodInstance] = {
+    //TODO resourceManagere.generateFood ?
+    Seq.empty[FoodInstance]
   }
 
   /**
@@ -94,7 +92,7 @@ case class GameLoop(species: Map[Species, Int], habitat: Habitat) extends Runnab
    *
    * @return the created animals.
    */
-  def generateInitialAnimals(): Seq[Animal] = {
+  private def generateInitialAnimals(): Seq[Animal] = {
     //TODO fare in modo più funzionale (for yield ad esempio)
     var animals = Seq.empty[Animal]
     species foreach (s => {
@@ -115,7 +113,7 @@ case class GameLoop(species: Map[Species, Int], habitat: Habitat) extends Runnab
    * @param species the Species of the animal.
    * @return the Point (top left) to create the animal and the Point (bottom right) used to draw the rectangle.
    */
-  def placeAnimal(species: Species): (Point, Point) = {
+  private def placeAnimal(species: Species): (Point, Point) = {
     val (width, height) = habitat.dimensions
     val size = species.size match {
       case Big => Constants.PixelForBig
