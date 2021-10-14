@@ -75,4 +75,18 @@ case class Point(x: Int, y: Int) {
    * @return the distance upon the y axis
    */
   def fromY(p: Point): Int = Math.abs(p.y - y)
+
+  /**
+   * Calculate if the point is inside a Rectangle or two points,
+   * requiring that the first is on the top left of the second
+   * @param topLeft the topleft corner (or first Point)
+   * @param bottomRigth the bottomRigth corner( or second Point=
+   * @return
+   */
+  def isInside(topLeft: Point, bottomRigth: Point): Boolean = {
+    require(topLeft.x < bottomRigth.x, "Invalid X axis")
+    require(topLeft.y < bottomRigth.y, "Invalid y axis")
+    (topLeft.x to bottomRigth.x contains this.x) && (topLeft.y to bottomRigth.y contains this.y)
+  }
+
 }

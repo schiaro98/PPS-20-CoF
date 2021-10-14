@@ -1,7 +1,7 @@
 package view
 
 import model.{Animal, FoodInstance, Habitat}
-import utility.Constants
+import utility.{Constants, Point}
 
 import java.awt.event.{MouseEvent, MouseMotionListener}
 import java.awt.{Color, Dimension, Graphics2D, Point}
@@ -99,7 +99,7 @@ class SimulationPanel(val width: Int, val height: Int) extends Panel {
    * @param rectangle the rectangle used to draw the animal.
    */
   def createPopupAndMouseListener(animal: Animal, rectangle: Rectangle): Unit = {
-    val p = new AnimalPopup(animal, () => new Point(
+    val p = new AnimalPopup(animal, () => new java.awt.Point(
       rectangle.topLeft.x + Constants.OffsetX + SwingUtilities.getWindowAncestor(this.peer).getLocation().x,
       rectangle.topLeft.y + Constants.OffsetY + SwingUtilities.getWindowAncestor(this.peer).getLocation().y
     ))
@@ -109,10 +109,7 @@ class SimulationPanel(val width: Int, val height: Int) extends Panel {
       override def mouseDragged(e: MouseEvent): Unit = {}
 
       override def mouseMoved(e: MouseEvent): Unit = {
-        val xMouse = e.getX
-        val yMouse = e.getY
-        if (xMouse > rectangle.topLeft.x && xMouse < rectangle.bottomRight.x && yMouse > rectangle.topLeft.y
-          && yMouse < rectangle.bottomRight.y) {
+        if (Point(e.getX, e.getY).isInside(rectangle.topLeft, rectangle.bottomRight)) {
           p.setVisible(true)
         } else {
           p.setVisible(false)
