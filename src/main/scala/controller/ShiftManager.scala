@@ -36,7 +36,7 @@ object ShiftManager {
   private class ShiftManagerImpl(override val habitat: Habitat, override var animalsDestinations: Map[Animal, Point]) extends ShiftManager {
 
     val nonWalkableAreas: Seq[Area] = habitat.areas.filterNot(a => a.areaType == Fertile)
-    val randShift: Unit => Int = _ => Random.between(Constants.MinShift, Constants.MaxShift)
+    val randShift = (x:Int) => Random.between(Constants.MinShift, x)
 
     /**
      *
@@ -84,11 +84,10 @@ object ShiftManager {
                      ): Seq[Point] = path match {
         case _ if from == dest => path.reverse
         case _ =>
-          val preCompTravelDistance = (randShift(), randShift())
-          val travelDistance: (Int, Int) =
+          val travelDistance =
             if (isCarnivore)
-              (preCompTravelDistance._1+Constants.IncCarnivoreVelocity,preCompTravelDistance._2+Constants.IncCarnivoreVelocity )
-            else preCompTravelDistance
+            (randShift(Constants.MaxShift + Constants.IncCarnivoreVelocity),randShift(Constants.MaxShift + Constants.IncCarnivoreVelocity))
+            else (randShift(Constants.MaxShift), randShift(Constants.MaxShift))
           val topLeft = makeInBounds(from.x - travelDistance._1, from.y - travelDistance._2)
           val bottomRight = makeInBounds(from.x + travelDistance._1, from.y + travelDistance._2)
           val legalPoints = for (x <- topLeft.x to bottomRight.x;
