@@ -71,23 +71,25 @@ object ShiftManager {
 
     /**
      *
-     * @param from           the point from which the animal starts
-     * @param dest           the destination point
-     * @param path           the sequence of point that the animal have to follow to arrive to dest
-     * @param travelDistance the distance that the animal will do for each step
+     * @param from the point from which the animal starts
+     * @param dest the destination point
      * @return the Sequence of Point that the animal will do
      */
-    @tailrec
-    private def createPath(from: Point, dest: Point, path: Seq[Point] = Seq.empty, travelDistance: (Int, Int) = (randShift(), randShift())): Seq[Point] = path match {
-      case _ if from == dest => path.reverse
-      case _ =>
-        val topLeft = makeInBounds(from.x - travelDistance._1, from.y - travelDistance._2)
-        val bottomRight = makeInBounds(from.x + travelDistance._1, from.y + travelDistance._2)
-        val legalPoints = for (x <- topLeft.x to bottomRight.x;
-                               y <- topLeft.y to bottomRight.y if isLegal(Point(x, y)))
-        yield Point(x, y)
-        val closerPoint = findCloserPoint(legalPoints, dest)
-        if (path.nonEmpty && path.contains(closerPoint)) path.reverse else createPath(closerPoint, dest, closerPoint +: path)
+    private def createPath(from: Point, dest: Point): Seq[Point] = {
+      @tailrec
+      def _createPath(from: Point, dest: Point, path: Seq[Point] = Seq.empty, travelDistance: (Int, Int) = (randShift(), randShift())): Seq[Point] = path match {
+        case _ if from == dest => path.reverse
+        case _ =>
+          val topLeft = makeInBounds(from.x - travelDistance._1, from.y - travelDistance._2)
+          val bottomRight = makeInBounds(from.x + travelDistance._1, from.y + travelDistance._2)
+          val legalPoints = for (x <- topLeft.x to bottomRight.x;
+                                 y <- topLeft.y to bottomRight.y if isLegal(Point(x, y)))
+          yield Point(x, y)
+          val closerPoint = findCloserPoint(legalPoints, dest)
+          if (path.nonEmpty && path.contains(closerPoint)) path.reverse else _createPath(closerPoint, dest, closerPoint +: path)
+      }
+
+      _createPath(from, dest)
     }
 
 
