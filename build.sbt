@@ -13,4 +13,8 @@ libraryDependencies += "com.google.code.gson" % "gson" % "2.8.7"
 libraryDependencies += "org.scalactic" %% "scalactic" % "3.2.9"
 libraryDependencies += "org.scalatest" %% "scalatest" % "3.2.9" % "test"
 
+//scala concurrency
+// https://mvnrepository.com/artifact/org.scala-lang.modules/scala-parallel-collections
+libraryDependencies += "org.scala-lang.modules" %% "scala-parallel-collections" % "1.0.4"
+
 scalacOptions += "-deprecation"
