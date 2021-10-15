@@ -3,13 +3,14 @@ import model._
 import org.scalatest.funsuite.AnyFunSuite
 import utility.{Constants, Point, RectangleArea}
 
+import java.awt.Color
 import java.nio.charset.StandardCharsets
 import java.nio.file.{Files, NoSuchFileException, Path}
 import scala.reflect.io.File
 
 class ResourceManagerTest extends AnyFunSuite{
 
-  val icon = "icon.png"
+  val color: Color = Color.black
 
   val fertileArea: Area = Area(Fertile, RectangleArea(Point(0,0), Point(10,10)))
   val waterArea: Area = Area(Water, RectangleArea(Point(0, 15), Point(15,30)))
@@ -27,24 +28,25 @@ class ResourceManagerTest extends AnyFunSuite{
   }
 
   test("ResourceManager grow()"){
-    val resMan = ResourceManager(habitat, Set(Food(icon, 5), Food(icon, 10), Food(icon, 15), Food(icon, 50)))
+    val resMan = ResourceManager(habitat, Set(Food(color, 5), Food(color, 10), Food(color, 15), Food(color, 50)))
     val newResMan = resMan.grow()
     println(newResMan.foods)
     assert(newResMan.foods.nonEmpty)
   }
 
   test("ResourceManager import food from non existing file"){
-    val resMan = ResourceManager(habitat, Set(Food(icon, 5), Food(icon, 10), Food(icon, 15), Food(icon, 50)))
+    val resMan = ResourceManager(habitat, Set(Food(color, 5), Food(color, 10), Food(color, 15), Food(color, 50)))
     assertThrows[NoSuchFileException](resMan.importFoodsFromFile("absolutelyNonExistingFileMadeUpOnlyForThisTest.txtxtxt"))
   }
 
   test("ResourceManager write food to file"){
-    val resMan = ResourceManager(habitat, Set(Food(icon, 5), Food(icon, 10), Food(icon, 15), Food(icon, 50)))
+    val resMan = ResourceManager(habitat, Set(Food(color, 5), Food(color, 10), Food(color, 15), Food(color, 50)))
     resMan.writeFoodsToFile(Constants.FoodsFilePath)
     val path = Path.of("res"+File.separator+"serialization"+File.separator+Constants.FoodsFilePath)
     val json = Files.readString(path, StandardCharsets.UTF_8)
 //    println(json)
-    assert(json == "{\"icon\":\"icon.png\",\"energy\":5}{\"icon\":\"icon.png\",\"energy\":10}{\"icon\":\"icon.png\",\"energy\":15}{\"icon\":\"icon.png\",\"energy\":50}")
+    // todo rimuovere tutti i commenti
+    assert(json == "{\"color\":{\"value\":-16777216,\"falpha\":0.0},\"energy\":5}{\"color\":{\"value\":-16777216,\"falpha\":0.0},\"energy\":10}{\"color\":{\"value\":-16777216,\"falpha\":0.0},\"energy\":15}{\"color\":{\"value\":-16777216,\"falpha\":0.0},\"energy\":50}")
   }
 
   test("ResourceManager import food from file"){

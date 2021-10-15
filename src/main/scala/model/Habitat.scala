@@ -1,8 +1,7 @@
 package model
 
-import controller.{OfArea, Serializer}
 import utility.Constants.{DefaultGridSize, DefaultStartingX, DefaultStartingY}
-import utility.{Constants, Point, RectangleArea}
+import utility.{Constants, OfArea, Point, RectangleArea, Serializer}
 
 import scala.util.Random
 

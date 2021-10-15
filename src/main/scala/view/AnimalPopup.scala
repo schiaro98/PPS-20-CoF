@@ -38,7 +38,7 @@ class AnimalPopup(animal: Animal, location: () => Point) {
   /**
    * Dispose the Frame of the popup.
    */
-  def deletePopup(): Unit = f.dispose()
+  def deletePopup(): Unit = SwingUtilities.invokeLater(() =>  f.dispose())
 
   /**
    * Method to get the info of a animal.

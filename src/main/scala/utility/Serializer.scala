@@ -1,9 +1,9 @@
-package controller
+package utility
 
 import com.google.gson._
 import model._
-import utility.{RectangleArea, StringConverter}
 
+import java.awt.Color
 import java.io.PrintWriter
 import java.lang.reflect.Type
 import scala.collection.mutable.ListBuffer
@@ -96,8 +96,8 @@ object Serializer {
               val name = obj.get("name").getAsString
               val strength = obj.get("strength").getAsInt
               val sight = obj.get("sight").getAsInt
-              val icon = obj.get("icon").getAsString
-              Species(icon, name, size, strength, sight, alimentationType)
+              val color = deserializeOne(obj.get("color").toString)(classOf[Color])
+              Species(name, size, strength, sight, alimentationType, color)
             case _ => null
           }
           Option(res).getOrElse(throw new JsonParseException(s"$json can't be parsed to Species"))
@@ -114,10 +114,10 @@ object Serializer {
     object FoodDeserializer extends JsonDeserializer[Food] {
       override def deserialize(json: JsonElement, typeOfT: Type, context: JsonDeserializationContext): Food = {
         val res = json match {
-          case obj: JsonObject if obj.has("icon") && obj.has("energy") =>
-            val icon = obj.get("icon").getAsString
+          case obj: JsonObject if obj.has("color") && obj.has("energy") =>
+            val color = deserializeOne(obj.get("color").toString)(classOf[Color])
             val energy = obj.get("energy").getAsInt
-            Food(icon, energy)
+            Food(color, energy)
           case _ => null
         }
         Option(res).getOrElse(throw new JsonParseException(s"$json can't be parsed to Food"))

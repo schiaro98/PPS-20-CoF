@@ -1,43 +1,61 @@
 {
-  "icon": "img",
   "name": "Ippo",
   "size": "Medium",
   "strength": 10,
   "sight": 10,
-  "alimentationType": "Carnivore"
+  "alimentationType": "Carnivore",
+  "color": {
+    "value": -8752012,
+    "falpha": 0.0
+  }
 }{
-  "icon": "img",
   "name": "Zebra",
   "size": "Small",
   "strength": 10,
   "sight": 10,
-  "alimentationType": "Herbivore"
+  "alimentationType": "Herbivore",
+  "color": {
+    "value": -1,
+    "falpha": 0.0
+  }
 }{
-  "icon": "icon.txt",
   "name": "Lion",
   "size": "Medium",
   "strength": 10,
   "sight": 10,
-  "alimentationType": "Carnivore"
+  "alimentationType": "Carnivore",
+  "color": {
+    "value": -2175844,
+    "falpha": 0.0
+  }
 }{
-  "icon": "icon.txt",
   "name": "Cat",
   "size": "Small",
   "strength": 10,
   "sight": 10,
-  "alimentationType": "Carnivore"
+  "alimentationType": "Carnivore",
+  "color": {
+    "value": -14433844,
+    "falpha": 0.0
+  }
 }{
-  "icon": "icon.txt",
   "name": "Dog",
   "size": "Small",
   "strength": 0,
   "sight": 0,
-  "alimentationType": "Carnivore"
+  "alimentationType": "Carnivore",
+  "color": {
+    "value": -3398716,
+    "falpha": 0.0
+  }
 }{
-  "icon": "icon.txt",
   "name": "Coyote",
   "size": "Medium",
   "strength": 10,
   "sight": 10,
-  "alimentationType": "Carnivore"
+  "alimentationType": "Carnivore",
+  "color": {
+    "value": -8298180,
+    "falpha": 0.0
+  }
 }

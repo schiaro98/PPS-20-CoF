@@ -62,7 +62,7 @@ object Area {
           val _2 = random.between(area.topLeft.y, area.bottomRight.y)
 
           val quantity = random.nextInt(DefaultFoodQuantity)
-          return Some(Vegetable(quantity, Point(_1, _2), food.energy, food.icon))
+          return Some(Vegetable(quantity, Point(_1, _2), food.energy, food.color))
         }
       }
       None

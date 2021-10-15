@@ -4,7 +4,6 @@ import model._
 import utility.{Constants, Point}
 import view.{Rectangle, SimulationPanel, SimulationGui}
 
-import java.awt.Color
 import scala.util.Random
 
 /**
@@ -15,8 +14,8 @@ import scala.util.Random
  */
 case class GameLoop(species: Map[Species, Int], habitat: Habitat) extends Runnable {
 
-  var animalsAndRectangles: Map[Animal, Rectangle] = Map.empty[Animal, Rectangle] //TODO lasciamo var?
-  var foodInMap: Seq[FoodInstance] = generateInitialFood() //TODO lasciamo var
+  var animalsAndRectangles: Map[Animal, Rectangle] = Map.empty[Animal, Rectangle]
+  var foodInMap: Seq[FoodInstance] = generateInitialFood()
   val animalsInMap: Seq[Animal] = generateInitialAnimals()
   val battleManager: BattleManager = BattleManager(animalsInMap)
   val shiftManager: ShiftManager = ShiftManager(habitat, Map.empty[Animal, Point])
@@ -96,12 +95,11 @@ case class GameLoop(species: Map[Species, Int], habitat: Habitat) extends Runnab
     //TODO fare in modo più funzionale (for yield ad esempio)
     var animals = Seq.empty[Animal]
     species foreach (s => {
-      val color = new Color(Random.nextFloat(), Random.nextFloat(), Random.nextFloat()) //TODO cambia colore hardcoded
       for (_ <- 1 to s._2) {
-        val (x, y) = placeAnimal(s._1)
-        val animal = Animal(s = s._1, x)
+        val (topLeft, bottomRight) = placeAnimal(s._1)
+        val animal = Animal(s._1, topLeft)
         animals = animals :+ animal
-        animalsAndRectangles += (animal -> new Rectangle(x, y, color))
+        animalsAndRectangles += (animal -> new Rectangle(topLeft, bottomRight, animal.color))
       }
     })
     animals

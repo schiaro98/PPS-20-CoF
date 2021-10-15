@@ -3,19 +3,16 @@ import org.scalatest.funsuite.AnyFunSuite
 import utility.Constants._
 import utility.Point
 
-import java.awt.image.BufferedImage
-import java.io.File
-import javax.imageio.ImageIO
+import java.awt.Color
 
 class AnimalsTest extends AnyFunSuite{
 
-  val path = "res/images/tiger-icon.jpg"
-  val img: BufferedImage = ImageIO.read(new File(path))
+  val color: Color = Color.black
   val p: Point = Point(0,0)
-  val a: Animal = Animal(Species(path, "tiger", Medium, 10, 10, Carnivore), p)
+  val a: Animal = Animal(Species("tiger", Medium, 10, 10, Carnivore, color), p)
 
   test("An animal is an entity with personal parameters and belong to a species") {
-    assert(path == a.icon)
+    assert(color == a.color)
     assert("tiger" == a.name)
     assert(MaxHealth == a.health)
   }
