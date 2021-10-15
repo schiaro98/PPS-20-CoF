@@ -5,19 +5,9 @@ import utility.Logger
 
 sealed trait BattleManager {
 
-  def battle(probability: Probability): Boolean
-
-  def calculateProbabilityFromSize(a1: Animal, a2: Animal): Probability
-
-  def calculateProbabilityFromDistance(a1: Animal, a2: Animal): Probability
-
-  def calculateProbabilityFromStrength(a1: Animal, a2: Animal): Probability
-
   def startBattle(a1: Animal, a2: Animal): Unit
 
   def calculateBattles(): Unit
-
-  def isCarnivorous(animal: Animal): Boolean
 
   def visibleAnimals(seqOfAnimals: Seq[Animal]): Seq[(Animal, Animal)]
 }
@@ -29,6 +19,9 @@ object BattleManager {
 
   private case class SimpleBattleManager(animals: Seq[Animal]) extends BattleManager {
 
+    override def calculateBattles(): Unit = {
+      visibleAnimals().filter(couple => isCarnivorous(couple._1)).foreach(couple => startBattle(couple._1, couple._2))
+    }
     /**
      * Return a sequence of tuples of every animal an animal can see, given the sequence created in the constructor
      *
@@ -53,7 +46,7 @@ object BattleManager {
     }
 
     /**
-     * Execute the battle between the attacker and the defender animal
+     * Execute the battle between ONE attacking animal and One defending
      *
      * @param attacker Attacking animal
      * @param defender Defending animal
@@ -70,17 +63,14 @@ object BattleManager {
         calculateProbabilityFromStrength(attacker, defender)
       )
 
-      if (battle(Probability(probabilities.map(a => a.probability).sum / probabilities.length))) {
+      if (Probability(probabilities.map(a => a.probability).sum / probabilities.length).calculate) {
         logger.info("Attacking animal: " + attacker + "has won")
         //attacker.eat(defender.die())
         //TODO come rilascio la risorsa? defender.die()
-
       } else {
         logger.info("Defending animal: " + defender + "has won")
       }
     }
-
-    override def battle(probability: Probability): Boolean = probability.calculate
 
     /**
      * Given a probability, it increase if the defending animal is fast (deducted by it's size) and far away. But it can
@@ -90,7 +80,7 @@ object BattleManager {
      * @param defender defending animal
      * @return Output probability of winning the battle
      */
-    override def calculateProbabilityFromDistance(attacker: Animal, defender: Animal): Probability = {
+     def calculateProbabilityFromDistance(attacker: Animal, defender: Animal): Probability = {
       val probability = Probability(50)
       attacker.position.distance(defender.position).toInt match {
         case x if x <= 1 => probability.increase(50)
@@ -113,7 +103,7 @@ object BattleManager {
      * @param defender defending animal
      * @return Output probability of winning the battle
      */
-    override def calculateProbabilityFromStrength(attacker: Animal, defender: Animal): Probability = {
+     def calculateProbabilityFromStrength(attacker: Animal, defender: Animal): Probability = {
       val probability = Probability(50)
       attacker.strength - defender.strength match {
         case x if x > 5 => probability.increase(50) //Attacking molto più forte
@@ -130,7 +120,7 @@ object BattleManager {
      * @param defender animal who has been figthed
      * @return probability of the attacker to win
      */
-    override def calculateProbabilityFromSize(attacker: Animal, defender: Animal): Probability = {
+     def calculateProbabilityFromSize(attacker: Animal, defender: Animal): Probability = {
       var probability = Probability(50)
       probability = attacker.size match {
         case Big => defender.size match {
@@ -152,11 +142,6 @@ object BattleManager {
       probability
     }
 
-
-    override def calculateBattles(): Unit = {
-      visibleAnimals().filter(couple => isCarnivorous(couple._1)).foreach(couple => startBattle(couple._1, couple._2))
-    }
-
-    override def isCarnivorous(animal: Animal): Boolean = animal.alimentationType == Carnivore
+     def isCarnivorous(animal: Animal): Boolean = animal.alimentationType == Carnivore
   }
 }
