@@ -9,9 +9,6 @@ import scala.collection.parallel.ParMap
 import scala.util.Random
 
 sealed trait ShiftManager {
-  val habitat: Habitat
-  var animalsDestinations: Map[Animal, Point]
-
   /**
    * Make all the animals walk
    */
@@ -33,7 +30,7 @@ object ShiftManager {
     new ShiftManagerImpl(habitat: Habitat, animalsDestinations)
 
 
-  private class ShiftManagerImpl(override val habitat: Habitat, override var animalsDestinations: Map[Animal, Point]) extends ShiftManager {
+  private class ShiftManagerImpl(val habitat: Habitat, val animalsDestinations: Map[Animal, Point]) extends ShiftManager {
 
     private val nonWalkableAreas: Seq[Area] = habitat.areas.filterNot(a => a.areaType == Fertile)
     private val randShift = (x:Int) => Random.between(Constants.MinShift, x)
