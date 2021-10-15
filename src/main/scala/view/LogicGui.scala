@@ -3,6 +3,8 @@ package view
 import model.{Size, Species, Type}
 import utility.{OfSpecies, Serializer}
 
+import java.awt.Color
+
 class LogicGui(speciesFile: String) {
 
   /**
@@ -76,8 +78,8 @@ class LogicGui(speciesFile: String) {
   /**
    * Given the Species parameters, give an istance of Species
    */
-  def captionSpecies(name: String, size: Size, strength: String, sight: String, alimentationType: Type): Species = {
-    Species("icon.txt", name, size, tryToInt(strength), tryToInt(sight), alimentationType)
+  def captionSpecies(color: Color, name: String, size: Size, strength: String, sight: String, alimentationType: Type): Species = {
+    Species(name, size, tryToInt(strength), tryToInt(sight), alimentationType, color)
   }
 
   // TODO: gestire meglio la gestione degli input da utente

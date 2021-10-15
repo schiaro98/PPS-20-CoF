@@ -1,24 +1,13 @@
 package model
 
+import java.awt.Color
+
 /**
- * Trait that represent an element viewable on the map.
+ * Trait that represent an element which has characteristics that allow it to be drawn on the map.
  */
 trait Visualizable {
-  val icon: String
-}
-
-/**
- * Object that represent an element viewable on the map.
- */
-object Visualizable {
   /**
-   * Apply method for a Visualizable.
-   *
-   * @param icon the image to draw in the map.
-   * @return an implementation of Visualizable.
+   * The color that should be used to draw the element.
    */
-  def apply(icon: String): Visualizable = new VisualizableImpl(icon)
-
-  private class VisualizableImpl(override val icon: String) extends Visualizable
-
+  val color: Color
 }

@@ -2,6 +2,7 @@ package utility
 
 import model.{AreaType, Rock, Volcano, Water}
 
+import java.awt.Color
 import scala.swing.Dimension
 
 /**
@@ -17,10 +18,10 @@ object Constants {
   // ------- Food -------
   val DefaultFoodQuantity = 10
 
-  val DefaultIconOfMeat = "res/images/tiger-icon.jpg"
+  val DefaultColorOfMeat = new Color(82,0,0)
   val DefaultEnergyOfMeat = 20
 
-  val DefaultIconOfVegetable ="res/images/tiger-icon.jpg"
+  val DefaultColorOfVegetable = new Color(0,84,11)
   val DefaultEnergyOfVegetable = 10
 
 

@@ -9,11 +9,10 @@ class ShiftManagerTest extends AnyFunSuite {
   // TODO: May be refactored
   val ourHabitat: Habitat = Habitat(Probability(0))
 
-  val path = "res/images/tiger-icon.jpg"
-  val tiger: Animal = Animal(Species(path, "tiger", Medium, 10, 10, Herbivore), getLegalRandomPoint(ourHabitat))
-  val elephant: Animal = Animal(Species(path, "elephant", Medium, 10, 10, Herbivore), getLegalRandomPoint(ourHabitat))
-  val dog: Animal = Animal(Species(path, "dog", Medium, 20, 20, Carnivore ), getLegalRandomPoint(ourHabitat))
-  val cat: Animal = Animal(Species(path, "cat", Small, 15, 10, Carnivore), getLegalRandomPoint(ourHabitat))
+  val tiger: Animal = Animal(Species("tiger", Medium, 10, 10, Herbivore), getLegalRandomPoint(ourHabitat))
+  val elephant: Animal = Animal(Species("elephant", Medium, 10, 10, Herbivore), getLegalRandomPoint(ourHabitat))
+  val dog: Animal = Animal(Species("dog", Medium, 20, 20, Carnivore ), getLegalRandomPoint(ourHabitat))
+  val cat: Animal = Animal(Species("cat", Small, 15, 10, Carnivore), getLegalRandomPoint(ourHabitat))
   val MaxX = 500
   val MaxY = 500
 
@@ -115,10 +114,10 @@ class ShiftManagerTest extends AnyFunSuite {
     val dest2 = getLegalRandomPoint(randHabitat)
     val dest3 = getLegalRandomPoint(randHabitat)
     val dest4 = getLegalRandomPoint(randHabitat)
-    val tiger: Animal = Animal(Species(path, "tiger", Medium, 10, 10, Herbivore), getLegalRandomPoint(randHabitat))
-    val elephant: Animal = Animal(Species(path, "elephant", Medium, 10, 10, Herbivore), getLegalRandomPoint(randHabitat))
-    val dog: Animal = Animal(Species(path, "dog", Medium, 20, 20, Carnivore ), getLegalRandomPoint(randHabitat))
-    val cat: Animal = Animal(Species(path, "cat", Small, 15, 10, Carnivore), getLegalRandomPoint(randHabitat))
+    val tiger: Animal = Animal(Species("tiger", Medium, 10, 10, Herbivore), getLegalRandomPoint(randHabitat))
+    val elephant: Animal = Animal(Species("elephant", Medium, 10, 10, Herbivore), getLegalRandomPoint(randHabitat))
+    val dog: Animal = Animal(Species("dog", Medium, 20, 20, Carnivore ), getLegalRandomPoint(randHabitat))
+    val cat: Animal = Animal(Species("cat", Small, 15, 10, Carnivore), getLegalRandomPoint(randHabitat))
     val destinations = Set(dest1, dest2, dest3, dest4)
     val sm: ShiftManager = ShiftManager(randHabitat,(tiger, dest1), (elephant, dest2), (dog, dest3), (cat, dest4))
     while(sm.animals.count(a => destinations.contains(a.position)) < sm.animals.size - sm.animals.size/2){

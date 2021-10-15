@@ -4,11 +4,11 @@ import view.LogicGui
 
 class LogicGuiTest extends AnyFunSuite {
   val mng = new LogicGui("speciesTest.txt")
-  val exampleSpecies: Species = Species("", "TestName", Small, 10, 10, Carnivore)
+  val exampleSpecies: Species = Species("TestName", Small, 10, 10, Carnivore)
   mng.removeAllSpeciesFromFile()
-  mng.addSpeciesInTheFile(Species("null","Lion", Medium, 10, 10, Carnivore))
-  mng.addSpeciesInTheFile(Species("null","Ippo", Big, 10, 10, Carnivore))
-  mng.addSpeciesInTheFile(Species("null","Zebra", Small, 10, 10, Carnivore))
+  mng.addSpeciesInTheFile(Species("Lion", Medium, 10, 10, Carnivore))
+  mng.addSpeciesInTheFile(Species("Ippo", Big, 10, 10, Carnivore))
+  mng.addSpeciesInTheFile(Species("Zebra", Small, 10, 10, Carnivore))
   mng.initialize()
 
   test("List should be populated with basic species after initialize"){
