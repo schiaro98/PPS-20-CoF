@@ -9,8 +9,6 @@ sealed trait BattleManager {
 
   def calculateBattles(): Unit
 
-  def isCarnivorous(animal: Animal): Boolean
-
   def visibleAnimals(seqOfAnimals: Seq[Animal]): Seq[(Animal, Animal)]
 }
 
@@ -144,6 +142,6 @@ object BattleManager {
       probability
     }
 
-    override def isCarnivorous(animal: Animal): Boolean = animal.alimentationType == Carnivore
+     def isCarnivorous(animal: Animal): Boolean = animal.alimentationType == Carnivore
   }
 }

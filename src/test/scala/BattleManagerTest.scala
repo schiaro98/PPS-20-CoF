@@ -34,7 +34,6 @@ class BattleManagerTest extends AnyFunSuite{
 
   test("Test if an herbivour can battle"){
     val bm = BattleManager(Seq(herb))
-    assert(!bm.isCarnivorous(herb))
     assertThrows[IllegalArgumentException](bm.startBattle(herb, a1))
   }
 
