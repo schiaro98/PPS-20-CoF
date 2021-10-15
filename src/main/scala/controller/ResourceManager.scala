@@ -11,13 +11,12 @@ object Aliases {
 }
 
 sealed trait ResourceManager {
-
+  // TODO:  observer(?) su animals per prendere la carne
   import Aliases._
 
   val habitat: Habitat
   val growableFoods: Set[Food]
   val foods: FoodInstances
-
   /**
    * Creates an Habitat with foods written on some file
    * @param fileName of the resource with foods
@@ -52,7 +51,7 @@ object ResourceManager {
                             override val growableFoods: Set[Food],
                             override val foods: FoodInstances) extends ResourceManager {
 
-
+    // TODO: add method to generate initial food
 
     private def randomFood(): Option[Food] = {
       if (growableFoods.nonEmpty) {

@@ -1,12 +1,12 @@
 package controller
 
-import model.{Animal, Area, Carnivore, Fertile, Habitat}
+import model._
 import utility.{Constants, Point}
 
 import scala.annotation.tailrec
-import scala.util.Random
 import scala.collection.parallel.CollectionConverters._
-import scala.collection.parallel.{ParMap, ParSet}
+import scala.collection.parallel.ParMap
+import scala.util.Random
 
 sealed trait ShiftManager {
   val habitat: Habitat
@@ -21,7 +21,7 @@ sealed trait ShiftManager {
    *
    * @return the animals in the shiftManager
    */
-  def animals: ParSet[Animal]
+  def animals: Set[Animal]
 }
 
 
@@ -48,10 +48,10 @@ object ShiftManager {
     animalsDestinations.keySet.foreach(animal => require(nonWalkableAreas.count(a => a.contains(animal.position)) == 0))
     private var mySupportAnimalsDestinations: ParMap[Animal, Seq[Point]] = initWalks(animalsDestinations.keySet.toSeq)
 
-    override def animals: ParSet[Animal] = mySupportAnimalsDestinations.keySet
+    override def animals: Set[Animal] = mySupportAnimalsDestinations.keySet.to(Set)
 
-    override def walk(): Unit = mySupportAnimalsDestinations =
-      mySupportAnimalsDestinations.filter(t => t._2.nonEmpty).map(t => t._1.shift(t._2.head) -> t._2.tail)
+    override def walk(): Unit = mySupportAnimalsDestinations = mySupportAnimalsDestinations.filter(t => t._2.nonEmpty).map(t => t._1.shift(t._2.head) -> t._2.tail)
+
 
     /**
      *

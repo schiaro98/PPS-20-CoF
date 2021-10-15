@@ -23,16 +23,21 @@ private case class DestinationManagerImpl[P <: Placeable](animals: Seq[Animal], 
   override def calculateDestination(): Map[Animal, Point] = {
     var destination: Map[Animal, Point] = Map.empty
     animals.foreach(animal => {
+      if(animal.thirst < 50){
+        destination = destination + (animal -> findNearestWaterZone(animal, habitat)
+          .getOrElse(throw new IllegalStateException("There's no water in the habitat")))
+      } else {
         val point = animal.alimentationType match {
-        case Herbivore => findNearestResource(animal, food.filter(resource => resource.isInstanceOf[Vegetable]))
-          .getOrElse(getLegalRandomPoint(habitat))
-        case Carnivore =>
-          findNearestResource(animal, animals.filter(animal => animal.alimentationType == Herbivore)).getOrElse(
-            findNearestResource(animal,
-              food.filter(resource => resource.isInstanceOf[Meat]))
-              .getOrElse(getLegalRandomPoint(habitat)))
+          case Herbivore => findNearestResource(animal, food.filter(resource => resource.isInstanceOf[Vegetable]))
+            .getOrElse(getLegalRandomPoint(habitat))
+          case Carnivore =>
+            findNearestResource(animal, animals.filter(animal => animal.alimentationType == Herbivore)).getOrElse(
+              findNearestResource(animal,
+                food.filter(resource => resource.isInstanceOf[Meat]))
+                .getOrElse(getLegalRandomPoint(habitat)))
+        }
+        destination = destination + (animal -> point)
       }
-      destination = destination + (animal -> point)
     })
     destination
   }
@@ -50,6 +55,14 @@ private case class DestinationManagerImpl[P <: Placeable](animals: Seq[Animal], 
     val p = Point(0,0).getRandomPoint(h.dimensions)
     if (h.areas.filterNot(a => a.areaType == Fertile).count(a => a.contains(p)) == 0) p else getLegalRandomPoint(h)
   }
+
+  def findNearestWaterZone(animal:Animal, h: Habitat) : Option[Point] = {
+    h.areas
+      .filter(area => area.areaType == Water)
+      .map(area => area.area.topLeft)
+      .minByOption(point => point.distance(animal.position))
+  }
+
 }
 
 /*
