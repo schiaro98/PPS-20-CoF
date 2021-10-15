@@ -22,6 +22,7 @@ class ShiftManagerTest extends AnyFunSuite {
     assert(sm.animals.size == 1)
   }
 
+
   test("Single animal arrives at destination in empty habitat") {
     val dest = Point(55, 100)
     val habitat = Habitat(EmptyHabitatType, Probability(0), (500, 500), Seq.empty[Area])
@@ -126,6 +127,7 @@ class ShiftManagerTest extends AnyFunSuite {
     }
     assert(sm.animals.count(a => destinations.contains(a.position)) == sm.animals.size)
   }
+
 
   def getLegalRandomPoint(h: Habitat): Point = {
     val p = Point(Random.nextInt(h.dimensions._1), Random.nextInt(h.dimensions._2))
