@@ -1,7 +1,7 @@
-import controller.{DefaultSerializer, OfArea, OfProbability, Serializer}
+import controller.OfProbability
 import model._
 import org.scalatest.funsuite.AnyFunSuite
-import utility.{Constants, Point, RectangleArea}
+import utility.{Constants, DefaultSerializer, OfArea, OfProbability, Point, RectangleArea, Serializer}
 
 import java.nio.charset.StandardCharsets
 import java.nio.file.{Files, Path}

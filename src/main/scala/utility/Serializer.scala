@@ -1,8 +1,7 @@
-package controller
+package utility
 
 import com.google.gson._
 import model._
-import utility.{RectangleArea, StringConverter}
 
 import java.io.PrintWriter
 import java.lang.reflect.Type

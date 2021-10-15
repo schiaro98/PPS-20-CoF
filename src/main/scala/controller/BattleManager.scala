@@ -3,7 +3,7 @@ package controller
 import model._
 
 sealed trait BattleManager {
-
+  // TODO: esporre solo metodi essenziali da fuori, quelli non implementativi, luca e simo
   def visibleAnimals() : Seq[(Animal, Animal)]
 
   def visibleAnimals(animals: Seq[Animal]) : Seq[(Animal, Animal)]

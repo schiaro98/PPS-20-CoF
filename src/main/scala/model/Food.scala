@@ -8,6 +8,7 @@ trait Food extends Visualizable {
   val energy: Int
 }
 
+// TODO: add type on food that says if it is vegetable or meat, rifare serializzatore
 /**
  * Object that represent the a food.
  */

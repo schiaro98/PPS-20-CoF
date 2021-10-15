@@ -1,7 +1,8 @@
 package view
 
-import controller.{OfSpecies, Serializer}
+import controller.OfSpecies
 import model.{Size, Species, Type}
+import utility.{OfSpecies, Serializer}
 
 class LogicGui(speciesFile: String) {
 

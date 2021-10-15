@@ -22,6 +22,7 @@ sealed trait ShiftManager {
    * @return the animals in the shiftManager
    */
   def animals: ParSet[Animal]
+  // TODO: return set not parset
 }
 
 

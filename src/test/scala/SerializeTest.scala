@@ -1,6 +1,7 @@
-import controller.{DefaultSerializer, OfSpecies, Serializer}
+import controller.OfSpecies
 import model._
 import org.scalatest.funsuite.AnyFunSuite
+import utility.{DefaultSerializer, OfSpecies, Serializer}
 
 import java.nio.charset.StandardCharsets
 import java.nio.file.{Files, Path}
