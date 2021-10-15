@@ -1,4 +1,3 @@
-import controller.OfProbability
 import model._
 import org.scalatest.funsuite.AnyFunSuite
 import utility.{Constants, DefaultSerializer, OfArea, OfProbability, Point, RectangleArea, Serializer}

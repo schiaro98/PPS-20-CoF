@@ -1,6 +1,5 @@
 package model
 
-import controller.OfArea
 import utility.Constants.{DefaultGridSize, DefaultStartingX, DefaultStartingY}
 import utility.{Constants, OfArea, Point, RectangleArea, Serializer}
 

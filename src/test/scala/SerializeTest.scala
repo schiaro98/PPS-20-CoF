@@ -1,4 +1,3 @@
-import controller.OfSpecies
 import model._
 import org.scalatest.funsuite.AnyFunSuite
 import utility.{DefaultSerializer, OfSpecies, Serializer}
