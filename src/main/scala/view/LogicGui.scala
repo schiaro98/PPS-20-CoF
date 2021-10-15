@@ -1,7 +1,7 @@
 package view
 
 import controller.{OfSpecies, Serializer}
-import model.{Size, Species}
+import model.{Size, Species, Type}
 
 class LogicGui(speciesFile: String) {
 
@@ -18,16 +18,12 @@ class LogicGui(speciesFile: String) {
   /**
    * Save the Species present in the file in a variable
    */
-  def initialize(): Unit = {
-    val speciesFromFile = serializer.deserializeManyFromFile(speciesFile)(classOf[Species])
-    speciesFromFile.foreach(s => {
-      species += (s -> 1)
-    })
-  }
+  def initialize(): Unit = getAllSpecies.foreach(s => species += (s -> 1))
+
+  def getAllSpecies: Seq[Species] = serializer.deserializeManyFromFile(speciesFile)(classOf[Species])
 
   /**
    * Add a new species if it doesn't exist
-   *
    * @param s species of the animal
    */
   def add(s: Species): Unit = {
@@ -49,6 +45,11 @@ class LogicGui(speciesFile: String) {
     }
   }
 
+  def increase(s: String): Unit = {
+    val foundSpecies = getAllSpecies.find(species => species.name == s)
+    increase(foundSpecies.getOrElse(throw new IllegalArgumentException("Trying to manage a species never seen before")))
+  }
+
   /**
    * Remove a species
    *
@@ -68,15 +69,15 @@ class LogicGui(speciesFile: String) {
     value match {
       case Some(value) if value > 1 => species += s -> species(s).-(1)
       case Some(_) => remove(s)
-      case None => println("Animal not found") //TODO maybe exception, in the future
+      case None => throw new IllegalArgumentException("Animal not found")
     }
   }
 
   /**
    * Given the Species parameters, give an istance of Species
    */
-  def captionSpecies(name: String, size: String, strength: String, sight: String): Species = {
-    Species("icon.txt", name, toSize(size), tryToInt(strength), tryToInt(sight))
+  def captionSpecies(name: String, size: Size, strength: String, sight: String, alimentationType: Type): Species = {
+    Species("icon.txt", name, size, tryToInt(strength), tryToInt(sight), alimentationType)
   }
 
   // TODO: gestire meglio la gestione degli input da utente
@@ -92,15 +93,6 @@ class LogicGui(speciesFile: String) {
     } catch {
       case _: Exception => 0
     }
-  }
-
-  /**
-   * Convert string into Size type
-   */
-  def toSize(s: String): Size = s match {
-    case "Small" => Size.Small
-    case "Medium" => Size.Medium
-    case "Big" => Size.Big
   }
 
   /**
@@ -137,23 +129,4 @@ class LogicGui(speciesFile: String) {
     species.keySet.find(species => species.name == name)
   }
 
-//  /**
-//   * Add a new species if it doesn't exist and add it also to species file
-//   *
-//   * @param s species to be added
-//   */
-//  def addAndUpdateFile(s: Species): Unit = {
-//    add(s)
-//    addSpeciesInTheFile(s)
-//  }
-//
-//  /**
-//   * Remove a species, also from species file
-//   *
-//   * @param s species of the animal
-//   */
-//  def removeAndUpdateFile(s: Species): Unit = {
-//    remove(s)
-//    removeSpeciesFromFile(s)
-//  }
 }

@@ -6,15 +6,26 @@ case class RectangleArea(topLeft: Point, bottomRight: Point) {
   def width: Int = bottomRight.x - topLeft.x
   def height: Int = bottomRight.y - topLeft.y
   def isValid: Boolean = topLeft.x < bottomRight.x && topLeft.y < bottomRight.y
+
+  /**
+   *
+   * @param otherArea the other area
+   * @return true if the areas have point in common
+   */
   def overlap(otherArea: RectangleArea): Boolean =
       topLeft.x < otherArea.bottomRight.x &&
       bottomRight.x > otherArea.topLeft.x &&
       topLeft.y < otherArea.bottomRight.y &&
       bottomRight.y > otherArea.topLeft.y
 
+  /**
+   *
+   * @param p the point we want to check
+   * @return true if the area contains the point
+   */
   def contains(p: Point): Boolean = p.isLeft(bottomRight) && p.isRight(topLeft)&& p.isUnder(topLeft) && p.isOver(bottomRight)
 
-
+  // TODO: riguardare questo
   def getIn4Quadrant(size: (Int, Int)) : Seq[RectangleArea] = {
     var rectangles = Seq.empty[RectangleArea]
     val max = Point(size._1 / 4, size._2 / 4)

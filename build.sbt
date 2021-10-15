@@ -13,8 +13,8 @@ libraryDependencies += "com.google.code.gson" % "gson" % "2.8.7"
 libraryDependencies += "org.scalactic" %% "scalactic" % "3.2.9"
 libraryDependencies += "org.scalatest" %% "scalatest" % "3.2.9" % "test"
 
-// spray json
-//libraryDependencies += "io.spray" %%  "spray-json" % "1.3.6"
+//scala concurrency
+// https://mvnrepository.com/artifact/org.scala-lang.modules/scala-parallel-collections
+libraryDependencies += "org.scala-lang.modules" %% "scala-parallel-collections" % "1.0.4"
 
-//uPickle
-//libraryDependencies += "com.lihaoyi" %% "upickle" % "0.7.1"
+scalacOptions += "-deprecation"

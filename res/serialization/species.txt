@@ -3,35 +3,41 @@
   "name": "Ippo",
   "size": "Medium",
   "strength": 10,
-  "sight": 10
+  "sight": 10,
+  "alimentationType": "Carnivore"
 }{
   "icon": "img",
   "name": "Zebra",
   "size": "Small",
   "strength": 10,
-  "sight": 10
+  "sight": 10,
+  "alimentationType": "Herbivore"
 }{
   "icon": "icon.txt",
   "name": "Lion",
   "size": "Medium",
   "strength": 10,
-  "sight": 10
+  "sight": 10,
+  "alimentationType": "Carnivore"
 }{
   "icon": "icon.txt",
   "name": "Cat",
   "size": "Small",
   "strength": 10,
-  "sight": 10
+  "sight": 10,
+  "alimentationType": "Carnivore"
 }{
   "icon": "icon.txt",
   "name": "Dog",
   "size": "Small",
   "strength": 0,
-  "sight": 0
+  "sight": 0,
+  "alimentationType": "Carnivore"
 }{
   "icon": "icon.txt",
-  "name": "Prova",
-  "size": "Small",
+  "name": "Coyote",
+  "size": "Medium",
   "strength": 10,
-  "sight": 10
+  "sight": 10,
+  "alimentationType": "Carnivore"
 }

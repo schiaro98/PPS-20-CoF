@@ -1,11 +1,12 @@
 package view
 
-import model.Size
+import model._
+import utility.StringConverter
 
 import java.awt.Dimension
 import scala.swing.BorderPanel.Position.Center
-import scala.swing.event.ButtonClicked
 import scala.swing._
+import scala.swing.event.ButtonClicked
 
 class SpeciesGui(logic: LogicGui) extends SimpleSwingApplication {
 
@@ -20,28 +21,36 @@ class SpeciesGui(logic: LogicGui) extends SimpleSwingApplication {
     val sightLabel = new Label("Sight of the species")
     val sightField = new TextField("Sight")
     val sizeLabel = new Label("Size of the species")
-    val sizeField = new ComboBox[String](Seq(Size.Small.toString, Size.Medium.toString, Size.Big.toString))
+    val sizeField = new ComboBox[String](Seq(Small.toString, Medium.toString, Big.toString))
+    val typeLabel = new Label("Type of the species")
+    val typeField = new ComboBox[String](Seq("Herbivore", "Carnivore"))
 
     val confirm: Button = new Button("Confirm"){
       reactions += {
         case _ : ButtonClicked =>
           if(nameField.text == "Name"){
-            println("Default species, please retry...")
+            Dialog.showMessage(contents.head, "Choose a name, please", title = "Try again!")
           } else if(logic.species.keySet.map(s => s.name).contains(nameField.text)){
-            println("Nome già assegnato")
+            Dialog.showMessage(contents.head, "A species with the given name already exist", title = "Try again!")
           } else {
+            val size = StringConverter.getSize(sizeField.selection.item)
+            val alimentationType = StringConverter.getAlimentationType(typeField.selection.item)
+
             val newSpecie = logic.captionSpecies(nameField.text,
-              sizeField.selection.item,
+              size,
               strengthField.text,
-              sightField.text)
-            println(newSpecie)
+              sightField.text,
+              alimentationType
+            )
             logic.addSpeciesInTheFile(newSpecie)
+
+            closeAndUpdate()
           }
-          closeAndUpdate()
       }
     }
 
     val existingSpecies = new ComboBox[String](logic.species.keySet.map(s => s.name).toSeq)
+
     val removeSpecies: Button = new Button("Remove"){
       reactions += {
         case _ : ButtonClicked =>
@@ -54,9 +63,8 @@ class SpeciesGui(logic: LogicGui) extends SimpleSwingApplication {
 
     val panel: BoxPanel = new BoxPanel(Orientation.Vertical) {
       contents addAll List(nameLabel, nameField, strengthLabel, strengthField, sightLabel, sightField, sizeLabel,
-        sizeField, confirm, existingSpecies, removeSpecies)
+        sizeField, typeLabel, typeField, confirm, existingSpecies, removeSpecies)
       centerOnScreen()
-//      open()
     }
 
     contents = new BorderPanel() {

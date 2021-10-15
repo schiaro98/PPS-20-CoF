@@ -1,32 +1,40 @@
 package view
 
-import controller.{OfSpecies, Serializer}
-import model._
-import utility.Constants
+import model.{Animal, FoodInstance, Habitat}
 
 import javax.swing.WindowConstants
 import scala.swing.{Dimension, Frame, SimpleSwingApplication}
 
-class SimulationGui(val habitat: Habitat, val species: Map[Species, Int]) extends SimpleSwingApplication {
+/**
+ * Class used to create the window where show the simulation.
+ *
+ * @param habitat the Habitat of the simulation.
+ * @param simulationPanel the Panel where to draw all the element of the simulation (areas, animals and food).
+ */
+class SimulationGui(habitat: Habitat, val simulationPanel: SimulationPanel) extends SimpleSwingApplication {
+
+  val (width, height) = habitat.dimensions
 
   override def top: Frame = new Frame {
     this.resizable = false
-    this.size = new Dimension(habitat.dimensions._1, habitat.dimensions._2)
-    title = "Simulation"
-
-    /**
-     * Map containing list of animals (String) and quantity
-     */
-    var areasRectangles = List.empty[Rectangle]
-
-    habitat.areas.foreach(area => {
-      areasRectangles = areasRectangles.::(new Rectangle(area.area.topLeft, area.area.bottomRight, area.color))
-    })
-
-    val shapePanel = new ShapePanel(habitat.dimensions._1, habitat.dimensions._2)
-    shapePanel.addAllShapes(areasRectangles)
-    shapePanel.addAnimals(species)
-    contents = shapePanel
+    this.size = new Dimension(width, height)
+    this.title = "Simulation"
+    contents = simulationPanel
     peer.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE)
+  }
+
+  /**
+   * Method use to delete the old element in the Panel and draw on the Panel the new state of the simulation.
+   *
+   * @param animalsAndRectangles a Map containing the info of the Animals and Rectangles used to draw them.
+   * @param food the food to draw on the Panel.
+   */
+  def updatePanel(animalsAndRectangles: Map[Animal, Rectangle], food: Seq[FoodInstance]): Unit = {
+    simulationPanel.peer.removeAll()
+    simulationPanel.drawHabitat(habitat)
+    simulationPanel.drawAnimals(animalsAndRectangles)
+    simulationPanel.drawFood(food)
+    simulationPanel.revalidate()
+    simulationPanel.repaint()
   }
 }

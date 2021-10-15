@@ -1,5 +1,6 @@
 package view
 
+import controller.GameLoop
 import model._
 
 import javax.swing.{Box, WindowConstants}
@@ -17,7 +18,7 @@ class ChooseHabitatGUI(val l :ChooseHabitatLogic) {
   val ue: TextField = new TextField("10")
 
   val ours: RadioButton = new RadioButton("The habitat that we made"){
-    doClick
+    doClick()
     reactions += {
       case _: ButtonClicked =>
         setVisibility(false)
@@ -108,5 +109,5 @@ class ChooseHabitatGUI(val l :ChooseHabitatLogic) {
     else GridHabitatType
   }
 
-  def startSimulation(habitat: Habitat): SimulationGui = new SimulationGui(habitat, l.species) {top.visible = true }
+  def startSimulation(habitat: Habitat): Unit = new Thread(GameLoop(l.species, habitat)).start()
 }

@@ -2,7 +2,7 @@ package controller
 
 import com.google.gson._
 import model._
-import utility.RectangleArea
+import utility.{RectangleArea, StringConverter}
 
 import java.io.PrintWriter
 import java.lang.reflect.Type
@@ -20,6 +20,7 @@ sealed trait Serializer {
   def serializeOne[U](obj: U): String
   def serializeMany[U](objs: Iterable[U], serializedObjs:String = ""): String
   def serializeManyToFile[U](objs:Iterable[U])(fileName:String): Unit
+
   def deserializeOne[T](json: String)(classOfT: Class[T]): T
   def deserializeMany[T](json: String)(classOfT: Class[T]): Seq[T]
   def deserializeManyFromFile[T](fileName: String)(classOfT: Class[T]): Seq[T]
@@ -80,22 +81,23 @@ object Serializer {
         override def serialize(src: Size, typeOfSrc: Type, context: JsonSerializationContext): JsonElement =  new JsonPrimitive(src.toString)
       }
 
+    object TypeSerializer extends JsonSerializer[model.Type] {
+      override def serialize(src: model.Type, typeOfSrc: Type, context: JsonSerializationContext): JsonElement =  new JsonPrimitive(src.toString)
+    }
+
       object SpeciesDeserializer extends JsonDeserializer[Species]{
         override def deserialize(json: JsonElement, typeOfT: Type, context: JsonDeserializationContext): Species = {
           val res = json match {
             case obj: JsonObject if obj.has("size") =>
               val sizeAsString = obj.get("size").getAsString
-              val size = sizeAsString match {
-                case "Big" => Size.Big
-                case "Medium" => Size.Medium
-                case "Small" => Size.Small
-                case _ => null
-              }
+              val alimentationAsString = obj.get("alimentationType").getAsString
+              val size = StringConverter.getSize(sizeAsString)
+              val alimentationType = StringConverter.getAlimentationType(alimentationAsString)
               val name = obj.get("name").getAsString
               val strength = obj.get("strength").getAsInt
               val sight = obj.get("sight").getAsInt
               val icon = obj.get("icon").getAsString
-              Species(icon, name, size, strength, sight)
+              Species(icon, name, size, strength, sight, alimentationType)
             case _ => null
           }
           Option(res).getOrElse(throw new JsonParseException(s"$json can't be parsed to Species"))
@@ -103,7 +105,8 @@ object Serializer {
       }
 
       override val gson: Gson = new GsonBuilder().registerTypeHierarchyAdapter(classOf[Size], SizeSerializer)
-        .registerTypeHierarchyAdapter(classOf[Species], SpeciesDeserializer).setPrettyPrinting().create()
+        .registerTypeHierarchyAdapter(classOf[Species], SpeciesDeserializer)
+        .registerTypeHierarchyAdapter(classOf[model.Type], TypeSerializer).setPrettyPrinting().create()
   }
 
   private class FoodsSerializer extends SerializerImpl {

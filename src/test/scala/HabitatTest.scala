@@ -1,9 +1,11 @@
 import model._
 import org.scalatest.funsuite.AnyFunSuite
-import utility.{Point, RectangleArea}
+import utility.Constants.DefaultGridSize
+import utility.{Constants, Point, RectangleArea}
 
 class HabitatTest extends AnyFunSuite{
 
+  val testQ = 100
   val centerArea: Area = Area(Rock, RectangleArea(Point(3, 2), Point(7, 5)))
 
   test("Create empty Habitat"){
@@ -58,18 +60,16 @@ class HabitatTest extends AnyFunSuite{
 
   test("Create a grid Habitat with areas, and test it with different number of areas"){
     val tollerance = 5 //Ten % of size is an acceptable tollerance, some areas cannot be drawn because of limit of space
-    val sizes = Seq(10, 20, 50, 100, 500)
-    for(_ <- 0 to 1000) {
-      sizes.foreach(size => {
-        val habitat = Habitat(GridHabitatType, Probability(1), (1000, 1000), size)
-        assert(habitat.areas.lengthIs >= (size - (size / tollerance)))
-      })
+    for(_ <- 0 to testQ) {
+        val habitat = Habitat(GridHabitatType, Probability(1), (1000, 1000), Seq.empty)
+        assert(habitat.areas.lengthIs >=
+          (Constants.DefaultGridSize - (Constants.DefaultGridSize / tollerance)))
     }
   }
 
   test("Create a random Habitat with areas, and test it with different number of areas"){
-    for(_ <- 0 to 1000){
-      val habitat = Habitat(RandomHabitatType, Probability(1), (1000, 1000), 4)
+    for(_ <- 0 to testQ){
+      val habitat = Habitat(RandomHabitatType, Probability(1), (1000, 1000), Seq.empty)
       assert(habitat.areas.lengthIs == 4)
     }
   }

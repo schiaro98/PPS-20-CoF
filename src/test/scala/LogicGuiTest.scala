@@ -1,14 +1,14 @@
-import model.{Size, Species}
+import model._
 import org.scalatest.funsuite.AnyFunSuite
 import view.LogicGui
 
 class LogicGuiTest extends AnyFunSuite {
   val mng = new LogicGui("speciesTest.txt")
-  val exampleSpecies: Species = Species("", "TestName", Size.Small, 10, 10)
+  val exampleSpecies: Species = Species("", "TestName", Small, 10, 10, Carnivore)
   mng.removeAllSpeciesFromFile()
-  mng.addSpeciesInTheFile(Species("null","Lion", Size.Medium, 10, 10))
-  mng.addSpeciesInTheFile(Species("null","Ippo", Size.Big, 10, 10))
-  mng.addSpeciesInTheFile(Species("null","Zebra", Size.Small, 10, 10))
+  mng.addSpeciesInTheFile(Species("null","Lion", Medium, 10, 10, Carnivore))
+  mng.addSpeciesInTheFile(Species("null","Ippo", Big, 10, 10, Carnivore))
+  mng.addSpeciesInTheFile(Species("null","Zebra", Small, 10, 10, Carnivore))
   mng.initialize()
 
   test("List should be populated with basic species after initialize"){

@@ -20,4 +20,5 @@ object Visualizable {
   def apply(icon: String): Visualizable = new VisualizableImpl(icon)
 
   private class VisualizableImpl(override val icon: String) extends Visualizable
+
 }

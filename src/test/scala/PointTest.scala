@@ -72,4 +72,18 @@ class PointTest extends AnyFunSuite{
     assert(right.isRight(left))
   }
 
+  test("Find distance upon x axis"){
+    val left = Point(5, 10)
+    val right = Point(10,10)
+    assert(left.fromX(right) == 5)
+    assert(right.fromX(left) == 5)
+  }
+
+
+  test("Find distance upon y axis"){
+    val up = Point(5, 20)
+    val down = Point(10,10)
+    assert(up.fromY(down) == 10)
+    assert(down.fromY(up) == 10)
+  }
 }
