@@ -18,7 +18,6 @@ import scala.swing.Panel
  */
 class SimulationPanel(val width: Int, val height: Int) extends Panel {
 
-  var getLocation: () => swing.Point = () => new swing.Point(0, 0)
   val shapes = new ArrayBuffer[Shape]
   var popups: Seq[AnimalPopup] = Seq.empty //TODO lasciare var?
   var listener: Seq[MouseMotionListener] = Seq.empty //TODO lasciare var?
@@ -62,6 +61,11 @@ class SimulationPanel(val width: Int, val height: Int) extends Panel {
     habitat.areas.foreach(area => addShape(new Rectangle(area.area.topLeft, area.area.bottomRight, area.color)))
   }
 
+  //todo scaladoc
+  def drawFood(food: Seq[FoodInstance]): Unit = {
+    food.foreach(f => addShape(new Circle(f.position, Constants.PixelForFood, Color.white))) //TODO cambiare colore hardcoded
+  }
+
   /**
    * After eliminate the old popups it draw the rectangle that represent each animals
    * and create the related popup with all his information.
@@ -76,15 +80,10 @@ class SimulationPanel(val width: Int, val height: Int) extends Panel {
     })
   }
 
-  //todo scaladoc
-  def drawFood(food: Seq[FoodInstance]): Unit = {
-
-  }
-
   /**
    * Dispose all the [[AnimalPopup]] and remove all the old mouse listener.
    */
-  def eliminateOldPopup(): Unit = {
+  private def eliminateOldPopup(): Unit = {
     popups.foreach(p => p.deletePopup())
     popups = Seq.empty
     listener.foreach(l => peer.removeMouseMotionListener(l))
@@ -98,8 +97,8 @@ class SimulationPanel(val width: Int, val height: Int) extends Panel {
    * @param animal    the animal with all his information.
    * @param rectangle the rectangle used to draw the animal.
    */
-  def createPopupAndMouseListener(animal: Animal, rectangle: Rectangle): Unit = {
-    val p = new AnimalPopup(animal, () => new java.awt.Point(
+  private def createPopupAndMouseListener(animal: Animal, rectangle: Rectangle): Unit = {
+    val p = new AnimalPopup(animal, () => new swing.Point(
       rectangle.topLeft.x + Constants.OffsetX + SwingUtilities.getWindowAncestor(this.peer).getLocation().x,
       rectangle.topLeft.y + Constants.OffsetY + SwingUtilities.getWindowAncestor(this.peer).getLocation().y
     ))
@@ -116,7 +115,6 @@ class SimulationPanel(val width: Int, val height: Int) extends Panel {
         }
       }
     }
-    //TODO questo dovrebbe esser fatto con reactions += come nelle altre classi di gui
     peer.addMouseMotionListener(mouseListener)
     listener = listener :+ mouseListener
   }
