@@ -57,6 +57,9 @@ case class GameLoop(population: Map[Species, Int], habitat: Habitat) extends Run
 
       simulationGui.updatePanel(animalsAndRectangles, foodInMap)
 
+      //TODO aggiungere nuove risorse casulmente vegetali
+
+      //TODO aggiungere nuovi animali a caso se uno proprio vole amazzasse de fatica
 
 
       // ---- solo per vedere che la gui cambia----|

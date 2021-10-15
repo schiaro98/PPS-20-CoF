@@ -66,7 +66,7 @@ object BattleManager {
 
       if (Probability(probabilities.map(a => a.probability).sum / probabilities.length).calculate) {
         logger.info("Attacking animal: " + attacker + "has won")
-        //attacker.eat(defender.die())
+        //attacker.die() or (defender.die())
         //TODO come rilascio la risorsa? defender.die()
       } else {
         logger.info("Defending animal: " + defender + "has won")
