@@ -1,32 +1,31 @@
 package controller
 
 import model._
+import utility.Logger
 
 sealed trait BattleManager {
-  // TODO: esporre solo metodi essenziali da fuori, quelli non implementativi, luca e simo
-  def visibleAnimals() : Seq[(Animal, Animal)]
 
-  def visibleAnimals(animals: Seq[Animal]) : Seq[(Animal, Animal)]
+  def battle(probability: Probability): Boolean
 
-  def battle(probability: Probability) : Boolean
+  def calculateProbabilityFromSize(a1: Animal, a2: Animal): Probability
 
-  def calculateProbabilityFromSize(a1: Animal, a2: Animal) : Probability
+  def calculateProbabilityFromDistance(a1: Animal, a2: Animal): Probability
 
-  def calculateProbabilityFromDistance(a1: Animal, a2: Animal) : Probability
-
-  def calculateProbabilityFromStrength(a1: Animal, a2: Animal) : Probability
+  def calculateProbabilityFromStrength(a1: Animal, a2: Animal): Probability
 
   def startBattle(a1: Animal, a2: Animal): Unit
 
   def calculateBattles(): Unit
 
   def isCarnivorous(animal: Animal): Boolean
+
+  def visibleAnimals(seqOfAnimals: Seq[Animal]): Seq[(Animal, Animal)]
 }
 
 object BattleManager {
   def apply(animals: Seq[Animal]): BattleManager = SimpleBattleManager(animals)
-
   def apply(): BattleManager = SimpleBattleManager(Seq.empty)
+  private val logger = Logger
 
   private case class SimpleBattleManager(animals: Seq[Animal]) extends BattleManager {
 
@@ -35,7 +34,7 @@ object BattleManager {
      *
      * @return Sequence of tuples
      */
-    override def visibleAnimals(): Seq[(Animal, Animal)] = {
+    def visibleAnimals(): Seq[(Animal, Animal)] = {
       visibleAnimals(animals)
     }
 
@@ -45,7 +44,7 @@ object BattleManager {
      * @param seqOfAnimals animal to be compared
      * @return Sequence of tuples
      */
-    def visibleAnimals(seqOfAnimals: Seq[Animal]): Seq[(Animal, Animal)] = {
+    override def visibleAnimals(seqOfAnimals: Seq[Animal]): Seq[(Animal, Animal)] = {
       var visible: Seq[(Animal, Animal)] = Seq.empty
       for (a <- seqOfAnimals; b <- seqOfAnimals.filterNot(animal => a == animal)) {
         if (a canSee b) visible = visible :+ (a, b)
@@ -72,12 +71,12 @@ object BattleManager {
       )
 
       if (battle(Probability(probabilities.map(a => a.probability).sum / probabilities.length))) {
-        println("Attacking animal: " + attacker + "has won")
+        logger.info("Attacking animal: " + attacker + "has won")
         //attacker.eat(defender.die())
         //TODO come rilascio la risorsa? defender.die()
 
       } else {
-        println("Defending animal: " + defender + "has won")
+        logger.info("Defending animal: " + defender + "has won")
       }
     }
 
