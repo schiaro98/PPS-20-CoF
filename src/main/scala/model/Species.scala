@@ -3,7 +3,7 @@ package model
 import java.awt.Color
 
 /**
- * Object that contains the possible size of a species.
+ * The possible sizes of a species.
  */
 sealed trait Size
 case object Big extends Size
@@ -11,7 +11,7 @@ case object Medium extends Size
 case object Small extends Size
 
 /**
- * Object that contains the possible type of a species.
+ * The possible types of alimentation of a species.
  */
 sealed trait Type
 case object Herbivore extends Type

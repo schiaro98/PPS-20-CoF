@@ -14,7 +14,7 @@ import scala.util.Random
  */
 case class GameLoop(species: Map[Species, Int], habitat: Habitat) extends Runnable {
 
-  var animalsAndRectangles: Map[Animal, Rectangle] = Map.empty[Animal, Rectangle]
+  var animalsAndRectangles: Map[Animal, Rectangle] = Map.empty[Animal, Rectangle] //TODO Point al posto di Rectangle ?
   var foodInMap: Seq[FoodInstance] = generateInitialFood()
   val animalsInMap: Seq[Animal] = generateInitialAnimals()
   val battleManager: BattleManager = BattleManager(animalsInMap)
@@ -76,14 +76,8 @@ case class GameLoop(species: Map[Species, Int], habitat: Habitat) extends Runnab
     }
   }
 
-  /**
-   * Method to create the food to insert at the beginning of the simulation.
-   *
-   * @return the created food.
-   */
   private def generateInitialFood(): Seq[FoodInstance] = {
-    //TODO resourceManagere.generateFood ?
-    Seq.empty[FoodInstance]
+    Seq.empty
   }
 
   /**
@@ -93,6 +87,7 @@ case class GameLoop(species: Map[Species, Int], habitat: Habitat) extends Runnab
    */
   private def generateInitialAnimals(): Seq[Animal] = {
     //TODO fare in modo più funzionale (for yield ad esempio)
+    // lasciare il metodo qui nel gameloop?
     var animals = Seq.empty[Animal]
     species foreach (s => {
       for (_ <- 1 to s._2) {

@@ -4,23 +4,45 @@ import utility.Point
 
 import java.awt.{Color, Graphics2D}
 
-abstract class Shape(topLeft: Point, val color: Color) {
+/**
+ * Trait that represent a geometric shape that can be drawn in two dimensions
+ */
+trait Shape {
+  val topLeft: Point
+  val color: Color
 
-  def draw(g: Graphics2D): Unit = {
-    g.fillRect(topLeft.x, topLeft.y, topLeft.x, topLeft.y)
+  /**
+   * Method used to draw the shape
+   *
+   * @param graphics the graphics where to draw the shape
+   */
+  def draw(graphics: Graphics2D): Unit
+}
+
+/**
+ * A rectangle
+ *
+ * @param topLeft     the top left point of the rectangle
+ * @param bottomRight the top bottom right of the rectangle
+ * @param color       the color that should be used to draw the rectangle.
+ */
+class Rectangle(override val topLeft: Point, val bottomRight: Point, override val color: Color) extends Shape {
+
+  override def draw(graphics: Graphics2D): Unit = {
+    graphics.fillRect(topLeft.x, topLeft.y, bottomRight.x - topLeft.x, bottomRight.y - topLeft.y)
   }
 }
 
-class Rectangle(val topLeft: Point, val bottomRight: Point, color: Color) extends Shape(topLeft, color) {
+/**
+ * A circle
+ *
+ * @param topLeft the top left point of the square circumscribed to the circle
+ * @param radius  the radius of the circle
+ * @param color   the color that should be used to draw the rectangle.
+ */
+class Circle(override val topLeft: Point, val radius: Int, override val color: Color) extends Shape {
 
-  override def draw(g: Graphics2D): Unit = {
-    g.fillRect(topLeft.x, topLeft.y, bottomRight.x - topLeft.x, bottomRight.y - topLeft.y)
-  }
-}
-
-class Circle(val topLeft: Point, val radius: Int, color: Color) extends Shape(topLeft, color) {
-
-  override def draw(g: Graphics2D): Unit = {
-    g.fillOval(topLeft.x, topLeft.y, radius, radius)
+  override def draw(graphics: Graphics2D): Unit = {
+    graphics.fillOval(topLeft.x, topLeft.y, radius, radius)
   }
 }
