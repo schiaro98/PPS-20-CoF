@@ -13,15 +13,16 @@ sealed trait BattleManager {
 }
 
 object BattleManager {
-  def apply(animals: Seq[Animal]): BattleManager = SimpleBattleManager(animals)
-  def apply(): BattleManager = SimpleBattleManager(Seq.empty)
-  private val logger = Logger
+  def apply(animals: Seq[Animal] = Seq.empty): BattleManager = SimpleBattleManager(animals)
+
 
   private case class SimpleBattleManager(animals: Seq[Animal]) extends BattleManager {
+    private val logger = Logger
 
     override def calculateBattles(): Unit = {
       visibleAnimals().filter(couple => isCarnivorous(couple._1)).foreach(couple => startBattle(couple._1, couple._2))
     }
+
     /**
      * Return a sequence of tuples of every animal an animal can see, given the sequence created in the constructor
      *
