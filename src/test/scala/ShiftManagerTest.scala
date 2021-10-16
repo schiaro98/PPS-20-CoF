@@ -1,7 +1,7 @@
 import controller.ShiftManager
 import model._
 import org.scalatest.funsuite.AnyFunSuite
-import utility.Point
+import utility.{Point, RectangleArea}
 
 import scala.util.Random
 
@@ -115,7 +115,7 @@ class ShiftManagerTest extends AnyFunSuite {
     val dest2 = getLegalRandomPoint(randHabitat)
     val dest3 = getLegalRandomPoint(randHabitat)
     val dest4 = getLegalRandomPoint(randHabitat)
-    val tiger: Animal = Animal(Species(path, "tiger", Medium, 10, 10, Herbivore), getLegalRandomPoint(randHabitat))
+    val tiger: Animal = Animal(Species(path, "tiger", Medium, 10, 10, Carnivore), getLegalRandomPoint(randHabitat))
     val elephant: Animal = Animal(Species(path, "elephant", Medium, 10, 10, Herbivore), getLegalRandomPoint(randHabitat))
     val dog: Animal = Animal(Species(path, "dog", Medium, 20, 20, Carnivore ), getLegalRandomPoint(randHabitat))
     val cat: Animal = Animal(Species(path, "cat", Small, 15, 10, Carnivore), getLegalRandomPoint(randHabitat))
@@ -128,6 +128,16 @@ class ShiftManagerTest extends AnyFunSuite {
     assert(sm.animals.count(a => destinations.contains(a.position)) == sm.animals.size)
   }
 
+  test("Destination is inside non walkable area"){
+    val area = Area(Water, RectangleArea(Point(15, 15), Point(50,50)))
+    val h = Habitat(unexpectedEvents = Probability(10), areas = Seq(area))
+    val tiger: Animal = Animal(Species(path, "tiger", Medium, 10, 10, Carnivore), getLegalRandomPoint(h))
+    val sm = ShiftManager(h, (tiger, Point(30,30) ))
+    for (_ <- 1 to 100){
+      sm.walk()
+    }
+//    assert(!area.contains(sm.animals.head.position))
+  }
 
   def getLegalRandomPoint(h: Habitat): Point = {
     val p = Point(Random.nextInt(h.dimensions._1), Random.nextInt(h.dimensions._2))
