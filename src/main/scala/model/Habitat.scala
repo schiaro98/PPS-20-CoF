@@ -5,21 +5,22 @@ import utility.{Constants, OfArea, Point, RectangleArea, Serializer}
 
 import scala.util.Random
 
+/**
+ * The possible types of habitat.
+ */
 sealed trait HabitatType
-
 case object EmptyHabitatType extends HabitatType
-
 case object SimpleHabitatType extends HabitatType
-
 case object RandomHabitatType extends HabitatType
-
 case object GridHabitatType extends HabitatType
 
+//todo scaladoc
 trait Habitat {
   val unexpectedEvents: Probability
   val dimensions: (Int, Int)
   val areas: Seq[Area]
 
+  //todo scaladoc
   def checkForOverlappingAreas(areas: Seq[Area]): Boolean = areas match {
     case h :: t =>
       for (a <- areas.filterNot(elem => elem == h)) {
@@ -29,6 +30,7 @@ trait Habitat {
     case _ => true
   }
 
+  //todo scaladoc
   def checkDimensionsOfAreas(areas: Seq[Area]): Boolean = areas match {
     case h :: t =>
 
@@ -48,7 +50,7 @@ trait Habitat {
   require(checkDimensionsOfAreas(areas), "areas don't fit in current habitat")
 }
 
-
+//todo scaladoc
 object Habitat {
 
   def apply(unexpectedEvents: Probability = Probability(0),
@@ -69,11 +71,12 @@ object Habitat {
   }
   
   /**
-   * 
-   * @return a random AreaType
+   * Method used to obtain a random [[AreaType]]
+   *
+   * @return a random [[AreaType]]
    */
   private def randomAreaType: AreaType = {
-    val choices: Seq[AreaType] = Seq(Fertile, Water, Rock, Volcano)
+    val choices: Seq[AreaType] = Seq(Fertile, Water, Rock, Volcano) //todo se si aggiunge un nuovo tipo bisogna modificare manualmente questa seq; alternative? ( ad es. un metodo getAllTypeOfHabitat? )
     Random.shuffle(choices).head
   }
 
@@ -89,7 +92,7 @@ object Habitat {
   }
 
   /**
-   * This method create an habitat, of given dimension, with 4 areas
+   * This method create an habitat, of given dimension, with a specific number of areas
    *
    * @param dimension     Dimension of habitat
    * @param numberOfAreas Number of areas in the habitat

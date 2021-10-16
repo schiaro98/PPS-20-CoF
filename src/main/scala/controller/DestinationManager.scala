@@ -45,7 +45,7 @@ private case class DestinationManagerImpl(animals: Seq[Animal], food: Seq[FoodIn
     destination
   }
 
-   def findNearestResource(animal: Animal, resources: Seq[FoodInstance]): Option[Point] = {
+   def findNearestResource[P <: Placeable](animal: Animal, resources: Seq[P]): Option[Point] = {
      resources
        .map(resource => resource.position)
        .filter(point => point.distance(animal.position) < animal.sight)

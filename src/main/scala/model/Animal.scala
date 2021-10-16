@@ -5,11 +5,17 @@ import utility.Constants._
 
 import java.awt.Color
 
+/**
+ * The possible age of an animal
+ */
 sealed trait Age
 case object Young extends Age
 case object Adult extends Age
 case object Old extends Age
 
+/**
+ * Trait that represent an animal of a specific [[Species]].
+ */
 trait Animal extends Species with Placeable {
 
   val health: Int
@@ -86,7 +92,8 @@ object Animal {
 
   private case class AnimalImpl(override val color: Color, override val name: String, override val size: Size,
                                 override val strength: Int, override val sight: Int, override val health: Int,
-                                override val thirst: Int, override val position: Point, override val alimentationType: Type) extends Animal {
+                                override val thirst: Int, override val position: Point,
+                                override val alimentationType: Type) extends Animal {
 
     override def canSee(element: Placeable): Boolean = this.position.distance(element.position) <= this.sight
 
@@ -106,8 +113,6 @@ object Animal {
       case _: Vegetable if this.alimentationType == Herbivore => consume(food)
       case _ => throw new IllegalArgumentException("Illegal food type")
     }
-
-    override def toString: String = s"Animal: $name, $size $strength pos:($position)"
 
     /**
      * Method to restore health to an animal by eating food.
@@ -134,5 +139,7 @@ object Animal {
       case Medium => QuantityForMedium
       case Small => QuantityForSmall
     }
+
+    override def toString: String = s"Animal: $name, $size $strength pos:($position)"
   }
 }

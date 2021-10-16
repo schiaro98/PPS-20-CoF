@@ -70,6 +70,7 @@ case class GameLoop(population: Map[Species, Int], habitat: Habitat) extends Run
       // ---- solo per vedere che la gui cambia----|
 
 
+
       waitForNextFrame(current)
       previous = current
     }
@@ -90,14 +91,8 @@ case class GameLoop(population: Map[Species, Int], habitat: Habitat) extends Run
     }
   }
 
-  /**
-   * Method to create the food to insert at the beginning of the simulation.
-   *
-   * @return the created food.
-   */
   private def generateInitialFood(): Seq[FoodInstance] = {
-    //TODO resourceManagere.generateFood ?
-    Seq.empty[FoodInstance]
+    Seq.empty
   }
 
   /**
