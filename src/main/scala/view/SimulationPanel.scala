@@ -10,7 +10,7 @@ import scala.collection.mutable.ArrayBuffer
 import scala.swing.Panel
 
 /**
- * Panel used to draw the shapes of the areas, animals and food; it creates also the mouse listeners
+ * [[Panel]] used to draw the shapes of the areas, animals and food; it creates also the mouse listeners
  * that shows the [[AnimalPopup]].
  *
  * @param width  the width of the Frame (and also of the Habitat).
@@ -19,8 +19,8 @@ import scala.swing.Panel
 class SimulationPanel(val width: Int, val height: Int) extends Panel {
 
   val shapes = new ArrayBuffer[Shape]
-  var popups: Seq[AnimalPopup] = Seq.empty //TODO lasciare var?
-  var listener: Seq[MouseMotionListener] = Seq.empty //TODO lasciare var?
+  var popups: Seq[AnimalPopup] = Seq.empty
+  var listener: Seq[MouseMotionListener] = Seq.empty
 
   peer.setPreferredSize(new Dimension(width, height))
   opaque = true
@@ -35,25 +35,25 @@ class SimulationPanel(val width: Int, val height: Int) extends Panel {
   }
 
   /**
-   * Method used to append a Shape to those to be drawn.
+   * Method used to append a [[Shape]] to those to be drawn.
    *
-   * @param shape the Shape to be drawn.
+   * @param shape the [[Shape]] to be drawn.
    */
   def addShape(shape: Shape): Unit = {
     shapes.append(shape)
   }
 
   /**
-   * Method used to append a Seq of Shape to those to be drawn.
+   * Method used to append a set of [[Shape]] to those to be drawn.
    *
-   * @param shapesSeq the Seq of Shape to drawn.
+   * @param shapesSeq the Seq of [[Shape]] to drawn.
    */
   def addAllShapes(shapesSeq: Seq[Shape]): Unit = {
     shapesSeq.foreach(s => addShape(s))
   }
 
   /**
-   * Draw all the areas present in the habitat by creating specific rectangles.
+   * Draw all the areas present in the [[Habitat]] by creating specific rectangles.
    *
    * @param habitat the Habitat of the simulation.
    */
@@ -61,9 +61,13 @@ class SimulationPanel(val width: Int, val height: Int) extends Panel {
     habitat.areas.foreach(area => addShape(new Rectangle(area.area.topLeft, area.area.bottomRight, area.color)))
   }
 
-  //todo scaladoc
+  /**
+   * Draw all the food present in the map by creating specific circle.
+   *
+   * @param food the food to be drawn
+   */
   def drawFood(food: Seq[FoodInstance]): Unit = {
-    food.foreach(f => addShape(new Circle(f.position, Constants.PixelForFood, Color.white))) //TODO cambiare colore hardcoded
+    food.foreach(f => addShape(new Circle(f.position, Constants.PixelForFood, f.color)))
   }
 
   /**

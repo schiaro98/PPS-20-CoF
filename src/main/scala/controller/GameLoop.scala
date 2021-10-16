@@ -4,22 +4,19 @@ import model._
 import utility.{Constants, Point}
 import view.{Rectangle, SimulationPanel, SimulationGui}
 
-import java.awt.Color
 import scala.util.Random
 
 /**
  * Runnable used to start the simulation, it contains the game loop which must be executed in a new thread.
  *
- * @param species the Species with the number of animals to create at the beginning of the simulation.
+ * @param population all the Species with the number of animals to create at the beginning of the simulation.
  * @param habitat the Habitat where the simulation takes place.
  */
-case class GameLoop(species: Map[Species, Int], habitat: Habitat) extends Runnable {
+case class GameLoop(population: Map[Species, Int], habitat: Habitat) extends Runnable {
 
-  var animalsAndRectangles: Map[Animal, Rectangle] = Map.empty[Animal, Rectangle] //TODO lasciamo var?
-  var foodInMap: Seq[FoodInstance] = generateInitialFood() //TODO lasciamo var
-  val animalsInMap: Seq[Animal] = generateInitialAnimals()
-  val battleManager: BattleManager = BattleManager(animalsInMap)
-  val shiftManager: ShiftManager = ShiftManager(habitat, Map.empty[Animal, Point])
+  var animalsAndRectangles: Map[Animal, Rectangle] = Map.empty[Animal, Rectangle]
+  var foodInMap: Seq[FoodInstance] = generateInitialFood() //TODO da prendere da resource manager
+  var animalsInMap: Seq[Animal] = generateInitialAnimals()
 
   /**
    * Method that represents the core of the simulation, defines the actions that must be
@@ -28,25 +25,37 @@ case class GameLoop(species: Map[Species, Int], habitat: Habitat) extends Runnab
   override def run(): Unit = {
     val shapePanel = new SimulationPanel(habitat.dimensions._1, habitat.dimensions._2)
     val simulationGui = new SimulationGui(habitat, shapePanel) { top.visible = true }
+    var resourceManager = ResourceManager(habitat)
+
     simulationGui.updatePanel(animalsAndRectangles, foodInMap)
 
     var previous: Long = System.currentTimeMillis()
     while (animalsInMap.lengthIs > 1) { //TODO pausa come fermare il gioco senza sprecare cpu?
       val current: Long = System.currentTimeMillis()
-      val elapsed: Double = (current - previous).toDouble / Constants.MillisToSec
 
-      //Prendo dallo shiftmanager il primo movimento per ogni animale
-      //TODO shift manager dovrebbe gestire l'eat se l'animale finisce vicino al cibo e acqua??
-      //Non credo sia proprio lo shift a dover vedere sta cosa ma vabbe
-      battleManager.calculateBattles()
+      val destinationManager: DestinationManager = DestinationManager(animals = animalsInMap,
+        resources = foodInMap,
+        habitat)
+
+      val destinations: Map[Animal, Point] = destinationManager.calculateDestination()
+      val shiftManager = ShiftManager(habitat, destinations)
+      shiftManager.walk()
+      animalsInMap = shiftManager.animals.toSeq
+
+      /*
+          se erbivori li faccio mangiare, se carnivori li faccio combattere, e mangiare le risorse rilasciate
+          //TODO gestire sete e fame degli animali da decrementare ogni volta (a fine epoca per tutti)
+       */
+
+      val battleManager: BattleManager = BattleManager(animalsInMap)
+
+      battleManager.battle()
       //Calcolo eventi inaspettati
-      //crescita casuale dei vegetali
-
 
 
       simulationGui.updatePanel(animalsAndRectangles, foodInMap)
 
-
+      resourceManager = resourceManager.grow() //TODO togliere foodinmap?
 
       // ---- solo per vedere che la gui cambia----|
       animalsAndRectangles = Map.empty //          |
@@ -54,9 +63,7 @@ case class GameLoop(species: Map[Species, Int], habitat: Habitat) extends Runnab
       foodInMap = Seq.empty //                     |
       foodInMap = generateInitialFood() //         |
       // ---- solo per vedere che la gui cambia----|
-
-
-
+      //Contatore epoche che passano
       waitForNextFrame(current)
       previous = current
     }
@@ -77,14 +84,8 @@ case class GameLoop(species: Map[Species, Int], habitat: Habitat) extends Runnab
     }
   }
 
-  /**
-   * Method to create the food to insert at the beginning of the simulation.
-   *
-   * @return the created food.
-   */
   private def generateInitialFood(): Seq[FoodInstance] = {
-    //TODO resourceManagere.generateFood ?
-    Seq.empty[FoodInstance]
+    Seq.empty
   }
 
   /**
@@ -95,13 +96,12 @@ case class GameLoop(species: Map[Species, Int], habitat: Habitat) extends Runnab
   private def generateInitialAnimals(): Seq[Animal] = {
     //TODO fare in modo più funzionale (for yield ad esempio)
     var animals = Seq.empty[Animal]
-    species foreach (s => {
-      val color = new Color(Random.nextFloat(), Random.nextFloat(), Random.nextFloat()) //TODO cambia colore hardcoded
+    population foreach (s => {
       for (_ <- 1 to s._2) {
-        val (x, y) = placeAnimal(s._1)
-        val animal = Animal(s = s._1, x)
+        val (topLeft, bottomRight) = placeAnimal(s._1)
+        val animal = Animal(s._1, topLeft)
         animals = animals :+ animal
-        animalsAndRectangles += (animal -> new Rectangle(x, y, color))
+        animalsAndRectangles += (animal -> new Rectangle(topLeft, bottomRight, animal.color))
       }
     })
     animals

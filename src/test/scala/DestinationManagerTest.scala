@@ -5,10 +5,10 @@ import utility.Point
 
 class DestinationManagerTest extends AnyFunSuite {
   val habitat: Habitat = Habitat(EmptyHabitatType, Probability(1), (100, 100), Seq.empty)
-  val herbivore1: Animal = Animal(Species("", "HerbivoreExample1", Medium, 10, 10, Herbivore), Point(0,0))
-  val herbivore2: Animal = Animal(Species("", "HerbivoreExample2", Medium, 10, 10, Herbivore), Point(3,3))
-  val carnivore1: Animal = Animal(Species("", "CarnivoreExample1", Medium, 10, 10, Carnivore), Point(0,0))
-  val carnivore2: Animal = Animal(Species("", "CarnivoreExample2", Medium, 10, 10, Carnivore), Point(3,3))
+  val herbivore1: Animal = Animal(Species("HerbivoreExample1", Medium, 10, 10, Herbivore), Point(0,0))
+  val herbivore2: Animal = Animal(Species("HerbivoreExample2", Medium, 10, 10, Herbivore), Point(3,3))
+  val carnivore1: Animal = Animal(Species("CarnivoreExample1", Medium, 10, 10, Carnivore), Point(0,0))
+  val carnivore2: Animal = Animal(Species("CarnivoreExample2", Medium, 10, 10, Carnivore), Point(3,3))
 
   val carrot: Vegetable = Vegetable(1, Point(1,1), 1)
   val beet: Vegetable = Vegetable(1, Point(2,2), 1)

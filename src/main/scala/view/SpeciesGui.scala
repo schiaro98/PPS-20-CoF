@@ -3,7 +3,7 @@ package view
 import model._
 import utility.StringConverter
 
-import java.awt.Dimension
+import java.awt.{Color, Dimension}
 import scala.swing.BorderPanel.Position.Center
 import scala.swing._
 import scala.swing.event.ButtonClicked
@@ -36,7 +36,9 @@ class SpeciesGui(logic: LogicGui) extends SimpleSwingApplication {
             val size = StringConverter.getSize(sizeField.selection.item)
             val alimentationType = StringConverter.getAlimentationType(typeField.selection.item)
 
-            val newSpecie = logic.captionSpecies(nameField.text,
+            val newSpecie = logic.captionSpecies(
+              new Color(0,0,0), //TODO prendere i parametri RGB da nuove caselle nella gui
+              nameField.text,
               size,
               strengthField.text,
               sightField.text,

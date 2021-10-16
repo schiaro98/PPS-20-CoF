@@ -115,7 +115,7 @@ class ShiftManagerTest extends AnyFunSuite {
     val dest2 = getLegalRandomPoint(randHabitat)
     val dest3 = getLegalRandomPoint(randHabitat)
     val dest4 = getLegalRandomPoint(randHabitat)
-    val tiger: Animal = Animal(Species(path, "tiger", Medium, 10, 10, Carnivore), getLegalRandomPoint(randHabitat))
+    val tiger: Animal = Animal(Species(path, "tiger", Medium, 10, 10, Herbivore), getLegalRandomPoint(randHabitat))
     val elephant: Animal = Animal(Species(path, "elephant", Medium, 10, 10, Herbivore), getLegalRandomPoint(randHabitat))
     val dog: Animal = Animal(Species(path, "dog", Medium, 20, 20, Carnivore ), getLegalRandomPoint(randHabitat))
     val cat: Animal = Animal(Species(path, "cat", Small, 15, 10, Carnivore), getLegalRandomPoint(randHabitat))

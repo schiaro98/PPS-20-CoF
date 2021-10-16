@@ -1,7 +1,7 @@
 package controller
 
 import controller.Aliases.FoodInstances
-import model._
+import model.{Area, Food, FoodInstance, GrowFood, Habitat}
 import utility.{Constants, OfFood, Serializer}
 
 import scala.util.Random

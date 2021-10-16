@@ -2,6 +2,8 @@ package model
 
 import utility.{Constants, Point}
 
+import java.awt.Color
+
 sealed trait FoodInstance extends Food with Placeable {
   val quantity: Int
   // TODO: qui ritorno un foodInstance che non esiste altrove
@@ -18,19 +20,19 @@ sealed trait FoodInstance extends Food with Placeable {
 case class Meat(override val quantity: Int,
                 override val position: Point,
                 override val energy: Int = Constants.DefaultEnergyOfMeat,
-                override val icon: String = Constants.DefaultIconOfMeat) extends FoodInstance {
+                override val color: Color = Constants.DefaultColorOfMeat) extends FoodInstance {
 
   override def consume[F >: FoodInstance](amount: Int): F = {
-    if (quantity > amount) Meat(quantity - amount, position, energy, icon) else throw new IllegalArgumentException
+    if (quantity > amount) Meat(quantity - amount, position, energy, color) else throw new IllegalArgumentException
   }
 }
 
 case class Vegetable(override val quantity: Int,
                      override val position: Point,
                      override val energy: Int,
-                     override val icon: String = Constants.DefaultIconOfVegetable) extends FoodInstance {
+                     override val color: Color = Constants.DefaultColorOfVegetable) extends FoodInstance {
 
   override def consume[F >: FoodInstance](amount: Int): F = {
-    if (quantity > amount) Vegetable(quantity - amount, position, energy, icon) else throw new IllegalArgumentException
+    if (quantity > amount) Vegetable(quantity - amount, position, energy, color) else throw new IllegalArgumentException
   }
 }
