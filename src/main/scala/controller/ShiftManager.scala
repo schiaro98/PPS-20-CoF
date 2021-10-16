@@ -47,7 +47,9 @@ object ShiftManager {
 
     override def animals: Set[Animal] = mySupportAnimalsDestinations.keySet.to(Set)
 
-    override def walk(): Unit = mySupportAnimalsDestinations = mySupportAnimalsDestinations.filter(t => t._2.nonEmpty).map(t => t._1.shift(t._2.head) -> t._2.tail)
+    override def walk(): Unit =
+      mySupportAnimalsDestinations =
+        mySupportAnimalsDestinations.filter(t => t._2.nonEmpty).map(t => t._1.shift(t._2.head) -> t._2.tail)
 
 
     /**
@@ -90,7 +92,7 @@ object ShiftManager {
           val legalPoints = for (x <- topLeft.x to bottomRight.x;
                                  y <- topLeft.y to bottomRight.y if isLegal(Point(x, y)))
           yield Point(x, y)
-          val closerPoint = findCloserPoint(legalPoints, dest)
+          val closerPoint = findClosestPoint(legalPoints, dest)
           if (path.nonEmpty && path.contains(closerPoint)) path.reverse
           else _createPath(closerPoint, dest, closerPoint +: path)
       }
@@ -118,16 +120,16 @@ object ShiftManager {
      * @param dest   the destination
      * @return the closest Point to dest
      */
-    private def findCloserPoint(points: Seq[Point], dest: Point): Point = {
+    private def findClosestPoint(points: Seq[Point], dest: Point): Point = {
       @tailrec
-      def _findCloserPoint(points: Seq[Point], dest: Point, closestP: Option[Point] = None, minDist: Double = Double.MaxValue): Point = points match {
+      def _findClosestPoint(points: Seq[Point], dest: Point, closestP: Option[Point] = None, minDist: Double = Double.MaxValue): Point = points match {
         case h +: t =>
           val d = h.distance(dest)
-          if (d < minDist) _findCloserPoint(t, dest, Some(h), d) else _findCloserPoint(t, dest, closestP, minDist)
+          if (d < minDist) _findClosestPoint(t, dest, Some(h), d) else _findClosestPoint(t, dest, closestP, minDist)
         case _ => closestP.getOrElse(throw new RuntimeException("LIKE IN LIFE, THERE ISN'T A POINT"))
       }
 
-      _findCloserPoint(points, dest)
+      _findClosestPoint(points, dest)
     }
   }
 }
