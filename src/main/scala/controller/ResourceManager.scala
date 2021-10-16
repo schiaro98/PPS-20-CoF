@@ -14,9 +14,24 @@ sealed trait ResourceManager {
   // TODO:  observer(?) su animals per prendere la carne
   import Aliases._
 
-  val habitat: Habitat
-  val growableFoods: Set[Food]
-  val foods: FoodInstances
+  /**
+   *
+   * @return the FoodInstnces in the ResourceManager
+   */
+  def foods: FoodInstances
+
+  /**
+   *
+   * @return the Set of foods that the ResourceManager can grow
+   */
+  def growableFoods: Set[Food]
+
+  /**
+   *
+   * @return a ResourceManager with fixed amount of FoodInstnce
+   */
+  def fillHabitat(): ResourceManager
+
   /**
    * Creates an Habitat with foods written on some file
    * @param fileName of the resource with foods
@@ -41,15 +56,16 @@ object ResourceManager {
 
   def apply(habitat: Habitat,
             growableFoods: Set[Food] = Set.empty[Food],
-            foods: FoodInstances = Seq.empty[FoodInstance]): ResourceManager =
+            foods: FoodInstances = Seq.empty[FoodInstance],
+           ): ResourceManager =
     new ResourceManagerImpl(habitat, growableFoods, foods)
 
   def apply(habitat: Habitat, fileName: String): ResourceManager =
     new ResourceManagerImpl(habitat,Set.empty[Food], Seq.empty[FoodInstance]).importFoodsFromFile(fileName)
 
-  class ResourceManagerImpl(override val habitat: Habitat,
-                            override val growableFoods: Set[Food],
-                            override val foods: FoodInstances) extends ResourceManager {
+  class ResourceManagerImpl(val habitat: Habitat,
+                            val growableFoods: Set[Food],
+                            val foods: FoodInstances) extends ResourceManager {
 
     // TODO: add method to generate initial food
 
@@ -80,5 +96,7 @@ object ResourceManager {
       val serializer: Serializer = Serializer(OfFood)
       serializer.serializeManyToFile(growableFoods)(Constants.FoodsFilePath)
     }
+
+    override def fillHabitat(): ResourceManager = ???
   }
 }
