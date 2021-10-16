@@ -1,16 +1,16 @@
 package controller
 
 import model._
-import utility.{Constants, Point}
-import view.{Rectangle, SimulationPanel, SimulationGui}
+import utility.{AnimalUtils, Constants, Point}
+import view.{Rectangle, SimulationGui, SimulationPanel}
 
 import scala.util.Random
 
 /**
  * Runnable used to start the simulation, it contains the game loop which must be executed in a new thread.
  *
- * @param species the Species with the number of animals to create at the beginning of the simulation.
- * @param habitat the Habitat where the simulation takes place.
+ * @param species the [[Species]] with the number of animals to create at the beginning of the simulation.
+ * @param habitat the [[Habitat]] where the simulation takes place.
  */
 case class GameLoop(species: Map[Species, Int], habitat: Habitat) extends Runnable {
 
@@ -115,29 +115,11 @@ case class GameLoop(species: Map[Species, Int], habitat: Habitat) extends Runnab
     }
     var x = Random.nextInt(width - size)
     var y = Random.nextInt(height - size)
-    while (areNotPlaceable(Seq(Point(x, y), Point(x + size, y + size), Point(x + size, y), Point(x, y + size)))) {
+    while (AnimalUtils.areNotPlaceable(habitat.areas, Seq(Point(x, y), Point(x + size, y + size), Point(x + size, y), Point(x, y + size)))) {
       x = Random.nextInt(width - size)
       y = Random.nextInt(height - size)
     }
     (Point(x, y), Point(x + size, y + size))
-  }
-
-  /**
-   * Check if a sequence of point is in a non-walkable area.
-   *
-   * @param points the points whose positions are to be checked.
-   * @return true if at least one point is not placeable because was in a non-walkable area, otherwise true.
-   */
-  def areNotPlaceable(points: Seq[Point]): Boolean = points.exists(p => isNotPlaceable(p))
-
-  /**
-   * Check if a point is in a non-walkable area.
-   *
-   * @param p the point whose position is to be checked.
-   * @return true if the point is not placeable because was in a non-walkable area, otherwise true.
-   */
-  def isNotPlaceable(p: Point): Boolean = {
-    Constants.NonWalkableArea.contains(habitat.areas.find(a => a.area.contains(p)).getOrElse(return false).areaType)
   }
 }
 
