@@ -49,7 +49,8 @@ object ShiftManager {
 
     override def walk(): Unit =
       mySupportAnimalsDestinations =
-        mySupportAnimalsDestinations.filter(t => t._2.nonEmpty).map(t => t._1.shift(t._2.head) -> t._2.tail)
+        mySupportAnimalsDestinations.filter(t => t._2.nonEmpty).map(t => t._1.shift(t._2.head) -> t._2.tail) ++
+          mySupportAnimalsDestinations.filterNot(t => t._2.nonEmpty)
 
 
     /**

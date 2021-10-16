@@ -78,33 +78,28 @@ class ShiftManagerTest extends AnyFunSuite {
     val dest2 = getLegalRandomPoint(ourHabitat)
     val dest3 = getLegalRandomPoint(ourHabitat)
     val dest4 = getLegalRandomPoint(ourHabitat)
-    val destinations = Set(dest1, dest2, dest3, dest4)
-    println(destinations)
     val sm: ShiftManager = ShiftManager(ourHabitat,(tiger, dest1), (elephant, dest2), (dog, dest3), (cat, dest4))
-    while(sm.animals.count(a => destinations.contains(a.position)) < sm.animals.size - sm.animals.size/2){
+    for (_ <- 0 to 100) {
       sm.walk()
       sm.animals.foreach(animal => require(ourHabitat.areas.filterNot(a => a.areaType == Fertile).count(a => a.contains(animal.position)) == 0))
     }
-    assert(sm.animals.count(a => destinations.contains(a.position)) == sm.animals.size)
+    sm.animals.foreach(animal => assert(ourHabitat.areas.filterNot(a => a.areaType == Fertile).count(a => a.contains(animal.position)) == 0))
   }
 
 
   test("Test 100 times  multiple animals to random destinations in ours habitat"){
-    var i=0
     for (_ <- 0 until 100) {
       val dest1 = getLegalRandomPoint(ourHabitat)
       val dest2 = getLegalRandomPoint(ourHabitat)
       val dest3 = getLegalRandomPoint(ourHabitat)
       val dest4 = getLegalRandomPoint(ourHabitat)
-      val destinations = Set(dest1, dest2, dest3, dest4)
       val sm: ShiftManager = ShiftManager(ourHabitat,(tiger, dest1), (elephant, dest2), (dog, dest3), (cat, dest4))
-      while(sm.animals.count(a => destinations.contains(a.position)) < sm.animals.size - sm.animals.size/2 ){
+      for (_ <- 0 to 100) {
         sm.walk()
         sm.animals.foreach(animal => require(ourHabitat.areas.filterNot(a => a.areaType == Fertile).count(a => a.contains(animal.position)) == 0))
       }
-      if (sm.animals.count(a => destinations.contains(a.position)) == sm.animals.size) i+= 1
+      sm.animals.foreach(animal => assert(ourHabitat.areas.filterNot(a => a.areaType == Fertile).count(a => a.contains(animal.position)) == 0))
     }
-    assert(i==100)
   }
 
 
@@ -135,7 +130,7 @@ class ShiftManagerTest extends AnyFunSuite {
     for (_ <- 1 to 100){
       sm.walk()
     }
-//    assert(!area.contains(sm.animals.head.position))
+    assert(!area.contains(sm.animals.head.position))
   }
 
   def getLegalRandomPoint(h: Habitat): Point = {
