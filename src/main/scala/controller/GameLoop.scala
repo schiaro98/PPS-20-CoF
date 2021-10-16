@@ -25,6 +25,8 @@ case class GameLoop(population: Map[Species, Int], habitat: Habitat) extends Run
   override def run(): Unit = {
     val shapePanel = new SimulationPanel(habitat.dimensions._1, habitat.dimensions._2)
     val simulationGui = new SimulationGui(habitat, shapePanel) { top.visible = true }
+    var resourceManager = ResourceManager(habitat)
+
     simulationGui.updatePanel(animalsAndRectangles, foodInMap)
 
     var previous: Long = System.currentTimeMillis()
@@ -42,25 +44,18 @@ case class GameLoop(population: Map[Species, Int], habitat: Habitat) extends Run
 
       /*
           se erbivori li faccio mangiare, se carnivori li faccio combattere, e mangiare le risorse rilasciate
+          //TODO gestire sete e fame degli animali da decrementare ogni volta (a fine epoca per tutti)
        */
 
       val battleManager: BattleManager = BattleManager(animalsInMap)
 
-      //Prendo dallo shiftmanager il primo movimento per ogni animale
-      //TODO shift manager dovrebbe gestire l'eat se l'animale finisce vicino al cibo e acqua??
-      //Non credo sia proprio lo shift a dover vedere sta cosa ma vabbe
-      battleManager.calculateBattles()
+      battleManager.battle()
       //Calcolo eventi inaspettati
-      //crescita casuale dei vegetali
 
-      //TODO gestire sete e fame degli animali da decrementare ogni volta
 
       simulationGui.updatePanel(animalsAndRectangles, foodInMap)
 
-      //TODO aggiungere nuove risorse casulmente vegetali
-
-      //TODO aggiungere nuovi animali a caso se uno proprio vole amazzasse de fatica
-
+      resourceManager = resourceManager.grow() //TODO togliere foodinmap?
 
       // ---- solo per vedere che la gui cambia----|
       animalsAndRectangles = Map.empty //          |
@@ -68,9 +63,7 @@ case class GameLoop(population: Map[Species, Int], habitat: Habitat) extends Run
       foodInMap = Seq.empty //                     |
       foodInMap = generateInitialFood() //         |
       // ---- solo per vedere che la gui cambia----|
-
-
-
+      //Contatore epoche che passano
       waitForNextFrame(current)
       previous = current
     }
