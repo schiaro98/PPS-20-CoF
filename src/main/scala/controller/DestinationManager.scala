@@ -54,14 +54,14 @@ private case class DestinationManagerImpl(animals: Seq[Animal], food: Seq[FoodIn
 
   @tailrec
   final def getLegalRandomPoint(h: Habitat): Point = {
-    val p = Point(0,0).getRandomPoint(h.dimensions)
+    val p = Point.getRandomPoint(h.dimensions)
     if (h.areas.filterNot(a => a.areaType == Fertile).count(a => a.contains(p)) == 0) p else getLegalRandomPoint(h)
   }
 
   def findNearestWaterZone(animal:Animal, h: Habitat) : Option[Point] = {
     h.areas
       .filter(area => area.areaType == Water)
-      .map(area => area.area.topLeft) //TODO mettere punto random tra topl e bottr
+      .map(rectangle => Point.getRandomPoint(rectangle.area.topLeft, rectangle.area.bottomRight))
       .filter(point => point.distance(animal.position) < animal.sight)
       .minByOption(point => point.distance(animal.position))
   }

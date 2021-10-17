@@ -1,22 +1,19 @@
 package controller
 
 import model._
-import utility.{Constants, Point}
-import view.{Rectangle, SimulationPanel, SimulationGui}
-
-import scala.util.Random
+import utility.{AnimalUtils, Constants, Point}
+import view.{SimulationGui, SimulationPanel}
 
 /**
- * Runnable used to start the simulation, it contains the game loop which must be executed in a new thread.
+ * [[Runnable]] used to start the simulation, it contains the game loop which must be executed in a new thread.
  *
- * @param population all the Species with the number of animals to create at the beginning of the simulation.
- * @param habitat the Habitat where the simulation takes place.
+ * @param population all the [[Species]] with the number of animals to create at the beginning of the simulation.
+ * @param habitat the [[Habitat]] where the simulation takes place.
  */
 case class GameLoop(population: Map[Species, Int], habitat: Habitat) extends Runnable {
 
-  var animalsAndRectangles: Map[Animal, Rectangle] = Map.empty[Animal, Rectangle]
-  var foodInMap: Seq[FoodInstance] = generateInitialFood() //TODO da prendere da resource manager
-  var animalsInMap: Seq[Animal] = generateInitialAnimals()
+  var foodInMap: Seq[FoodInstance] = Seq.empty //TODO da prendere da resource manager
+  var animalsInMap: Seq[Animal] = AnimalUtils.generateInitialAnimals(population, habitat)
 
   /**
    * Method that represents the core of the simulation, defines the actions that must be
@@ -27,47 +24,49 @@ case class GameLoop(population: Map[Species, Int], habitat: Habitat) extends Run
     val simulationGui = new SimulationGui(habitat, shapePanel) { top.visible = true }
     var resourceManager = ResourceManager(habitat)
 
-    simulationGui.updatePanel(animalsAndRectangles, foodInMap)
-
+    simulationGui.updatePanel(animalsInMap, foodInMap)
     var previous: Long = System.currentTimeMillis()
-    while (animalsInMap.lengthIs > 1) { //TODO pausa come fermare il gioco senza sprecare cpu?
+
+    while (animalsInMap.lengthIs > 0) { //TODO pausa come fermare il gioco senza sprecare cpu?
       val current: Long = System.currentTimeMillis()
 
-      val destinationManager: DestinationManager = DestinationManager(animals = animalsInMap,
-        resources = foodInMap,
-        habitat)
-
+      val destinationManager: DestinationManager = DestinationManager(animalsInMap, foodInMap, habitat)
       val destinations: Map[Animal, Point] = destinationManager.calculateDestination()
+
       val shiftManager = ShiftManager(habitat, destinations)
       shiftManager.walk()
-      animalsInMap = shiftManager.animals.toSeq
+      println(shiftManager.animals.size)
+      animalsInMap = shiftManager.animals.toSeq //TODO restituisce solo un animale?
 
-      /*
-          se erbivori li faccio mangiare, se carnivori li faccio combattere, e mangiare le risorse rilasciate
-          //TODO gestire sete e fame degli animali da decrementare ogni volta (a fine epoca per tutti)
-       */
+      //TODO far mangiare e bere gli animali che possono raggiungere le risorse
+      // decrementare sete e fame da tutti gli animali
 
       val battleManager: BattleManager = BattleManager(animalsInMap)
-
       battleManager.battle()
+
       //Calcolo eventi inaspettati
 
-
-      simulationGui.updatePanel(animalsAndRectangles, foodInMap)
+      simulationGui.updatePanel(animalsInMap, foodInMap)
 
       resourceManager = resourceManager.grow() //TODO togliere foodinmap?
 
-      // ---- solo per vedere che la gui cambia----|
-      animalsAndRectangles = Map.empty //          |
-      generateInitialAnimals() //                  |
-      foodInMap = Seq.empty //                     |
-      foodInMap = generateInitialFood() //         |
-      // ---- solo per vedere che la gui cambia----|
+      //Contatore epoche che passano
+
+
+
+      // ---- solo per vedere che la gui cambia-----------------------------------|
+//      animalsInMap = Seq.empty //                                                 |
+//      animalsInMap = AnimalUtils.generateInitialAnimals(population, habitat) //   |                                      |
+      // ---- solo per vedere che la gui cambia-----------------------------------|
+
+
+
       //Contatore epoche che passano
       waitForNextFrame(current)
       previous = current
     }
 
+    println("All the animals are dead")
     //mostrare la gui con il riassunto ?
   }
 
@@ -82,69 +81,6 @@ case class GameLoop(population: Map[Species, Int], habitat: Habitat) extends Run
     if (dt < Constants.Period) {
       Thread.sleep(Constants.Period - dt)
     }
-  }
-
-  private def generateInitialFood(): Seq[FoodInstance] = {
-    Seq.empty
-  }
-
-  /**
-   * Method to create a number of animals for each species equal to the one in the Map.
-   *
-   * @return the created animals.
-   */
-  private def generateInitialAnimals(): Seq[Animal] = {
-    //TODO fare in modo più funzionale (for yield ad esempio)
-    var animals = Seq.empty[Animal]
-    population foreach (s => {
-      for (_ <- 1 to s._2) {
-        val (topLeft, bottomRight) = placeAnimal(s._1)
-        val animal = Animal(s._1, topLeft)
-        animals = animals :+ animal
-        animalsAndRectangles += (animal -> new Rectangle(topLeft, bottomRight, animal.color))
-      }
-    })
-    animals
-  }
-
-  /**
-   * Method used to obtain a random permissible point to create an animal of a certain species.
-   *
-   * @param species the Species of the animal.
-   * @return the Point (top left) to create the animal and the Point (bottom right) used to draw the rectangle.
-   */
-  private def placeAnimal(species: Species): (Point, Point) = {
-    val (width, height) = habitat.dimensions
-    val size = species.size match {
-      case Big => Constants.PixelForBig
-      case Medium => Constants.PixelForMedium
-      case Small => Constants.PixelForSmall
-    }
-    var x = Random.nextInt(width - size)
-    var y = Random.nextInt(height - size)
-    while (areNotPlaceable(Seq(Point(x, y), Point(x + size, y + size), Point(x + size, y), Point(x, y + size)))) {
-      x = Random.nextInt(width - size)
-      y = Random.nextInt(height - size)
-    }
-    (Point(x, y), Point(x + size, y + size))
-  }
-
-  /**
-   * Check if a sequence of point is in a non-walkable area.
-   *
-   * @param points the points whose positions are to be checked.
-   * @return true if at least one point is not placeable because was in a non-walkable area, otherwise true.
-   */
-  def areNotPlaceable(points: Seq[Point]): Boolean = points.exists(p => isNotPlaceable(p))
-
-  /**
-   * Check if a point is in a non-walkable area.
-   *
-   * @param p the point whose position is to be checked.
-   * @return true if the point is not placeable because was in a non-walkable area, otherwise true.
-   */
-  def isNotPlaceable(p: Point): Boolean = {
-    Constants.NonWalkableArea.contains(habitat.areas.find(a => a.area.contains(p)).getOrElse(return false).areaType)
   }
 }
 

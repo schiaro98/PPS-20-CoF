@@ -3,9 +3,14 @@ package controller
 import model._
 import utility.Logger
 
+import scala.language.postfixOps
+/*
+TODO schiaro. I tre metodi che calcolano la probabilità potrebbero essere "convertiti" usando le curried functions
+Vedere se conviene/è fattibile
+ */
 sealed trait BattleManager {
 
-  def battle(): Unit
+  def battle(): Seq[Meat]
 
   def visibleAnimals(seqOfAnimals: Seq[Animal]): Seq[(Animal, Animal)]
 }
@@ -17,10 +22,10 @@ object BattleManager {
   private case class SimpleBattleManager(animals: Seq[Animal]) extends BattleManager {
     private val logger = Logger
 
-    override def battle(): Unit = {
+    override def battle(): Seq[Meat] = {
       visibleAnimals(animals)
         .filter(couple => isCarnivorous(couple._1))
-        .foreach(couple => startBattle(couple._1, couple._2))
+        .map(couple => startBattle(couple._1, couple._2))
     }
 
     /**
@@ -44,9 +49,9 @@ object BattleManager {
      * @param defender Defending animal
      * @return
      */
-    def startBattle(attacker: Animal, defender: Animal): Unit = {
+    def startBattle(attacker: Animal, defender: Animal): Meat = {
       require(isCarnivorous(attacker))
-      require(attacker.isAlive)
+      require(attacker isAlive)
       require(attacker canSee defender)
 
       val probabilities = List(
@@ -57,10 +62,10 @@ object BattleManager {
 
       if (Probability(probabilities.map(a => a.probability).sum / probabilities.length).calculate) {
         logger.info("Attacking animal: " + attacker + "has won")
-        //attacker.die() or (defender.die())
-        //TODO come rilascio la risorsa? defender.die()
+        defender.die()
       } else {
         logger.info("Defending animal: " + defender + "has won")
+        attacker.die()
       }
     }
 

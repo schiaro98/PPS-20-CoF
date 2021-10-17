@@ -1,7 +1,7 @@
 package view
 
 import model.{Animal, FoodInstance, Habitat}
-import utility.{Constants, Point}
+import utility.{AnimalUtils, Constants, Point}
 
 import java.awt.event.{MouseEvent, MouseMotionListener}
 import java.awt.{Color, Dimension, Graphics2D}
@@ -74,13 +74,15 @@ class SimulationPanel(val width: Int, val height: Int) extends Panel {
    * After eliminate the old popups it draw the rectangle that represent each animals
    * and create the related popup with all his information.
    *
-   * @param animalsAndRectangles a Map containing the info of the Animals and Rectangles used to draw them.
+   * @param animals a Seq of [[Animal]] to draw.
    */
-  def drawAnimals(animalsAndRectangles: Map[Animal, Rectangle]): Unit = {
+  def drawAnimals(animals: Seq[Animal]): Unit = {
     eliminateOldPopup()
-    animalsAndRectangles.foreach(v => {
-      addShape(v._2)
-      createPopupAndMouseListener(v._1, v._2)
+    animals.foreach(a => {
+      val bottomRight = Point(a.position.x+AnimalUtils.getPixelFromSize(a), a.position.y+AnimalUtils.getPixelFromSize(a))
+      val rectangle = new Rectangle(a.position, bottomRight, a.color)
+      addShape(rectangle)
+      createPopupAndMouseListener(a, rectangle)
     })
   }
 

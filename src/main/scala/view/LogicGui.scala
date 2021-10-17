@@ -79,22 +79,7 @@ class LogicGui(speciesFile: String) {
    * Given the Species parameters, give an istance of Species
    */
   def captionSpecies(color: Color, name: String, size: Size, strength: String, sight: String, alimentationType: Type): Species = {
-    Species(name, size, tryToInt(strength), tryToInt(sight), alimentationType, color)
-  }
-
-  // TODO: gestire meglio la gestione degli input da utente
-
-  /**
-   * Convert int to String
-   *
-   * @throws Exception if string is not a number
-   */
-  def tryToInt(s: String): Int = {
-    try {
-      s.toInt
-    } catch {
-      case _: Exception => 0
-    }
+    Species(name, size, strength.toInt, sight.toInt, alimentationType, color)
   }
 
   /**

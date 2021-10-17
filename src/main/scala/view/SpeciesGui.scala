@@ -32,6 +32,8 @@ class SpeciesGui(logic: LogicGui) extends SimpleSwingApplication {
             Dialog.showMessage(contents.head, "Choose a name, please", title = "Try again!")
           } else if(logic.species.keySet.map(s => s.name).contains(nameField.text)){
             Dialog.showMessage(contents.head, "A species with the given name already exist", title = "Try again!")
+          } else if(!Seq(strengthField.text, sightField.text).forall(string => string.forall(char => char.isDigit))){
+            Dialog.showMessage(contents.head, "Strength or Sight field is not a number", title = "Try again!")
           } else {
             val size = StringConverter.getSize(sizeField.selection.item)
             val alimentationType = StringConverter.getAlimentationType(typeField.selection.item)
