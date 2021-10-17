@@ -27,7 +27,7 @@ case class GameLoop(population: Map[Species, Int], habitat: Habitat) extends Run
     simulationGui.updatePanel(animalsInMap, foodInMap)
     var previous: Long = System.currentTimeMillis()
 
-    while (animalsInMap.lengthIs > 1) { //TODO pausa come fermare il gioco senza sprecare cpu?
+    while (animalsInMap.lengthIs > 0) { //TODO pausa come fermare il gioco senza sprecare cpu?
       val current: Long = System.currentTimeMillis()
 
       val destinationManager: DestinationManager = DestinationManager(animalsInMap, foodInMap, habitat)
@@ -35,7 +35,8 @@ case class GameLoop(population: Map[Species, Int], habitat: Habitat) extends Run
 
       val shiftManager = ShiftManager(habitat, destinations)
       shiftManager.walk()
-//      animalsInMap = shiftManager.animals.toSeq //TODO restituisce solo un animale?
+      println(shiftManager.animals.size)
+      animalsInMap = shiftManager.animals.toSeq //TODO restituisce solo un animale?
 
       //TODO far mangiare e bere gli animali che possono raggiungere le risorse
       // decrementare sete e fame da tutti gli animali
@@ -54,8 +55,8 @@ case class GameLoop(population: Map[Species, Int], habitat: Habitat) extends Run
 
 
       // ---- solo per vedere che la gui cambia-----------------------------------|
-      animalsInMap = Seq.empty //                                                 |
-      animalsInMap = AnimalUtils.generateInitialAnimals(population, habitat) //   |                                      |
+//      animalsInMap = Seq.empty //                                                 |
+//      animalsInMap = AnimalUtils.generateInitialAnimals(population, habitat) //   |                                      |
       // ---- solo per vedere che la gui cambia-----------------------------------|
 
 
@@ -65,6 +66,7 @@ case class GameLoop(population: Map[Species, Int], habitat: Habitat) extends Run
       previous = current
     }
 
+    println("All the animals are dead")
     //mostrare la gui con il riassunto ?
   }
 

@@ -53,7 +53,7 @@ object Constants {
   val OffsetX = 20
   val OffsetY = 45
 
-  val Period = 10000 // 10000 = una epoca ogni 10 secondi (15 per 60fps?)
+  val Period = 3000 // 10000 = una epoca ogni 10 secondi (15 per 60fps?)
 
   // ------- Habitat ------
   val DefaultRandomSize = 10

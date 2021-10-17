@@ -33,7 +33,7 @@ object AnimalUtils {
     val (width, height) = habitat.dimensions
     val pixel = getPixelFromSize(species)
     var p = Point.getRandomPoint((width - pixel, height - pixel))
-    while (areNotPlaceable(habitat.areas, Point.getSquareVertices(p, pixel))) {
+    while (areNotPlaceable(habitat.areas, getSquareVertices(p, pixel))) {
       p = Point.getRandomPoint((width - pixel, height - pixel))
     }
     p
@@ -47,7 +47,6 @@ object AnimalUtils {
   def getSquareVertices(topLeft: Point, side: Int): Seq[Point] =
     Seq(topLeft, Point(topLeft.x+side, topLeft.y), Point(topLeft.x, topLeft.y+side), Point(topLeft.x+side, topLeft.y+side))
 
-  
   /**
    * Method to obtain the pixel used to calculate the dimension of an animal; the value returned is also used to
    * draw the animal because represent the side of the square
