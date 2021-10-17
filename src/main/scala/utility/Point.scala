@@ -26,18 +26,6 @@ object Point {
     require(ends.y > start.y, "Illegal random point y")
     Point(Random.between(start.x, ends.x), Random.between(start.y, ends.y))
   }
-
-  /**
-   * @param topLeft the top left vertices of the square
-   * @param side the side of the square
-   * @return a Seq of [[Point]] that contains the vertices of the square
-   */
-  def getSquareVertices(topLeft: Point, side: Int): Seq[Point] = {
-    require(side > 0, "The side must be positive")
-    val x = topLeft.x
-    val y = topLeft.y
-    Seq(topLeft, Point(x+side, y), Point(x, y+side), Point(x+side, y+side))
-  }
 }
 
 

@@ -40,6 +40,15 @@ object AnimalUtils {
   }
 
   /**
+   * @param topLeft the top left vertices of the square
+   * @param side the side of the square
+   * @return a Seq of [[Point]] that contains the vertices of the square
+   */
+  def getSquareVertices(topLeft: Point, side: Int): Seq[Point] =
+    Seq(topLeft, Point(topLeft.x+side, topLeft.y), Point(topLeft.x, topLeft.y+side), Point(topLeft.x+side, topLeft.y+side))
+
+  
+  /**
    * Method to obtain the pixel used to calculate the dimension of an animal; the value returned is also used to
    * draw the animal because represent the side of the square
    *
