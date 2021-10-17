@@ -23,9 +23,6 @@ class BattleManagerTest extends AnyFunSuite{
       Seq((a1,a2), (a2,a1), (a1, a3), (a2, a3), (a3,a1), (a3,a2)).toSet)
   }
 
-/*  test("Test battle between animals that cannot see each other"){
-    assertThrows[IllegalArgumentException](bm.startBattle(a1, unreachableAnimal))
-  }*/
 
   test("Execute a simple battle"){
     val bm = BattleManager(Seq(a1, a2, a3))
