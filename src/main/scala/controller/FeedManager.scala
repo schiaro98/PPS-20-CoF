@@ -3,8 +3,10 @@ package controller
 import model._
 import utility.Constants
 
+import scala.:+
+
 sealed trait FeedManager {
-  def consumeResources(): Unit
+  def consumeResources(): (Seq[Animal], Seq[FoodInstance])
 }
 
 object FeedManager {
@@ -12,16 +14,19 @@ object FeedManager {
 
   private case class SimpleFeedManager(animals: Seq[Animal], resources: Seq[FoodInstance]) extends FeedManager {
 
-    override def consumeResources(): Unit = {
+    override def consumeResources(): (Seq[Animal], Seq[FoodInstance]) = {
+      val results: (Seq[Animal], Seq[FoodInstance]) = (Seq.empty, Seq.empty)
+
       animals.foreach(animal => {
         resources
           .filter(food => food.position.distance(animal.position) < Constants.hitbox)
           .minByOption(food => food.position.distance(animal.position)).get match {
-          case x: Meat if animal.alimentationType == Carnivore => animal.eat(x)
-          case x: Vegetable if animal.alimentationType == Herbivore => animal.eat(x)
+          case x: Meat if animal.alimentationType == Carnivore => results +: Seq(animal.eat(x))
+          case x: Vegetable if animal.alimentationType == Herbivore => results +: Seq(animal.eat(x))
           case _ =>
         }
       })
+      results
     }
   }
 }
