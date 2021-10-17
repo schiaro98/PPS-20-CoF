@@ -2,6 +2,27 @@ package utility
 
 import scala.util.Random
 
+object Point {
+  /**
+   * @param limits are the point max coordinates
+   * @return a random point, between (0,0) and limits
+   */
+  def getRandomPoint(limits: Point): Point = getRandomPoint(Point(0,0), limits)
+  def getRandomPoint(limits: (Int, Int)): Point = getRandomPoint(Point(0,0), Point(limits._1, limits._2))
+
+  /**
+   * @param start are the point min coordinates
+   * @param ends are the point max coordinates
+   * @return a random point, between start and ends
+   */
+  def getRandomPoint(start: Point, ends: Point) : Point = {
+    require(ends.x > start.x, "Illegal random point x")
+    require(ends.y > start.y, "Illegal random point y")
+    Point(Random.between(start.x, ends.x), Random.between(start.y, ends.y))
+  }
+}
+
+
 case class Point(x: Int, y: Int) {
 
   def +(add: Point): Point = Point(x + add.x, y + add.y)
@@ -44,23 +65,7 @@ case class Point(x: Int, y: Int) {
    */
   def distance(p: Point): Double = Math.sqrt(Math.pow(x - p.x, 2) + Math.pow(y - p.y, 2))
 
-  /**
-   * @param limits are the point max coordinates
-   * @return a random point, between (0,0) and limits
-   */
-  def getRandomPoint(limits: Point): Point = getRandomPoint(Point(0,0), limits)
-  def getRandomPoint(limits: (Int, Int)): Point = getRandomPoint(Point(0,0), Point(limits._1, limits._2))
 
-  /**
-   * @param start are the point min coordinates
-   * @param ends are the point max coordinates
-   * @return a random point, between start and ends
-   */
-  def getRandomPoint(start: Point, ends: Point) : Point = {
-    require(ends.x > start.x, "Illegal random point x")
-    require(ends.y > start.y, "Illegal random point y")
-    Point(Random.between(start.x, ends.x), Random.between(start.y, ends.y))
-  }
 
   /**
    * Calculate distance upon x axis

@@ -54,7 +54,7 @@ private case class DestinationManagerImpl(animals: Seq[Animal], food: Seq[FoodIn
 
   @tailrec
   final def getLegalRandomPoint(h: Habitat): Point = {
-    val p = Point(0,0).getRandomPoint(h.dimensions)
+    val p = Point.getRandomPoint(h.dimensions)
     if (h.areas.filterNot(a => a.areaType == Fertile).count(a => a.contains(p)) == 0) p else getLegalRandomPoint(h)
   }
 
