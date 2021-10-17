@@ -11,6 +11,7 @@ object FeedManager {
   def apply(animals: Seq[Animal], resources: Seq[FoodInstance]): FeedManager = SimpleFeedManager(animals, resources)
 
   private case class SimpleFeedManager(animals: Seq[Animal], resources: Seq[FoodInstance]) extends FeedManager {
+
     override def consumeResources(): Unit = {
       animals.foreach(animal => {
         resources
