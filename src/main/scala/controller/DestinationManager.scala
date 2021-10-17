@@ -61,7 +61,7 @@ private case class DestinationManagerImpl(animals: Seq[Animal], food: Seq[FoodIn
   def findNearestWaterZone(animal:Animal, h: Habitat) : Option[Point] = {
     h.areas
       .filter(area => area.areaType == Water)
-      .map(area => area.area.topLeft) //TODO mettere punto random tra topl e bottr
+      .map(rectangle => Point.getRandomPoint(rectangle.area.topLeft, rectangle.area.bottomRight))
       .filter(point => point.distance(animal.position) < animal.sight)
       .minByOption(point => point.distance(animal.position))
   }

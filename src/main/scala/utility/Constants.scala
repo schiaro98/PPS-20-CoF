@@ -43,6 +43,8 @@ object Constants {
   val PixelForFood = 6
 
   val IncCarnivoreVelocity = 5
+
+  val hitbox = 3
   // ------- Gui --------
   val DefaultSimulationDimension = new Dimension(1000, 1000)
   val MainMapDimension: (Int, Int) = (500, 500)
