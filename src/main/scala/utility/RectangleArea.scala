@@ -39,26 +39,26 @@ case class RectangleArea(topLeft: Point, bottomRight: Point) {
 
     //Alto a sx
     rectangles = rectangles :+ RectangleArea(
-      p.getRandomPoint(p, centerFirstQuadrant),
-      p.getRandomPoint(centerFirstQuadrant, center)
+      Point.getRandomPoint(p, centerFirstQuadrant),
+      Point.getRandomPoint(centerFirstQuadrant, center)
     )
 
     //Alto a dx
     rectangles = rectangles :+ RectangleArea(
-      p.getRandomPoint(Point(center.x, 0), centerSecondQuadrant),
-      p.getRandomPoint(centerSecondQuadrant, Point(end.x, center.y))
+      Point.getRandomPoint(Point(center.x, 0), centerSecondQuadrant),
+      Point.getRandomPoint(centerSecondQuadrant, Point(end.x, center.y))
     )
 
     //Basso a sx
     rectangles = rectangles :+ RectangleArea(
-      p.getRandomPoint(Point(0, center.y), centerThirdQuadrant),
-      p.getRandomPoint(centerThirdQuadrant, Point(center.x, end.y))
+      Point.getRandomPoint(Point(0, center.y), centerThirdQuadrant),
+      Point.getRandomPoint(centerThirdQuadrant, Point(center.x, end.y))
     )
 
     //Basso a dx
     rectangles = rectangles :+ RectangleArea(
-      p.getRandomPoint(center, centerFourthQuadrant),
-      p.getRandomPoint(centerFourthQuadrant, end)
+      Point.getRandomPoint(center, centerFourthQuadrant),
+      Point.getRandomPoint(centerFourthQuadrant, end)
     )
 
     rectangles
