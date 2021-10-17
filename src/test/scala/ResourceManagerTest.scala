@@ -24,13 +24,13 @@ class ResourceManagerTest extends AnyFunSuite{
     val resMan = ResourceManager(habitat)
 
     val newResMan = resMan.grow()
-    assert(newResMan.foods.isEmpty)
+    assert(newResMan.foodInstances.isEmpty)
   }
 
   test("ResourceManager grow()"){
     val resMan = ResourceManager(habitat, Set(Food(color, 5), Food(color, 10), Food(color, 15), Food(color, 50)))
     val newResMan = resMan.grow()
-    assert(newResMan.foods.nonEmpty)
+    assert(newResMan.foodInstances.nonEmpty)
   }
 
   test("ResourceManager import food from non existing file"){
@@ -53,11 +53,20 @@ class ResourceManagerTest extends AnyFunSuite{
   }
 
 
-  // TODO: infinite loop id the habitat doesn't have at least a fertileArea with fertility>0
   test("Initialize habitat with foods"){
     val resMan = ResourceManager(habitat, Constants.FoodsFilePath)
     val newResMan = resMan.fillHabitat()
-    assert(newResMan.foods.size > habitat.areas.count(a => a.areaType == Fertile) * 10)
+    assert(newResMan.foodInstances.size > habitat.areas.count(a => a.areaType == Fertile) * 10)
+  }
+
+  test("Try to initialize habitat with all fertile areas with zero fertility"){
+    val f1: Area = Area(Fertile, RectangleArea(Point(0,0), Point(10,10)),probability = Probability(0))
+    val f2: Area = Area(Fertile, RectangleArea(Point(60,60), Point(65, 65)), Probability(0))
+    val w: Area = Area(Water, RectangleArea(Point(0, 15), Point(15,30)))
+    val habitat: Habitat = Habitat( Probability(30),(100,100), Seq(f1,f2,w))
+    val resMan = ResourceManager(habitat, Constants.FoodsFilePath)
+    val newResMan = resMan.fillHabitat()
+    assert(newResMan.foodInstances.size== resMan.foodInstances.size)
   }
 
 }

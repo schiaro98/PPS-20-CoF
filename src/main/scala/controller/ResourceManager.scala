@@ -19,30 +19,29 @@ sealed trait ResourceManager {
    *
    * @return the FoodInstnces in the ResourceManager
    */
-  def foods: FoodInstances
+  def foodInstances: FoodInstances
 
   /**
    *
-   * @return the Set of foods that the ResourceManager can grow
+   * @return the Set of foods that the [ResourceManager] can grow
    */
   def growableFoods: Set[Food]
 
   /**
    *
-   * @return a ResourceManager with fixed amount of FoodInstnce
+   * @return a [ResourceManager] with fixed amount of [FoodInstnce] if there isa at least one [Area] with fertility > 0
    */
   def fillHabitat(): ResourceManager
 
   /**
-   * Creates an Habitat with foods written on some file
    *
-   * @param fileName of the resource with foods
-   * @return a ResourceManager with Foods
+   * @param fileName of the resource with Foods
+   * @return a [ResourceManager] with Seq[Food] read from file
    */
   def importFoodsFromFile(fileName: String): ResourceManager
 
   /**
-   * Writes foods of the current ResourceManager to file
+   * Writes Seq of [Food] of the current [ResourceManager] to file
    *
    * @param filename of the resource in which the foods wil be saved
    */
@@ -68,7 +67,7 @@ object ResourceManager {
 
   private class ResourceManagerImpl(val habitat: Habitat,
                                     val growableFoods: Set[Food],
-                                    val foods: FoodInstances,
+                                    val foodInstances: FoodInstances,
                                    ) extends ResourceManager {
 
     private def randomFood(): Option[Food] = {
@@ -79,18 +78,18 @@ object ResourceManager {
 
     override def grow(): ResourceManager = {
       val newFoods = habitat.areas
-        .filter(area => area.isInstanceOf[Area with GrowFood])
-        .map(a => a.asInstanceOf[Area with GrowFood])
-        .map(gfa => gfa.growFood(randomFood()))
-        .filter(optFood => optFood.isDefined)
-        .map(optFood => optFood.get)
-      ResourceManager(habitat, growableFoods, foods ++ newFoods)
+        .filter(_.isInstanceOf[Area with GrowFood])
+        .map(_.asInstanceOf[Area with GrowFood])
+        .map(_.growFood(randomFood()))
+        .filter(_.isDefined)
+        .map(_.get)
+      ResourceManager(habitat, growableFoods, foodInstances ++ newFoods)
     }
 
     override def importFoodsFromFile(fileName: String): ResourceManager = {
       val serializer: Serializer = Serializer(OfFood)
       val growableFoods = serializer.deserializeManyFromFile(fileName)(classOf[Food])
-      ResourceManager(habitat, growableFoods.toSet, foods)
+      ResourceManager(habitat, growableFoods.toSet, foodInstances)
     }
 
 
@@ -102,14 +101,16 @@ object ResourceManager {
     override def fillHabitat(): ResourceManager = {
       @tailrec
       def _fillHabitat(resourceManager: ResourceManager): ResourceManager = {
-        if (resourceManager.foods.size > habitat.areas.count(a => a.areaType == Fertile) * 10)
+        if (resourceManager.foodInstances.size > habitat.areas.count(a => a.areaType == Fertile) * 10)
           resourceManager
         else _fillHabitat(resourceManager.grow())
       }
-
-      _fillHabitat(this)
+      //if there isn't at least one Fertile area with fertility > 0 no foods are produced and infinite loops occur
+      if (habitat.areas
+        .filter(_.areaType == Fertile)
+        .map(_.asInstanceOf[Area with GrowFood])
+        .count(_.fertility == Probability(0)) == habitat.areas.count(_.areaType==Fertile))  this
+      else _fillHabitat(this)
     }
-
-
   }
 }
