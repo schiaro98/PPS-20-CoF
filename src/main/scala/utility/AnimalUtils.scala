@@ -2,10 +2,7 @@ package utility
 
 import model.{Animal, Area, Big, Habitat, Medium, Small, Species}
 
-import scala.util.Random
-
 object AnimalUtils {
-
 
   /**
    * Method to create a number of animals for each species equal to the one in the Map.
@@ -35,14 +32,11 @@ object AnimalUtils {
   def placeAnimal(habitat: Habitat, species: Species): Point = {
     val (width, height) = habitat.dimensions
     val pixel = getPixelFromSize(species)
-    //TODO usare val randomPoint = Point.getRandomPoint() ?
-    var x = Random.nextInt(width - pixel)
-    var y = Random.nextInt(height - pixel)
-    while (areNotPlaceable(habitat.areas, Seq(Point(x, y), Point(x+pixel, y), Point(x, y+pixel), Point(x+pixel, y+pixel)))) {
-      x = Random.nextInt(width - pixel)
-      y = Random.nextInt(height - pixel)
+    var p = Point.getRandomPoint((width - pixel, height - pixel))
+    while (areNotPlaceable(habitat.areas, Point.getSquareVertices(p, pixel))) {
+      p = Point.getRandomPoint((width - pixel, height - pixel))
     }
-    Point(x, y)
+    p
   }
 
   /**
@@ -77,5 +71,4 @@ object AnimalUtils {
   def isNotPlaceable(areas: Seq[Area], point: Point): Boolean = {
     Constants.NonWalkableArea.contains(areas.find(a => a.area.contains(point)).getOrElse(return false).areaType)
   }
-
 }
