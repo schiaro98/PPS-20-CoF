@@ -8,8 +8,8 @@ import scala.swing.{Dimension, Frame, SimpleSwingApplication}
 /**
  * Class used to create the window where show the simulation.
  *
- * @param habitat the Habitat of the simulation.
- * @param simulationPanel the Panel where to draw all the element of the simulation (areas, animals and food).
+ * @param habitat the [[Habitat]] of the simulation.
+ * @param simulationPanel the [[SimulationPanel]] where to draw all the element of the simulation (areas, animals and food).
  */
 class SimulationGui(habitat: Habitat, val simulationPanel: SimulationPanel) extends SimpleSwingApplication {
 
@@ -24,15 +24,15 @@ class SimulationGui(habitat: Habitat, val simulationPanel: SimulationPanel) exte
   }
 
   /**
-   * Method use to delete the old element in the Panel and draw on the Panel the new state of the simulation.
+   * Method use to delete the old element in the [[SimulationPanel]] and draw on the Panel the new state of the simulation.
    *
-   * @param animalsAndRectangles a Map containing the info of the Animals and Rectangles used to draw them.
-   * @param food the food to draw on the Panel.
+   * @param animals a Seq of [[Animal]] to draw on the [[SimulationPanel]].
+   * @param food the food to draw on the [[SimulationPanel]].
    */
-  def updatePanel(animalsAndRectangles: Map[Animal, Rectangle], food: Seq[FoodInstance]): Unit = {
+  def updatePanel(animals: Seq[Animal], food: Seq[FoodInstance]): Unit = {
     simulationPanel.peer.removeAll()
     simulationPanel.drawHabitat(habitat)
-    simulationPanel.drawAnimals(animalsAndRectangles)
+    simulationPanel.drawAnimals(animals)
     simulationPanel.drawFood(food)
     simulationPanel.revalidate()
     simulationPanel.repaint()

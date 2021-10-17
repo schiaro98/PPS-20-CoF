@@ -5,30 +5,22 @@ import utility.Logger
 
 sealed trait BattleManager {
 
-  def startBattle(a1: Animal, a2: Animal): Unit
-
-  def calculateBattles(): Unit
+  def battle(): Unit
 
   def visibleAnimals(seqOfAnimals: Seq[Animal]): Seq[(Animal, Animal)]
 }
 
 object BattleManager {
-  def apply(animals: Seq[Animal]): BattleManager = SimpleBattleManager(animals)
-  def apply(): BattleManager = SimpleBattleManager(Seq.empty)
-  private val logger = Logger
+  def apply(animals: Seq[Animal] = Seq.empty): BattleManager = SimpleBattleManager(animals)
+
 
   private case class SimpleBattleManager(animals: Seq[Animal]) extends BattleManager {
+    private val logger = Logger
 
-    override def calculateBattles(): Unit = {
-      visibleAnimals().filter(couple => isCarnivorous(couple._1)).foreach(couple => startBattle(couple._1, couple._2))
-    }
-    /**
-     * Return a sequence of tuples of every animal an animal can see, given the sequence created in the constructor
-     *
-     * @return Sequence of tuples
-     */
-    def visibleAnimals(): Seq[(Animal, Animal)] = {
+    override def battle(): Unit = {
       visibleAnimals(animals)
+        .filter(couple => isCarnivorous(couple._1))
+        .foreach(couple => startBattle(couple._1, couple._2))
     }
 
     /**
@@ -52,7 +44,7 @@ object BattleManager {
      * @param defender Defending animal
      * @return
      */
-    override def startBattle(attacker: Animal, defender: Animal): Unit = {
+    def startBattle(attacker: Animal, defender: Animal): Unit = {
       require(isCarnivorous(attacker))
       require(attacker.isAlive)
       require(attacker canSee defender)
@@ -65,7 +57,7 @@ object BattleManager {
 
       if (Probability(probabilities.map(a => a.probability).sum / probabilities.length).calculate) {
         logger.info("Attacking animal: " + attacker + "has won")
-        //attacker.eat(defender.die())
+        //attacker.die() or (defender.die())
         //TODO come rilascio la risorsa? defender.die()
       } else {
         logger.info("Defending animal: " + defender + "has won")

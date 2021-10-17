@@ -2,23 +2,18 @@ package controller
 
 import model._
 import utility.{AnimalUtils, Constants, Point}
-import view.{Rectangle, SimulationGui, SimulationPanel}
-
-import scala.util.Random
+import view.{SimulationGui, SimulationPanel}
 
 /**
- * Runnable used to start the simulation, it contains the game loop which must be executed in a new thread.
+ * [[Runnable]] used to start the simulation, it contains the game loop which must be executed in a new thread.
  *
- * @param species the [[Species]] with the number of animals to create at the beginning of the simulation.
+ * @param population all the [[Species]] with the number of animals to create at the beginning of the simulation.
  * @param habitat the [[Habitat]] where the simulation takes place.
  */
-case class GameLoop(species: Map[Species, Int], habitat: Habitat) extends Runnable {
+case class GameLoop(population: Map[Species, Int], habitat: Habitat) extends Runnable {
 
-  var animalsAndRectangles: Map[Animal, Rectangle] = Map.empty[Animal, Rectangle] //TODO Point al posto di Rectangle ?
-  var foodInMap: Seq[FoodInstance] = generateInitialFood()
-  val animalsInMap: Seq[Animal] = generateInitialAnimals()
-  val battleManager: BattleManager = BattleManager(animalsInMap)
-  val shiftManager: ShiftManager = ShiftManager(habitat, Map.empty[Animal, Point])
+  var foodInMap: Seq[FoodInstance] = Seq.empty //TODO da prendere da resource manager
+  var animalsInMap: Seq[Animal] = AnimalUtils.generateInitialAnimals(population, habitat)
 
   /**
    * Method that represents the core of the simulation, defines the actions that must be
@@ -27,35 +22,45 @@ case class GameLoop(species: Map[Species, Int], habitat: Habitat) extends Runnab
   override def run(): Unit = {
     val shapePanel = new SimulationPanel(habitat.dimensions._1, habitat.dimensions._2)
     val simulationGui = new SimulationGui(habitat, shapePanel) { top.visible = true }
-    simulationGui.updatePanel(animalsAndRectangles, foodInMap)
+    var resourceManager = ResourceManager(habitat)
 
+    simulationGui.updatePanel(animalsInMap, foodInMap)
     var previous: Long = System.currentTimeMillis()
+
     while (animalsInMap.lengthIs > 1) { //TODO pausa come fermare il gioco senza sprecare cpu?
       val current: Long = System.currentTimeMillis()
-      val elapsed: Double = (current - previous).toDouble / Constants.MillisToSec
 
-      //Prendo dallo shiftmanager il primo movimento per ogni animale
-      //TODO shift manager dovrebbe gestire l'eat se l'animale finisce vicino al cibo e acqua??
-      //Non credo sia proprio lo shift a dover vedere sta cosa ma vabbe
-      battleManager.calculateBattles()
+      val destinationManager: DestinationManager = DestinationManager(animalsInMap, foodInMap, habitat)
+      val destinations: Map[Animal, Point] = destinationManager.calculateDestination()
+
+      val shiftManager = ShiftManager(habitat, destinations)
+      shiftManager.walk()
+//      animalsInMap = shiftManager.animals.toSeq //TODO restituisce solo un animale?
+
+      //TODO far mangiare e bere gli animali che possono raggiungere le risorse
+      // decrementare sete e fame da tutti gli animali
+
+      val battleManager: BattleManager = BattleManager(animalsInMap)
+      battleManager.battle()
+
       //Calcolo eventi inaspettati
-      //crescita casuale dei vegetali
+
+      simulationGui.updatePanel(animalsInMap, foodInMap)
+
+      resourceManager = resourceManager.grow() //TODO togliere foodinmap?
+
+      //Contatore epoche che passano
 
 
 
-      simulationGui.updatePanel(animalsAndRectangles, foodInMap)
+      // ---- solo per vedere che la gui cambia-----------------------------------|
+      animalsInMap = Seq.empty //                                                 |
+      animalsInMap = AnimalUtils.generateInitialAnimals(population, habitat) //   |                                      |
+      // ---- solo per vedere che la gui cambia-----------------------------------|
 
 
 
-      // ---- solo per vedere che la gui cambia----|
-      animalsAndRectangles = Map.empty //          |
-      generateInitialAnimals() //                  |
-      foodInMap = Seq.empty //                     |
-      foodInMap = generateInitialFood() //         |
-      // ---- solo per vedere che la gui cambia----|
-
-
-
+      //Contatore epoche che passano
       waitForNextFrame(current)
       previous = current
     }
@@ -74,52 +79,6 @@ case class GameLoop(species: Map[Species, Int], habitat: Habitat) extends Runnab
     if (dt < Constants.Period) {
       Thread.sleep(Constants.Period - dt)
     }
-  }
-
-  private def generateInitialFood(): Seq[FoodInstance] = {
-    Seq.empty
-  }
-
-  /**
-   * Method to create a number of animals for each species equal to the one in the Map.
-   *
-   * @return the created animals.
-   */
-  private def generateInitialAnimals(): Seq[Animal] = {
-    //TODO fare in modo più funzionale (for yield ad esempio)
-    // lasciare il metodo qui nel gameloop?
-    var animals = Seq.empty[Animal]
-    species foreach (s => {
-      for (_ <- 1 to s._2) {
-        val (topLeft, bottomRight) = placeAnimal(s._1)
-        val animal = Animal(s._1, topLeft)
-        animals = animals :+ animal
-        animalsAndRectangles += (animal -> new Rectangle(topLeft, bottomRight, animal.color))
-      }
-    })
-    animals
-  }
-
-  /**
-   * Method used to obtain a random permissible point to create an animal of a certain species.
-   *
-   * @param species the Species of the animal.
-   * @return the Point (top left) to create the animal and the Point (bottom right) used to draw the rectangle.
-   */
-  private def placeAnimal(species: Species): (Point, Point) = {
-    val (width, height) = habitat.dimensions
-    val size = species.size match {
-      case Big => Constants.PixelForBig
-      case Medium => Constants.PixelForMedium
-      case Small => Constants.PixelForSmall
-    }
-    var x = Random.nextInt(width - size)
-    var y = Random.nextInt(height - size)
-    while (AnimalUtils.areNotPlaceable(habitat.areas, Seq(Point(x, y), Point(x + size, y + size), Point(x + size, y), Point(x, y + size)))) {
-      x = Random.nextInt(width - size)
-      y = Random.nextInt(height - size)
-    }
-    (Point(x, y), Point(x + size, y + size))
   }
 }
 
