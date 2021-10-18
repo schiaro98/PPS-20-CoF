@@ -4,18 +4,25 @@ import model._
 import org.scalatest.funsuite.AnyFunSuite
 import utility.Point
 
+import java.awt.Color
+
 class DestinationManagerTest extends AnyFunSuite {
   val habitat: Habitat = Habitat(EmptyHabitatType, Probability(1), (100, 100), Seq.empty)
   val herbivore1: Animal = Animal(Species("HerbivoreExample1", Medium, 10, 10, Herbivore), Point(0,0))
   val herbivore2: Animal = Animal(Species("HerbivoreExample2", Medium, 10, 10, Herbivore), Point(3,3))
   val carnivore1: Animal = Animal(Species("CarnivoreExample1", Medium, 10, 10, Carnivore), Point(0,0))
   val carnivore2: Animal = Animal(Species("CarnivoreExample2", Medium, 10, 10, Carnivore), Point(3,3))
+  val carrotFood: Food = Food(Color.ORANGE, 5, Vegetable)
+  val beetFood: Food = Food(Color.PINK, 10, Vegetable)
+  val beefMeat: Food = Food(Color.red, 10, Meat)
+  val crocodileMeat: Food = Food(Color.green, 10,Meat)
 
-  val carrot: Vegetable = Vegetable(1, Point(1,1), 1)
-  val beet: Vegetable = Vegetable(1, Point(2,2), 1)
 
-  val meat1: Meat = Meat(1, Point(1,1), 1)
-  val meat2: Meat = Meat(1, Point(2,2), 1)
+  val carrot: FoodInstance = FoodInstance(carrotFood, Point(1,1), 1)
+  val beet: FoodInstance = FoodInstance(beetFood, Point(2,2), 1)
+
+  val meat1: FoodInstance = FoodInstance(beefMeat, Point(1,1), 1)
+  val meat2: FoodInstance = FoodInstance(crocodileMeat, Point(2,2), 1)
 
   test("An herbivore should go towards a vegetable, if it's the only choice"){
     val destMng = DestinationManager(Seq(herbivore1), Seq(carrot), habitat)

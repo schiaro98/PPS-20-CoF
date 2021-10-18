@@ -17,8 +17,7 @@ case object GridHabitatType extends HabitatType
 /**
  * Trait that represents an habitat.
  * Every habitat has a dimension (width x height), a [[Probability]] that unexpected events occurs (An ([[Animal]] can
- * die if an ugly event occurs
- * TODO mi sa che ti sei scordato di finire di scrivere XD
+ * die if an ugly event occurs) and a [[Seq]] of [[Area]] that can have different behaviours
  */
 trait Habitat {
   val unexpectedEvents: Probability
@@ -70,17 +69,25 @@ object Habitat {
   /**
    * Apply method for [[Habitat]].
    *
-   * @param unexpectedEvents todo
-   * @param dimensions
-   * @param areas
-   * @return
+   * @param unexpectedEvents the [[Probability]] that some event occur
+   * @param dimensions the diemsion of the habitat expressed as [[(Int, Int)]]
+   * @param areas the [[Seq]] of [[Area]] that are contained in the habitat
+   * @return an implementation of [[Habitat]]
    */
   def apply(unexpectedEvents: Probability = Probability(0),
             dimensions: (Int, Int) = Constants.MainMapDimension,
             areas: Seq[Area] = Serializer(OfArea).deserializeManyFromFile(Constants.MainMap)(classOf[Area]),
            ): Habitat = SimpleHabitat(unexpectedEvents, dimensions, areas)
 
-  //TODO scaladoc
+  /**
+   * Apply method for [[Habitat]].
+   *
+   * @param habitatType can be [[EmptyHabitatType]], [[SimpleHabitatType]], [[RandomHabitatType]] or [[GridHabitatType]]
+   * @param unexpectedEvents the [[Probability]] that some event occur
+   * @param dimensions the diemsion of the habitat
+   * @param areas the [[Seq]] of [[Area]] that are contained in the habitat
+   * @return an implementation of [[Habitat]]
+   */
   def apply(habitatType: HabitatType,
             unexpectedEvents: Probability,
             dimensions: (Int, Int),

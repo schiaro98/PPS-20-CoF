@@ -3,8 +3,8 @@ package model
 import java.awt.Color
 
 sealed trait FoodType
-case object MeatType extends FoodType
-case object VegetableType extends FoodType
+case object Meat extends FoodType
+case object Vegetable extends FoodType
 
 /**
  * Trait that represent a food.
@@ -31,6 +31,5 @@ object Food {
   private case class FoodImpl(override val color: Color,
                               override val energy: Int,
                               override val foodType: FoodType,
-                             ) extends Food {
-  }
+                             ) extends Food
 }

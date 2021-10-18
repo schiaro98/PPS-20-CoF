@@ -58,7 +58,7 @@ trait Animal extends Species with Placeable {
    *
    * @return a new food, the meat that can be eaten.
    */
-  def die(): Meat
+  def die(): FoodInstance
 
   /**
    * Shift an animal position.
@@ -104,14 +104,14 @@ object Animal {
 
     override def drink(): Animal = this.update(thirst = MaxThirst)
 
-    override def die(): Meat = Meat(quantityFromDeath(), position)
+    override def die(): FoodInstance =
+      FoodInstance(Food(Constants.DefaultColorOfMeat, Constants.DefaultEnergyOfMeat, Meat), position, quantityFromDeath())
 
     override def shift(pos: Point): Animal = this.update(position = pos)
 
-    override def eat(food: FoodInstance): (Animal, Option[FoodInstance]) = food match {
-      case _: Meat if this.alimentationType == Carnivore => consume(food)
-      case _: Vegetable if this.alimentationType == Herbivore => consume(food)
-      case _ => throw new IllegalArgumentException("Illegal food type")
+    override def eat(food: FoodInstance): (Animal, Option[FoodInstance]) = food.foodType match {
+      case Meat if this.alimentationType == Carnivore => consume(food)
+      case Vegetable if this.alimentationType == Herbivore => consume(food)
     }
 
     /**
@@ -122,11 +122,11 @@ object Animal {
      */
     def consume(food: FoodInstance): (Animal, Option[FoodInstance]) = health match {
       case Constants.MaxHealth => (this, Some(food))
-      case _ if MaxHealth - this.health > food.energy * food.quantity =>
-        logger.info(this.name + "eat some food")
+      case _ if MaxHealth - health > food.energy * food.quantity =>
+        logger.info(this.name + " eat all food")
         (this.update(health = health + food.energy * food.quantity), None)
       case _ =>
-        logger.info(this.name + "eat some food")
+        logger.info(this.name + " eat some food")
         val foodToEat = (MaxHealth - health) / food.energy + (if (MaxHealth - health % food.energy == 0) 0 else 1)
         (this.update(health = MaxHealth), Some(food.consume(foodToEat)))
     }

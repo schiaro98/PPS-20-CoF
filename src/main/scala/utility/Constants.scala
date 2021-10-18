@@ -66,6 +66,7 @@ object Constants {
 
   val NonWalkableArea: Set[AreaType] = Set(Volcano,Rock,Water)
 
+  val FoodToGrowPerFertileArea: Int = 10
   // ------- Various ------
   val MillisToSec = 1000
 }

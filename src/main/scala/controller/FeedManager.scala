@@ -25,8 +25,8 @@ object FeedManager {
         resources
           .filter(food => food.position.distance(animal.position) < Constants.hitbox)
           .minByOption(food => food.position.distance(animal.position)).get match {
-          case x: Meat if animal.alimentationType == Carnivore => results +: Seq(animal.eat(x))
-          case x: Vegetable if animal.alimentationType == Herbivore => results +: Seq(animal.eat(x))
+          case x if x.foodType == Meat && animal.alimentationType == Carnivore => results +: Seq(animal.eat(x))
+          case x if x.foodType ==  Vegetable && animal.alimentationType == Herbivore => results +: Seq(animal.eat(x))
           case _ =>
         }
       })

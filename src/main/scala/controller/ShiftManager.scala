@@ -23,16 +23,31 @@ sealed trait ShiftManager {
 
 
 object ShiftManager {
-  def apply(habitat: Habitat, animalDestinations: (Animal, Point)*): ShiftManager =
-    new ShiftManagerImpl(habitat, animalDestinations.toMap)
+  /**
+   * The apply for [[ShiftManager]]
+   *
+   * @param habitat the [[Habitat]] in which shifts occur
+   * @param animalsDestinations a vararg of  [[(Animal, Point)]]
+   * @return an Implementation of [[ShiftManager]]
+   */
+  def apply(habitat: Habitat, animalsDestinations: (Animal, Point)*): ShiftManager =
+    new ShiftManagerImpl(habitat, animalsDestinations.toMap)
 
+  /**
+   * The apply for [[ShiftManager]]
+   *
+   * @param habitat the [[Habitat]] in which shifts occur
+   * @param animalsDestinations a [[Map]] with [[Animal]] as key and the [[Point]] as destination
+   * @return an Implementation of [[ShiftManager]]
+   */
   def apply(habitat: Habitat, animalsDestinations: Map[Animal, Point]): ShiftManager =
     new ShiftManagerImpl(habitat: Habitat, animalsDestinations)
 
 
   private class ShiftManagerImpl(val habitat: Habitat, val animalsDestinations: Map[Animal, Point]) extends ShiftManager {
 
-    private val nonWalkableAreas: Seq[Area] = habitat.areas.filterNot(a => a.areaType == Fertile)
+    private val nonWalkableAreas: Seq[Area] = habitat.areas.filterNot(_.areaType == Fertile)
+    //lambda returning an Int for potential shifts
     private val randShift = (x:Int) => Random.between(Constants.MinShift, x)
 
     /**
@@ -40,17 +55,17 @@ object ShiftManager {
      * @param p the Point to analyze
      * @return true if the animal can be in the point p
      */
-    private def isLegal(p: Point): Boolean = !nonWalkableAreas.exists(a => a.contains(p))
+    private def isLegal(p: Point): Boolean = !nonWalkableAreas.exists(_.contains(p))
 
-    animalsDestinations.keySet.foreach(animal => require(nonWalkableAreas.count(a => a.contains(animal.position)) == 0))
+    animalsDestinations.keySet.foreach(animal => require(nonWalkableAreas.count(_.contains(animal.position)) == 0))
     private var mySupportAnimalsDestinations: ParMap[Animal, Seq[Point]] = initWalks(animalsDestinations.keySet.toSeq)
 
     override def animals: Set[Animal] = mySupportAnimalsDestinations.keySet.to(Set)
 
     override def walk(): Unit =
     mySupportAnimalsDestinations =
-        mySupportAnimalsDestinations.filter(t => t._2.nonEmpty).map(t => t._1.shift(t._2.head) -> t._2.tail) ++
-          mySupportAnimalsDestinations.filterNot(t => t._2.nonEmpty)
+        mySupportAnimalsDestinations.filter(_._2.nonEmpty).map(t => t._1.shift(t._2.head) -> t._2.tail) ++
+          mySupportAnimalsDestinations.filterNot(_._2.nonEmpty)
 
 
 

@@ -1,7 +1,7 @@
 package model
 
 import org.scalatest.funsuite.AnyFunSuite
-import utility.Point
+import utility.{Constants, Point}
 
 import java.awt.Color
 
@@ -10,7 +10,7 @@ class VisualizableTest extends AnyFunSuite {
   val color: Color = Color.black
 
   test("A visualizable must provide an image") {
-    val v: Visualizable = Food(color, 0, VegetableType)
+    val v: Visualizable = Food(color, 0, Vegetable)
     assert(color == v.color)
   }
 
@@ -21,7 +21,8 @@ class VisualizableTest extends AnyFunSuite {
   }
 
   test("A Vegetable is a visualizable with energy and quantity") {
-    val f: Food = Vegetable(10, Point(0,0), 10, color)
+    val f: Food =
+      FoodInstance(Food(color,Constants.DefaultEnergyOfVegetable, Vegetable), Point(0,0), 10)
     assert(color == f.color)
     assert(10 == f.energy )
   }

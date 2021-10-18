@@ -72,6 +72,10 @@ object ResourceManager {
                                     val foodInstances: FoodInstances,
                                    ) extends ResourceManager {
 
+    /**
+     *
+     * @return a random [[Food]] from foods
+     */
     private def randomFood(): Option[Food] = {
       if (foods.nonEmpty) {
         Some(foods.toSeq(new Random().nextInt(foods.size)))
@@ -85,7 +89,7 @@ object ResourceManager {
         .map(_.growFood(randomFood()))
         .filter(_.isDefined)
         .map(_.get)
-      ResourceManager(habitat, foods.filter(_.foodType==VegetableType), foodInstances ++ newFoods)
+      ResourceManager(habitat, foods.filter(_.foodType == Vegetable ), foodInstances ++ newFoods)
     }
 
     override def importFoodsFromFile(fileName: String): ResourceManager = {
@@ -103,7 +107,7 @@ object ResourceManager {
     override def fillHabitat(): ResourceManager = {
       @tailrec
       def _fillHabitat(resourceManager: ResourceManager): ResourceManager = {
-        if (resourceManager.foodInstances.size > habitat.areas.count(a => a.areaType == Fertile) * 10)
+        if (resourceManager.foodInstances.size > habitat.areas.count(_.areaType == Fertile) * Constants.FoodToGrowPerFertileArea)
           resourceManager
         else _fillHabitat(resourceManager.grow())
       }

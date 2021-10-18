@@ -1,10 +1,8 @@
 package model
 
-import utility.{Constants, Point}
+import utility.Point
 
 import java.awt.Color
-
-//TODO scegliere insieme come gestire Vegetable e Meat (a livello logico è più Food che FoodInstance)
 
 /**
  * Trait that represents an instance of a particular [[Food]] of which it may contain
@@ -23,30 +21,18 @@ sealed trait FoodInstance extends Food with Placeable {
   def consume[F >: FoodInstance](amount: Int): F
 }
 
-// TODO: Mi sembra che si ripeta del codice
+object FoodInstance {
+  def apply(food: Food, position: Point, quantity: Int): FoodInstance =
+    FoodInstanceImpl(quantity, position, food.energy, food.color, food.foodType)
 
-//TODO scaladoc
-case class Meat(override val quantity: Int,
-                override val position: Point,
-                override val energy: Int = Constants.DefaultEnergyOfMeat,
-                override val color: Color = Constants.DefaultColorOfMeat,
-                override val foodType: FoodType = MeatType,
-               ) extends FoodInstance {
+  private case class FoodInstanceImpl(override val quantity: Int,
+                                      override val position: Point,
+                                      override val energy: Int,
+                                      override val color: Color,
+                                      override val foodType: FoodType,
+                                     ) extends FoodInstance {
 
-  override def consume[F >: FoodInstance](amount: Int): F = {
-    if (quantity > amount) Meat(quantity - amount, position, energy, color) else throw new IllegalArgumentException
-  }
-}
-
-//TODO scaladoc
-case class Vegetable(override val quantity: Int,
-                     override val position: Point,
-                     override val energy: Int,
-                     override val color: Color = Constants.DefaultColorOfVegetable,
-                     override val foodType: FoodType = VegetableType,
-                    ) extends FoodInstance {
-
-  override def consume[F >: FoodInstance](amount: Int): F = {
-    if (quantity > amount) Vegetable(quantity - amount, position, energy, color) else throw new IllegalArgumentException
+    override def consume[F >: FoodInstance](amount: Int): F =
+      if (quantity > amount) FoodInstanceImpl(quantity - amount, position, energy, color, foodType) else throw new IllegalArgumentException
   }
 }

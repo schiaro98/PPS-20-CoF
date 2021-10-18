@@ -21,7 +21,7 @@ class ResourceManagerTest extends AnyFunSuite{
 
   val habitat: Habitat = Habitat( Probability(30), (100, 100), Seq(fertileArea, waterArea, rockArea, volcanoArea, area))
 
-  val foods = Set(Food(color, 5, VegetableType), Food(color, 10, VegetableType), Food(color, 15, VegetableType), Food(color, 50, VegetableType))
+  val foods = Set(Food(color, 5, Vegetable), Food(color, 10, Vegetable), Food(color, 15, Vegetable), Food(color, 50, Vegetable))
 
   test("ResourceManager grow() with no growable foods"){
     val resMan = ResourceManager(habitat)
@@ -46,7 +46,7 @@ class ResourceManagerTest extends AnyFunSuite{
     resMan.writeFoodsToFile(Constants.FoodsFilePath)
     val path = Path.of("res"+File.separator+"serialization"+File.separator+Constants.FoodsFilePath)
     val json = Files.readString(path, StandardCharsets.UTF_8)
-    assert(json == "{\"color\":{\"value\":-16777216,\"falpha\":0.0},\"energy\":5,\"foodType\":\"VegetableType\"}{\"color\":{\"value\":-16777216,\"falpha\":0.0},\"energy\":10,\"foodType\":\"VegetableType\"}{\"color\":{\"value\":-16777216,\"falpha\":0.0},\"energy\":15,\"foodType\":\"VegetableType\"}{\"color\":{\"value\":-16777216,\"falpha\":0.0},\"energy\":50,\"foodType\":\"VegetableType\"}")
+    assert(json == "{\"color\":{\"value\":-16777216,\"falpha\":0.0},\"energy\":5,\"foodType\":\"Vegetable\"}{\"color\":{\"value\":-16777216,\"falpha\":0.0},\"energy\":10,\"foodType\":\"Vegetable\"}{\"color\":{\"value\":-16777216,\"falpha\":0.0},\"energy\":15,\"foodType\":\"Vegetable\"}{\"color\":{\"value\":-16777216,\"falpha\":0.0},\"energy\":50,\"foodType\":\"Vegetable\"}")
   }
 
   test("ResourceManager import food from file"){

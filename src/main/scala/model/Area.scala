@@ -16,7 +16,9 @@ case object Water extends AreaType
 case object Rock extends AreaType
 case object Volcano extends AreaType
 
-//TODO scaladoc
+/**
+ * The Model of an [[Area]]
+ */
 sealed trait Area {
   val name: String
   val areaType: AreaType
@@ -31,10 +33,17 @@ sealed trait Area {
   def contains(p: Point): Boolean = area.contains(p)
 }
 
-//TODO scaladoc
 object Area {
 
-  //TODO scaladoc
+  /**
+   *Apply method for [[Area]]
+   *
+   * @param areaType one among [[Fertile]], [[Water]], [[Volcano]], [[Rock]]
+   * @param area the [[Rectangle]] in which the [[Area]] is
+   * @param probability 0 by default, applicable only with a [[Fertile]] [[Area]]
+   * @param name an optional name for the [[Area]]
+   * @return an implementation of [[Area]]
+   */
   def apply(areaType: AreaType, area: RectangleArea, probability: Probability = Probability(0), name: String = ""): Area =
     areaType match {
       case Fertile => FertileAreaGrowFood(new Rectangle(area, Color.green), probability, name)
@@ -64,7 +73,7 @@ object Area {
           val _2 = random.between(area.topLeft.y, area.bottomRight.y)
 
           val quantity = random.nextInt(DefaultFoodQuantity)
-          return Some(Vegetable(quantity, Point(_1, _2), food.energy, food.color))
+          return Some(FoodInstance(food, Point(_1, _2), quantity))
         }
       }
       None
@@ -72,16 +81,18 @@ object Area {
   }
 }
 
-//TODO scaladoc
+/**
+ * Trait that makes it possible to grow food
+ */
 sealed trait GrowFood {
   val fertility: Probability
-  // TODO: make it return a food (possibly from foods if the probability is true
 
   /**
-   * todo spiegazione
+   * Given a food calculate the probability of its growth, if it can grow return an [[Some]] [[FoodInstance]]
+   * else [[None]]
    *
    * @param food the [[Food]] that can grow.
-   * @return an optional of [[FoodInstance]].
+   * @return an [[Option]] of [[FoodInstance]].
    */
   def growFood(food: Option[Food]): Option[FoodInstance]
 }

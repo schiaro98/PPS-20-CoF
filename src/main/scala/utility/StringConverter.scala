@@ -20,11 +20,10 @@ object StringConverter {
     }
   }
 
-  // TODO: forse e' meglio lasciarle parzialmente implementate?
   def getFoodType(input: String): FoodType = {
     input match {
-      case "MeatType" => MeatType
-      case "VegetableType" => VegetableType
+      case "Meat" => Meat
+      case "Vegetable" => Vegetable
       case _ => null
     }
   }

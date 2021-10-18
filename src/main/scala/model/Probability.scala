@@ -6,18 +6,27 @@ trait Probability {
 
   val probability: Int
 
+  /**
+   *
+   * @return a boolean based on the probability taken in input
+   */
   def calculate: Boolean
-  //could use implicits for different strategies?
-  //pattern strategy?
 
   def increase(x: Int): Probability
+
   def decrease(x: Int): Probability
 }
 
 object Probability {
+  /**
+   *
+   * @param probability an Int between 0 and 100
+   * @return an implementation of [[Probability]]
+   */
   def apply(probability: Int): Probability = ProbabilityImpl(probability)
 
   private case class ProbabilityImpl(override val probability: Int) extends Probability {
+    //the probability needs to be between 0 and 100
     require(probability >= 0 && probability <= 100 )
 
     override def calculate: Boolean = probability match {

@@ -9,7 +9,7 @@ sealed trait BattleManager {
    * For every animal that is able to see other animals, execute battles
    * @return the Meat that can be released during the battles
    */
-  def battle(): Seq[Meat]
+  def battle(): Seq[FoodInstance]
 
   /**
    * Return a sequence of pairs of [[Animal]], the presence in this list means that animal 1 can see animal 2
@@ -26,7 +26,7 @@ object BattleManager {
   private case class SimpleBattleManager(animals: Seq[Animal]) extends BattleManager {
     private val logger = Logger
 
-    override def battle(): Seq[Meat] = {
+    override def battle(): Seq[FoodInstance] = {
       visibleAnimals(animals)
         .filter(couple => isCarnivorous(couple._1))
         .map(couple => startBattle(couple._1, couple._2))
@@ -53,7 +53,7 @@ object BattleManager {
      * @param defender Defending animal
      * @return
      */
-    def startBattle(attacker: Animal, defender: Animal): Meat = {
+    def startBattle(attacker: Animal, defender: Animal): FoodInstance = {
       require(isCarnivorous(attacker))
       require(attacker.isAlive)
       require(attacker canSee defender)

@@ -7,7 +7,6 @@ import utility.{Point, RectangleArea}
 import scala.util.Random
 
 class ShiftManagerTest extends AnyFunSuite {
-  // TODO: May be refactored
   val ourHabitat: Habitat = Habitat(Probability(0))
 
   val MaxX = 500
@@ -17,10 +16,10 @@ class ShiftManagerTest extends AnyFunSuite {
   val elephant: Animal = Animal(Species( "elephant", Medium, 10, 10, Herbivore), getLegalRandomPoint(ourHabitat))
   val dog: Animal = Animal(Species("dog", Medium, 20, 20, Carnivore ), getLegalRandomPoint(ourHabitat))
   val cat: Animal = Animal(Species( "cat", Small, 15, 10, Carnivore), getLegalRandomPoint(ourHabitat))
-  val dest1 = Point.getRandomPoint(Point(MaxX,MaxY))
-  val dest2 = Point.getRandomPoint(Point(MaxX,MaxY))
-  val dest3 = Point.getRandomPoint(Point(MaxX,MaxY))
-  val dest4 = Point.getRandomPoint(Point(MaxX,MaxY))
+  val dest1: Point = Point.getRandomPoint(Point(MaxX,MaxY))
+  val dest2: Point = Point.getRandomPoint(Point(MaxX,MaxY))
+  val dest3: Point = Point.getRandomPoint(Point(MaxX,MaxY))
+  val dest4: Point = Point.getRandomPoint(Point(MaxX,MaxY))
 
 
   test("Create ShiftManager") {
@@ -72,11 +71,11 @@ class ShiftManagerTest extends AnyFunSuite {
   test("One animal may arrive to random destination in ours habitat") {
     val d = getLegalRandomPoint(ourHabitat)
     val sm: ShiftManager = ShiftManager(ourHabitat,(tiger, d))
-    while(sm.animals.count(a => a.position == d) != sm.animals.size){
+    for (_ <- 0 to 100) {
       sm.walk()
       sm.animals.foreach(animal => require(ourHabitat.areas.filterNot(a => a.areaType == Fertile).count(a => a.contains(animal.position)) == 0))
     }
-    assert(sm.animals.count(a => a.position == d) == sm.animals.size)
+    sm.animals.foreach(animal => assert(ourHabitat.areas.filterNot(_.areaType == Fertile).count(a => a.contains(animal.position)) == 0))
   }
 
   test("Multiple animals may arrive at different random destinations in ours habitat") {
@@ -85,7 +84,7 @@ class ShiftManagerTest extends AnyFunSuite {
       sm.walk()
       sm.animals.foreach(animal => require(ourHabitat.areas.filterNot(a => a.areaType == Fertile).count(a => a.contains(animal.position)) == 0))
     }
-    sm.animals.foreach(animal => assert(ourHabitat.areas.filterNot(a => a.areaType == Fertile).count(a => a.contains(animal.position)) == 0))
+    sm.animals.foreach(animal => assert(ourHabitat.areas.filterNot(_.areaType == Fertile).count(a => a.contains(animal.position)) == 0))
   }
 
   test("Test 100 times multiple animals to random destinations in ours habitat"){
