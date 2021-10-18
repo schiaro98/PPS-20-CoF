@@ -16,14 +16,19 @@ case object GridHabitatType extends HabitatType
 
 /**
  * Trait that rappresent an habitat
- * TODO completare
+ * Every habitat has a dimension (width x heigth), a [[Probability]] that unexpected events occurs (An ([[Animal]] can
+ * die if an ugly event occurs
  */
 trait Habitat {
   val unexpectedEvents: Probability
   val dimensions: (Int, Int)
   val areas: Seq[Area]
 
-  //todo scaladoc
+  /**
+   * Check if in the sequence exist overlapping areas
+   * @param areas to be checked
+   * @return true if any of the area overlap
+   */
   def checkForOverlappingAreas(areas: Seq[Area]): Boolean = areas match {
     case h :: t =>
       for (a <- areas.filterNot(elem => elem == h)) {
@@ -33,7 +38,11 @@ trait Habitat {
     case _ => true
   }
 
-  //todo scaladoc
+  /**
+   * Check if areas has got illegal points (exceed dimensions or are not rectangles)
+   * @param areas to be checked
+   * @return true if any of the areas is illegal
+   */
   def checkDimensionsOfAreas(areas: Seq[Area]): Boolean = areas match {
     case h :: t =>
 
@@ -53,7 +62,9 @@ trait Habitat {
   require(checkDimensionsOfAreas(areas), "areas don't fit in current habitat")
 }
 
-//todo scaladoc
+/**
+ * Object that rappresent an habitat
+ */
 object Habitat {
 
   def apply(unexpectedEvents: Probability = Probability(0),
