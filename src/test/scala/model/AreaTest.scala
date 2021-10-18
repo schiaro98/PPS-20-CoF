@@ -1,7 +1,7 @@
 package model
 
 import org.scalatest.funsuite.AnyFunSuite
-import utility.{Point, RectangleArea}
+import utility.RectangleArea
 
 class AreaTest extends AnyFunSuite{
 

@@ -2,7 +2,7 @@ package controller
 
 import model._
 import org.scalatest.funsuite.AnyFunSuite
-import utility.{Constants, Point, RectangleArea}
+import utility.{Constants, RectangleArea}
 
 import java.awt.Color
 import java.nio.charset.StandardCharsets

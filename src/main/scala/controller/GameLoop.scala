@@ -1,7 +1,7 @@
 package controller
 
 import model._
-import utility.{AnimalUtils, Constants, Point}
+import utility.{AnimalUtils, Constants}
 import view.{SimulationGui, SimulationPanel}
 
 /**
@@ -70,7 +70,6 @@ case class GameLoop(population: Map[Species, Int], habitat: Habitat) extends Run
    */
   private def waitForNextFrame(current: Long): Unit = {
     val dt = System.currentTimeMillis() - current
-    println("Time elapsed for the computation: " + dt)
     if (dt < Constants.Period) {
       Thread.sleep(Constants.Period - dt)
     }

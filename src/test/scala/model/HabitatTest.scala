@@ -1,7 +1,7 @@
 package model
 
 import org.scalatest.funsuite.AnyFunSuite
-import utility.{Constants, Point, RectangleArea}
+import utility.{Constants, RectangleArea}
 
 class HabitatTest extends AnyFunSuite{
 

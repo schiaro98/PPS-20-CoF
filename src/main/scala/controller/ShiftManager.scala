@@ -1,7 +1,7 @@
 package controller
 
 import model._
-import utility.{Constants, Point}
+import utility.Constants
 
 import scala.annotation.tailrec
 import scala.collection.parallel.CollectionConverters._

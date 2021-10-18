@@ -1,6 +1,6 @@
 package utility
 
-import model.{Animal, Area, Big, Habitat, Medium, Small, Species}
+import model.{Animal, Area, Big, Habitat, Medium, Point, Small, Species}
 
 /**
  * Object containing some utility methods for [[Animal]]

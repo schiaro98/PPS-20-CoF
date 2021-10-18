@@ -1,6 +1,6 @@
 package model
 
-import utility.{Constants, Logger, Point}
+import utility.{Constants, Logger}
 import utility.Constants._
 
 import java.awt.Color

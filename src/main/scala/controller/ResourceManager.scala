@@ -17,7 +17,7 @@ sealed trait ResourceManager {
 
   /**
    *
-   * @return the FoodInstnces in the ResourceManager
+   * @return the [[FoodInstances]] in the ResourceManager
    */
   def foodInstances: FoodInstances
 

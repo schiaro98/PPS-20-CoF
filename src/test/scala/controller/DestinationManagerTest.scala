@@ -1,8 +1,7 @@
 package controller
 
-import model._
+import model.{Point, _}
 import org.scalatest.funsuite.AnyFunSuite
-import utility.Point
 
 class DestinationManagerTest extends AnyFunSuite {
   val habitat: Habitat = Habitat(EmptyHabitatType, Probability(1), (100, 100), Seq.empty)
