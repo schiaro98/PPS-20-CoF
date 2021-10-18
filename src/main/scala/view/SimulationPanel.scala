@@ -1,7 +1,7 @@
 package view
 
-import model.{Animal, FoodInstance, Habitat}
-import utility.{AnimalUtils, Constants, Point, RectangleArea}
+import model.{Animal, FoodInstance, Habitat, Point}
+import utility.{AnimalUtils, Constants, RectangleArea}
 
 import java.awt.event.{MouseEvent, MouseMotionListener}
 import java.awt.{Color, Dimension, Graphics2D}

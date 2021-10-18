@@ -1,4 +1,4 @@
-package utility
+package model
 
 import org.scalatest.funsuite.AnyFunSuite
 

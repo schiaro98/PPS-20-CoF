@@ -17,6 +17,11 @@ sealed trait BattleManager {
    * @return a sequence of pairs of animals that can see other animals
    */
   def visibleAnimals(seqOfAnimals: Seq[Animal]): Seq[(Animal, Animal)]
+
+  /**
+   * Return alive animals
+   */
+  def getAnimals: Seq[Animal]
 }
 
 object BattleManager {
@@ -25,6 +30,8 @@ object BattleManager {
 
   private case class SimpleBattleManager(animals: Seq[Animal]) extends BattleManager {
     private val logger = Logger
+    private var animalKilled : List[Animal] = List.empty
+
 
     override def battle(): Seq[FoodInstance] = {
       visibleAnimals(animals)
@@ -66,9 +73,11 @@ object BattleManager {
 
       if (Probability(probabilities.map(a => a.probability).sum / probabilities.length).calculate) {
         logger.info("Attacking animal: " + attacker.name + " has won against " + defender.name)
+        animalKilled = animalKilled :+ defender
         defender.die()
       } else {
         logger.info("Defending animal: " + defender.name + " has won against "  + attacker.name)
+        animalKilled = animalKilled :+ attacker
         attacker.die()
       }
     }
@@ -149,5 +158,10 @@ object BattleManager {
      * @return true if the animal is Carnivorous
      */
      def isCarnivorous(animal: Animal): Boolean = animal.alimentationType == Carnivore
+
+    /**
+     * @return the animals in the shiftManager
+     */
+    override def getAnimals: Seq[Animal] = animals diff animalKilled
   }
 }

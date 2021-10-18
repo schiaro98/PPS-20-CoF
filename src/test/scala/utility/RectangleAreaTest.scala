@@ -1,5 +1,6 @@
 package utility
 
+import model.Point
 import org.scalatest.funsuite.AnyFunSuite
 
 import scala.util.Random

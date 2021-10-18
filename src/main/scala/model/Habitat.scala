@@ -1,7 +1,7 @@
 package model
 
 import utility.Constants.{DefaultGridSize, DefaultStartingX, DefaultStartingY}
-import utility.{Constants, OfArea, Point, RectangleArea, Serializer}
+import utility.{Constants, OfArea, RectangleArea, Serializer}
 
 import scala.util.Random
 

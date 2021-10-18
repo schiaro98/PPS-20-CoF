@@ -2,7 +2,7 @@ package controller
 
 import model._
 import org.scalatest.funsuite.AnyFunSuite
-import utility.{Point, RectangleArea}
+import utility.RectangleArea
 
 import scala.util.Random
 

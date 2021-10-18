@@ -1,6 +1,6 @@
 package model
 
-import utility.{Constants, Logger, Point}
+import utility.{Constants, Logger}
 import utility.Constants._
 
 import java.awt.Color
@@ -112,6 +112,7 @@ object Animal {
     override def eat(food: FoodInstance): (Animal, Option[FoodInstance]) = food.foodType match {
       case Meat if this.alimentationType == Carnivore => consume(food)
       case Vegetable if this.alimentationType == Herbivore => consume(food)
+      case _ => throw new IllegalArgumentException
     }
 
     /**

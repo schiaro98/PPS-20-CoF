@@ -1,7 +1,7 @@
 package controller
 
 import model._
-import utility.{AnimalUtils, Constants, Point}
+import utility.{AnimalUtils, Constants}
 import view.{SimulationGui, SimulationPanel}
 
 /**
@@ -24,6 +24,7 @@ case class GameLoop(population: Map[Species, Int], habitat: Habitat) extends Run
     val simulationGui = new SimulationGui(habitat, shapePanel) { top.visible = true }
     var resourceManager = ResourceManager(habitat)
 
+
     simulationGui.updatePanel(animalsInMap, foodInMap)
     var previous: Long = System.currentTimeMillis()
 
@@ -34,14 +35,22 @@ case class GameLoop(population: Map[Species, Int], habitat: Habitat) extends Run
       val destinations: Map[Animal, Point] = destinationManager.calculateDestination()
 
       val shiftManager = ShiftManager(habitat, destinations)
+      val feedManager = FeedManager(animalsInMap, foodInMap)
       shiftManager.walk()
       animalsInMap = shiftManager.animals.toSeq
 
-      //TODO far mangiare e bere gli animali che possono raggiungere le risorse
-      // decrementare sete e fame da tutti gli animali
+      val res = feedManager.consumeResources()
+      feedManager.lifeCycleUpdate()
+
+      val remainingFromConsume = res._2
+
+      animalsInMap = res._1
 
       val battleManager: BattleManager = BattleManager(animalsInMap)
-      battleManager.battle()
+
+      resourceManager = resourceManager.addAll(battleManager.battle() ++ remainingFromConsume)
+
+      animalsInMap = battleManager.getAnimals
 
       //Calcolo eventi inaspettati
 
@@ -70,7 +79,6 @@ case class GameLoop(population: Map[Species, Int], habitat: Habitat) extends Run
    */
   private def waitForNextFrame(current: Long): Unit = {
     val dt = System.currentTimeMillis() - current
-    println("Time elapsed for the computation: " + dt)
     if (dt < Constants.Period) {
       Thread.sleep(Constants.Period - dt)
     }

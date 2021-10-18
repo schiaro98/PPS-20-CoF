@@ -1,8 +1,7 @@
 package controller
 
-import model._
+import model.{Point, _}
 import org.scalatest.funsuite.AnyFunSuite
-import utility.Point
 
 class BattleManagerTest extends AnyFunSuite{
 

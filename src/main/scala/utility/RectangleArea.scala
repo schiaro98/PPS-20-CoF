@@ -1,5 +1,7 @@
 package utility
 
+import model.Point
+
 case class RectangleArea(topLeft: Point, bottomRight: Point) {
 
   require(isValid, "Illegal corners")

@@ -1,7 +1,5 @@
 package model
 
-import utility.Point
-
 import java.awt.Color
 
 /**

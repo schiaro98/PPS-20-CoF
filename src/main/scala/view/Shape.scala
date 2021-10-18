@@ -1,6 +1,7 @@
 package view
 
-import utility.{Point, RectangleArea}
+import model.Point
+import utility.RectangleArea
 
 import java.awt.{Color, Graphics2D}
 

@@ -1,8 +1,8 @@
 package model
 
 import org.scalatest.funsuite.AnyFunSuite
+import utility.Constants
 import utility.Constants._
-import utility.{Constants, Point}
 
 import java.awt.Color
 

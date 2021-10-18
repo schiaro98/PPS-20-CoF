@@ -1,7 +1,6 @@
 package controller
 
-import model._
-import utility.Point
+import model.{Point, _}
 
 import scala.annotation.tailrec
 

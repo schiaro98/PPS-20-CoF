@@ -1,7 +1,7 @@
 package model
 
 import utility.Constants.DefaultFoodQuantity
-import utility.{Point, RectangleArea}
+import utility.RectangleArea
 import view.Rectangle
 
 import java.awt.Color
