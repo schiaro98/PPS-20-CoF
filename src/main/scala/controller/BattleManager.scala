@@ -162,6 +162,6 @@ object BattleManager {
     /**
      * @return the animals in the shiftManager
      */
-    override def getAnimals: Seq[Animal] = animals diff animalKilled
+    override def getAnimals: Seq[Animal] = animals.filterNot(animalKilled.contains(_))
   }
 }

@@ -15,18 +15,24 @@ import scala.swing._
  */
 class SimulationGui(habitat: Habitat, val simulationPanel: SimulationPanel) extends SimpleSwingApplication {
 
+  var elapsedTime = 0
   val (width, height) = habitat.dimensions
-  val textArea = new TextArea("Welcome to Circe of Life Simulator!", 10, 10)
-  val logger: Logger.type = Logger
+  val textArea: TextArea = new TextArea("Welcome to Circe of Life Simulator!", 10, 10){
+    editable = false
+  }
+
+  val elapsedTimeLabel = new Label("timeElapsed: ")
+  val elapsedTimeField: TextField = new TextField(elapsedTime.toString){
+    editable = false
+  }
 
   override def top: Frame = new Frame {
     this.resizable = false
     this.size = new Dimension(width, height)
     this.title = "Simulation"
 
-
     val logPanel: BoxPanel =  new BoxPanel(Orientation.Vertical) {
-      contents addAll List(textArea)
+      contents addAll List(elapsedTimeField, elapsedTimeField, textArea)
     }
 
     contents = new BorderPanel(){
@@ -53,7 +59,11 @@ class SimulationGui(habitat: Habitat, val simulationPanel: SimulationPanel) exte
     simulationPanel.repaint()
   }
 
-  def updateLogger() : Unit = {
-    textArea.text = Logger.history.takeRight(10).mkString("\n")
+  def updateLogger() : Unit = textArea.text = Logger.history.takeRight(10).mkString("\n")
+
+  def updateElapsedTime(): Unit = {
+    elapsedTime += 1
+    elapsedTimeField.text = elapsedTime.toString
   }
+
 }

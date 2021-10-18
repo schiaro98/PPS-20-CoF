@@ -38,31 +38,22 @@ case class GameLoop(population: Map[Species, Int], habitat: Habitat) extends Run
       val feedManager = FeedManager(animalsInMap, foodInMap)
       shiftManager.walk()
       animalsInMap = shiftManager.animals.toSeq
-
       val res = feedManager.consumeResources()
       feedManager.lifeCycleUpdate()
-
-      val remainingFromConsume = res._2
-
       animalsInMap = res._1
 
       val battleManager: BattleManager = BattleManager(animalsInMap)
 
-      resourceManager = resourceManager.addAll(battleManager.battle() ++ remainingFromConsume)
+      resourceManager = resourceManager.addAll(battleManager.battle() ++ res._2)
 
       animalsInMap = battleManager.getAnimals
-
       //Calcolo eventi inaspettati
 
       simulationGui.updatePanel(animalsInMap, foodInMap)
 
       resourceManager = resourceManager.grow() //TODO togliere foodinmap?
 
-      //Contatore epoche che passano
-
-
-
-
+      simulationGui.updateElapsedTime()
       //Contatore epoche che passano
       waitForNextFrame(current)
       previous = current
