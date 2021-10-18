@@ -21,7 +21,7 @@ sealed trait ResourceManager {
    */
   def foodInstances: FoodInstances
 
-  def foodInstances_(fi:FoodInstances) : ResourceManager
+  def addAll(fi:FoodInstances) : ResourceManager
 
   /**
    *
@@ -115,7 +115,7 @@ object ResourceManager {
       else _fillHabitat(this)
     }
 
-    override def foodInstances_(fi: FoodInstances) : ResourceManager =
+    override def addAll(fi: FoodInstances) : ResourceManager =
       ResourceManager(habitat, foods, fi ++ foodInstances)
   }
 }
