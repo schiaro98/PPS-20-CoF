@@ -34,7 +34,7 @@ trait Species extends Visualizable {
 object Species {
 
   /**
-   * Apply method for a Species.
+   * Apply method for [[Species]].
    *
    * @param color    the color that should be used to draw the element.
    * @param name     the name of the species.

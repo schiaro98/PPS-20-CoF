@@ -20,13 +20,12 @@ trait Shape {
 }
 
 /**
- * A rectangle
+ * A drawable rectangle
  *
- * @param topLeft     the top left point of the rectangle
- * @param bottomRight the top bottom right of the rectangle
- * @param color       the color that should be used to draw the rectangle.
+ * @param rectangleArea the [[RectangleArea]] which contains the top left and the bottom right [[Point]]
+ * @param color         the color that should be used to draw the rectangle.
  */
-class Rectangle(override val topLeft: Point, override val bottomRight: Point, override val color: Color) extends RectangleArea(topLeft, bottomRight) with Shape {
+class Rectangle(rectangleArea: RectangleArea, override val color: Color) extends RectangleArea(rectangleArea.topLeft, rectangleArea.bottomRight) with Shape {
 
   override def draw(graphics: Graphics2D): Unit = {
     graphics.fillRect(topLeft.x, topLeft.y, bottomRight.x - topLeft.x, bottomRight.y - topLeft.y)
@@ -34,13 +33,13 @@ class Rectangle(override val topLeft: Point, override val bottomRight: Point, ov
 }
 
 /**
- * A circle
+ * A drawable circle
  *
  * @param topLeft the top left point of the square circumscribed to the circle
  * @param radius  the radius of the circle
  * @param color   the color that should be used to draw the rectangle.
  */
-class Circle(override val topLeft: Point, val radius: Int, override val color: Color) extends Shape {
+class Circle(override val topLeft: Point, override val color: Color, radius: Int) extends Shape {
 
   override def draw(graphics: Graphics2D): Unit = {
     graphics.fillOval(topLeft.x, topLeft.y, radius, radius)

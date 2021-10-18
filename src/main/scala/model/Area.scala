@@ -2,53 +2,55 @@ package model
 
 import utility.Constants.DefaultFoodQuantity
 import utility.{Point, RectangleArea}
+import view.Rectangle
 
 import java.awt.Color
 import scala.util.Random
 
+/**
+ * The possible types of area.
+ */
 sealed trait AreaType
-
 case object Fertile extends AreaType
-
 case object Water extends AreaType
-
 case object Rock extends AreaType
-
 case object Volcano extends AreaType
 
+//TODO scaladoc
 sealed trait Area {
   val name: String
-  val color: Color
   val areaType: AreaType
-  val area: RectangleArea
+  val area: Rectangle
 
   /**
+   * Method to check if a [[Point]] is inside the [[Area]].
    *
-   * @param p the point we want to check
-   * @return true if the area contains the point
+   * @param p the [[Point]] to check.
+   * @return true if the [[Area]] contains the [[Point]], false otherwise.
    */
   def contains(p: Point): Boolean = area.contains(p)
 }
 
+//TODO scaladoc
 object Area {
+
+  //TODO scaladoc
   def apply(areaType: AreaType, area: RectangleArea, probability: Probability = Probability(0), name: String = ""): Area =
     areaType match {
-      case Fertile => FertileAreaGrowFood(area, probability, name)
-      case Water => SimpleAreaImpl(area, if (name == "") "a bit of water" else name, Color.blue, areaType)
-      case Rock => SimpleAreaImpl(area, if (name == "") "a rock area" else name, new Color(102, 51, 0), areaType)
-      case Volcano => SimpleAreaImpl(area, if (name == "") "a volcano" else name, Color.red, areaType)
+      case Fertile => FertileAreaGrowFood(new Rectangle(area, Color.green), probability, name)
+      case Water => SimpleAreaImpl(new Rectangle(area, Color.blue), if (name == "") "a bit of water" else name, areaType)
+      case Rock => SimpleAreaImpl(new Rectangle(area, new Color(102, 51, 0)), if (name == "") "a rock area" else name, areaType)
+      case Volcano => SimpleAreaImpl(new Rectangle(area, Color.red), if (name == "") "a volcano" else name, areaType)
     }
 
-  private case class SimpleAreaImpl(override val area: RectangleArea,
+  private case class SimpleAreaImpl(override val area: Rectangle,
                                     override val name: String,
-                                    override val color: Color,
                                     override val areaType: AreaType,
                                    ) extends Area
 
-  private case class FertileAreaGrowFood(override val area: RectangleArea,
+  private case class FertileAreaGrowFood(override val area: Rectangle,
                                          override val fertility: Probability,
                                          override val name: String = "a fertile area",
-                                         override val color: Color = Color.green,
                                          override val areaType: AreaType = Fertile,
                                         ) extends Area with GrowFood {
     require(areaType == Fertile)
@@ -70,14 +72,16 @@ object Area {
   }
 }
 
+//TODO scaladoc
 sealed trait GrowFood {
   val fertility: Probability
   // TODO: make it return a food (possibly from foods if the probability is true
 
   /**
+   * If
    *
-   * @param food we want to grow
-   * @return an optional FoodInstance
+   * @param food the [[Food]] that can grow.
+   * @return an optional of [[FoodInstance]]
    */
   def growFood(food: Option[Food]): Option[FoodInstance]
 }

@@ -1,5 +1,9 @@
 {
   "area": {
+    "color": {
+      "value": -65536,
+      "falpha": 0.0
+    },
     "topLeft": {
       "x": 0,
       "y": 0
@@ -10,13 +14,13 @@
     }
   },
   "name": "a volcano",
-  "color": {
-    "value": -65536,
-    "falpha": 0.0
-  },
   "areaType": "Volcano"
 }{
   "area": {
+    "color": {
+      "value": -65536,
+      "falpha": 0.0
+    },
     "topLeft": {
       "x": 100,
       "y": 0
@@ -27,13 +31,13 @@
     }
   },
   "name": "a volcano",
-  "color": {
-    "value": -65536,
-    "falpha": 0.0
-  },
   "areaType": "Volcano"
 }{
   "area": {
+    "color": {
+      "value": -65536,
+      "falpha": 0.0
+    },
     "topLeft": {
       "x": 400,
       "y": 450
@@ -44,13 +48,13 @@
     }
   },
   "name": "a volcano",
-  "color": {
-    "value": -65536,
-    "falpha": 0.0
-  },
   "areaType": "Volcano"
 }{
   "area": {
+    "color": {
+      "value": -10079488,
+      "falpha": 0.0
+    },
     "topLeft": {
       "x": 200,
       "y": 0
@@ -61,13 +65,13 @@
     }
   },
   "name": "a rock area",
-  "color": {
-    "value": -10079488,
-    "falpha": 0.0
-  },
   "areaType": "Rock"
 }{
   "area": {
+    "color": {
+      "value": -10079488,
+      "falpha": 0.0
+    },
     "topLeft": {
       "x": 300,
       "y": 150
@@ -78,13 +82,13 @@
     }
   },
   "name": "a rock area",
-  "color": {
-    "value": -10079488,
-    "falpha": 0.0
-  },
   "areaType": "Rock"
 }{
   "area": {
+    "color": {
+      "value": -10079488,
+      "falpha": 0.0
+    },
     "topLeft": {
       "x": 150,
       "y": 450
@@ -95,13 +99,13 @@
     }
   },
   "name": "a rock area",
-  "color": {
-    "value": -10079488,
-    "falpha": 0.0
-  },
   "areaType": "Rock"
 }{
   "area": {
+    "color": {
+      "value": -10079488,
+      "falpha": 0.0
+    },
     "topLeft": {
       "x": 200,
       "y": 400
@@ -112,13 +116,13 @@
     }
   },
   "name": "a rock area",
-  "color": {
-    "value": -10079488,
-    "falpha": 0.0
-  },
   "areaType": "Rock"
 }{
   "area": {
+    "color": {
+      "value": -10079488,
+      "falpha": 0.0
+    },
     "topLeft": {
       "x": 470,
       "y": 150
@@ -129,13 +133,13 @@
     }
   },
   "name": "a rock area",
-  "color": {
-    "value": -10079488,
-    "falpha": 0.0
-  },
   "areaType": "Rock"
 }{
   "area": {
+    "color": {
+      "value": -16776961,
+      "falpha": 0.0
+    },
     "topLeft": {
       "x": 400,
       "y": 0
@@ -146,13 +150,13 @@
     }
   },
   "name": "a bit of water",
-  "color": {
-    "value": -16776961,
-    "falpha": 0.0
-  },
   "areaType": "Water"
 }{
   "area": {
+    "color": {
+      "value": -16776961,
+      "falpha": 0.0
+    },
     "topLeft": {
       "x": 450,
       "y": 0
@@ -163,13 +167,13 @@
     }
   },
   "name": "a bit of water",
-  "color": {
-    "value": -16776961,
-    "falpha": 0.0
-  },
   "areaType": "Water"
 }{
   "area": {
+    "color": {
+      "value": -16776961,
+      "falpha": 0.0
+    },
     "topLeft": {
       "x": 0,
       "y": 200
@@ -180,13 +184,13 @@
     }
   },
   "name": "a bit of water",
-  "color": {
-    "value": -16776961,
-    "falpha": 0.0
-  },
   "areaType": "Water"
 }{
   "area": {
+    "color": {
+      "value": -16776961,
+      "falpha": 0.0
+    },
     "topLeft": {
       "x": 300,
       "y": 300
@@ -197,13 +201,13 @@
     }
   },
   "name": "a bit of water",
-  "color": {
-    "value": -16776961,
-    "falpha": 0.0
-  },
   "areaType": "Water"
 }{
   "area": {
+    "color": {
+      "value": -16776961,
+      "falpha": 0.0
+    },
     "topLeft": {
       "x": 350,
       "y": 300
@@ -214,13 +218,13 @@
     }
   },
   "name": "a bit of water",
-  "color": {
-    "value": -16776961,
-    "falpha": 0.0
-  },
   "areaType": "Water"
 }{
   "area": {
+    "color": {
+      "value": -16776961,
+      "falpha": 0.0
+    },
     "topLeft": {
       "x": 50,
       "y": 400
@@ -231,13 +235,13 @@
     }
   },
   "name": "a bit of water",
-  "color": {
-    "value": -16776961,
-    "falpha": 0.0
-  },
   "areaType": "Water"
 }{
   "area": {
+    "color": {
+      "value": -16711936,
+      "falpha": 0.0
+    },
     "topLeft": {
       "x": 300,
       "y": 0
@@ -251,13 +255,13 @@
     "probability": 50
   },
   "name": "",
-  "color": {
-    "value": -16711936,
-    "falpha": 0.0
-  },
   "areaType": "Fertile"
 }{
   "area": {
+    "color": {
+      "value": -16711936,
+      "falpha": 0.0
+    },
     "topLeft": {
       "x": 100,
       "y": 50
@@ -271,13 +275,13 @@
     "probability": 30
   },
   "name": "",
-  "color": {
-    "value": -16711936,
-    "falpha": 0.0
-  },
   "areaType": "Fertile"
 }{
   "area": {
+    "color": {
+      "value": -16711936,
+      "falpha": 0.0
+    },
     "topLeft": {
       "x": 0,
       "y": 100
@@ -291,13 +295,13 @@
     "probability": 60
   },
   "name": "",
-  "color": {
-    "value": -16711936,
-    "falpha": 0.0
-  },
   "areaType": "Fertile"
 }{
   "area": {
+    "color": {
+      "value": -16711936,
+      "falpha": 0.0
+    },
     "topLeft": {
       "x": 100,
       "y": 150
@@ -311,13 +315,13 @@
     "probability": 50
   },
   "name": "",
-  "color": {
-    "value": -16711936,
-    "falpha": 0.0
-  },
   "areaType": "Fertile"
 }{
   "area": {
+    "color": {
+      "value": -16711936,
+      "falpha": 0.0
+    },
     "topLeft": {
       "x": 450,
       "y": 100
@@ -331,13 +335,13 @@
     "probability": 60
   },
   "name": "",
-  "color": {
-    "value": -16711936,
-    "falpha": 0.0
-  },
   "areaType": "Fertile"
 }{
   "area": {
+    "color": {
+      "value": -16711936,
+      "falpha": 0.0
+    },
     "topLeft": {
       "x": 200,
       "y": 200
@@ -351,13 +355,13 @@
     "probability": 60
   },
   "name": "",
-  "color": {
-    "value": -16711936,
-    "falpha": 0.0
-  },
   "areaType": "Fertile"
 }{
   "area": {
+    "color": {
+      "value": -16711936,
+      "falpha": 0.0
+    },
     "topLeft": {
       "x": 350,
       "y": 150
@@ -371,13 +375,13 @@
     "probability": 20
   },
   "name": "",
-  "color": {
-    "value": -16711936,
-    "falpha": 0.0
-  },
   "areaType": "Fertile"
 }{
   "area": {
+    "color": {
+      "value": -16711936,
+      "falpha": 0.0
+    },
     "topLeft": {
       "x": 0,
       "y": 250
@@ -391,13 +395,13 @@
     "probability": 80
   },
   "name": "",
-  "color": {
-    "value": -16711936,
-    "falpha": 0.0
-  },
   "areaType": "Fertile"
 }{
   "area": {
+    "color": {
+      "value": -16711936,
+      "falpha": 0.0
+    },
     "topLeft": {
       "x": 200,
       "y": 300
@@ -411,13 +415,13 @@
     "probability": 60
   },
   "name": "",
-  "color": {
-    "value": -16711936,
-    "falpha": 0.0
-  },
   "areaType": "Fertile"
 }{
   "area": {
+    "color": {
+      "value": -16711936,
+      "falpha": 0.0
+    },
     "topLeft": {
       "x": 400,
       "y": 300
@@ -431,13 +435,13 @@
     "probability": 60
   },
   "name": "",
-  "color": {
-    "value": -16711936,
-    "falpha": 0.0
-  },
   "areaType": "Fertile"
 }{
   "area": {
+    "color": {
+      "value": -16711936,
+      "falpha": 0.0
+    },
     "topLeft": {
       "x": 470,
       "y": 280
@@ -451,13 +455,13 @@
     "probability": 20
   },
   "name": "",
-  "color": {
-    "value": -16711936,
-    "falpha": 0.0
-  },
   "areaType": "Fertile"
 }{
   "area": {
+    "color": {
+      "value": -16711936,
+      "falpha": 0.0
+    },
     "topLeft": {
       "x": 350,
       "y": 350
@@ -471,13 +475,13 @@
     "probability": 60
   },
   "name": "",
-  "color": {
-    "value": -16711936,
-    "falpha": 0.0
-  },
   "areaType": "Fertile"
 }{
   "area": {
+    "color": {
+      "value": -16711936,
+      "falpha": 0.0
+    },
     "topLeft": {
       "x": 0,
       "y": 400
@@ -491,13 +495,13 @@
     "probability": 60
   },
   "name": "",
-  "color": {
-    "value": -16711936,
-    "falpha": 0.0
-  },
   "areaType": "Fertile"
 }{
   "area": {
+    "color": {
+      "value": -16711936,
+      "falpha": 0.0
+    },
     "topLeft": {
       "x": 100,
       "y": 400
@@ -511,13 +515,13 @@
     "probability": 40
   },
   "name": "",
-  "color": {
-    "value": -16711936,
-    "falpha": 0.0
-  },
   "areaType": "Fertile"
 }{
   "area": {
+    "color": {
+      "value": -16711936,
+      "falpha": 0.0
+    },
     "topLeft": {
       "x": 50,
       "y": 450
@@ -531,13 +535,13 @@
     "probability": 40
   },
   "name": "",
-  "color": {
-    "value": -16711936,
-    "falpha": 0.0
-  },
   "areaType": "Fertile"
 }{
   "area": {
+    "color": {
+      "value": -16711936,
+      "falpha": 0.0
+    },
     "topLeft": {
       "x": 250,
       "y": 400
@@ -551,13 +555,13 @@
     "probability": 20
   },
   "name": "",
-  "color": {
-    "value": -16711936,
-    "falpha": 0.0
-  },
   "areaType": "Fertile"
 }{
   "area": {
+    "color": {
+      "value": -16711936,
+      "falpha": 0.0
+    },
     "topLeft": {
       "x": 300,
       "y": 400
@@ -571,13 +575,13 @@
     "probability": 40
   },
   "name": "",
-  "color": {
-    "value": -16711936,
-    "falpha": 0.0
-  },
   "areaType": "Fertile"
 }{
   "area": {
+    "color": {
+      "value": -16711936,
+      "falpha": 0.0
+    },
     "topLeft": {
       "x": 400,
       "y": 400
@@ -591,9 +595,5 @@
     "probability": 20
   },
   "name": "",
-  "color": {
-    "value": -16711936,
-    "falpha": 0.0
-  },
   "areaType": "Fertile"
 }

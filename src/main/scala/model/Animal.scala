@@ -77,8 +77,7 @@ trait Animal extends Species with Placeable {
 object Animal {
 
   /**
-   * Apply method for an Animal; it's private because it must be impossible to instantiate a general animal,
-   * it must be a carnivorous or a herbivore
+   * Apply method for [[Animal]].
    *
    * @param s        the species of the animal.
    * @param position the location on the map, where the animal is.

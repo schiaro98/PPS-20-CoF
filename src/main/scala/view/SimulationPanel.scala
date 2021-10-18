@@ -1,7 +1,7 @@
 package view
 
 import model.{Animal, FoodInstance, Habitat}
-import utility.{AnimalUtils, Constants, Point}
+import utility.{AnimalUtils, Constants, Point, RectangleArea}
 
 import java.awt.event.{MouseEvent, MouseMotionListener}
 import java.awt.{Color, Dimension, Graphics2D}
@@ -58,7 +58,7 @@ class SimulationPanel(val width: Int, val height: Int) extends Panel {
    * @param habitat the Habitat of the simulation.
    */
   def drawHabitat(habitat: Habitat): Unit = {
-    habitat.areas.foreach(area => addShape(new Rectangle(area.area.topLeft, area.area.bottomRight, area.color)))
+    habitat.areas.foreach(a => addShape(new Rectangle(RectangleArea(a.area.topLeft, a.area.bottomRight), a.area.color)))
   }
 
   /**
@@ -67,7 +67,7 @@ class SimulationPanel(val width: Int, val height: Int) extends Panel {
    * @param food the food to be drawn
    */
   def drawFood(food: Seq[FoodInstance]): Unit = {
-    food.foreach(f => addShape(new Circle(f.position, Constants.PixelForFood, f.color)))
+    food.foreach(f => addShape(new Circle(f.position, f.color, Constants.PixelForFood)))
   }
 
   /**
@@ -80,7 +80,7 @@ class SimulationPanel(val width: Int, val height: Int) extends Panel {
     eliminateOldPopup()
     animals.foreach(a => {
       val bottomRight = Point(a.position.x+AnimalUtils.getPixelFromSize(a), a.position.y+AnimalUtils.getPixelFromSize(a))
-      val rectangle = new Rectangle(a.position, bottomRight, a.color)
+      val rectangle = new Rectangle(RectangleArea(a.position, bottomRight), a.color)
       addShape(rectangle)
       createPopupAndMouseListener(a, rectangle)
     })
