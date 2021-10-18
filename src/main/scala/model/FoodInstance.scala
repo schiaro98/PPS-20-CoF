@@ -6,7 +6,7 @@ import java.awt.Color
 
 sealed trait FoodInstance extends Food with Placeable {
   val quantity: Int
-  // TODO: qui ritorno un foodInstance che non esiste altrove
+
   /**
    * Method to decrease the quantity of the food.
    *
@@ -17,20 +17,26 @@ sealed trait FoodInstance extends Food with Placeable {
   def consume[F >: FoodInstance](amount: Int): F
 }
 
+// TODO: Mi sembra che si ripeta del codice
 case class Meat(override val quantity: Int,
                 override val position: Point,
                 override val energy: Int = Constants.DefaultEnergyOfMeat,
-                override val color: Color = Constants.DefaultColorOfMeat) extends FoodInstance {
+                override val color: Color = Constants.DefaultColorOfMeat,
+                override val foodType: FoodType = MeatType,
+               ) extends FoodInstance {
 
   override def consume[F >: FoodInstance](amount: Int): F = {
     if (quantity > amount) Meat(quantity - amount, position, energy, color) else throw new IllegalArgumentException
   }
 }
 
+
 case class Vegetable(override val quantity: Int,
                      override val position: Point,
                      override val energy: Int,
-                     override val color: Color = Constants.DefaultColorOfVegetable) extends FoodInstance {
+                     override val color: Color = Constants.DefaultColorOfVegetable,
+                     override val foodType: FoodType = VegetableType,
+                    ) extends FoodInstance {
 
   override def consume[F >: FoodInstance](amount: Int): F = {
     if (quantity > amount) Vegetable(quantity - amount, position, energy, color) else throw new IllegalArgumentException

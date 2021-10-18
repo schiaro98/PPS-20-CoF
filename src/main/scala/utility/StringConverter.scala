@@ -1,6 +1,6 @@
 package utility
 
-import model.{Big, Carnivore, Herbivore, Medium, Size, Small, Type}
+import model._
 
 object StringConverter {
   def getAlimentationType(input: String) : Type = {
@@ -16,6 +16,15 @@ object StringConverter {
       case "Big" => Big
       case "Medium" => Medium
       case "Small" => Small
+      case _ => null
+    }
+  }
+
+  // TODO: forse e' meglio lasciarle parzialmente implementate?
+  def getFoodType(input: String): FoodType = {
+    input match {
+      case "MeatType" => MeatType
+      case "VegetableType" => VegetableType
       case _ => null
     }
   }

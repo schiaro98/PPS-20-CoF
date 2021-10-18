@@ -111,20 +111,27 @@ object Serializer {
 
   private class FoodsSerializer extends SerializerImpl {
 
+    object FoodTypeSerializer extends JsonSerializer[model.FoodType] {
+      override def serialize(src: FoodType, typeOfSrc: Type, context: JsonSerializationContext): JsonElement = new JsonPrimitive(src.toString)
+    }
+
     object FoodDeserializer extends JsonDeserializer[Food] {
       override def deserialize(json: JsonElement, typeOfT: Type, context: JsonDeserializationContext): Food = {
         val res = json match {
-          case obj: JsonObject if obj.has("color") && obj.has("energy") =>
+          case obj: JsonObject if obj.has("color") && obj.has("energy")
+            && obj.has("foodType") =>
             val color = deserializeOne(obj.get("color").toString)(classOf[Color])
             val energy = obj.get("energy").getAsInt
-            Food(color, energy)
+            val foodType = obj.get("foodType").getAsString
+            Food(color, energy, StringConverter.getFoodType(foodType))
           case _ => null
         }
         Option(res).getOrElse(throw new JsonParseException(s"$json can't be parsed to Food"))
       }
     }
 
-    override val gson: Gson = new GsonBuilder().registerTypeHierarchyAdapter(classOf[Food], FoodDeserializer).create()
+    override val gson: Gson = new GsonBuilder().registerTypeHierarchyAdapter(classOf[Food], FoodDeserializer)
+    .registerTypeHierarchyAdapter(classOf[FoodType], FoodTypeSerializer).create()
   }
 
   private class ProbabilitySerializer extends SerializerImpl {
