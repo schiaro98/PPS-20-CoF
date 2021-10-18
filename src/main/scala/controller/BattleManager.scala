@@ -3,11 +3,6 @@ package controller
 import model._
 import utility.Logger
 
-import scala.language.postfixOps
-/*
-TODO schiaro. I tre metodi che calcolano la probabilità potrebbero essere "convertiti" usando le curried functions
-Vedere se conviene/è fattibile
- */
 sealed trait BattleManager {
 
   /**
@@ -60,7 +55,7 @@ object BattleManager {
      */
     def startBattle(attacker: Animal, defender: Animal): Meat = {
       require(isCarnivorous(attacker))
-      require(attacker isAlive)
+      require(attacker.isAlive)
       require(attacker canSee defender)
 
       val probabilities = List(
