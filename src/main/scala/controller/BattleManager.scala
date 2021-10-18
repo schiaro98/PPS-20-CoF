@@ -70,10 +70,10 @@ object BattleManager {
       )
 
       if (Probability(probabilities.map(a => a.probability).sum / probabilities.length).calculate) {
-        logger.info("Attacking animal: " + attacker + "has won")
+        logger.info("Attacking animal: " + attacker.name + " has won against " + defender.name)
         defender.die()
       } else {
-        logger.info("Defending animal: " + defender + "has won")
+        logger.info("Defending animal: " + defender.name + " has won against "  + attacker.name)
         attacker.die()
       }
     }
