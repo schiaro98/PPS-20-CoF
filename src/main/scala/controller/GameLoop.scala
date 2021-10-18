@@ -8,11 +8,10 @@ import view.{SimulationGui, SimulationPanel}
  * [[Runnable]] used to start the simulation, it contains the game loop which must be executed in a new thread.
  *
  * @param population all the [[Species]] with the number of animals to create at the beginning of the simulation.
- * @param habitat the [[Habitat]] where the simulation takes place.
+ * @param habitat    the [[Habitat]] where the simulation takes place.
  */
 case class GameLoop(population: Map[Species, Int], habitat: Habitat) extends Runnable {
 
-  var foodInMap: Seq[FoodInstance] = Seq.empty //TODO da prendere da resource manager
   var animalsInMap: Seq[Animal] = AnimalUtils.generateInitialAnimals(population, habitat)
 
   /**
@@ -21,21 +20,23 @@ case class GameLoop(population: Map[Species, Int], habitat: Habitat) extends Run
    */
   override def run(): Unit = {
     val shapePanel = new SimulationPanel(habitat.dimensions._1, habitat.dimensions._2)
-    val simulationGui = new SimulationGui(habitat, shapePanel) { top.visible = true }
-    var resourceManager = ResourceManager(habitat)
+    val simulationGui = new SimulationGui(habitat, shapePanel) {
+      top.visible = true
+    }
+    var resourceManager = ResourceManager(habitat, Constants.FoodsFilePath)
 
 
-    simulationGui.updatePanel(animalsInMap, foodInMap)
+    simulationGui.updatePanel(animalsInMap, resourceManager.foodInstances)
     var previous: Long = System.currentTimeMillis()
 
     while (animalsInMap.lengthIs > 0) { //TODO pausa come fermare il gioco senza sprecare cpu?
       val current: Long = System.currentTimeMillis()
 
-      val destinationManager: DestinationManager = DestinationManager(animalsInMap, foodInMap, habitat)
+      val destinationManager: DestinationManager = DestinationManager(animalsInMap, resourceManager.foodInstances, habitat)
       val destinations: Map[Animal, Point] = destinationManager.calculateDestination()
 
       val shiftManager = ShiftManager(habitat, destinations)
-      val feedManager = FeedManager(animalsInMap, foodInMap)
+      val feedManager = FeedManager(animalsInMap, resourceManager.foodInstances)
       shiftManager.walk()
       animalsInMap = shiftManager.animals.toSeq
       val res = feedManager.consumeResources()
@@ -49,9 +50,9 @@ case class GameLoop(population: Map[Species, Int], habitat: Habitat) extends Run
       animalsInMap = battleManager.getAnimals
       //Calcolo eventi inaspettati
 
-      simulationGui.updatePanel(animalsInMap, foodInMap)
+      simulationGui.updatePanel(animalsInMap, resourceManager.foodInstances)
 
-      resourceManager = resourceManager.grow() //TODO togliere foodinmap?
+      resourceManager = resourceManager.grow()
 
       simulationGui.updateElapsedTime()
       //Contatore epoche che passano
