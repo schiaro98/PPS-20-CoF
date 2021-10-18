@@ -26,10 +26,10 @@ sealed trait ResourceManager {
 
   /**
    *
-   * @param fi adds the [[Seq]] of [[FoodInstance]] to the [[ResourceManager]]
+   * @param fi replace the [[Seq]] of [[FoodInstance]] to the [[ResourceManager]]
    * @return the updated [[ResourceManager]]
    */
-  def addAll(fi: FoodInstances): ResourceManager
+  def foodInstances_(fi: FoodInstances): ResourceManager
 
   /**
    *
@@ -140,7 +140,7 @@ object ResourceManager {
       else _fillHabitat(this)
     }
 
-    override def addAll(fi: FoodInstances): ResourceManager =
-      ResourceManager(habitat, foods, fi ++ foodInstances)
+    override def foodInstances_(fi: FoodInstances): ResourceManager =
+      ResourceManager(habitat, foods, fi)
   }
 }
