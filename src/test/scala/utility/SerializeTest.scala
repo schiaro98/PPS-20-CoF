@@ -12,6 +12,7 @@ class SerializeTest extends AnyFunSuite{
 
   val defaultSerializer: Serializer = Serializer(DefaultSerializer)
   val speciesSerializer: Serializer = Serializer(OfSpecies)
+  val foodSerializer: Serializer = Serializer(OfFood)
   case class Car(brand: String, doors:Int)
 
   val car: Car = Car("Rover", 5)
@@ -73,9 +74,24 @@ class SerializeTest extends AnyFunSuite{
     assert(json == "{\n  \"color\": {\n    \"value\": -65536,\n    \"falpha\": 0.0\n  },\n  \"name\": \"dog\",\n  \"size\": \"Small\",\n  \"strength\": 100,\n  \"sight\": 10,\n  \"alimentationType\": \"Carnivore\"\n}{\n  \"color\": {\n    \"value\": -16776961,\n    \"falpha\": 0.0\n  },\n  \"name\": \"cat\",\n  \"size\": \"Small\",\n  \"strength\": 80,\n  \"sight\": 60,\n  \"alimentationType\": \"Carnivore\"\n}{\n  \"color\": {\n    \"value\": -16711936,\n    \"falpha\": 0.0\n  },\n  \"name\": \"cow\",\n  \"size\": \"Medium\",\n  \"strength\": 40,\n  \"sight\": 50,\n  \"alimentationType\": \"Carnivore\"\n}")
   }
 
-  test("Test serialize many from file for Species"){
+  test("Test deserialize many from file for Species"){
     val fileName = "speciesSerializerTest.txt"
     val species = speciesSerializer.deserializeManyFromFile(fileName)(classOf[Species])
     assert(species.lengthIs == 3)
   }
+
+  test("Test serialize many to file for Food"){
+    val fileName = "foodSerializer.txt"
+    foodSerializer.serializeManyToFile(Seq(Food(Color.green, 10, VegetableType), Food(Color.green, 20, VegetableType), Food(Color.ORANGE, 15, VegetableType)))(fileName)
+    val path = Path.of("res"+File.separator+"serialization"+File.separator+fileName)
+    val json = Files.readString(path, StandardCharsets.UTF_8)
+    assert(json == "{\"color\":{\"value\":-16711936,\"falpha\":0.0},\"energy\":10,\"foodType\":\"VegetableType\"}{\"color\":{\"value\":-16711936,\"falpha\":0.0},\"energy\":20,\"foodType\":\"VegetableType\"}{\"color\":{\"value\":-14336,\"falpha\":0.0},\"energy\":15,\"foodType\":\"VegetableType\"}")
+  }
+
+  test("Test deserialize many from file for Food"){
+    val fileName = "foodSerializer.txt"
+    val foods = foodSerializer.deserializeManyFromFile(fileName)(classOf[Food])
+    assert(foods.lengthIs == 3)
+  }
+
 }

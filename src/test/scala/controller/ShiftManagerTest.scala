@@ -92,34 +92,34 @@ class ShiftManagerTest extends AnyFunSuite {
       val dest2 = getLegalRandomPoint(ourHabitat)
       val dest3 = getLegalRandomPoint(ourHabitat)
       val dest4 = getLegalRandomPoint(ourHabitat)
+
       val sm: ShiftManager = ShiftManager(ourHabitat,(tiger, dest1), (elephant, dest2), (dog, dest3), (cat, dest4))
       for (_ <- 0 to 100) {
-        sm.walk()
+        require(sm.animals.size == 4)
         sm.animals.foreach(animal => require(ourHabitat.areas.filterNot(a => a.areaType == Fertile).count(a => a.contains(animal.position)) == 0))
       }
       sm.animals.foreach(animal => assert(ourHabitat.areas.filterNot(a => a.areaType == Fertile).count(a => a.contains(animal.position)) == 0))
     }
   }
 
-  //TODO se lancio tutti i test insieme questo va in loop
-//  test("Multiple animals may arrive at different random destinations in Random Habitat") {
-//    val randHabitat = Habitat(RandomHabitatType,Probability(0), (500,500), Seq.empty)
-//    val dest1 = getLegalRandomPoint(randHabitat) //TODO usare Point.getRandomPoint(...)
-//    val dest2 = getLegalRandomPoint(randHabitat)
-//    val dest3 = getLegalRandomPoint(randHabitat)
-//    val dest4 = getLegalRandomPoint(randHabitat)
-//    val tiger: Animal = Animal(Species("tiger", Medium, 10, 10, Herbivore), getLegalRandomPoint(randHabitat))
-//    val elephant: Animal = Animal(Species( "elephant", Medium, 10, 10, Herbivore), getLegalRandomPoint(randHabitat))
-//    val dog: Animal = Animal(Species( "dog", Medium, 20, 20, Carnivore ), getLegalRandomPoint(randHabitat))
-//    val cat: Animal = Animal(Species( "cat", Small, 15, 10, Carnivore), getLegalRandomPoint(randHabitat))
-//    val destinations = Set(dest1, dest2, dest3, dest4)
-//    val sm: ShiftManager = ShiftManager(randHabitat,(tiger, dest1), (elephant, dest2), (dog, dest3), (cat, dest4))
-//    while(sm.animals.count(a => destinations.contains(a.position)) < sm.animals.size - sm.animals.size/2){
-//      sm.walk()
-//      sm.animals.foreach(animal => require(randHabitat.areas.filterNot(a => a.areaType == Fertile).count(a => a.contains(animal.position)) == 0))
-//    }
-//    assert(sm.animals.count(a => destinations.contains(a.position)) == sm.animals.size)
-//  }
+  test("Multiple animals may arrive at different random destinations in Random Habitat") {
+    val randHabitat = Habitat(RandomHabitatType,Probability(0), (500,500), Seq.empty)
+    val dest1 = getLegalRandomPoint(randHabitat) //TODO usare Point.getRandomPoint(...)
+    val dest2 = getLegalRandomPoint(randHabitat)
+    val dest3 = getLegalRandomPoint(randHabitat)
+    val dest4 = getLegalRandomPoint(randHabitat)
+    val tiger: Animal = Animal(Species("tiger", Medium, 10, 10, Herbivore), getLegalRandomPoint(randHabitat))
+    val elephant: Animal = Animal(Species( "elephant", Medium, 10, 10, Herbivore), getLegalRandomPoint(randHabitat))
+    val dog: Animal = Animal(Species( "dog", Medium, 20, 20, Carnivore ), getLegalRandomPoint(randHabitat))
+    val cat: Animal = Animal(Species( "cat", Small, 15, 10, Carnivore), getLegalRandomPoint(randHabitat))
+    val destinations = Set(dest1, dest2, dest3, dest4)
+    val sm: ShiftManager = ShiftManager(randHabitat,(tiger, dest1), (elephant, dest2), (dog, dest3), (cat, dest4))
+    while(sm.animals.count(a => destinations.contains(a.position)) < sm.animals.size - sm.animals.size/2){
+      sm.walk()
+      sm.animals.foreach(animal => require(randHabitat.areas.filterNot(a => a.areaType == Fertile).count(a => a.contains(animal.position)) == 0))
+    }
+    assert(sm.animals.count(a => destinations.contains(a.position)) == sm.animals.size)
+  }
 
   test("Destination is inside non walkable area"){
     val area = Area(Water, RectangleArea(Point(15, 15), Point(50,50)))

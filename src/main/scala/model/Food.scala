@@ -1,17 +1,19 @@
 package model
 
 import java.awt.Color
-// TODO: we could add to Food a maxQuantity so that when we create a new FoodInstance we can use a random from 1 to maxQuantity
-// TODO: add name to Food?
+
+sealed trait FoodType
+case object MeatType extends FoodType
+case object VegetableType extends FoodType
 
 /**
  * Trait that represent a food.
  */
 trait Food extends Visualizable {
   val energy: Int
+  val foodType: FoodType
 }
 
-// TODO: add type on food that says if it is vegetable or meat, rifare serializzatore
 /**
  * Object that represent the a food.
  */
@@ -23,9 +25,12 @@ object Food {
    * @param energy the health it returns to an animal.
    * @return an implementation of Food.
    */
-  def apply(color: Color, energy: Int): Food =
-    FoodImpl(color, energy)
+  def apply(color: Color, energy: Int, foodType: FoodType): Food =
+    FoodImpl(color, energy, foodType)
 
   private case class FoodImpl(override val color: Color,
-                              override val energy: Int) extends Food
+                              override val energy: Int,
+                              override val foodType: FoodType,
+                             ) extends Food {
+  }
 }

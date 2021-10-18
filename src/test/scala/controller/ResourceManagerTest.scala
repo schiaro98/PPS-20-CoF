@@ -21,6 +21,8 @@ class ResourceManagerTest extends AnyFunSuite{
 
   val habitat: Habitat = Habitat( Probability(30), (100, 100), Seq(fertileArea, waterArea, rockArea, volcanoArea, area))
 
+  val foods = Set(Food(color, 5, VegetableType), Food(color, 10, VegetableType), Food(color, 15, VegetableType), Food(color, 50, VegetableType))
+
   test("ResourceManager grow() with no growable foods"){
     val resMan = ResourceManager(habitat)
 
@@ -29,28 +31,28 @@ class ResourceManagerTest extends AnyFunSuite{
   }
 
   test("ResourceManager grow()"){
-    val resMan = ResourceManager(habitat, Set(Food(color, 5), Food(color, 10), Food(color, 15), Food(color, 50)))
+    val resMan = ResourceManager(habitat, foods)
     val newResMan = resMan.grow()
     assert(newResMan.foodInstances.nonEmpty)
   }
 
   test("ResourceManager import food from non existing file"){
-    val resMan = ResourceManager(habitat, Set(Food(color, 5), Food(color, 10), Food(color, 15), Food(color, 50)))
+    val resMan = ResourceManager(habitat, foods)
     assertThrows[NoSuchFileException](resMan.importFoodsFromFile("absolutelyNonExistingFileMadeUpOnlyForThisTest.txtxtxt"))
   }
 
   test("ResourceManager write food to file"){
-    val resMan = ResourceManager(habitat, Set(Food(color, 5), Food(color, 10), Food(color, 15), Food(color, 50)))
+    val resMan = ResourceManager(habitat, foods)
     resMan.writeFoodsToFile(Constants.FoodsFilePath)
     val path = Path.of("res"+File.separator+"serialization"+File.separator+Constants.FoodsFilePath)
     val json = Files.readString(path, StandardCharsets.UTF_8)
-    assert(json == "{\"color\":{\"value\":-16777216,\"falpha\":0.0},\"energy\":5}{\"color\":{\"value\":-16777216,\"falpha\":0.0},\"energy\":10}{\"color\":{\"value\":-16777216,\"falpha\":0.0},\"energy\":15}{\"color\":{\"value\":-16777216,\"falpha\":0.0},\"energy\":50}")
+    assert(json == "{\"color\":{\"value\":-16777216,\"falpha\":0.0},\"energy\":5,\"foodType\":\"VegetableType\"}{\"color\":{\"value\":-16777216,\"falpha\":0.0},\"energy\":10,\"foodType\":\"VegetableType\"}{\"color\":{\"value\":-16777216,\"falpha\":0.0},\"energy\":15,\"foodType\":\"VegetableType\"}{\"color\":{\"value\":-16777216,\"falpha\":0.0},\"energy\":50,\"foodType\":\"VegetableType\"}")
   }
 
   test("ResourceManager import food from file"){
     val resMan = ResourceManager(habitat)
     val newResMan = resMan.importFoodsFromFile(Constants.FoodsFilePath)
-    assert(newResMan.growableFoods.nonEmpty)
+    assert(newResMan.foods.nonEmpty)
   }
 
 

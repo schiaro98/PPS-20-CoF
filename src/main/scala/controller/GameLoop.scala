@@ -54,12 +54,6 @@ case class GameLoop(population: Map[Species, Int], habitat: Habitat) extends Run
 
 
 
-      // ---- solo per vedere che la gui cambia-----------------------------------|
-//      animalsInMap = Seq.empty //                                                 |
-//      animalsInMap = AnimalUtils.generateInitialAnimals(population, habitat) //   |                                      |
-      // ---- solo per vedere che la gui cambia-----------------------------------|
-
-
 
       //Contatore epoche che passano
       waitForNextFrame(current)

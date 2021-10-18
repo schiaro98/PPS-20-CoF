@@ -10,7 +10,7 @@ class VisualizableTest extends AnyFunSuite {
   val color: Color = Color.black
 
   test("A visualizable must provide an image") {
-    val v: Visualizable = Food(color, 0)
+    val v: Visualizable = Food(color, 0, VegetableType)
     assert(color == v.color)
   }
 

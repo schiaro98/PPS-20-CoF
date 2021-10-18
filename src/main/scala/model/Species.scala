@@ -26,7 +26,6 @@ trait Species extends Visualizable {
   val strength: Int
   val sight: Int
   val alimentationType: Type
-  //todo inserire la velocità?
 }
 
 /**

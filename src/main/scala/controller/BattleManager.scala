@@ -10,8 +10,17 @@ Vedere se conviene/è fattibile
  */
 sealed trait BattleManager {
 
+  /**
+   * For every animal that is able to see other animals, execute battles
+   * @return the Meat that can be released during the battles
+   */
   def battle(): Seq[Meat]
 
+  /**
+   * Return a sequence of pairs of [[Animal]], the presence in this list means that animal 1 can see animal 2
+   * @param seqOfAnimals list of animals to be checked
+   * @return a sequence of pairs of animals that can see other animals
+   */
   def visibleAnimals(seqOfAnimals: Seq[Animal]): Seq[(Animal, Animal)]
 }
 
@@ -70,7 +79,7 @@ object BattleManager {
     }
 
     /**
-     * Given a probability, it increase if the defending animal is fast (deducted by it's size) and far away. But it can
+     * Given a [[Probability]], it increase if the defending animal is fast (deducted by it's size) and far away. But it can
      * increase if the attacking animal is near or fast
      *
      * @param attacker attacking animal
@@ -94,7 +103,7 @@ object BattleManager {
     }
 
     /**
-     * Given a probability, it decrease if the defending animal is stronger.
+     * Given a [[Probability]], it decrease if the defending animal is stronger.
      *
      * @param attacker attacking animal
      * @param defender defending animal
@@ -111,7 +120,7 @@ object BattleManager {
     }
 
     /**
-     * Calculate the probability that animal 1, attacker wins, given only the two sizes
+     * Calculate the [[Probability]] that animal 1, attacker wins, given only the two sizes
      *
      * @param attacker animal who figth
      * @param defender animal who has been figthed
@@ -139,6 +148,11 @@ object BattleManager {
       probability
     }
 
+    /**
+     * Check the alimentation type of given [[Animal]]
+     * @param animal to be checked
+     * @return true if the animal is Carnivorous
+     */
      def isCarnivorous(animal: Animal): Boolean = animal.alimentationType == Carnivore
   }
 }
