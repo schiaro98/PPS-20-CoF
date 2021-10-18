@@ -42,9 +42,9 @@ case class GameLoop(population: Map[Species, Int], habitat: Habitat) extends Run
 
       val battleManager: BattleManager = BattleManager(animalsInMap)
 
-      //resourceManager.takeInput(battleManager.battle()
+      resourceManager =  resourceManager.foodInstances_(battleManager.battle())
+
       animalsInMap = battleManager.getAnimals
-      //Resource manager dovrebbe prendere in input la carne risultando dal battleManager
 
       //Calcolo eventi inaspettati
 

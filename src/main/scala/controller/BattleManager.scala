@@ -9,7 +9,7 @@ sealed trait BattleManager {
    * For every animal that is able to see other animals, execute battles
    * @return the Meat that can be released during the battles
    */
-  def battle(): (Seq[Meat], Seq[Animal])
+  def battle(): Seq[Meat]
 
   /**
    * Return a sequence of pairs of [[Animal]], the presence in this list means that animal 1 can see animal 2
@@ -19,7 +19,7 @@ sealed trait BattleManager {
   def visibleAnimals(seqOfAnimals: Seq[Animal]): Seq[(Animal, Animal)]
 
   /**
-   * @return the animals in the shiftManager
+   * Return alive animals
    */
   def getAnimals: Seq[Animal]
 }
@@ -32,11 +32,11 @@ object BattleManager {
     private val logger = Logger
     private var animalKilled : List[Animal] = List.empty
 
-    override def battle(): (Seq[Meat], Seq[Animal]) = {
-      (visibleAnimals(animals)
+
+    override def battle(): Seq[Meat] = {
+      visibleAnimals(animals)
         .filter(couple => isCarnivorous(couple._1))
-        .map(couple => startBattle(couple._1, couple._2)),
-        animals diff animalKilled)
+        .map(couple => startBattle(couple._1, couple._2))
     }
 
     /**
@@ -162,6 +162,6 @@ object BattleManager {
     /**
      * @return the animals in the shiftManager
      */
-    override def getAnimals: Seq[Animal] = animals
+    override def getAnimals: Seq[Animal] = animals diff animalKilled
   }
 }
