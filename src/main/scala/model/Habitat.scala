@@ -94,7 +94,6 @@ object Habitat {
     Random.shuffle(choices).head
   }
 
-  // TODO: Refactor createRandomAreas 
   /**
    * This method create an habitat, of given dimension, with diven areas, arranged in a randow way
    *
