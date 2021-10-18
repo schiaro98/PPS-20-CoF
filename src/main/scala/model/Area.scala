@@ -78,10 +78,10 @@ sealed trait GrowFood {
   // TODO: make it return a food (possibly from foods if the probability is true
 
   /**
-   * If
+   * todo spiegazione
    *
    * @param food the [[Food]] that can grow.
-   * @return an optional of [[FoodInstance]]
+   * @return an optional of [[FoodInstance]].
    */
   def growFood(food: Option[Food]): Option[FoodInstance]
 }
