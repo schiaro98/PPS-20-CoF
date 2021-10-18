@@ -3,6 +3,7 @@ package controller
 import model._
 import utility.Constants
 
+import scala.+:
 import scala.annotation.tailrec
 
 
@@ -24,37 +25,43 @@ sealed trait FeedManager {
 object FeedManager {
   def apply(animals: Seq[Animal], resources: Seq[FoodInstance]): FeedManager = SimpleFeedManager(animals, resources)
 
-
   private case class SimpleFeedManager(animals: Seq[Animal], resources: Seq[FoodInstance]) extends FeedManager {
-
 
     override def consumeResources(): (Seq[Animal], Seq[FoodInstance]) = {
       @tailrec
       def _consumeResources(animals: Seq[Animal],
                             remainingFood: Seq[FoodInstance] = Seq.empty,
                             updatedAnimals: Seq[Animal] = Seq.empty) : (Seq[Animal], Seq[FoodInstance]) = animals match {
-        case h +: t =>
-          val nearestResources = resources
-            .filter(food => food.position.distance(h.position) < Constants.hitbox)
-            .minByOption(food => food.position.distance(h.position))
+        case h :: t =>
 
-          if(nearestResources.isDefined) {
-            nearestResources.get match {
-              case x: FoodInstance if x.foodType == Meat && h.alimentationType == Carnivore ||
-                x.foodType == Vegetable && h.alimentationType == Herbivore =>
+          val nearestResource = resources
+            .filter(_.position.distance(h.position) < Constants.hitbox)
+            .minByOption(_.position.distance(h.position))
+
+          if(nearestResource.isDefined) {
+            nearestResource.get match {
+              case x: FoodInstance if x.foodType == Meat && h.alimentationType == Carnivore || x.foodType == Vegetable && h.alimentationType == Herbivore =>
                 val res = h.eat(x)
-                if(res._2.isDefined)
-                  _consumeResources(t, remainingFood :+ res._2.get, updatedAnimals :+ res._1)
-                else
-                  _consumeResources(t, remainingFood, updatedAnimals :+ res._1)
+                if(res._2.isDefined) {
+                  //IL cibo non è stato completamente mangiato, lo devo reinserire tra i disponibili
+                  val remainedFood: FoodInstance = res._2.get
+                  println(remainingFood)
+                  println(Seq(x))
+                  println((remainingFood diff Seq(x)))
+                  println( (remainingFood diff Seq(x)) :+ remainedFood )
+                  _consumeResources(t, (remainingFood diff Seq(x)) :+ remainedFood , updatedAnimals :+ res._1)
+                } else {
+                  //Il cibo è stato completamente mangiato
+                  _consumeResources(t, remainingFood diff Seq(x), updatedAnimals :+ res._1)
+                }
               case _ => throw new IllegalArgumentException("FeedManager error")
             }
           } else {
-            _consumeResources(t, remainingFood, updatedAnimals)
+            _consumeResources(t, remainingFood, updatedAnimals :+ h)
           }
         case _ => (updatedAnimals, remainingFood)
       }
-      _consumeResources(animals)
+      _consumeResources(animals, resources)
     }
 
     /**
