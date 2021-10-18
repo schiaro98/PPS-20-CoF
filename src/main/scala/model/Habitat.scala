@@ -14,7 +14,10 @@ case object SimpleHabitatType extends HabitatType
 case object RandomHabitatType extends HabitatType
 case object GridHabitatType extends HabitatType
 
-//todo scaladoc
+/**
+ * Trait that rappresent an habitat
+ * TODO completare
+ */
 trait Habitat {
   val unexpectedEvents: Probability
   val dimensions: (Int, Int)
