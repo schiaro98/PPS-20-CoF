@@ -21,6 +21,8 @@ sealed trait ResourceManager {
    */
   def foodInstances: FoodInstances
 
+  def foodInstances_(fi:FoodInstances) : ResourceManager
+
   /**
    *
    * @return the Set of foods that the [ResourceManager] can grow
@@ -112,5 +114,8 @@ object ResourceManager {
         .count(_.fertility == Probability(0)) == habitat.areas.count(_.areaType==Fertile))  this
       else _fillHabitat(this)
     }
+
+    override def foodInstances_(fi: FoodInstances) : ResourceManager =
+      ResourceManager(habitat, foods, fi ++ foodInstances)
   }
 }
