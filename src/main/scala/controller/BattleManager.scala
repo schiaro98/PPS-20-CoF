@@ -9,7 +9,7 @@ sealed trait BattleManager {
    * For every animal that is able to see other animals, execute battles
    * @return the Meat that can be released during the battles
    */
-  def battle(): Seq[Meat]
+  def battle(): (Seq[Meat], Seq[Animal])
 
   /**
    * Return a sequence of pairs of [[Animal]], the presence in this list means that animal 1 can see animal 2
@@ -17,6 +17,11 @@ sealed trait BattleManager {
    * @return a sequence of pairs of animals that can see other animals
    */
   def visibleAnimals(seqOfAnimals: Seq[Animal]): Seq[(Animal, Animal)]
+
+  /**
+   * @return the animals in the shiftManager
+   */
+  def getAnimals: Seq[Animal]
 }
 
 object BattleManager {
@@ -25,11 +30,13 @@ object BattleManager {
 
   private case class SimpleBattleManager(animals: Seq[Animal]) extends BattleManager {
     private val logger = Logger
+    private var animalKilled : List[Animal] = List.empty
 
-    override def battle(): Seq[Meat] = {
-      visibleAnimals(animals)
+    override def battle(): (Seq[Meat], Seq[Animal]) = {
+      (visibleAnimals(animals)
         .filter(couple => isCarnivorous(couple._1))
-        .map(couple => startBattle(couple._1, couple._2))
+        .map(couple => startBattle(couple._1, couple._2)),
+        animals diff animalKilled)
     }
 
     /**
@@ -66,9 +73,11 @@ object BattleManager {
 
       if (Probability(probabilities.map(a => a.probability).sum / probabilities.length).calculate) {
         logger.info("Attacking animal: " + attacker.name + " has won against " + defender.name)
+        animalKilled = animalKilled :+ defender
         defender.die()
       } else {
         logger.info("Defending animal: " + defender.name + " has won against "  + attacker.name)
+        animalKilled = animalKilled :+ attacker
         attacker.die()
       }
     }
@@ -149,5 +158,10 @@ object BattleManager {
      * @return true if the animal is Carnivorous
      */
      def isCarnivorous(animal: Animal): Boolean = animal.alimentationType == Carnivore
+
+    /**
+     * @return the animals in the shiftManager
+     */
+    override def getAnimals: Seq[Animal] = animals
   }
 }
