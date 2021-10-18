@@ -93,9 +93,10 @@ class ShiftManagerTest extends AnyFunSuite {
       val dest2 = getLegalRandomPoint(ourHabitat)
       val dest3 = getLegalRandomPoint(ourHabitat)
       val dest4 = getLegalRandomPoint(ourHabitat)
+
       val sm: ShiftManager = ShiftManager(ourHabitat,(tiger, dest1), (elephant, dest2), (dog, dest3), (cat, dest4))
       for (_ <- 0 to 100) {
-        sm.walk()
+        require(sm.animals.size == 4)
         sm.animals.foreach(animal => require(ourHabitat.areas.filterNot(a => a.areaType == Fertile).count(a => a.contains(animal.position)) == 0))
       }
       sm.animals.foreach(animal => assert(ourHabitat.areas.filterNot(a => a.areaType == Fertile).count(a => a.contains(animal.position)) == 0))

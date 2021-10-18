@@ -44,13 +44,15 @@ object ShiftManager {
 
     animalsDestinations.keySet.foreach(animal => require(nonWalkableAreas.count(a => a.contains(animal.position)) == 0))
     private var mySupportAnimalsDestinations: ParMap[Animal, Seq[Point]] = initWalks(animalsDestinations.keySet.toSeq)
+    println("support", mySupportAnimalsDestinations)
 
     override def animals: Set[Animal] = mySupportAnimalsDestinations.keySet.to(Set)
 
     override def walk(): Unit =
-      mySupportAnimalsDestinations =
+    mySupportAnimalsDestinations =
         mySupportAnimalsDestinations.filter(t => t._2.nonEmpty).map(t => t._1.shift(t._2.head) -> t._2.tail) ++
           mySupportAnimalsDestinations.filterNot(t => t._2.nonEmpty)
+
 
 
     /**
@@ -62,7 +64,7 @@ object ShiftManager {
     private def initWalks(animals: Seq[Animal]): ParMap[Animal, Seq[Point]] = {
       @tailrec
       def _initWalks(animals: Seq[Animal], map: Map[Animal, Seq[Point]] = Map.empty): ParMap[Animal, Seq[Point]] = animals match {
-        case h +: t => _initWalks(t, Map(h -> createPath(h, animalsDestinations(h))))
+        case h +: t => _initWalks(t,map ++ Map(h -> createPath(h, animalsDestinations(h))))
         case _ => map.par
       }
 
