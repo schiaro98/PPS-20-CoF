@@ -27,7 +27,10 @@ object Constants {
 
   // ------- Animal -------
   val MaxHealth = 300
+  val healthDecrease = 15
+
   val MaxThirst = 100
+  val thirstDecrease = 5
 
   val QuantityForBig = 8
   val QuantityForMedium = 5

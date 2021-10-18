@@ -7,6 +7,7 @@ sealed trait FeedManager {
 
   /**
    * Consume the nearest resource of the animal in the map
+   * It manage also the decrease of health and thirst
    * @return a pair of the sequence of the animals updated and of the food still eatable
    */
   def consumeResources(): (Seq[Animal], Seq[FoodInstance])
@@ -28,6 +29,14 @@ object FeedManager {
           case x: Vegetable if animal.alimentationType == Herbivore => results +: Seq(animal.eat(x))
           case _ =>
         }
+      })
+
+      results._1.map(animal => {
+        animal.update(
+            health = animal.health - Constants.healthDecrease,
+            thirst = animal.thirst - Constants.thirstDecrease,
+          position = animal.position
+        )
       })
       results
     }
