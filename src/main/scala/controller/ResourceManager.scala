@@ -25,7 +25,7 @@ sealed trait ResourceManager {
    *
    * @return the Set of foods that the [ResourceManager] can grow
    */
-  def growableFoods: Set[Food]
+  def foods: Set[Food]
 
   /**
    *
@@ -59,20 +59,20 @@ object ResourceManager {
 
   def apply(habitat: Habitat,
             growableFoods: Set[Food] = Set.empty[Food],
-            foods: FoodInstances = Seq.empty[FoodInstance],
-           ): ResourceManager = new ResourceManagerImpl(habitat, growableFoods, foods)
+            foodInstances: FoodInstances = Seq.empty[FoodInstance],
+           ): ResourceManager = new ResourceManagerImpl(habitat, growableFoods, foodInstances)
 
   def apply(habitat: Habitat, fileName: String): ResourceManager =
     new ResourceManagerImpl(habitat, Set.empty[Food], Seq.empty[FoodInstance]).importFoodsFromFile(fileName)
 
   private class ResourceManagerImpl(val habitat: Habitat,
-                                    val growableFoods: Set[Food],
+                                    val foods: Set[Food],
                                     val foodInstances: FoodInstances,
                                    ) extends ResourceManager {
 
     private def randomFood(): Option[Food] = {
-      if (growableFoods.nonEmpty) {
-        Some(growableFoods.toSeq(new Random().nextInt(growableFoods.size)))
+      if (foods.nonEmpty) {
+        Some(foods.toSeq(new Random().nextInt(foods.size)))
       } else None
     }
 
@@ -83,7 +83,7 @@ object ResourceManager {
         .map(_.growFood(randomFood()))
         .filter(_.isDefined)
         .map(_.get)
-      ResourceManager(habitat, growableFoods, foodInstances ++ newFoods)
+      ResourceManager(habitat, foods.filter(_.foodType==VegetableType), foodInstances ++ newFoods)
     }
 
     override def importFoodsFromFile(fileName: String): ResourceManager = {
@@ -95,7 +95,7 @@ object ResourceManager {
 
     override def writeFoodsToFile(filename: String): Unit = {
       val serializer: Serializer = Serializer(OfFood)
-      serializer.serializeManyToFile(growableFoods)(Constants.FoodsFilePath)
+      serializer.serializeManyToFile(foods)(Constants.FoodsFilePath)
     }
 
     override def fillHabitat(): ResourceManager = {

@@ -51,7 +51,7 @@ class ResourceManagerTest extends AnyFunSuite{
   test("ResourceManager import food from file"){
     val resMan = ResourceManager(habitat)
     val newResMan = resMan.importFoodsFromFile(Constants.FoodsFilePath)
-    assert(newResMan.growableFoods.nonEmpty)
+    assert(newResMan.foods.nonEmpty)
   }
 
 
