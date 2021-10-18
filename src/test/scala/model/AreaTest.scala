@@ -1,4 +1,5 @@
-import model.{Area, Fertile, GrowFood, Probability}
+package model
+
 import org.scalatest.funsuite.AnyFunSuite
 import utility.{Point, RectangleArea}
 

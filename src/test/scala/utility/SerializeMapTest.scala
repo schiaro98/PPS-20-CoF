@@ -1,6 +1,7 @@
+package utility
+
 import model._
 import org.scalatest.funsuite.AnyFunSuite
-import utility.{Constants, DefaultSerializer, OfArea, OfProbability, Point, RectangleArea, Serializer}
 
 import java.nio.charset.StandardCharsets
 import java.nio.file.{Files, Path}

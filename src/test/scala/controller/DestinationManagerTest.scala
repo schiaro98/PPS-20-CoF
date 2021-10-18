@@ -1,4 +1,5 @@
-import controller.DestinationManager
+package controller
+
 import model._
 import org.scalatest.funsuite.AnyFunSuite
 import utility.Point

@@ -1,6 +1,7 @@
+package view
+
 import model._
 import org.scalatest.funsuite.AnyFunSuite
-import view.LogicGui
 
 class LogicGuiFileTest extends AnyFunSuite {
   val mng = new LogicGui("speciesTest.txt")

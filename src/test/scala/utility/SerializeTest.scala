@@ -1,6 +1,7 @@
+package utility
+
 import model._
 import org.scalatest.funsuite.AnyFunSuite
-import utility.{DefaultSerializer, OfSpecies, Serializer}
 
 import java.awt.Color
 import java.nio.charset.StandardCharsets

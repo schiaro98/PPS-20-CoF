@@ -1,6 +1,6 @@
-import model._
+package model
+
 import org.scalatest.funsuite.AnyFunSuite
-import utility.Constants.DefaultGridSize
 import utility.{Constants, Point, RectangleArea}
 
 class HabitatTest extends AnyFunSuite{

@@ -1,4 +1,5 @@
-import model._
+package model
+
 import org.scalatest.funsuite.AnyFunSuite
 import utility.Point
 

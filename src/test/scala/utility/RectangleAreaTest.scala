@@ -1,9 +1,10 @@
+package utility
+
 import org.scalatest.funsuite.AnyFunSuite
-import utility.{Point, RectangleArea}
 
 import scala.util.Random
 
-class RectangleTest extends AnyFunSuite{
+class RectangleAreaTest extends AnyFunSuite{
 
   val testQ = 1000
 

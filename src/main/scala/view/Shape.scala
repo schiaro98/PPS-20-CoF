@@ -1,6 +1,6 @@
 package view
 
-import utility.Point
+import utility.{Point, RectangleArea}
 
 import java.awt.{Color, Graphics2D}
 
@@ -26,7 +26,7 @@ trait Shape {
  * @param bottomRight the top bottom right of the rectangle
  * @param color       the color that should be used to draw the rectangle.
  */
-class Rectangle(override val topLeft: Point, val bottomRight: Point, override val color: Color) extends Shape {
+class Rectangle(override val topLeft: Point, override val bottomRight: Point, override val color: Color) extends RectangleArea(topLeft, bottomRight) with Shape {
 
   override def draw(graphics: Graphics2D): Unit = {
     graphics.fillRect(topLeft.x, topLeft.y, bottomRight.x - topLeft.x, bottomRight.y - topLeft.y)

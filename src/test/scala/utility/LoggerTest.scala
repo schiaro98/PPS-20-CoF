@@ -1,5 +1,6 @@
+package utility
+
 import org.scalatest.funsuite.AnyFunSuite
-import utility.Logger
 
 class LoggerTest extends AnyFunSuite{
   private val logger = Logger

@@ -1,7 +1,6 @@
-import org.scalatest.funsuite.AnyFunSuite
-import utility.Point
+package utility
 
-import scala.util.Random
+import org.scalatest.funsuite.AnyFunSuite
 
 class PointTest extends AnyFunSuite{
   test("Use + on Point"){
@@ -76,7 +75,6 @@ class PointTest extends AnyFunSuite{
     assert(left.fromX(right) == 5)
     assert(right.fromX(left) == 5)
   }
-
 
   test("Find distance upon y axis"){
     val up = Point(5, 20)

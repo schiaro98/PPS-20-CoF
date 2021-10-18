@@ -1,4 +1,5 @@
-import controller.ResourceManager
+package controller
+
 import model._
 import org.scalatest.funsuite.AnyFunSuite
 import utility.{Constants, Point, RectangleArea}

@@ -1,4 +1,5 @@
-import model.Probability
+package model
+
 import org.scalatest.funsuite.AnyFunSuite
 
 class ProbabilityTest extends AnyFunSuite{
