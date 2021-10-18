@@ -41,7 +41,10 @@ case class GameLoop(population: Map[Species, Int], habitat: Habitat) extends Run
       // decrementare sete e fame da tutti gli animali
 
       val battleManager: BattleManager = BattleManager(animalsInMap)
-      battleManager.battle()
+
+      //resourceManager.takeInput(battleManager.battle()
+      animalsInMap = battleManager.getAnimals
+      //Resource manager dovrebbe prendere in input la carne risultando dal battleManager
 
       //Calcolo eventi inaspettati
 
