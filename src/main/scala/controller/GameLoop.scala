@@ -35,8 +35,7 @@ case class GameLoop(population: Map[Species, Int], habitat: Habitat) extends Run
 
       val shiftManager = ShiftManager(habitat, destinations)
       shiftManager.walk()
-      println(shiftManager.animals.size)
-      animalsInMap = shiftManager.animals.toSeq //TODO restituisce solo un animale?
+      animalsInMap = shiftManager.animals.toSeq
 
       //TODO far mangiare e bere gli animali che possono raggiungere le risorse
       // decrementare sete e fame da tutti gli animali

@@ -15,6 +15,7 @@ case object OfSpecies extends SerializerType
 case object OfFood extends SerializerType
 case object OfArea extends SerializerType
 case object OfProbability extends SerializerType
+case object OfColor extends SerializerType
 
 sealed trait Serializer {
   def serializeOne[U](obj: U): String
@@ -34,6 +35,7 @@ object Serializer {
     case OfFood => new FoodsSerializer
     case OfArea => new AreasSerializer
     case OfProbability => new ProbabilitySerializer
+    case OfColor => new ColorSerializer
   }
 
   private class SerializerImpl() extends Serializer {
@@ -77,39 +79,44 @@ object Serializer {
   }
 
   private class SpeciesSerializer extends SerializerImpl {
-      object SizeSerializer extends JsonSerializer[Size] {
-        override def serialize(src: Size, typeOfSrc: Type, context: JsonSerializationContext): JsonElement =  new JsonPrimitive(src.toString)
-      }
 
-    object TypeSerializer extends JsonSerializer[model.Type] {
-      override def serialize(src: model.Type, typeOfSrc: Type, context: JsonSerializationContext): JsonElement =  new JsonPrimitive(src.toString)
+    val colorSerializer: Serializer = Serializer(OfColor)
+
+    object SizeSerializer extends JsonSerializer[Size] {
+      override def serialize(src: Size, typeOfSrc: Type, context: JsonSerializationContext): JsonElement = new JsonPrimitive(src.toString)
     }
 
-      object SpeciesDeserializer extends JsonDeserializer[Species]{
-        override def deserialize(json: JsonElement, typeOfT: Type, context: JsonDeserializationContext): Species = {
-          val res = json match {
-            case obj: JsonObject if obj.has("size") =>
-              val sizeAsString = obj.get("size").getAsString
-              val alimentationAsString = obj.get("alimentationType").getAsString
-              val size = StringConverter.getSize(sizeAsString)
-              val alimentationType = StringConverter.getAlimentationType(alimentationAsString)
-              val name = obj.get("name").getAsString
-              val strength = obj.get("strength").getAsInt
-              val sight = obj.get("sight").getAsInt
-              val color = deserializeOne(obj.get("color").toString)(classOf[Color])
-              Species(name, size, strength, sight, alimentationType, color)
-            case _ => null
-          }
-          Option(res).getOrElse(throw new JsonParseException(s"$json can't be parsed to Species"))
-        }
-      }
+    object TypeSerializer extends JsonSerializer[model.Type] {
+      override def serialize(src: model.Type, typeOfSrc: Type, context: JsonSerializationContext): JsonElement = new JsonPrimitive(src.toString)
+    }
 
-      override val gson: Gson = new GsonBuilder().registerTypeHierarchyAdapter(classOf[Size], SizeSerializer)
-        .registerTypeHierarchyAdapter(classOf[Species], SpeciesDeserializer)
-        .registerTypeHierarchyAdapter(classOf[model.Type], TypeSerializer).setPrettyPrinting().create()
+    object SpeciesDeserializer extends JsonDeserializer[Species] {
+      override def deserialize(json: JsonElement, typeOfT: Type, context: JsonDeserializationContext): Species = {
+        val res = json match {
+          case obj: JsonObject if obj.has("size") =>
+            val sizeAsString = obj.get("size").getAsString
+            val alimentationAsString = obj.get("alimentationType").getAsString
+            val size = StringConverter.getSize(sizeAsString)
+            val alimentationType = StringConverter.getAlimentationType(alimentationAsString)
+            val name = obj.get("name").getAsString
+            val strength = obj.get("strength").getAsInt
+            val sight = obj.get("sight").getAsInt
+            val color = colorSerializer.deserializeOne(obj.get("color").toString)(classOf[Color])
+            Species(name, size, strength, sight, alimentationType, color)
+          case _ => null
+        }
+        Option(res).getOrElse(throw new JsonParseException(s"$json can't be parsed to Species"))
+      }
+    }
+
+    override val gson: Gson = new GsonBuilder().registerTypeHierarchyAdapter(classOf[Size], SizeSerializer)
+      .registerTypeHierarchyAdapter(classOf[Species], SpeciesDeserializer)
+      .registerTypeHierarchyAdapter(classOf[model.Type], TypeSerializer).setPrettyPrinting().create()
   }
 
   private class FoodsSerializer extends SerializerImpl {
+
+    val colorSerializer: Serializer = Serializer(OfColor)
 
     object FoodTypeSerializer extends JsonSerializer[model.FoodType] {
       override def serialize(src: FoodType, typeOfSrc: Type, context: JsonSerializationContext): JsonElement = new JsonPrimitive(src.toString)
@@ -120,7 +127,7 @@ object Serializer {
         val res = json match {
           case obj: JsonObject if obj.has("color") && obj.has("energy")
             && obj.has("foodType") =>
-            val color = deserializeOne(obj.get("color").toString)(classOf[Color])
+            val color = colorSerializer.deserializeOne(obj.get("color").toString)(classOf[Color])
             val energy = obj.get("energy").getAsInt
             val foodType = obj.get("foodType").getAsString
             Food(color, energy, StringConverter.getFoodType(foodType))
@@ -185,6 +192,23 @@ object Serializer {
 
     override val gson: Gson = new GsonBuilder().registerTypeHierarchyAdapter(classOf[AreaType], AreaTypeSerializer)
       .registerTypeHierarchyAdapter(classOf[Area], AreasDeserializer).setPrettyPrinting().create()
+  }
+
+  private class ColorSerializer extends SerializerImpl {
+
+    object ColorDeserializer extends JsonDeserializer[Color] {
+      override def deserialize(json: JsonElement, typeOfT: Type, context: JsonDeserializationContext): Color = {
+        val res = json match {
+          case obj: JsonObject if obj.has("value") =>
+            val value = obj.get("value").getAsInt
+            new Color(value)
+          case _ => null
+        }
+        Option(res).getOrElse(throw new JsonParseException(s"$json can't be parsed to Color"))
+      }
+    }
+
+    override val gson: Gson = new GsonBuilder().registerTypeHierarchyAdapter(classOf[Color], ColorDeserializer).create()
   }
 }
 
