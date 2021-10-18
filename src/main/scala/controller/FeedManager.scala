@@ -3,6 +3,8 @@ package controller
 import model._
 import utility.Constants
 
+import scala.annotation.tailrec
+
 
 sealed trait FeedManager {
 
@@ -28,6 +30,7 @@ object FeedManager {
 
     override def consumeResources(): (Seq[Animal], Seq[FoodInstance]) = {
 
+      @tailrec
       def _consumeResources(animals: Seq[Animal],
                             remainingFood: Seq[FoodInstance] = Seq.empty,
                             updatedAnimals: Seq[Animal] = Seq.empty) : (Seq[Animal], Seq[FoodInstance]) = animals match {
