@@ -44,7 +44,6 @@ object ShiftManager {
 
     animalsDestinations.keySet.foreach(animal => require(nonWalkableAreas.count(a => a.contains(animal.position)) == 0))
     private var mySupportAnimalsDestinations: ParMap[Animal, Seq[Point]] = initWalks(animalsDestinations.keySet.toSeq)
-    println("support", mySupportAnimalsDestinations)
 
     override def animals: Set[Animal] = mySupportAnimalsDestinations.keySet.to(Set)
 

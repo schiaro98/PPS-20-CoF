@@ -1,6 +1,6 @@
 package model
 
-import utility.{Constants, Point}
+import utility.{Constants, Logger, Point}
 import utility.Constants._
 
 import java.awt.Color
@@ -94,6 +94,7 @@ object Animal {
                                 override val thirst: Int, override val position: Point,
                                 override val alimentationType: Type) extends Animal {
 
+    private val logger = Logger
     override def canSee(element: Placeable): Boolean = this.position.distance(element.position) <= this.sight
 
     override def update(health: Int, thirst: Int, position: Point): Animal =
@@ -121,8 +122,11 @@ object Animal {
      */
     def consume(food: FoodInstance): (Animal, Option[FoodInstance]) = health match {
       case Constants.MaxHealth => (this, Some(food))
-      case _ if MaxHealth - this.health > food.energy * food.quantity => (this.update(health = health + food.energy * food.quantity), None)
+      case _ if MaxHealth - this.health > food.energy * food.quantity =>
+        logger.info(this.name + "eat some food")
+        (this.update(health = health + food.energy * food.quantity), None)
       case _ =>
+        logger.info(this.name + "eat some food")
         val foodToEat = (MaxHealth - health) / food.energy + (if (MaxHealth - health % food.energy == 0) 0 else 1)
         (this.update(health = MaxHealth), Some(food.consume(foodToEat)))
     }
