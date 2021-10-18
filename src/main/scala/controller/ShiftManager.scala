@@ -26,7 +26,7 @@ object ShiftManager {
   /**
    * The apply for [[ShiftManager]]
    *
-   * @param habitat the [[Habitat]] in which shifts occur
+   * @param habitat             the [[Habitat]] in which shifts occur
    * @param animalsDestinations a vararg of  [[(Animal, Point)]]
    * @return an Implementation of [[ShiftManager]]
    */
@@ -36,7 +36,7 @@ object ShiftManager {
   /**
    * The apply for [[ShiftManager]]
    *
-   * @param habitat the [[Habitat]] in which shifts occur
+   * @param habitat             the [[Habitat]] in which shifts occur
    * @param animalsDestinations a [[Map]] with [[Animal]] as key and the [[Point]] as destination
    * @return an Implementation of [[ShiftManager]]
    */
@@ -48,7 +48,7 @@ object ShiftManager {
 
     private val nonWalkableAreas: Seq[Area] = habitat.areas.filterNot(_.areaType == Fertile)
     //lambda returning an Int for potential shifts
-    private val randShift = (x:Int) => Random.between(Constants.MinShift, x)
+    private val randShift = (x: Int) => Random.between(Constants.MinShift, x)
 
     /**
      *
@@ -57,16 +57,16 @@ object ShiftManager {
      */
     private def isLegal(p: Point): Boolean = !nonWalkableAreas.exists(_.contains(p))
 
+    //require that on creation no animal is inside a nonWalkableArea
     animalsDestinations.keySet.foreach(animal => require(nonWalkableAreas.count(_.contains(animal.position)) == 0))
     private var mySupportAnimalsDestinations: ParMap[Animal, Seq[Point]] = initWalks(animalsDestinations.keySet.toSeq)
 
     override def animals: Set[Animal] = mySupportAnimalsDestinations.keySet.to(Set)
 
     override def walk(): Unit =
-    mySupportAnimalsDestinations =
+      mySupportAnimalsDestinations =
         mySupportAnimalsDestinations.filter(_._2.nonEmpty).map(t => t._1.shift(t._2.head) -> t._2.tail) ++
           mySupportAnimalsDestinations.filterNot(_._2.nonEmpty)
-
 
 
     /**
@@ -78,7 +78,7 @@ object ShiftManager {
     private def initWalks(animals: Seq[Animal]): ParMap[Animal, Seq[Point]] = {
       @tailrec
       def _initWalks(animals: Seq[Animal], map: Map[Animal, Seq[Point]] = Map.empty): ParMap[Animal, Seq[Point]] = animals match {
-        case h +: t => _initWalks(t,map ++ Map(h -> createPath(h, animalsDestinations(h))))
+        case h +: t => _initWalks(t, map ++ Map(h -> createPath(h, animalsDestinations(h))))
         case _ => map.par
       }
 
@@ -88,7 +88,7 @@ object ShiftManager {
     /**
      *
      * @param animal the animal from that wants to go to dest
-     * @param dest the destination point
+     * @param dest   the destination point
      * @return the Sequence of Point that the animal will do
      */
     private def createPath(animal: Animal, dest: Point): Seq[Point] = {
@@ -102,7 +102,7 @@ object ShiftManager {
         case _ =>
           val travelDistance =
             if (isCarnivore)
-            (randShift(Constants.MaxShift + Constants.IncCarnivoreVelocity),randShift(Constants.MaxShift + Constants.IncCarnivoreVelocity))
+              (randShift(Constants.MaxShift + Constants.IncCarnivoreVelocity), randShift(Constants.MaxShift + Constants.IncCarnivoreVelocity))
             else (randShift(Constants.MaxShift), randShift(Constants.MaxShift))
           val topLeft = makeInBounds(from.x - travelDistance._1, from.y - travelDistance._2)
           val bottomRight = makeInBounds(from.x + travelDistance._1, from.y + travelDistance._2)
@@ -116,7 +116,6 @@ object ShiftManager {
 
       _createPath(animal.position, dest, isCarnivore = animal.alimentationType == Carnivore)
     }
-
 
     /**
      * Make coordinates be inside of the habitat
