@@ -121,7 +121,6 @@ object Animal {
      * @return a pair that contains the animal with the health restored and the remaining food, if there is still any.
      */
     def consume(food: FoodInstance): (Animal, Option[FoodInstance]) = health match {
-      //todo se il controllo viene fatto altrove (ad es. mangi solo se hai meno salute di MaxHealth) non serve
       case Constants.MaxHealth => (this, Some(food))
       case _ if MaxHealth - this.health > food.energy * food.quantity => (this.update(health = health + food.energy * food.quantity), None)
       case _ =>

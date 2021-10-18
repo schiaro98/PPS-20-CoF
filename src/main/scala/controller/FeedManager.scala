@@ -3,9 +3,12 @@ package controller
 import model._
 import utility.Constants
 
-import scala.:+
-
 sealed trait FeedManager {
+
+  /**
+   * Consume the nearest resource of the animal in the map
+   * @return a pair of the sequence of the animals updated and of the food still eatable
+   */
   def consumeResources(): (Seq[Animal], Seq[FoodInstance])
 }
 

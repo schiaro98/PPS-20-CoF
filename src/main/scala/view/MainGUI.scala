@@ -76,7 +76,7 @@ object MainGUI {
 
         val allNames = logic.getAllSpecies.map(species => species.name)
         val deletedByGui = logic.species.keySet.map(species => species.name).toSeq
-        val cb: ComboBox[String] = new ComboBox[String](allNames diff deletedByGui) //TODO worka ma all'add da errore
+        val cb: ComboBox[String] = new ComboBox[String](allNames diff deletedByGui)
 
         val chooseButton = new Button("Add") {
           reactions += {

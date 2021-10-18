@@ -6,13 +6,13 @@ import utility.StringConverter
 import java.awt.{Color, Dimension}
 import scala.swing.BorderPanel.Position.Center
 import scala.swing._
-import scala.swing.event.ButtonClicked
+import scala.swing.event.{ButtonClicked, UIEvent}
 
 class SpeciesGui(logic: LogicGui) extends SimpleSwingApplication {
 
   def top: Frame = new Frame {
     title = "Create species"
-    preferredSize = new Dimension(350, 300)
+    preferredSize = new Dimension(700, 600)
 
     val nameLabel = new Label("Name of the species")
     val nameField = new TextField("Name")
@@ -24,6 +24,13 @@ class SpeciesGui(logic: LogicGui) extends SimpleSwingApplication {
     val sizeField = new ComboBox[String](Seq(Small.toString, Medium.toString, Big.toString))
     val typeLabel = new Label("Type of the species")
     val typeField = new ComboBox[String](Seq("Herbivore", "Carnivore"))
+    var choosedColor: Color = Color.white
+
+    val colorChooser: ColorChooser = new ColorChooser() {
+      reactions += {
+        case x: event.ColorChanged => choosedColor = x.c
+      }
+    }
 
     val confirm: Button = new Button("Confirm"){
       reactions += {
@@ -39,7 +46,7 @@ class SpeciesGui(logic: LogicGui) extends SimpleSwingApplication {
             val alimentationType = StringConverter.getAlimentationType(typeField.selection.item)
 
             val newSpecie = logic.captionSpecies(
-              new Color(0,0,0), //TODO prendere i parametri RGB da nuove caselle nella gui
+              choosedColor,
               nameField.text,
               size,
               strengthField.text,
@@ -67,7 +74,7 @@ class SpeciesGui(logic: LogicGui) extends SimpleSwingApplication {
 
     val panel: BoxPanel = new BoxPanel(Orientation.Vertical) {
       contents addAll List(nameLabel, nameField, strengthLabel, strengthField, sightLabel, sightField, sizeLabel,
-        sizeField, typeLabel, typeField, confirm, existingSpecies, removeSpecies)
+        sizeField, typeLabel, typeField,colorChooser, confirm, existingSpecies, removeSpecies)
       centerOnScreen()
     }
 
