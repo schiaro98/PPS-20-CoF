@@ -10,7 +10,7 @@ import scala.util.Random
 /**
  * The possible types of area.
  */
-sealed trait AreaType
+sealed trait AreaType //TODO fare walkable e nonWalkable
 case object Fertile extends AreaType
 case object Water extends AreaType
 case object Rock extends AreaType

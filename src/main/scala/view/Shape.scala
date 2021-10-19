@@ -5,8 +5,6 @@ import utility.RectangleArea
 
 import java.awt.{Color, Graphics2D}
 
-//TODO aggiungere gli object così da non dover usare "new" ?
-
 /**
  * Trait that represent a geometric shape that can be drawn in two dimensions
  */

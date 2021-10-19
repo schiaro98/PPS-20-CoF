@@ -90,7 +90,7 @@ object Animal {
    * @param position the location on the map, where the animal is.
    * @param health   the parameter that indicates whether the animal is healthy.
    * @param thirst   the parameter that indicates whether the animal is thirsty.
-   * @return a new implementation of Animal.
+   * @return a new implementation of [[Animal]].
    */
   def apply(s: Species, position: Point, health: Int = MaxHealth, thirst: Int = MaxThirst): Animal = AnimalImpl(
     s.color, s.name, s.size, s.strength, s.sight, health, thirst, position, s.alimentationType)

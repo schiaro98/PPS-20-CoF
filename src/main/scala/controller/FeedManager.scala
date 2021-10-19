@@ -13,11 +13,6 @@ sealed trait FeedManager {
    * @return a pair of the sequence of the animals updated and of the food still eatable
    */
   def consumeResources(): (Seq[Animal], Seq[FoodInstance])
-
-  /**
-   * Update (decrease) the current thirst and health
-   */
-  def lifeCycleUpdate(): Seq[Animal]
 }
 
 object FeedManager {
@@ -54,19 +49,6 @@ object FeedManager {
         case _ => (updatedAnimals, remainingFood)
       }
       _consumeResources(animals, resources)
-    }
-
-    /**
-     * Update (decrease) the current thirst and health
-     */
-    override def lifeCycleUpdate(): Seq[Animal] = {
-      animals.map(animal => {
-        animal.update(
-          health = animal.health - Constants.healthDecrease,
-          thirst = animal.thirst - Constants.thirstDecrease,
-          position = animal.position
-        )
-      })
     }
   }
 }

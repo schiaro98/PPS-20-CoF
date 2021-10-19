@@ -4,7 +4,7 @@ import model._
 import org.scalatest.funsuite.AnyFunSuite
 import utility.Constants
 
-class FeedManagerTest extends AnyFunSuite{
+class FeedManagerTest extends AnyFunSuite {
 
   val animalQuantity = 10
   val foodQuantity = 10
@@ -26,23 +26,11 @@ class FeedManagerTest extends AnyFunSuite{
     })
   }
 
-  test("Animal should decreas health and thirst every round"){
-    var animalsUpdated = animals
-    for (i <- 1 to 10){
-      val feedManager: FeedManager = FeedManager(animalsUpdated, foodsFar)
-      animalsUpdated = feedManager.lifeCycleUpdate()
-      animalsUpdated.foreach(animal => {
-        assert(animal.health == Constants.MaxHealth - (Constants.healthDecrease * i))
-        assert(animal.thirst == Constants.MaxThirst - (Constants.thirstDecrease * i))
-      })
-    }
-  }
-
   test("Animal should eat near food"){
       val damagedAnimals = animals.map(animal => animal.update(health = Constants.MaxHealth / 2))
       val feedManager: FeedManager = FeedManager(damagedAnimals, foodsNear)
       val result = feedManager.consumeResources()
-      val (animalsUpdated, foodsRemaining) = result
+      val (animalsUpdated, _) = result
 
       assert(animalsUpdated.length == animalQuantity)
 

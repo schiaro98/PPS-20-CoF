@@ -8,25 +8,6 @@ import model._
 object AnimalUtils {
 
   /**
-   * Method to create a number of animals for each species equal to the one in the Map.
-   *
-   * @param population all the [[Species]] with the number of animals to create at the beginning of the simulation.
-   * @param habitat the [[Habitat]] where the simulation takes place.
-   * @return the created animals.
-   */
-  def generateInitialAnimals(population: Map[Species, Int], habitat: Habitat): Seq[Animal] = {
-    var animals = Seq.empty[Animal]
-    population foreach (s => {
-      for (_ <- 1 to s._2) {
-        val point = AnimalUtils.placeAnimal(habitat, s._1)
-        val animal = Animal(s._1, point)
-        animals = animals :+ animal
-      }
-    })
-    animals
-  }
-
-  /**
    * Method used to obtain a random permissible point where is possible to create an animal of a certain species.
    *
    * @param species the [[Species]] of the animal.
