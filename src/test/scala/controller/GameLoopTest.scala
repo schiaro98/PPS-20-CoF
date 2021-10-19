@@ -28,16 +28,15 @@ class GameLoopTest extends AnyFunSuite{
 
       val feedManager = FeedManager(animalsInMap, resourceManager.foodInstances)
 
-      val remainedFood = feedManager.consumeResources()
-      animalsInMap = feedManager.lifeCycleUpdate()
+      val (animalsUpdated, foodsRemaining) = feedManager.consumeResources()
+      animalsInMap = feedManager.lifeCycleUpdate(animalsUpdated)
 
       val battleManager: BattleManager = BattleManager(animalsInMap)
       val result = battleManager.battle()
       animalsInMap = result._1
       val oldFood = resourceManager.foodInstances
-      resourceManager = resourceManager.foodInstances_(oldFood.filterNot((result._2 ++ remainedFood).contains(_)))
+      resourceManager = resourceManager.foodInstances_(oldFood.filterNot((result._2 ++ foodsRemaining).contains(_)))
 
-      animalsInMap = battleManager.getAnimals
       //TODO Calcolo eventi inaspettati
 
       resourceManager = resourceManager.grow()

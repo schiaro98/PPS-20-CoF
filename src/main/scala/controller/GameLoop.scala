@@ -1,7 +1,7 @@
 package controller
 
 import model._
-import utility.{AnimalUtils, Constants}
+import utility.{AnimalUtils, Constants, Logger}
 import view.{SimulationGui, SimulationPanel}
 
 /**
@@ -16,7 +16,7 @@ case class GameLoop(population: Map[Species, Int], habitat: Habitat) extends Run
   var isSpeedUp: Boolean = false
   var isStopped: Boolean = false
   var animalsInMap: Seq[Animal] = AnimalUtils.generateInitialAnimals(population, habitat)
-
+  private val logger = Logger
   /**
    * Method that represents the core of the simulation, defines the actions that must be
    * carried out at each unit of time.
@@ -41,14 +41,14 @@ case class GameLoop(population: Map[Species, Int], habitat: Habitat) extends Run
 
         val feedManager = FeedManager(animalsInMap, resourceManager.foodInstances, habitat)
 
-        val remainedFood = feedManager.consumeResources()
+        val feedResult = feedManager.consumeResources()
 
-        animalsInMap = feedManager.lifeCycleUpdate()
+        animalsInMap = feedManager.lifeCycleUpdate(feedResult._1)
 
         val battleManager: BattleManager = BattleManager(animalsInMap)
         val result = battleManager.battle()
 
-        resourceManager = resourceManager.foodInstances_(result._2 ++ remainedFood)
+        resourceManager = resourceManager.foodInstances_(result._2 ++ feedResult._2)
 
         animalsInMap = result._1
 
@@ -62,8 +62,7 @@ case class GameLoop(population: Map[Species, Int], habitat: Habitat) extends Run
       waitForNextStep(current)
       previous = current
     }
-
-    println("Simulation finished")
+    logger.info("Simulation finished")
     //TODO mostrare la gui con il riassunto
   }
 
