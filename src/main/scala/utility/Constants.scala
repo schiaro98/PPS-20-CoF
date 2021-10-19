@@ -58,7 +58,7 @@ object Constants {
   val OffsetX = 20
   val OffsetY = 45
 
-  val Period = 500
+  val Period = 1000
   val SpeedUpPeriod: Int = Period / 10
 
   // ------- Habitat ------

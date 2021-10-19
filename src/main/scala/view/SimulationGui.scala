@@ -3,7 +3,8 @@ package view
 import model.{Animal, FoodInstance, Habitat}
 import utility.Logger
 
-import javax.swing.WindowConstants
+import java.awt.Dimension
+import javax.swing.{ImageIcon, WindowConstants}
 import scala.swing.BorderPanel.Position._
 import scala.swing._
 import scala.swing.event.ButtonClicked
@@ -30,27 +31,32 @@ class SimulationGui(habitat: Habitat,
 
   val elapsedTimeLabel: Label = new Label("    Time elapsed:    ")
   val elapsedTimeField: TextField = new TextField(elapsedTime.toString) { editable = false }
-  val playButton: Button = new Button("▶") {
+  val playButton: Button = new Button() {
+    icon = new ImageIcon("res/images/play-button.png")
     reactions += {
       case _: ButtonClicked => setPaused(false)
     }
   }
-  val pauseButton: Button = new Button("⏸") {
+  val pauseButton: Button = new Button() {
+    icon = new ImageIcon("res/images/pause.png")
     reactions += {
       case _: ButtonClicked => setPaused(true)
     }
   }
-  val speedDownButton: Button = new Button("⏪") {
+  val speedDownButton: Button = new Button() {
+    icon = new ImageIcon("res/images/rewind.png")
     reactions += {
       case _: ButtonClicked => setSpeed(false)
     }
   }
-  val speedUpButton: Button = new Button("⏩") {
+  val speedUpButton: Button = new Button() {
+    icon = new ImageIcon("res/images/fast-forward.png")
     reactions += {
       case _: ButtonClicked => setSpeed(true)
     }
   }
-  val stopButton: Button = new Button("⏹") {
+  val stopButton: Button = new Button() {
+    icon = new ImageIcon("res/images/stop.png")
     reactions += {
       case _: ButtonClicked => stop()
     }
