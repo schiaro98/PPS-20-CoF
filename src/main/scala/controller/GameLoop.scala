@@ -20,15 +20,11 @@ case class GameLoop(population: Map[Species, Int], habitat: Habitat) extends Run
    */
   override def run(): Unit = {
     val shapePanel = new SimulationPanel(habitat.dimensions._1, habitat.dimensions._2)
-    val simulationGui = new SimulationGui(habitat, shapePanel) {
-      top.visible = true
-    }
+    val simulationGui = new SimulationGui(habitat, shapePanel) {top.visible = true}
     var resourceManager = ResourceManager(habitat, Constants.FoodsFilePath)
-
-
     simulationGui.updatePanel(animalsInMap, resourceManager.foodInstances)
-    var previous: Long = System.currentTimeMillis()
 
+    var previous: Long = System.currentTimeMillis()
     while (animalsInMap.lengthIs > 0) { //TODO pausa come fermare il gioco senza sprecare cpu?
       val current: Long = System.currentTimeMillis()
 
@@ -55,7 +51,6 @@ case class GameLoop(population: Map[Species, Int], habitat: Habitat) extends Run
       resourceManager = resourceManager.grow()
 
       simulationGui.updateElapsedTime()
-      //Contatore epoche che passano
       waitForNextFrame(current)
       previous = current
     }

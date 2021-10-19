@@ -28,10 +28,10 @@ class SimulationPanel(val width: Int, val height: Int) extends Panel {
 
   override def paint(g: Graphics2D): Unit = {
     g.clearRect(0, 0, width, height)
-    for (s <- shapes) {
+    shapes.foreach(s => {
       g.setColor(s.color)
       s.draw(g)
-    }
+    })
   }
 
   /**
@@ -39,35 +39,23 @@ class SimulationPanel(val width: Int, val height: Int) extends Panel {
    *
    * @param shape the [[Shape]] to be drawn.
    */
-  def addShape(shape: Shape): Unit = {
-    shapes.append(shape)
-  }
+  def addShape(shape: Shape): Unit = shapes.append(shape)
 
   /**
    * Method used to append a set of [[Shape]] to those to be drawn.
    *
    * @param shapesSeq the Seq of [[Shape]] to drawn.
    */
-  def addAllShapes(shapesSeq: Seq[Shape]): Unit = {
-    shapesSeq.foreach(s => addShape(s))
-  }
+  def addAllShapes(shapesSeq: Seq[Shape]): Unit = shapesSeq.foreach(s => addShape(s))
 
   /**
    * Draw all the areas present in the [[Habitat]] by creating specific rectangles.
    *
-   * @param habitat the Habitat of the simulation.
+   * @param habitat the [[Habitat]] of the simulation.
    */
   def drawHabitat(habitat: Habitat): Unit = {
+    addShape(new Rectangle(RectangleArea(Point(0, 0), Point(width, height)), Color.white))
     habitat.areas.foreach(a => addShape(new Rectangle(RectangleArea(a.area.topLeft, a.area.bottomRight), a.area.color)))
-  }
-
-  /**
-   * Draw all the food present in the map by creating specific circle.
-   *
-   * @param food the food to be drawn
-   */
-  def drawFood(food: Seq[FoodInstance]): Unit = {
-    food.foreach(f => addShape(new Circle(f.position, f.color, Constants.PixelForFood)))
   }
 
   /**
@@ -79,11 +67,31 @@ class SimulationPanel(val width: Int, val height: Int) extends Panel {
   def drawAnimals(animals: Seq[Animal]): Unit = {
     eliminateOldPopup()
     animals.foreach(a => {
-      val bottomRight = Point(a.position.x+AnimalUtils.getPixelFromSize(a), a.position.y+AnimalUtils.getPixelFromSize(a))
+      val bottomRight = Point(a.position.x + AnimalUtils.getPixelFromSize(a), a.position.y + AnimalUtils.getPixelFromSize(a))
       val rectangle = new Rectangle(RectangleArea(a.position, bottomRight), a.color)
       addShape(rectangle)
       createPopupAndMouseListener(a, rectangle)
     })
+  }
+
+  /**
+   * Draw all the food present in the map by creating specific circle.
+   *
+   * @param food a Seq of [[FoodInstance]] to draw.
+   */
+  def drawFood(food: Seq[FoodInstance]): Unit = food.foreach(f => addShape(new Circle(f.position, f.color, Constants.PixelForFood)))
+
+  /**
+   * Method to draw all the areas present in the [[Habitat]], the animals and the food.
+   *
+   * @param habitat the [[Habitat]] of the simulation.
+   * @param animals a Seq of [[Animal]] to draw.
+   * @param food    a Seq of [[FoodInstance]] to draw.
+   */
+  def drawAll(habitat: Habitat, animals: Seq[Animal], food: Seq[FoodInstance]): Unit = {
+    drawHabitat(habitat)
+    drawAnimals(animals)
+    drawFood(food)
   }
 
   /**
