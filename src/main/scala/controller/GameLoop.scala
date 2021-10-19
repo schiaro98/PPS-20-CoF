@@ -32,18 +32,27 @@ case class GameLoop(population: Map[Species, Int], habitat: Habitat) extends Run
       val destinations: Map[Animal, Point] = destinationManager.calculateDestination()
 
       val shiftManager = ShiftManager(habitat, destinations)
-      val feedManager = FeedManager(animalsInMap, resourceManager.foodInstances)
       shiftManager.walk()
       animalsInMap = shiftManager.animals.toSeq
-      val res = feedManager.consumeResources()
-      feedManager.lifeCycleUpdate()
-      animalsInMap = res._1
+
+      val feedManager = FeedManager(animalsInMap, resourceManager.foodInstances)
+
+      println("Updated animals after shiftmanager", animalsInMap.length)
+      val (_, remainedFood) = feedManager.consumeResources()
+      animalsInMap = feedManager.lifeCycleUpdate()
+
+      println("Updated animals after feedmanager" + animalsInMap.length)
 
       val battleManager: BattleManager = BattleManager(animalsInMap)
+      val battleFood = battleManager.battle()
 
-      resourceManager = resourceManager.addAll(battleManager.battle() ++ res._2)
+      resourceManager = resourceManager.foodInstances_(battleFood ++ remainedFood)
+
+      println("Updated food after feed and battle", resourceManager.foodInstances.length)
 
       animalsInMap = battleManager.getAnimals
+      println("Updated animals after battle", animalsInMap.length)
+
       //Calcolo eventi inaspettati
 
       simulationGui.updatePanel(animalsInMap, resourceManager.foodInstances)

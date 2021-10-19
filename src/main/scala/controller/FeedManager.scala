@@ -3,7 +3,6 @@ package controller
 import model._
 import utility.Constants
 
-import scala.+:
 import scala.annotation.tailrec
 
 
@@ -43,15 +42,9 @@ object FeedManager {
               case x: FoodInstance if x.foodType == Meat && h.alimentationType == Carnivore || x.foodType == Vegetable && h.alimentationType == Herbivore =>
                 val res = h.eat(x)
                 if(res._2.isDefined) {
-                  //IL cibo non è stato completamente mangiato, lo devo reinserire tra i disponibili
                   val remainedFood: FoodInstance = res._2.get
-                  println(remainingFood)
-                  println(Seq(x))
-                  println((remainingFood diff Seq(x)))
-                  println( (remainingFood diff Seq(x)) :+ remainedFood )
                   _consumeResources(t, (remainingFood diff Seq(x)) :+ remainedFood , updatedAnimals :+ res._1)
                 } else {
-                  //Il cibo è stato completamente mangiato
                   _consumeResources(t, remainingFood diff Seq(x), updatedAnimals :+ res._1)
                 }
               case _ => throw new IllegalArgumentException("FeedManager error")
