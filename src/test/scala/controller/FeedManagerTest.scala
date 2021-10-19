@@ -4,15 +4,13 @@ import model._
 import org.scalatest.funsuite.AnyFunSuite
 import utility.Constants
 
-import java.awt.Color
-
 class FeedManagerTest extends AnyFunSuite{
 
   val animalQuantity = 10
   val foodQuantity = 10
-  val animals: Seq[Animal] = Seq.fill(10)(Animal(Species("tiger", Medium, 10, 10, Carnivore, Color.WHITE), Point(0,0)))
-  val foodsFar: Seq[FoodInstance] = Seq.fill(10)(FoodInstance(Food(Color.black, 10, Meat),Point(100, 100), 1))
-  val foodsNear: Seq[FoodInstance] = Seq.fill(10)(FoodInstance(Food(Color.black, 10, Meat),Point(2, 2), 1))
+  val animals: Seq[Animal] = Seq.fill(10)(Animal(Species("tiger", Medium, 10, 10, Carnivore), Point(0,0)))
+  val foodsFar: Seq[FoodInstance] = Seq.fill(10)(FoodInstance(Food(10, Meat),Point(100, 100), 1))
+  val foodsNear: Seq[FoodInstance] = Seq.fill(10)(FoodInstance(Food(10, Meat),Point(2, 2), 1))
 
   val feedManager: FeedManager = FeedManager(animals, foodsFar)
 

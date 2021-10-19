@@ -4,14 +4,11 @@ import model._
 import org.scalatest.funsuite.AnyFunSuite
 import utility.{Constants, RectangleArea}
 
-import java.awt.Color
 import java.nio.charset.StandardCharsets
 import java.nio.file.{Files, NoSuchFileException, Path}
 import scala.reflect.io.File
 
 class ResourceManagerTest extends AnyFunSuite{
-
-  val color: Color = Color.black
 
   val fertileArea: Area = Area(Fertile, RectangleArea(Point(0,0), Point(10,10)),probability = Probability(0))
   val waterArea: Area = Area(Water, RectangleArea(Point(0, 15), Point(15,30)))
@@ -21,7 +18,7 @@ class ResourceManagerTest extends AnyFunSuite{
 
   val habitat: Habitat = Habitat( Probability(30), (100, 100), Seq(fertileArea, waterArea, rockArea, volcanoArea, area))
 
-  val foods = Set(Food(color, 5, Vegetable), Food(color, 10, Vegetable), Food(color, 15, Vegetable), Food(color, 50, Vegetable))
+  val foods = Set(Food(5, Vegetable), Food(10, Vegetable), Food(15, Vegetable), Food(50, Vegetable))
 
   test("ResourceManager grow() with no growable foods"){
     val resMan = ResourceManager(habitat)

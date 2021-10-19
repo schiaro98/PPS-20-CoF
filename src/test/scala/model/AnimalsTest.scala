@@ -1,7 +1,6 @@
 package model
 
 import org.scalatest.funsuite.AnyFunSuite
-import utility.Constants
 import utility.Constants._
 
 import java.awt.Color
@@ -28,7 +27,7 @@ class AnimalsTest extends AnyFunSuite{
 
   test("An animal that eats regains health") {
     val animal0 = a.update(MaxHealth, MaxThirst)
-    val food1 = FoodInstance(Food(Constants.DefaultColorOfMeat, 10,Meat), p, 5)
+    val food1 = FoodInstance(Food(10,Meat), p, 5)
     assert((animal0, Option(food1)) == animal0.eat(food1))
 
     val animal1 = a.update(MaxHealth - 90, MaxThirst)
@@ -36,7 +35,7 @@ class AnimalsTest extends AnyFunSuite{
     assert((MaxHealth - 40, None) == (res1._1.health, res1._2))
 
     val animal2 = a.update(MaxHealth - 90, MaxThirst)
-    val food2 = FoodInstance(Food(Constants.DefaultColorOfMeat, 12,Meat), p, 10)
+    val food2 = FoodInstance(Food(12,Meat), p, 10)
     val res2 = animal2.eat(food2)
     assert((MaxHealth, 2) == (res2._1.health, res2._2.get.quantity))
   }

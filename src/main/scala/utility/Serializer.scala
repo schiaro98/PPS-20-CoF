@@ -130,7 +130,7 @@ object Serializer {
             val color = colorSerializer.deserializeOne(obj.get("color").toString)(classOf[Color])
             val energy = obj.get("energy").getAsInt
             val foodType = obj.get("foodType").getAsString
-            Food(color, energy, StringConverter.getFoodType(foodType))
+            Food(energy, StringConverter.getFoodType(foodType), color)
           case _ => null
         }
         Option(res).getOrElse(throw new JsonParseException(s"$json can't be parsed to Food"))

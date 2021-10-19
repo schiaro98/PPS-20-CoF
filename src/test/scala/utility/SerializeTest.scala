@@ -82,7 +82,7 @@ class SerializeTest extends AnyFunSuite{
 
   test("Test serialize many to file for Food"){
     val fileName = "foodSerializer.txt"
-    foodSerializer.serializeManyToFile(Seq(Food(Color.green, 10, Vegetable), Food(Color.green, 20, Vegetable), Food(Color.ORANGE, 15, Vegetable)))(fileName)
+    foodSerializer.serializeManyToFile(Seq(Food(10, Vegetable, Color.green), Food(20, Vegetable, Color.green), Food(15, Vegetable, Color.ORANGE)))(fileName)
     val path = Path.of("res"+File.separator+"serialization"+File.separator+fileName)
     val json = Files.readString(path, StandardCharsets.UTF_8)
     assert(json == "{\"color\":{\"value\":-16711936,\"falpha\":0.0},\"energy\":10,\"foodType\":\"Vegetable\"}{\"color\":{\"value\":-16711936,\"falpha\":0.0},\"energy\":20,\"foodType\":\"Vegetable\"}{\"color\":{\"value\":-14336,\"falpha\":0.0},\"energy\":15,\"foodType\":\"Vegetable\"}")

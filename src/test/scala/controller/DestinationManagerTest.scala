@@ -11,11 +11,10 @@ class DestinationManagerTest extends AnyFunSuite {
   val herbivore2: Animal = Animal(Species("HerbivoreExample2", Medium, 10, 10, Herbivore), Point(3,3))
   val carnivore1: Animal = Animal(Species("CarnivoreExample1", Medium, 10, 10, Carnivore), Point(0,0))
   val carnivore2: Animal = Animal(Species("CarnivoreExample2", Medium, 10, 10, Carnivore), Point(3,3))
-  val carrotFood: Food = Food(Color.ORANGE, 5, Vegetable)
-  val beetFood: Food = Food(Color.PINK, 10, Vegetable)
-  val beefMeat: Food = Food(Color.red, 10, Meat)
-  val crocodileMeat: Food = Food(Color.green, 10,Meat)
-
+  val carrotFood: Food = Food(5, Vegetable, Color.ORANGE)
+  val beetFood: Food = Food(10, Vegetable, Color.PINK)
+  val beefMeat: Food = Food(10, Meat, Color.red)
+  val crocodileMeat: Food = Food(10, Meat, Color.green)
 
   val carrot: FoodInstance = FoodInstance(carrotFood, Point(1,1), 1)
   val beet: FoodInstance = FoodInstance(beetFood, Point(2,2), 1)
@@ -82,7 +81,5 @@ class DestinationManagerTest extends AnyFunSuite {
     assert(result.keySet.contains(carnivore1))
     assert(result(carnivore1) == herbivore1.position)
     assert(result(herbivore1) == carrot.position)
-
   }
-
 }

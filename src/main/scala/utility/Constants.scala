@@ -18,12 +18,11 @@ object Constants {
   // ------- Food -------
   val DefaultFoodQuantity = 10
 
-  val DefaultColorOfMeat = new Color(82,0,0)
+  val DefaultColorOfMeat = new Color(138,0,0)
   val DefaultEnergyOfMeat = 20
 
   val DefaultColorOfVegetable = new Color(0,84,11)
   val DefaultEnergyOfVegetable = 10
-
 
   // ------- Animal -------
   val MaxHealth = 300
@@ -39,15 +38,16 @@ object Constants {
   val MaxShift = 15
   val MinShift = 5
 
-  val PixelForBig = 12
-  val PixelForMedium = 9
-  val PixelForSmall = 6
+  val PixelForBig = 14
+  val PixelForMedium = 11
+  val PixelForSmall = 8
 
-  val PixelForFood = 6
+  val PixelForFood = 8
 
   val IncCarnivoreVelocity = 5
 
   val hitbox = 3
+
   // ------- Gui --------
   val DefaultSimulationDimension = new Dimension(1000, 1000)
   val MainMapDimension: (Int, Int) = (500, 500)
@@ -58,7 +58,7 @@ object Constants {
   val OffsetX = 20
   val OffsetY = 45
 
-  val Period = 3000 // 10000 = una epoca ogni 10 secondi (15 per 60fps?)
+  val Period = 500 // 10000 = una epoca ogni 10 secondi (15 per 60fps?)
 
   // ------- Habitat ------
   val DefaultRandomSize = 10
@@ -67,6 +67,7 @@ object Constants {
   val NonWalkableArea: Set[AreaType] = Set(Volcano,Rock,Water)
 
   val FoodToGrowPerFertileArea: Int = 10
+
   // ------- Various ------
   val MillisToSec = 1000
 }

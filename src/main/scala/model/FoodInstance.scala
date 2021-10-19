@@ -4,9 +4,10 @@ import java.awt.Color
 
 /**
  * Trait that represents an instance of a particular [[Food]] of which it may contain
- * a certain quantity
+ * a certain quantity.
  */
 sealed trait FoodInstance extends Food with Placeable {
+
   val quantity: Int
 
   /**
@@ -19,7 +20,20 @@ sealed trait FoodInstance extends Food with Placeable {
   def consume[F >: FoodInstance](amount: Int): F
 }
 
+/**
+ * Object that represents an instance of a particular [[Food]] of which it may contain
+ * a certain quantity.
+ */
 object FoodInstance {
+
+  /**
+   * Apply method for [[FoodInstance]].
+   *
+   * @param food     the [[Food]] to instantiate.
+   * @param position the [[Point]] where the [[Food]] is.
+   * @param quantity the quantity of [[Food]].
+   * @return an implementation of [[FoodInstance]].
+   */
   def apply(food: Food, position: Point, quantity: Int): FoodInstance =
     FoodInstanceImpl(quantity, position, food.energy, food.color, food.foodType)
 

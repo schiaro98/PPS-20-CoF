@@ -5,7 +5,6 @@ import utility.Constants
 
 import scala.annotation.tailrec
 
-
 sealed trait FeedManager {
 
   /**
@@ -70,5 +69,4 @@ object FeedManager {
       })
     }
   }
-
 }

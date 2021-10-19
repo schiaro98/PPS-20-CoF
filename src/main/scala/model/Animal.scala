@@ -104,8 +104,7 @@ object Animal {
 
     override def drink(): Animal = this.update(thirst = MaxThirst)
 
-    override def die(): FoodInstance =
-      FoodInstance(Food(Constants.DefaultColorOfMeat, Constants.DefaultEnergyOfMeat, Meat), position, quantityFromDeath())
+    override def die(): FoodInstance = FoodInstance(Food(Constants.DefaultEnergyOfMeat, Meat), position, quantityFromDeath())
 
     override def shift(pos: Point): Animal = this.update(position = pos)
 
