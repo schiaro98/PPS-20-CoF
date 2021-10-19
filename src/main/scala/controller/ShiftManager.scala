@@ -1,7 +1,7 @@
 package controller
 
 import model._
-import utility.Constants
+import utility.{AnimalUtils, Constants}
 
 import scala.annotation.tailrec
 import scala.collection.parallel.CollectionConverters._
@@ -95,6 +95,7 @@ object ShiftManager {
       @tailrec
       def _createPath(from: Point,
                       dest: Point,
+                      species: Species,
                       path: Seq[Point] = Seq.empty,
                       isCarnivore: Boolean = false,
                      ): Seq[Point] = path match {
@@ -107,14 +108,26 @@ object ShiftManager {
           val topLeft = makeInBounds(from.x - travelDistance._1, from.y - travelDistance._2)
           val bottomRight = makeInBounds(from.x + travelDistance._1, from.y + travelDistance._2)
           val legalPoints = for (x <- topLeft.x to bottomRight.x;
-                                 y <- topLeft.y to bottomRight.y if isLegal(Point(x, y)))
+                                 y <- topLeft.y to bottomRight.y
+                                 if areAllLegal( AnimalUtils.getCornersOfSpeciesInPoint(species, Point(x,y))))
           yield Point(x, y)
           val closerPoint = findClosestPoint(legalPoints, dest)
           if (path.nonEmpty && path.contains(closerPoint)) path.reverse
-          else _createPath(closerPoint, dest, closerPoint +: path)
+          else _createPath(closerPoint, dest, animal.species, closerPoint +: path)
       }
 
-      _createPath(animal.position, dest, isCarnivore = animal.alimentationType == Carnivore)
+      _createPath(animal.position, dest, animal.species, isCarnivore = animal.alimentationType == Carnivore)
+    }
+
+    /**
+     *
+     * @param points the [[Seq]] of [[Point]] we want to test
+     * @return true if all points are legal
+     */
+    @tailrec
+    private def areAllLegal(points: Seq[Point]): Boolean = points match {
+      case h::t => if (isLegal(h)) areAllLegal(t) else false
+      case _ => true
     }
 
     /**
