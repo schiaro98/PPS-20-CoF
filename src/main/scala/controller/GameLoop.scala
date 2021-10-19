@@ -24,7 +24,8 @@ case class GameLoop(population: Map[Species, Int], habitat: Habitat) extends Run
   override def run(): Unit = {
     val shapePanel = new SimulationPanel(habitat.dimensions._1, habitat.dimensions._2)
     val simulationGui = new SimulationGui(habitat, shapePanel, setPaused, setSpeed, stop) {top.visible = true}
-    var resourceManager = ResourceManager(habitat, Constants.FoodsFilePath)
+    var resourceManager = ResourceManager(habitat, Constants.FoodsFilePath).fillHabitat()
+
     simulationGui.updatePanel(animalsInMap, resourceManager.foodInstances)
 
     var previous: Long = System.currentTimeMillis()
@@ -38,27 +39,22 @@ case class GameLoop(population: Map[Species, Int], habitat: Habitat) extends Run
         shiftManager.walk()
         animalsInMap = shiftManager.animals.toSeq
 
-        val feedManager = FeedManager(animalsInMap, resourceManager.foodInstances)
+        val feedManager = FeedManager(animalsInMap, resourceManager.foodInstances, habitat)
 
-        println("Updated animals after shiftmanager", animalsInMap.length)
-        val (_, remainedFood) = feedManager.consumeResources()
+        val remainedFood = feedManager.consumeResources()
+
         animalsInMap = feedManager.lifeCycleUpdate()
 
-        println("Updated animals after feedmanager" + animalsInMap.length)
-
         val battleManager: BattleManager = BattleManager(animalsInMap)
-        val battleFood = battleManager.battle()
+        val result = battleManager.battle()
 
-        resourceManager = resourceManager.foodInstances_(battleFood ++ remainedFood)
+        resourceManager = resourceManager.foodInstances_(result._2 ++ remainedFood)
 
-        println("Updated food after feed and battle", resourceManager.foodInstances.length)
-
-        animalsInMap = battleManager.getAnimals
-        println("Updated animals after battle", animalsInMap.length)
+        animalsInMap = result._1
 
         //TODO Calcolo eventi inaspettati
 
-        resourceManager = resourceManager.grow()
+        //resourceManager = resourceManager.grow()
 
         simulationGui.updatePanel(animalsInMap, resourceManager.foodInstances)
         simulationGui.updateElapsedTime()
