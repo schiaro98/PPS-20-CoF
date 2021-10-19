@@ -1,6 +1,6 @@
 package controller
 
-import model.{Animal, Habitat, Species}
+import model.{Animal, FoodInstance, Habitat, Species}
 import utility.{AnimalUtils, Constants}
 
 /**
@@ -26,12 +26,12 @@ sealed trait AnimalManager {
   def generateInitialAnimals(population: Map[Species, Int], habitat: Habitat): AnimalManager
 
   /**
-   * Decrease thirst and health from all the animals
+   * Decrease thirst and health from all the [[Animal]]s; if an animal dies of hunger or thirst
+   * it will release som meat into its position.
    *
-   * @return a new [[AnimalManager]] with the updated values.
+   * @return a pair with the alive, updated [[Animal]]s and the food that was released.
    */
-  def lifeCycleUpdate(): AnimalManager //TODO aggiornare scaladoc dopo cambiamenti: far tornare una pair (AnimalManager,FoodInstance)
-                                       // o solo FoodInstance e poi fare dal game un nuovo AnimalManager con i nuovi animali
+  def lifeCycleUpdate(): (Seq[Animal], Seq[FoodInstance])
 }
 
 /**
@@ -61,24 +61,14 @@ object AnimalManager {
       AnimalManager(animals)
     }
 
-    override def lifeCycleUpdate(): AnimalManager = {
-
-//      animalToUpdate.map(animal => {
-//        animal.update(
-//          health = animal.health - Constants.healthDecrease,
-//          thirst = animal.thirst - Constants.thirstDecrease,
-//          position = animal.position
-//        )
-//      }).filter(_.isAlive)
-
-      //TODO gestire le morti e ritornare anche la carne
-
-      AnimalManager(animals.map(animal => animal.update(
-        health = animal.health - Constants.healthDecrease,
-        thirst = animal.thirst - Constants.thirstDecrease,
-        position = animal.position
-      )
-      ))
+    override def lifeCycleUpdate(): (Seq[Animal], Seq[FoodInstance]) = {
+      val updatedAnimals = animals.map(animal => {
+        animal.update(
+          health = animal.health - Constants.healthDecrease,
+          thirst = animal.thirst - Constants.thirstDecrease
+        )
+      })
+      (updatedAnimals.filter(_.isAlive), updatedAnimals.filter(!_.isAlive).map(a => a.die()))
     }
   }
 }

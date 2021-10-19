@@ -71,10 +71,17 @@ trait Animal extends Species with Placeable {
    * Shift an animal position.
    *
    * @param pos the new position of the animal.
-   * @return new Animal with the specified position.
+   * @return the same Animal but in the specified position.
    */
   def shift(pos: Point): Animal
 
+  /**
+   * Method used to feed the [[Animal]] and increase his health.
+   *
+   * @param food the food that the [[Animal]] can eat.
+   * @return a pair containing the same [[Animal]] with health increased and the remaining food,
+   *         if there is, that it hasn't eaten.
+   */
   def eat(food: FoodInstance): (Animal, Option[FoodInstance])
 }
 
@@ -124,13 +131,28 @@ object Animal {
       case _ => throw new IllegalArgumentException
     }
 
+    override def toString: String = s"Animal: $name, Size: $size, Health: $health, Thirst: $thirst, $strength pos: ${(position.x, position.y)}"
+
+    override def species: Species = Species(name, size, strength, sight, alimentationType, color)
+
+    /**
+     * Method to obtain the amount of meat it will produce once it is dead; it is based on the size of the animal.
+     *
+     * @return the quantity of food.
+     */
+    private def quantityFromDeath(): Int = size match {
+      case Big => QuantityForBig
+      case Medium => QuantityForMedium
+      case Small => QuantityForSmall
+    }
+
     /**
      * Method to restore health to an animal by eating food.
      *
      * @param food The food to eat.
      * @return a pair that contains the animal with the health restored and the remaining food, if there is still any.
      */
-    def consume(food: FoodInstance): (Animal, Option[FoodInstance]) = health match {
+    private def consume(food: FoodInstance): (Animal, Option[FoodInstance]) = health match {
       case Constants.MaxHealth => (this, Some(food))
       case _ if MaxHealth - health > food.energy * food.quantity =>
         logger.info(this.name + " eat all food")
@@ -140,25 +162,5 @@ object Animal {
         val foodToEat = (MaxHealth - health) / food.energy + (if (MaxHealth - health % food.energy == 0) 0 else 1)
         (this.update(health = MaxHealth), Some(food.consume(foodToEat)))
     }
-
-    /**
-     * Method to obtain the amount of meat it will produce once it is dead; it is based on the size of the animal.
-     *
-     * @return the quantity of food.
-     */
-    def quantityFromDeath(): Int = size match {
-      case Big => QuantityForBig
-      case Medium => QuantityForMedium
-      case Small => QuantityForSmall
-    }
-
-    override def toString: String = s"Animal: $name, Size: $size, Health: $health, Thirst: $thirst, $strength pos: ${(position.x, position.y)}"
-
-    /**
-     * Method used to get the [[Species]] given an [[Animal]]
-     *
-     * @return the [[Species]] of the [[Animal]]
-     */
-    override def species: Species = Species(name, size, strength, sight, alimentationType, color)
   }
 }

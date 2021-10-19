@@ -14,7 +14,7 @@ class AnimalManagerTest extends AnyFunSuite {
     var animalsUpdated = animals
     for (i <- 1 to 10){
       val animalManager: AnimalManager = AnimalManager()
-      animalsUpdated = animalManager.lifeCycleUpdate().animals
+      animalsUpdated = animalManager.lifeCycleUpdate()._1
       animalsUpdated.foreach(animal => {
         assert(animal.health == Constants.MaxHealth - (Constants.healthDecrease * i))
         assert(animal.thirst == Constants.MaxThirst - (Constants.thirstDecrease * i))

@@ -42,7 +42,7 @@ object FeedManager {
           if(nearestResource.isDefined) {
 
             //Se il cibo è una verdura e l'animale erbivoro
-            // //oppure è una carne e l'animale carnivoro
+            //oppure è una carne e l'animale carnivoro
             //Provo a consumare la risorsa
             nearestResource.get match {
               case x: FoodInstance if x.foodType == Meat && myAnimal.alimentationType == Carnivore || x.foodType == Vegetable && myAnimal.alimentationType == Herbivore =>
@@ -51,8 +51,8 @@ object FeedManager {
 
                 //remainedFood contiene un Option vuoto se non è rimasto cibo
                 // o un option di FoodInstance se il cibo è avanzato
-                val (updatedAnimal ,remainedFood) = myAnimal.eat(x)
-                println(updatedAnimal + "has eat")
+                val (updatedAnimal, remainedFood) = myAnimal.eat(x)
+                println(updatedAnimal.toString + "has eat")
                 //Se il cibo è avanzato, ciclo la lista di animali rimanenti,
                 // togliendo il cibo vecchio (Con quantità piena) e mettendo quello avanzato
                 if(remainedFood.isDefined) {
