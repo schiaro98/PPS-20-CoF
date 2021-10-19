@@ -32,7 +32,11 @@ class GameLoopTest extends AnyFunSuite{
 
       val (animalsUpdated, foodsRemaining) = feedManager.consumeResources()
       animalManager = AnimalManager(animalsUpdated)
-      animalManager = animalManager.lifeCycleUpdate()
+
+      val (updatedAnimal, generatedFood) = animalManager.lifeCycleUpdate()
+      animalManager = AnimalManager(updatedAnimal)
+      //TODO nella riga sotto ho aggiunto le carcasse al ResourceManager, si faceva così? è giusto? il nome è definitivo? forse con "setFood" si capisce meglio?
+      resourceManager = resourceManager.foodInstances_(resourceManager.foodInstances ++ generatedFood)
 
       val battleManager: BattleManager = BattleManager(animalManager.animals)
       val result = battleManager.battle()

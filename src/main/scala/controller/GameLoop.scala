@@ -32,7 +32,8 @@ case class GameLoop(population: Map[Species, Int], habitat: Habitat) extends Run
     while (animalManager.animals.lengthIs > 0 && !isStopped) {
       val current: Long = System.currentTimeMillis()
       if (!isPaused) {
-        val destinationManager: DestinationManager = DestinationManager(animalManager.animals, resourceManager.foodInstances, habitat)
+        val destinationManager: DestinationManager =
+          DestinationManager(animalManager.animals, resourceManager.foodInstances, habitat)
         val destinations: Map[Animal, Point] = destinationManager.calculateDestination()
 
         val shiftManager = ShiftManager(habitat, destinations)
@@ -40,17 +41,19 @@ case class GameLoop(population: Map[Species, Int], habitat: Habitat) extends Run
         animalManager = AnimalManager(shiftManager.animals.toSeq)
 
         val feedManager = FeedManager(animalManager.animals, resourceManager.foodInstances)
-
         val feedResult = feedManager.consumeResources()
+        animalManager = AnimalManager(feedResult._1)
+        resourceManager = resourceManager.foodInstances_(/* resourceManager.foodInstances ++ */ feedResult._2)
 
-        animalManager = animalManager.lifeCycleUpdate()
+        val (updatedAnimal, generatedFood) = animalManager.lifeCycleUpdate()
+        animalManager = AnimalManager(updatedAnimal)
+        //TODO nella riga sotto ho aggiunto le carcasse al ResourceManager, si faceva così? è giusto? il nome è definitivo? forse con "setFood" si capisce meglio?
+        resourceManager = resourceManager.foodInstances_(resourceManager.foodInstances ++ generatedFood)
 
         val battleManager: BattleManager = BattleManager(animalManager.animals)
         val result = battleManager.battle()
-
-        resourceManager = resourceManager.foodInstances_(result._2 ++ feedResult._2)
-
         animalManager = AnimalManager(result._1)
+        resourceManager = resourceManager.foodInstances_(resourceManager.foodInstances ++ result._2)
 
         //TODO Calcolo eventi inaspettati
 
