@@ -1,7 +1,7 @@
 package view
 
 import model.{Animal, FoodInstance, Habitat}
-import utility.Logger
+import utility.{Logger, Statistics}
 
 import java.awt.Dimension
 import javax.swing.{ImageIcon, WindowConstants}
@@ -24,13 +24,11 @@ class SimulationGui(habitat: Habitat,
                     setSpeed: Boolean => Unit,
                     stop: () => Unit,
                    ) extends SimpleSwingApplication {
-
-  var elapsedTime = 0
   val (width, height) = habitat.dimensions
   val textArea: TextArea = new TextArea("Welcome to Circe of Life Simulator!", 10, 10) { editable = false }
 
   val elapsedTimeLabel: Label = new Label("    Time elapsed:    ")
-  val elapsedTimeField: TextField = new TextField(elapsedTime.toString) { editable = false }
+  val elapsedTimeField: TextField = new TextField(Statistics.time().toString) { editable = false }
   val playButton: Button = new Button() {
     icon = new ImageIcon("res/images/play-button.png")
     reactions += {
@@ -95,8 +93,8 @@ class SimulationGui(habitat: Habitat,
    * Method to increment the counter of the elapsed time.
    */
   def updateElapsedTime(): Unit = {
-    elapsedTime += 1
-    elapsedTimeField.text = elapsedTime.toString
+    Statistics.incTime()
+    elapsedTimeField.text = Statistics.time().toString
   }
 
   /**

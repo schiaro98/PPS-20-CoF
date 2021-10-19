@@ -1,7 +1,7 @@
 package model
 
 import utility.Constants.DefaultFoodQuantity
-import utility.RectangleArea
+import utility.{RectangleArea, Statistics}
 import view.Rectangle
 
 import java.awt.Color
@@ -73,6 +73,7 @@ object Area {
           val _2 = random.between(area.topLeft.y, area.bottomRight.y)
 
           val quantity = random.nextInt(DefaultFoodQuantity)
+          Statistics.update(foods = quantity)
           return Some(FoodInstance(food, Point(_1, _2), quantity))
         }
       }

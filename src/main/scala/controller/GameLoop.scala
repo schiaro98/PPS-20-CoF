@@ -2,7 +2,7 @@ package controller
 
 import model._
 import utility.{Constants, Logger}
-import view.{SimulationGui, SimulationPanel}
+import view.{SimulationGui, SimulationPanel, StatisticsGUI}
 
 /**
  * [[Runnable]] used to start the simulation, it contains the game loop which must be executed in a new thread.
@@ -25,7 +25,7 @@ case class GameLoop(population: Map[Species, Int], habitat: Habitat) extends Run
     val shapePanel = new SimulationPanel(habitat.dimensions._1, habitat.dimensions._2)
     val simulationGui = new SimulationGui(habitat, shapePanel, setPaused, setSpeed, stop) { top.visible = true }
     var animalManager = AnimalManager().generateInitialAnimals(population, habitat)
-    var resourceManager = ResourceManager(habitat, Constants.FoodsFilePath)
+    var resourceManager = ResourceManager(habitat, Constants.FoodsFilePath).fillHabitat()
     simulationGui.updatePanel(animalManager.animals, resourceManager.foodInstances)
 
     var previous: Long = System.currentTimeMillis()
@@ -63,7 +63,8 @@ case class GameLoop(population: Map[Species, Int], habitat: Habitat) extends Run
       previous = current
     }
     logger.info("Simulation finished")
-    //TODO mostrare la gui con il riassunto
+    val f = new StatisticsGUI
+    f.top
   }
 
   /**

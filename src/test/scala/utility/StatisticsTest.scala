@@ -13,16 +13,16 @@ class StatisticsTest extends AnyFunSuite{
   }
 
   test("test add time 1"){
-    Statistics.time = 1
+    Statistics.incTime()
     Statistics.update(foods = 1)
-    assert(Statistics.map(Statistics.time).foods == 1)
+    assert(Statistics.map(Statistics.time()).foods == 1)
   }
 
   test("Adding others value in time 1"){
     Statistics.update(foods = 1)
     Statistics.update(foodEaten = 1)
-    assert(Statistics.map(Statistics.time).foods == 2 )
-    assert(Statistics.map(Statistics.time).foodEaten == 1 )
+    assert(Statistics.map(Statistics.time()).foods == 2 )
+    assert(Statistics.map(Statistics.time()).foodEaten == 1 )
   }
 
 }

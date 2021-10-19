@@ -1,7 +1,14 @@
 package utility
 
 object Statistics {
-  var time: Int = 0
+  private var _time: Int = 0
+
+  def time() :Int = _time
+
+  def incTime(): Unit = {
+    _time+=1
+    update()
+  }
 
   var map: Map[Int, StatisticsForTimeT] = Map.empty
 
@@ -15,8 +22,8 @@ object Statistics {
    * @param deathForNaturalCause to sum
    */
   def update(foods: Double = 0, attacks: Double = 0, foodEaten: Double = 0, deathInBattle: Double = 0, deathForNaturalCause: Double = 0): Unit = map =
-    if (map isDefinedAt time)
-      map + (time -> map(time).sum(StatisticsForTimeT(foods, attacks, foodEaten, deathInBattle, deathForNaturalCause)))
+    if (map isDefinedAt _time)
+      map + (time -> map(_time).sum(StatisticsForTimeT(foods, attacks, foodEaten, deathInBattle, deathForNaturalCause)))
     else
       map + (time -> StatisticsForTimeT(foods, attacks, foodEaten, deathInBattle, deathForNaturalCause))
 
