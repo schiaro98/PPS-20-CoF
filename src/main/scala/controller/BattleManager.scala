@@ -3,13 +3,15 @@ package controller
 import model._
 import utility.Logger
 
+import scala.annotation.tailrec
+
 sealed trait BattleManager {
 
   /**
    * For every animal that is able to see other animals, execute battles
    * @return the Meat that can be released during the battles
    */
-  def battle(): Seq[FoodInstance]
+  def battle(): (Seq[Animal],Seq[FoodInstance])
 
   /**
    * Return a sequence of pairs of [[Animal]], the presence in this list means that animal 1 can see animal 2
@@ -30,13 +32,39 @@ object BattleManager {
 
   private case class SimpleBattleManager(animals: Seq[Animal]) extends BattleManager {
     private val logger = Logger
-    private var animalKilled : List[Animal] = List.empty
 
+    def battle(): (Seq[Animal],Seq[FoodInstance]) = {
+      @tailrec
+      def battle_(animals: Seq[Animal],
+                  meats: Seq[FoodInstance] = Seq.empty,
+                  animalUpdated: Seq[Animal] = Seq.empty): (Seq[Animal], Seq[FoodInstance]) = animals match {
+        case h :: t =>
+          val enemyOpt = animals
+            .filterNot(_ != h)
+            .filter(_.position.distance(h.position) < h.sight)
+            .minByOption(_.position.distance(h.position))
 
-    override def battle(): Seq[FoodInstance] = {
-      visibleAnimals(animals)
-        .filter(couple => isCarnivorous(couple._1))
-        .map(couple => startBattle(couple._1, couple._2))
+          if(enemyOpt.isDefined){
+            val enemy = enemyOpt.get
+            val probabilities = List(
+              calculateProbabilityFromSize(h, enemy),
+              calculateProbabilityFromDistance(h, enemy),
+              calculateProbabilityFromStrength(h, enemy)
+            )
+
+            if (Probability(probabilities.map(a => a.probability).sum / probabilities.length).calculate) {
+              logger.info("Attacking animal: " + h.name + " has won against " + enemy.name)
+              battle_(t, meats :+ enemy.die(), animalUpdated :+ h)
+            } else {
+              logger.info("Defending animal: " + enemy.name + " has won against "  + h.name)
+              battle_(t, meats :+ h.die(), animalUpdated :+ enemy)
+            }
+          } else {
+            battle_(t, meats, animalUpdated :+ h)
+          }
+        case _ => (animalUpdated, meats)
+      }
+      battle_(animals)
     }
 
     /**
@@ -51,35 +79,6 @@ object BattleManager {
         if (a canSee b) visible = visible :+ (a, b)
       }
       visible
-    }
-
-    /**
-     * Execute the battle between ONE attacking animal and One defending
-     *
-     * @param attacker Attacking animal
-     * @param defender Defending animal
-     * @return
-     */
-    def startBattle(attacker: Animal, defender: Animal): FoodInstance = {
-      require(isCarnivorous(attacker))
-      require(attacker.isAlive)
-      require(attacker canSee defender)
-
-      val probabilities = List(
-        calculateProbabilityFromSize(attacker, defender),
-        calculateProbabilityFromDistance(attacker, defender),
-        calculateProbabilityFromStrength(attacker, defender)
-      )
-
-      if (Probability(probabilities.map(a => a.probability).sum / probabilities.length).calculate) {
-        logger.info("Attacking animal: " + attacker.name + " has won against " + defender.name)
-        animalKilled = animalKilled :+ defender
-        defender.die()
-      } else {
-        logger.info("Defending animal: " + defender.name + " has won against "  + attacker.name)
-        animalKilled = animalKilled :+ attacker
-        attacker.die()
-      }
     }
 
     /**
@@ -151,17 +150,5 @@ object BattleManager {
       }
       probability
     }
-
-    /**
-     * Check the alimentation type of given [[Animal]]
-     * @param animal to be checked
-     * @return true if the animal is Carnivorous
-     */
-     def isCarnivorous(animal: Animal): Boolean = animal.alimentationType == Carnivore
-
-    /**
-     * @return the animals in the shiftManager
-     */
-    override def getAnimals: Seq[Animal] = animals.filterNot(animalKilled.contains(_))
   }
 }
