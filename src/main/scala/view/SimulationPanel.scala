@@ -28,10 +28,7 @@ class SimulationPanel(val width: Int, val height: Int) extends Panel {
 
   override def paint(g: Graphics2D): Unit = {
     g.clearRect(0, 0, width, height)
-    shapes.foreach(s => {
-      g.setColor(s.color)
-      s.draw(g)
-    })
+    shapes.foreach(s => s.draw(g))
   }
 
   /**

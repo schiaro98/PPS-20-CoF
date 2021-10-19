@@ -12,6 +12,9 @@ import view.{SimulationGui, SimulationPanel}
  */
 case class GameLoop(population: Map[Species, Int], habitat: Habitat) extends Runnable {
 
+  var isPaused: Boolean = false
+  var isSpeedUp: Boolean = false
+  var isStopped: Boolean = false
   var animalsInMap: Seq[Animal] = AnimalUtils.generateInitialAnimals(population, habitat)
 
   /**
@@ -20,65 +23,85 @@ case class GameLoop(population: Map[Species, Int], habitat: Habitat) extends Run
    */
   override def run(): Unit = {
     val shapePanel = new SimulationPanel(habitat.dimensions._1, habitat.dimensions._2)
-    val simulationGui = new SimulationGui(habitat, shapePanel) {top.visible = true}
+    val simulationGui = new SimulationGui(habitat, shapePanel, setPaused, setSpeed, stop) {top.visible = true}
     var resourceManager = ResourceManager(habitat, Constants.FoodsFilePath)
     simulationGui.updatePanel(animalsInMap, resourceManager.foodInstances)
 
     var previous: Long = System.currentTimeMillis()
-    while (animalsInMap.lengthIs > 0) { //TODO pausa come fermare il gioco senza sprecare cpu?
+    while (animalsInMap.lengthIs > 0 && !isStopped) {
       val current: Long = System.currentTimeMillis()
+      if (!isPaused) {
+        val destinationManager: DestinationManager = DestinationManager(animalsInMap, resourceManager.foodInstances, habitat)
+        val destinations: Map[Animal, Point] = destinationManager.calculateDestination()
 
-      val destinationManager: DestinationManager = DestinationManager(animalsInMap, resourceManager.foodInstances, habitat)
-      val destinations: Map[Animal, Point] = destinationManager.calculateDestination()
+        val shiftManager = ShiftManager(habitat, destinations)
+        shiftManager.walk()
+        animalsInMap = shiftManager.animals.toSeq
 
-      val shiftManager = ShiftManager(habitat, destinations)
-      shiftManager.walk()
-      animalsInMap = shiftManager.animals.toSeq
+        val feedManager = FeedManager(animalsInMap, resourceManager.foodInstances)
 
-      val feedManager = FeedManager(animalsInMap, resourceManager.foodInstances)
+        println("Updated animals after shiftmanager", animalsInMap.length)
+        val (_, remainedFood) = feedManager.consumeResources()
+        animalsInMap = feedManager.lifeCycleUpdate()
 
-      println("Updated animals after shiftmanager", animalsInMap.length)
-      val (_, remainedFood) = feedManager.consumeResources()
-      animalsInMap = feedManager.lifeCycleUpdate()
+        println("Updated animals after feedmanager" + animalsInMap.length)
 
-      println("Updated animals after feedmanager" + animalsInMap.length)
+        val battleManager: BattleManager = BattleManager(animalsInMap)
+        val battleFood = battleManager.battle()
 
-      val battleManager: BattleManager = BattleManager(animalsInMap)
-      val battleFood = battleManager.battle()
+        resourceManager = resourceManager.foodInstances_(battleFood ++ remainedFood)
 
-      resourceManager = resourceManager.foodInstances_(battleFood ++ remainedFood)
+        println("Updated food after feed and battle", resourceManager.foodInstances.length)
 
-      println("Updated food after feed and battle", resourceManager.foodInstances.length)
+        animalsInMap = battleManager.getAnimals
+        println("Updated animals after battle", animalsInMap.length)
 
-      animalsInMap = battleManager.getAnimals
-      println("Updated animals after battle", animalsInMap.length)
+        //TODO Calcolo eventi inaspettati
 
-      //Calcolo eventi inaspettati
+        resourceManager = resourceManager.grow()
 
-      simulationGui.updatePanel(animalsInMap, resourceManager.foodInstances)
-
-      resourceManager = resourceManager.grow()
-
-      simulationGui.updateElapsedTime()
-      waitForNextFrame(current)
+        simulationGui.updatePanel(animalsInMap, resourceManager.foodInstances)
+        simulationGui.updateElapsedTime()
+      }
+      waitForNextStep(current)
       previous = current
     }
 
-    println("All the animals are dead")
-    //mostrare la gui con il riassunto ?
+    println("Simulation finished")
+    //TODO mostrare la gui con il riassunto
   }
 
   /**
-   * Method that permit to wait the current time to render the following frame.
+   * Method that permit to wait the time required before running the cycle again.
    *
-   * @param current time at the beginning of current frame.
+   * @param current time at the beginning of the cycle.
    */
-  private def waitForNextFrame(current: Long): Unit = {
+  private def waitForNextStep(current: Long): Unit = {
     val dt = System.currentTimeMillis() - current
-    if (dt < Constants.Period) {
+    val period = if (isSpeedUp) Constants.SpeedUpPeriod else Constants.Period
+    if (dt < period) {
       Thread.sleep(Constants.Period - dt)
     }
   }
+
+  /**
+   * Method to pause/unpause the simulation.
+   *
+   * @param paused true to pause the simulation, false to unpause.
+   */
+  def setPaused(paused: Boolean): Unit = isPaused = paused
+
+  /**
+   * Method to speed up and slow down the simulation.
+   *
+   * @param speedUp true to speed up the simulation, false to slow down.
+   */
+  def setSpeed(speedUp: Boolean): Unit = isSpeedUp = speedUp
+
+  /**
+   * Method used to stop the simulation.
+   */
+  def stop(): Unit = isStopped = true
 }
 
 

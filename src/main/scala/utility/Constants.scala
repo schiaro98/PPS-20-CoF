@@ -58,16 +58,14 @@ object Constants {
   val OffsetX = 20
   val OffsetY = 45
 
-  val Period = 500 // 10000 = una epoca ogni 10 secondi (15 per 60fps?)
+  val Period = 500
+  val SpeedUpPeriod: Int = Period / 10
 
   // ------- Habitat ------
   val DefaultRandomSize = 10
   val DefaultGridSize = 100
 
-  val NonWalkableArea: Set[AreaType] = Set(Volcano,Rock,Water)
+  val NonWalkableArea: Set[AreaType] = Set(Volcano,Rock,Water) //TODO gestire questo nel model ?
 
   val FoodToGrowPerFertileArea: Int = 10
-
-  // ------- Various ------
-  val MillisToSec = 1000
 }
