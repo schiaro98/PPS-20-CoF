@@ -27,12 +27,14 @@ class BattleManagerTest extends AnyFunSuite{
   test("Execute a simple battle"){
     val bm = BattleManager(Seq(a1, a2, a3))
     bm.battle()
+    val result = bm.battle()
+    result._1.foreach(println)
   }
 
   test("Check result of the battle"){
     val bm = BattleManager(Seq(a1, a2, a3, herb, unreachableAnimal))
-    bm.battle()
-    bm.getAnimals.foreach(println)
+    val result = bm.battle()
+
   }
 
 /*  test("Test if an herbivour can battle"){

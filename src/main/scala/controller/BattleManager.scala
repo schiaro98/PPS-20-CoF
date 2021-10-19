@@ -20,10 +20,6 @@ sealed trait BattleManager {
    */
   def visibleAnimals(seqOfAnimals: Seq[Animal]): Seq[(Animal, Animal)]
 
-  /**
-   * Return alive animals
-   */
-  def getAnimals: Seq[Animal]
 }
 
 object BattleManager {
@@ -40,7 +36,7 @@ object BattleManager {
                   animalUpdated: Seq[Animal] = Seq.empty): (Seq[Animal], Seq[FoodInstance]) = animals match {
         case h :: t =>
           val enemyOpt = animals
-            .filterNot(_ != h)
+            .filterNot(_ == h)
             .filter(_.position.distance(h.position) < h.sight)
             .minByOption(_.position.distance(h.position))
 
