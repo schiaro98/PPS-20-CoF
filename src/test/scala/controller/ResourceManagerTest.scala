@@ -43,7 +43,7 @@ class ResourceManagerTest extends AnyFunSuite{
     resMan.writeFoodsToFile(Constants.FoodsFilePath)
     val path = Path.of("res"+File.separator+"serialization"+File.separator+Constants.FoodsFilePath)
     val json = Files.readString(path, StandardCharsets.UTF_8)
-    assert(json == "{\"color\":{\"value\":-16777216,\"falpha\":0.0},\"energy\":5,\"foodType\":\"Vegetable\"}{\"color\":{\"value\":-16777216,\"falpha\":0.0},\"energy\":10,\"foodType\":\"Vegetable\"}{\"color\":{\"value\":-16777216,\"falpha\":0.0},\"energy\":15,\"foodType\":\"Vegetable\"}{\"color\":{\"value\":-16777216,\"falpha\":0.0},\"energy\":50,\"foodType\":\"Vegetable\"}")
+    assert(json == "{\"color\":{\"value\":-16755701,\"falpha\":0.0},\"energy\":5,\"foodType\":\"Vegetable\"}{\"color\":{\"value\":-16755701,\"falpha\":0.0},\"energy\":10,\"foodType\":\"Vegetable\"}{\"color\":{\"value\":-16755701,\"falpha\":0.0},\"energy\":15,\"foodType\":\"Vegetable\"}{\"color\":{\"value\":-16755701,\"falpha\":0.0},\"energy\":50,\"foodType\":\"Vegetable\"}")
   }
 
   test("ResourceManager import food from file"){
