@@ -12,46 +12,78 @@ sealed trait FeedManager {
    * It manage also the decrease of health and thirst
    * @return a pair of the sequence of the animals updated and of the food still eatable
    */
-  def consumeResources(): (Seq[Animal], Seq[FoodInstance])
+  def consumeResources(): Seq[FoodInstance]
 
   /**
    * Update (decrease) the current thirst and health
    */
   def lifeCycleUpdate(): Seq[Animal]
+
+  /**
+   * Return alive animals
+   */
+  def getAnimals: Seq[Animal]
 }
 
 object FeedManager {
-  def apply(animals: Seq[Animal], resources: Seq[FoodInstance]): FeedManager = SimpleFeedManager(animals, resources)
+  def apply(animals: Seq[Animal], resources: Seq[FoodInstance], habitat: Habitat = Habitat()): FeedManager = SimpleFeedManager(animals, resources, habitat)
 
-  private case class SimpleFeedManager(animals: Seq[Animal], resources: Seq[FoodInstance]) extends FeedManager {
+  private case class SimpleFeedManager(animals: Seq[Animal], resources: Seq[FoodInstance], habitat: Habitat) extends FeedManager {
 
-    override def consumeResources(): (Seq[Animal], Seq[FoodInstance]) = {
+    override def consumeResources(): Seq[FoodInstance] = {
+
       @tailrec
       def _consumeResources(animals: Seq[Animal],
-                            remainingFood: Seq[FoodInstance] = Seq.empty,
-                            updatedAnimals: Seq[Animal] = Seq.empty) : (Seq[Animal], Seq[FoodInstance]) = animals match {
+                            resources: Seq[FoodInstance],
+                            updatedAnimals: Seq[Animal] = Seq.empty) : Seq[FoodInstance] = animals match {
         case h :: t =>
 
-          val nearestResource = resources
-            .filter(_.position.distance(h.position) < Constants.hitbox)
-            .minByOption(_.position.distance(h.position))
+          val nearestWaterArea = findNearestWaterZone(h, habitat)
+          val myAnimal = if(nearestWaterArea.isDefined){
+            h.drink()
+          } else h
 
+
+
+          //Contiene la risorsa più vicina all'animale, deve essere dentro alla hitbox
+          val nearestResource = resources
+            .filter(_.position.distance(myAnimal.position) < Constants.hitbox)
+            .minByOption(_.position.distance(myAnimal.position))
+
+          //Se l'animale ha un cibo mangiabile nell'hitbox
           if(nearestResource.isDefined) {
+
+            //Se il cibo è una verdura e l'animale erbivoro
+            // //oppure è una carne e l'animale carnivoro
+            //Provo a consumare la risorsa
             nearestResource.get match {
-              case x: FoodInstance if x.foodType == Meat && h.alimentationType == Carnivore || x.foodType == Vegetable && h.alimentationType == Herbivore =>
-                val res = h.eat(x)
-                if(res._2.isDefined) {
-                  val remainedFood: FoodInstance = res._2.get
-                  _consumeResources(t, (remainingFood diff Seq(x)) :+ remainedFood , updatedAnimals :+ res._1)
+              case x: FoodInstance if x.foodType == Meat && myAnimal.alimentationType == Carnivore || x.foodType == Vegetable && myAnimal.alimentationType == Herbivore =>
+
+                //updatedAnimal contiene l'animale con i valori aggiornati dopo aver mangiato
+
+                //remainedFood contiene un Option vuoto se non è rimasto cibo
+                // o un option di FoodInstance se il cibo è avanzato
+                val (updatedAnimal ,remainedFood) = myAnimal.eat(x)
+                println(updatedAnimal + "has eat")
+                //Se il cibo è avanzato, ciclo la lista di animali rimanenti,
+                // togliendo il cibo vecchio (Con quantità piena) e mettendo quello avanzato
+                if(remainedFood.isDefined) {
+                  _consumeResources(t, resources.filterNot(_ == x) :+ remainedFood.get , updatedAnimals :+ updatedAnimal)
                 } else {
-                  _consumeResources(t, remainingFood diff Seq(x), updatedAnimals :+ res._1)
+                  _consumeResources(t, resources.filterNot(_ == x), updatedAnimals :+ updatedAnimal)
                 }
-              case _ => throw new IllegalArgumentException("FeedManager error")
+              case _ =>
+                println("ERROR: Trying to do something impossible")
+                resources
             }
           } else {
-            _consumeResources(t, remainingFood, updatedAnimals :+ h)
+            //Se l'animale NON ha un cibo mangiabile nell'hitbox
+            //ciclo sugli animali rimanenti, sul cibo e aggiungo un animale agli aggiornati
+            _consumeResources(t, resources, updatedAnimals :+ myAnimal)
           }
-        case _ => (updatedAnimals, remainingFood)
+        case _ =>
+          //Se finisco la lista, ritorno i cibi avanzati
+          resources
       }
       _consumeResources(animals, resources)
     }
@@ -66,7 +98,20 @@ object FeedManager {
           thirst = animal.thirst - Constants.thirstDecrease,
           position = animal.position
         )
-      })
+      }).filter(_.isAlive)
+    }
+
+    /**
+     * Return alive animals
+     */
+    override def getAnimals: Seq[Animal] = animals
+
+    def findNearestWaterZone(animal: Animal, h: Habitat): Option[Point] = {
+      h.areas
+        .filter(_.areaType == Water)
+        .map(rectangle => rectangle.area.topLeft)
+        .filter(_.distance(animal.position) < Constants.hitbox)
+        .minByOption(_.distance(animal.position))
     }
   }
 }
