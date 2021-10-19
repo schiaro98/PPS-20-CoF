@@ -1,6 +1,6 @@
 package utility
 
-import model.{Animal, Area, Big, Habitat, Medium, Point, Small, Species}
+import model._
 
 /**
  * Object containing some utility methods for [[Animal]]
@@ -53,6 +53,16 @@ object AnimalUtils {
     case Big => Constants.PixelForBig
     case Medium => Constants.PixelForMedium
     case Small => Constants.PixelForSmall
+  }
+
+  /**
+   *
+   * @param s the [[Species]] of which we want to know the corners
+   * @param p the [[Point]] in which the [[Species]] is or will be
+   * @return the [[Seq]] of [[Point]] corresponding to the corners
+   */
+  def getCornersOfSpeciesInPoint(s: Species, p: Point):Seq[Point]= {
+    getSquareVertices(p, getPixelFromSize(s))
   }
 
   /**

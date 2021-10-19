@@ -22,6 +22,13 @@ trait Animal extends Species with Placeable {
   val thirst: Int
 
   /**
+   * Method used to get the [[Species]] given an [[Animal]]
+   *
+   * @return the [[Species]] of the [[Animal]]
+   */
+  def species:Species
+
+  /**
    * Method used to understand if the animal can see a certain element of the map.
    *
    * @param element the element to see.
@@ -143,5 +150,12 @@ object Animal {
     }
 
     override def toString: String = s"Animal: $name, $size $strength pos:($position)"
+
+    /**
+     * Method used to get the [[Species]] given an [[Animal]]
+     *
+     * @return the [[Species]] of the [[Animal]]
+     */
+    override def species: Species = Species(name, size, strength, sight, alimentationType, color)
   }
 }
