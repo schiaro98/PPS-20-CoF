@@ -14,8 +14,7 @@ class FeedManagerTest extends AnyFunSuite{
   val feedManager: FeedManager = FeedManager(animals, foodsFar)
 
   test("Animals should not eat food that is far away"){
-    val foodsRemaining = feedManager.consumeResources()
-    val animalsUpdated = feedManager.getAnimals
+    val (animalsUpdated, foodsRemaining) = feedManager.consumeResources()
 
     assert(animalsUpdated.length == animalQuantity)
     assert(foodsRemaining.length == foodQuantity)
@@ -25,24 +24,22 @@ class FeedManagerTest extends AnyFunSuite{
     })
   }
 
+
   test("Animal should decreas health and thirst every round"){
-    var animalsUpdated = animals
-    for (i <- 1 to 10){
-      val feedManager: FeedManager = FeedManager(animalsUpdated, foodsFar)
-      animalsUpdated = feedManager.lifeCycleUpdate()
-      animalsUpdated.foreach(animal => {
-        assert(animal.health == Constants.MaxHealth - (Constants.healthDecrease * i))
-        assert(animal.thirst == Constants.MaxThirst - (Constants.thirstDecrease * i))
+    val feedManager: FeedManager = FeedManager(animals, foodsFar)
+      feedManager.lifeCycleUpdate(animals).foreach(animal => {
+        assert(animal.health == Constants.MaxHealth - Constants.healthDecrease)
+        assert(animal.thirst == Constants.MaxThirst - Constants.thirstDecrease)
       })
-    }
   }
 
   test("Animal should eat near food"){
       val damagedAnimals = animals.map(animal => animal.update(health = 150))
       val feedManager: FeedManager = FeedManager(damagedAnimals, foodsNear)
+      val (animalsUpdated, _) = feedManager.consumeResources()
 
-      feedManager.lifeCycleUpdate()
-      assert(feedManager.getAnimals.forall(_.health < Constants.MaxHealth))
+      feedManager.lifeCycleUpdate(animalsUpdated)
+      assert(animalsUpdated.forall(_.health < Constants.MaxHealth))
       feedManager.consumeResources()
   }
 
@@ -54,14 +51,10 @@ class FeedManagerTest extends AnyFunSuite{
                       FoodInstance(Food(10, Meat),Point(101, 101), 1))
 
     val feedManager: FeedManager = FeedManager(animals, foods)
+    val (animalsUpdated, foodsRemaining) = feedManager.consumeResources()
+    assert(animalsUpdated.forall(_.health == Constants.MaxHealth))
+    animals = feedManager.lifeCycleUpdate(animalsUpdated)
 
-    animals = feedManager.lifeCycleUpdate()
-
-    val feedManager2: FeedManager = FeedManager(animals, foods)
-    assert(feedManager2.getAnimals.forall(_.health == (Constants.MaxHealth - Constants.healthDecrease)))
-
-    feedManager2.consumeResources()
-
-    assert(feedManager.getAnimals.forall(_.health == Constants.MaxHealth))
+    assert(animals.forall(_.health == (Constants.MaxHealth - Constants.healthDecrease)))
   }
 }

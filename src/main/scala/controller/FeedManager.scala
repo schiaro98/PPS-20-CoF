@@ -12,17 +12,12 @@ sealed trait FeedManager {
    * It manage also the decrease of health and thirst
    * @return a pair of the sequence of the animals updated and of the food still eatable
    */
-  def consumeResources(): Seq[FoodInstance]
+  def consumeResources(): (Seq[Animal],Seq[FoodInstance])
 
   /**
    * Update (decrease) the current thirst and health
    */
-  def lifeCycleUpdate(): Seq[Animal]
-
-  /**
-   * Return alive animals
-   */
-  def getAnimals: Seq[Animal]
+  def lifeCycleUpdate(animal: Seq[Animal]): Seq[Animal]
 }
 
 object FeedManager {
@@ -30,20 +25,18 @@ object FeedManager {
 
   private case class SimpleFeedManager(animals: Seq[Animal], resources: Seq[FoodInstance], habitat: Habitat) extends FeedManager {
 
-    override def consumeResources(): Seq[FoodInstance] = {
+    override def consumeResources():(Seq[Animal],Seq[FoodInstance]) = {
 
       @tailrec
       def _consumeResources(animals: Seq[Animal],
                             resources: Seq[FoodInstance],
-                            updatedAnimals: Seq[Animal] = Seq.empty) : Seq[FoodInstance] = animals match {
+                            updatedAnimals: Seq[Animal] = Seq.empty) : (Seq[Animal],Seq[FoodInstance]) = animals match {
         case h :: t =>
 
           val nearestWaterArea = findNearestWaterZone(h, habitat)
           val myAnimal = if(nearestWaterArea.isDefined){
             h.drink()
           } else h
-
-
 
           //Contiene la risorsa più vicina all'animale, deve essere dentro alla hitbox
           val nearestResource = resources
@@ -74,7 +67,7 @@ object FeedManager {
                 }
               case _ =>
                 println("ERROR: Trying to do something impossible")
-                resources
+                (updatedAnimals, resources)
             }
           } else {
             //Se l'animale NON ha un cibo mangiabile nell'hitbox
@@ -83,7 +76,8 @@ object FeedManager {
           }
         case _ =>
           //Se finisco la lista, ritorno i cibi avanzati
-          resources
+          (updatedAnimals, resources)
+
       }
       _consumeResources(animals, resources)
     }
@@ -91,8 +85,8 @@ object FeedManager {
     /**
      * Update (decrease) the current thirst and health
      */
-    override def lifeCycleUpdate(): Seq[Animal] = {
-      animals.map(animal => {
+    override def lifeCycleUpdate(animalToUpdate: Seq[Animal]): Seq[Animal] = {
+      animalToUpdate.map(animal => {
         animal.update(
           health = animal.health - Constants.healthDecrease,
           thirst = animal.thirst - Constants.thirstDecrease,
@@ -100,11 +94,6 @@ object FeedManager {
         )
       }).filter(_.isAlive)
     }
-
-    /**
-     * Return alive animals
-     */
-    override def getAnimals: Seq[Animal] = animals
 
     def findNearestWaterZone(animal: Animal, h: Habitat): Option[Point] = {
       h.areas
