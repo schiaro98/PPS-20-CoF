@@ -1,7 +1,7 @@
 package controller
 
 import model._
-import utility.Constants
+import utility.{Constants, Logger}
 import view.{SimulationGui, SimulationPanel}
 
 /**
@@ -15,6 +15,7 @@ case class GameLoop(population: Map[Species, Int], habitat: Habitat) extends Run
   var isPaused: Boolean = false
   var isSpeedUp: Boolean = false
   var isStopped: Boolean = false
+  private val logger = Logger
 
   /**
    * Method that represents the core of the simulation, defines the actions that must be
@@ -39,22 +40,21 @@ case class GameLoop(population: Map[Species, Int], habitat: Habitat) extends Run
         animalManager = AnimalManager(shiftManager.animals.toSeq)
 
         val feedManager = FeedManager(animalManager.animals, resourceManager.foodInstances)
-        println("Updated animals after shiftmanager", animalManager.animals.length)
-        val (_, remainedFood) = feedManager.consumeResources()
+
+        val feedResult = feedManager.consumeResources()
 
         animalManager = animalManager.lifeCycleUpdate()
-        println("Updated animals after feedmanager" + animalManager.animals.length)
 
         val battleManager: BattleManager = BattleManager(animalManager.animals)
-        val battleFood = battleManager.battle()
-        resourceManager = resourceManager.foodInstances_(battleFood ++ remainedFood)
-        println("Updated food after feed and battle", resourceManager.foodInstances.length)
-        animalManager = AnimalManager(battleManager.getAnimals)
-        println("Updated animals after battle", animalManager.animals.length)
+        val result = battleManager.battle()
+
+        resourceManager = resourceManager.foodInstances_(result._2 ++ feedResult._2)
+
+        animalManager = AnimalManager(result._1)
 
         //TODO Calcolo eventi inaspettati
 
-        resourceManager = resourceManager.grow()
+        //resourceManager = resourceManager.grow()
 
         simulationGui.updatePanel(animalManager.animals, resourceManager.foodInstances)
         simulationGui.updateElapsedTime()
@@ -62,8 +62,7 @@ case class GameLoop(population: Map[Species, Int], habitat: Habitat) extends Run
       waitForNextStep(current)
       previous = current
     }
-
-    println("Simulation finished")
+    logger.info("Simulation finished")
     //TODO mostrare la gui con il riassunto
   }
 

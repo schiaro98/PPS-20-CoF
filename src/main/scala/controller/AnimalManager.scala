@@ -62,7 +62,17 @@ object AnimalManager {
     }
 
     override def lifeCycleUpdate(): AnimalManager = {
+
+//      animalToUpdate.map(animal => {
+//        animal.update(
+//          health = animal.health - Constants.healthDecrease,
+//          thirst = animal.thirst - Constants.thirstDecrease,
+//          position = animal.position
+//        )
+//      }).filter(_.isAlive)
+
       //TODO gestire le morti e ritornare anche la carne
+
       AnimalManager(animals.map(animal => animal.update(
         health = animal.health - Constants.healthDecrease,
         thirst = animal.thirst - Constants.thirstDecrease,

@@ -27,8 +27,9 @@ object DestinationManager {
     override def calculateDestination(): Map[Animal, Point] = {
       var destination: Map[Animal, Point] = Map.empty
       animals.foreach(animal => {
-        if (animal.thirst < 50 && findNearestWaterZone(animal, habitat).isDefined) {
-          destination = destination + (animal -> findNearestWaterZone(animal, habitat).get)
+        val neareastWaterZone = findNearestWaterZone(animal, habitat)
+        if (animal.thirst < 50 && neareastWaterZone.isDefined) {
+          destination = destination + (animal -> neareastWaterZone.get)
         } else {
           val point = animal.alimentationType match {
             case Herbivore => findNearestResource(animal, food.filter(_.foodType == Vegetable))

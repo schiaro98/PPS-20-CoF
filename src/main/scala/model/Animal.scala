@@ -109,7 +109,10 @@ object Animal {
 
     override def isAlive: Boolean = health > 0 && thirst > 0
 
-    override def drink(): Animal = this.update(thirst = MaxThirst)
+    override def drink(): Animal = {
+      logger.info(this.name + " drinked water")
+      this.update(thirst = MaxThirst)
+    }
 
     override def die(): FoodInstance = FoodInstance(Food(Constants.DefaultEnergyOfMeat, Meat), position, quantityFromDeath())
 
@@ -149,7 +152,7 @@ object Animal {
       case Small => QuantityForSmall
     }
 
-    override def toString: String = s"Animal: $name, $size $strength pos:($position)"
+    override def toString: String = s"Animal: $name, Size: $size, Health: $health, Thirst: $thirst, $strength pos: ${(position.x, position.y)}"
 
     /**
      * Method used to get the [[Species]] given an [[Animal]]
