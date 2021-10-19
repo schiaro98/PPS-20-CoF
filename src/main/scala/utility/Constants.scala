@@ -26,10 +26,10 @@ object Constants {
 
   // ------- Animal -------
   val MaxHealth = 300
-  val healthDecrease = 15
+  val healthDecrease = 5
 
   val MaxThirst = 100
-  val thirstDecrease = 5
+  val thirstDecrease = 2
 
   val QuantityForBig = 8
   val QuantityForMedium = 5
@@ -46,7 +46,7 @@ object Constants {
 
   val IncCarnivoreVelocity = 5
 
-  val hitbox = 3
+  val hitbox = 5
 
   // ------- Gui --------
   val DefaultSimulationDimension = new Dimension(1000, 1000)
