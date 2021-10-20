@@ -63,6 +63,12 @@ object FeedManager {
       _consumeResources(animals, resources)
     }
 
+    /**
+     * Find if an [[Animal]] is near (or not) a water zone
+     * @param animal who needs to drink
+     * @param h the habitat
+     * @return true if the animal is near the water zone, false otherwise
+     */
     def isAnimalNearToWater(animal: Animal, h: Habitat): Boolean = {
       @tailrec
       def _isAnimalNearToWater(areas: Seq[Area]): Boolean = areas.filter(_.areaType == Water) match {

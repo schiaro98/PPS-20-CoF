@@ -4,6 +4,9 @@ import model.{Point, _}
 
 import scala.annotation.tailrec
 
+/**
+ * Controller for give a destination to every [[Animal]] in a map
+ */
 sealed trait DestinationManager {
   /**
    * For any given [[Animal]], calculate the target of the movement
@@ -28,7 +31,7 @@ object DestinationManager {
       var destination: Map[Animal, Point] = Map.empty
       animals.foreach(animal => {
         val neareastWaterZone = findNearestWaterZone(animal, habitat)
-        if (neareastWaterZone.isDefined) { //TODO togliere costante
+        if (neareastWaterZone.isDefined) {
           destination = destination + (animal -> neareastWaterZone.get)
         } else {
           val point = animal.alimentationType match {
