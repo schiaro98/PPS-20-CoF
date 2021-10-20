@@ -167,11 +167,14 @@ object Animal {
           di chi è la colpa?
          */
         logger.info(this.name + " eat some food")
-        println("Food quantity : " + food.quantity)
         val foodToEat = (MaxHealth - health) / food.energy + (if (MaxHealth - health % food.energy == 0) 0 else 1)
-        println("Food to eat: " + foodToEat)
         Statistics.update(foodEaten = foodToEat)
-        (this.update(health = MaxHealth), Some(food.consume(foodToEat)))
+        if(foodToEat > food.quantity){
+          val foodToEat2 = food.quantity
+          (this.update(health = MaxHealth), Some(food.consume(foodToEat2)))
+        } else {
+          (this.update(health = MaxHealth), Some(food.consume(foodToEat)))
+        }
     }
   }
 }

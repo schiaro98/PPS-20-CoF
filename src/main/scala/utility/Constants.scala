@@ -48,7 +48,8 @@ object Constants {
 
   val IncCarnivoreVelocity = 5
 
-  val hitbox = 5
+  val Hitbox = 5
+  val waterHitbox = 10
 
   // ------- Gui --------
   val DefaultSimulationDimension = new Dimension(1000, 1000)

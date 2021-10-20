@@ -33,7 +33,7 @@ object FeedManager {
           } else h
 
           val nearestResource = resources
-            .filter(_.position.distance(myAnimal.position) < Constants.hitbox)
+            .filter(_.position.distance(myAnimal.position) < Constants.Hitbox)
             .filter(food => {
               if (myAnimal.alimentationType == Carnivore){
                 food.foodType == Meat
@@ -49,10 +49,8 @@ object FeedManager {
                 val (updatedAnimal, remainedFood) = myAnimal.eat(x)
 
                 if(remainedFood.isDefined) {
-                  //require(remainedFood.get.foodType == x.foodType, "Remaining food is not of same type of the original")
-                  //print("Remained" + remainedFood.get)
-                  //print("Old food" + x)
-                  //require(remainedFood.get.quantity < x.quantity, "Remaining food quantity is greater than original")
+                  require(remainedFood.get.foodType == x.foodType, "Remaining food is not of same type of the original")
+                  require(remainedFood.get.quantity <= x.quantity, "Remaining food quantity is greater than original")
                   _consumeResources(t, resources.filterNot(_ == x) :+ remainedFood.get , updatedAnimals :+ updatedAnimal)
                 } else {
                   _consumeResources(t, resources.filterNot(_ == x), updatedAnimals :+ updatedAnimal)
@@ -71,7 +69,7 @@ object FeedManager {
       def _isAnimalNearToWater(areas: Seq[Area]): Boolean = areas.filter(_.areaType == Water) match {
         case h::t => h match {
           case h =>
-            if( h.area.topLeft.distance(animal.position) < animal.sight &&
+            if( h.area.topLeft.distance(animal.position) < animal.sight ||
               h.area.bottomRight.distance(animal.position) < animal.sight){
               true
             } else {
@@ -82,6 +80,5 @@ object FeedManager {
       }
       _isAnimalNearToWater(h.areas)
     }
-
-    }
+  }
 }
