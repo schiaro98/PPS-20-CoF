@@ -2,6 +2,7 @@ package model
 
 import scala.util.Random
 
+//TODO aggiungere scaladoc in trait, object e metodi
 trait Probability {
 
   val probability: Int
@@ -18,6 +19,7 @@ trait Probability {
 }
 
 object Probability {
+
   /**
    *
    * @param probability an Int between 0 and 100

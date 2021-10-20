@@ -1,7 +1,6 @@
 package controller
 
 import model.{Animal, Habitat, Point}
-import org.scalatest.Ignore
 import org.scalatest.funsuite.AnyFunSuite
 import utility.Constants
 import view.LogicGui

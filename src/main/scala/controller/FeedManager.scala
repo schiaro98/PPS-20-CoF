@@ -24,31 +24,38 @@ object FeedManager {
 
       @tailrec
       def _consumeResources(animals: Seq[Animal],
-                            resources: Seq[FoodInstance],
+                            resources: Seq[FoodInstance] = Seq.empty,
                             updatedAnimals: Seq[Animal] = Seq.empty) : (Seq[Animal],Seq[FoodInstance]) = animals match {
         case h :: t =>
-
-          val nearestWaterArea = findNearestWaterZone(h, habitat)
-          val myAnimal = if(nearestWaterArea.isDefined){
+          val myAnimal = if(isAnimalNearToWater(h, habitat)){
+            print("Ho trovato dell'acqua!!!\n\nYEEEE")
             h.drink()
           } else h
 
           val nearestResource = resources
-            .filter(_.position.distance(myAnimal.position) < Constants.hitbox)
+            .filter(_.position.distance(myAnimal.position) < Constants.Hitbox)
+            .filter(food => {
+              if (myAnimal.alimentationType == Carnivore){
+                food.foodType == Meat
+              } else {
+                food.foodType == Vegetable
+              }
+            })
             .minByOption(_.position.distance(myAnimal.position))
 
           if(nearestResource.isDefined) {
             nearestResource.get match {
-              case x: FoodInstance if x.foodType == Meat && myAnimal.alimentationType == Carnivore || x.foodType == Vegetable && myAnimal.alimentationType == Herbivore =>
+              case x: FoodInstance =>
                 val (updatedAnimal, remainedFood) = myAnimal.eat(x)
 
                 if(remainedFood.isDefined) {
+                  require(remainedFood.get.foodType == x.foodType, "Remaining food is not of same type of the original")
+                  require(remainedFood.get.quantity <= x.quantity, "Remaining food quantity is greater than original")
                   _consumeResources(t, resources.filterNot(_ == x) :+ remainedFood.get , updatedAnimals :+ updatedAnimal)
                 } else {
                   _consumeResources(t, resources.filterNot(_ == x), updatedAnimals :+ updatedAnimal)
                 }
               case _ => _consumeResources(t, resources, updatedAnimals :+ myAnimal)
-
             }
           } else _consumeResources(t, resources, updatedAnimals :+ myAnimal)
         case _ => (updatedAnimals, resources)
@@ -57,12 +64,21 @@ object FeedManager {
       _consumeResources(animals, resources)
     }
 
-    def findNearestWaterZone(animal: Animal, h: Habitat): Option[Point] = {
-      h.areas
-        .filter(_.areaType == Water)
-        .map(rectangle => rectangle.area.topLeft)
-        .filter(_.distance(animal.position) < Constants.hitbox)
-        .minByOption(_.distance(animal.position))
+    def isAnimalNearToWater(animal: Animal, h: Habitat): Boolean = {
+      @tailrec
+      def _isAnimalNearToWater(areas: Seq[Area]): Boolean = areas.filter(_.areaType == Water) match {
+        case h::t => h match {
+          case h =>
+            if( h.area.topLeft.distance(animal.position) < animal.sight ||
+              h.area.bottomRight.distance(animal.position) < animal.sight){
+              true
+            } else {
+              _isAnimalNearToWater(t)
+            }
+        }
+        case _ => false
+      }
+      _isAnimalNearToWater(h.areas)
     }
   }
 }

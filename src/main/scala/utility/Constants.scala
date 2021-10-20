@@ -25,6 +25,8 @@ object Constants {
   val DefaultEnergyOfVegetable = 10
 
   // ------- Animal -------
+  val InitialNumForAnimals = 5
+
   val MaxHealth = 300
   val healthDecrease = 5
 
@@ -46,7 +48,8 @@ object Constants {
 
   val IncCarnivoreVelocity = 5
 
-  val hitbox = 5
+  val Hitbox = 5
+  val waterHitbox = 10
 
   // ------- Gui --------
   val DefaultSimulationDimension = new Dimension(1000, 1000)
@@ -68,4 +71,5 @@ object Constants {
   val NonWalkableArea: Set[AreaType] = Set(Volcano,Rock,Water) //TODO gestire questo nel model ?
 
   val FoodToGrowPerFertileArea: Int = 1
+
 }

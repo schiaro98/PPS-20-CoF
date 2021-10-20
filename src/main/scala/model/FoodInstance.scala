@@ -44,8 +44,8 @@ object FoodInstance {
                                       override val foodType: FoodType,
                                      ) extends FoodInstance {
 
-
     override def consume[F >: FoodInstance](amount: Int): F =
-      if (quantity >= amount) FoodInstanceImpl(quantity - amount, position, energy, color, foodType) else throw new IllegalArgumentException
+      if (quantity >= amount) FoodInstanceImpl(quantity - amount, position, energy, color, foodType)
+      else throw new IllegalArgumentException("Trying to eat more food than existing")
   }
 }
