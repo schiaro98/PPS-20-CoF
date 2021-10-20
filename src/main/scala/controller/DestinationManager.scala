@@ -1,6 +1,7 @@
 package controller
 
 import model.{Point, _}
+import utility.Constants
 
 import scala.annotation.tailrec
 
@@ -28,7 +29,7 @@ object DestinationManager {
       var destination: Map[Animal, Point] = Map.empty
       animals.foreach(animal => {
         val neareastWaterZone = findNearestWaterZone(animal, habitat)
-        if (animal.thirst < 50 && neareastWaterZone.isDefined) {
+        if (animal.thirst < 50 && neareastWaterZone.isDefined) { //TODO togliere costante
           destination = destination + (animal -> neareastWaterZone.get)
         } else {
           val point = animal.alimentationType match {
