@@ -25,7 +25,6 @@ sealed trait BattleManager {
 object BattleManager {
   def apply(animals: Seq[Animal] = Seq.empty): BattleManager = SimpleBattleManager(animals)
 
-
   private case class SimpleBattleManager(animals: Seq[Animal]) extends BattleManager {
     private val logger = Logger
 

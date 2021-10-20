@@ -41,8 +41,8 @@ object Constants {
   val MaxShiftForCarnivore = 20
   val MinShift = 5
 
-  val PixelForBig = 14
-  val PixelForMedium = 11
+  val PixelForBig = 12
+  val PixelForMedium = 10
   val PixelForSmall = 8
 
   val PixelForFood = 8

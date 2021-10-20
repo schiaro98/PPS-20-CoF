@@ -1,6 +1,6 @@
 package controller
 
-import model.{Point, _}
+import model._
 import org.scalatest.funsuite.AnyFunSuite
 
 class BattleManagerTest extends AnyFunSuite{
@@ -28,22 +28,6 @@ class BattleManagerTest extends AnyFunSuite{
     val bm = BattleManager(Seq(a1, a2, a3))
     bm.battle()
     val result = bm.battle()
-    result._1.foreach(println)
   }
 
-  test("Check result of the battle"){
-    val bm = BattleManager(Seq(a1, a2, a3, herb, unreachableAnimal))
-    val result = bm.battle()
-
-  }
-
-/*  test("Test if an herbivour can battle"){
-    val bm = BattleManager(Seq(herb))
-    assertThrows[IllegalArgumentException](bm.startBattle(herb, a1))
-  }
-
-  test("Test if a damaged (with a low health) animal can battle"){
-    val damagedAnimal = a2.update(health = 0, a2.thirst, a2.position)
-    assertThrows[IllegalArgumentException](bm.startBattle(damagedAnimal, a1))
-  }*/
 }

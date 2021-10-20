@@ -28,7 +28,6 @@ object FeedManager {
                             updatedAnimals: Seq[Animal] = Seq.empty) : (Seq[Animal],Seq[FoodInstance]) = animals match {
         case h :: t =>
           val myAnimal = if(isAnimalNearToWater(h, habitat)){
-            print("Ho trovato dell'acqua!!!\n\nYEEEE")
             h.drink()
           } else h
 
