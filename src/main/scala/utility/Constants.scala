@@ -74,4 +74,7 @@ object Constants {
 
   val FoodToGrowPerFertileArea: Int = 1
 
+
+  //------- ResourceManager ----
+  val MaxFoodInstances = 80
 }
