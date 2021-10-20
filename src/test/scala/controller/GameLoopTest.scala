@@ -1,6 +1,7 @@
 package controller
 
 import model.{Animal, Habitat, Point}
+import org.scalatest.Ignore
 import org.scalatest.funsuite.AnyFunSuite
 import utility.Constants
 import view.LogicGui
@@ -19,8 +20,6 @@ class GameLoopTest extends AnyFunSuite{
 
     var i = 0
     while (animalManager.animals.lengthIs > 0 && i < 100) {
-      println(i)
-      i+=1
       val destinationManager: DestinationManager = DestinationManager(animalManager.animals, resourceManager.foodInstances, habitat)
       val destinations: Map[Animal, Point] = destinationManager.calculateDestination()
       val shiftManager = ShiftManager(habitat, destinations)
@@ -28,7 +27,7 @@ class GameLoopTest extends AnyFunSuite{
       shiftManager.walk()
       animalManager = AnimalManager(shiftManager.animals.toSeq)
 
-      val feedManager = FeedManager(animalManager.animals, resourceManager.foodInstances)
+      val feedManager = FeedManager(animalManager.animals, resourceManager.foodInstances, habitat)
 
       val (animalsUpdated, foodsRemaining) = feedManager.consumeResources()
       animalManager = AnimalManager(animalsUpdated)

@@ -40,7 +40,7 @@ case class GameLoop(population: Map[Species, Int], habitat: Habitat) extends Run
         shiftManager.walk()
         animalManager = AnimalManager(shiftManager.animals.toSeq)
 
-        val feedManager = FeedManager(animalManager.animals, resourceManager.foodInstances)
+        val feedManager = FeedManager(animalManager.animals, resourceManager.foodInstances, habitat)
         val feedResult = feedManager.consumeResources()
         animalManager = AnimalManager(feedResult._1)
         resourceManager = resourceManager.foodInstances_(/* resourceManager.foodInstances ++ */ feedResult._2)
