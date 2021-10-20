@@ -1,7 +1,7 @@
 package controller
 
 import model._
-import utility.Logger
+import utility.{Logger, Statistics}
 
 import scala.annotation.tailrec
 
@@ -48,6 +48,8 @@ object BattleManager {
               calculateProbabilityFromStrength(h, enemy)
             )
 
+            Statistics.update(attacks = 1)
+            Statistics.update(deathInBattle = 1)
             if (Probability(probabilities.map(a => a.probability).sum / probabilities.length).calculate) {
               logger.info("Attacking animal: " + h.name + " has won against " + enemy.name)
               battle_(t, meats :+ enemy.die(), animalUpdated :+ h)
