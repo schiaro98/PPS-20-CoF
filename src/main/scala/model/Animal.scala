@@ -1,6 +1,6 @@
 package model
 
-import utility.{Constants, Logger}
+import utility.{Constants, Logger, Statistics}
 import utility.Constants._
 
 import java.awt.Color
@@ -155,11 +155,13 @@ object Animal {
     private def consume(food: FoodInstance): (Animal, Option[FoodInstance]) = health match {
       case Constants.MaxHealth => (this, Some(food))
       case _ if MaxHealth - health > food.energy * food.quantity =>
+        Statistics.update(foodEaten = food.quantity)
         logger.info(this.name + " eat all food")
         (this.update(health = health + food.energy * food.quantity), None)
       case _ =>
         logger.info(this.name + " eat some food")
         val foodToEat = (MaxHealth - health) / food.energy + (if (MaxHealth - health % food.energy == 0) 0 else 1)
+        Statistics.update(foodEaten = foodToEat)
         (this.update(health = MaxHealth), Some(food.consume(foodToEat)))
     }
   }

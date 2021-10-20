@@ -93,7 +93,6 @@ class SimulationGui(habitat: Habitat,
    * Method to increment the counter of the elapsed time.
    */
   def updateElapsedTime(): Unit = {
-    Statistics.incTime()
     elapsedTimeField.text = Statistics.time().toString
   }
 
