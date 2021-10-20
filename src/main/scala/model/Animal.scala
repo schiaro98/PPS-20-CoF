@@ -159,8 +159,17 @@ object Animal {
         logger.info(this.name + " eat all food")
         (this.update(health = health + food.energy * food.quantity), None)
       case _ =>
+        /*
+        TODO è capitata sta cosa:
+        INFO: Cat eat some food
+          Food quantity : 2
+          Food to eat: 3
+          di chi è la colpa?
+         */
         logger.info(this.name + " eat some food")
+        println("Food quantity : " + food.quantity)
         val foodToEat = (MaxHealth - health) / food.energy + (if (MaxHealth - health % food.energy == 0) 0 else 1)
+        println("Food to eat: " + foodToEat)
         Statistics.update(foodEaten = foodToEat)
         (this.update(health = MaxHealth), Some(food.consume(foodToEat)))
     }
