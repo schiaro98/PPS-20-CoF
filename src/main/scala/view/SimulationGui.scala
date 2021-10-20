@@ -26,7 +26,7 @@ class SimulationGui(habitat: Habitat,
   val simulationPanel = new SimulationPanel(habitat.dimensions)
   val textArea: TextArea = new TextArea("", 10, 10) { editable = false }
   val elapsedTimeLabel: Label = new Label("   Time elapsed:   ")
-  val elapsedTimeField: TextField = new TextField(Statistics.time().toString) { editable = false }
+  val elapsedTimeField: TextField = new TextField(Statistics.time.toString) { editable = false }
   val buttons: Seq[Button] = SimulationButton(setPaused, setSpeed, stop).buttons
 
   override def top: Frame = new Frame {
@@ -62,7 +62,7 @@ class SimulationGui(habitat: Habitat,
    * Method to increment the counter of the elapsed time.
    */
   def updateElapsedTime(): Unit = {
-    elapsedTimeField.text = Statistics.time().toString
+    elapsedTimeField.text = Statistics.time.toString
   }
 
   /**
