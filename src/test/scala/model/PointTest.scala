@@ -20,7 +20,7 @@ class PointTest extends AnyFunSuite{
     val p2 = Point(1,0)
     val p3 = Point(1,1)
     assert(p1.distance(p2) == 1)
-    assert(p1.distance(p3) == Math.sqrt(2))
+    assert(p1.distance(p3) == 2)
   }
 
   test("Find random points between 0 and limits"){
