@@ -10,14 +10,14 @@
   "alimentationType": "Carnivore"
 }{
   "color": {
-    "value": -1,
+    "value": -3398716,
     "falpha": 0.0
   },
-  "name": "Zebra",
-  "size": "Medium",
-  "strength": 10,
-  "sight": 20,
-  "alimentationType": "Herbivore"
+  "name": "Hyena",
+  "size": "Small",
+  "strength": 20,
+  "sight": 15,
+  "alimentationType": "Carnivore"
 }{
   "color": {
     "value": -2175844,
@@ -28,6 +28,16 @@
   "strength": 20,
   "sight": 20,
   "alimentationType": "Carnivore"
+}{
+  "color": {
+    "value": -1,
+    "falpha": 0.0
+  },
+  "name": "Zebra",
+  "size": "Medium",
+  "strength": 10,
+  "sight": 20,
+  "alimentationType": "Herbivore"
 }{
   "color": {
     "value": -14433844,
@@ -48,24 +58,4 @@
   "strength": 30,
   "sight": 20,
   "alimentationType": "Herbivore"
-}{
-  "color": {
-    "value": -3398716,
-    "falpha": 0.0
-  },
-  "name": "Hyena",
-  "size": "Small",
-  "strength": 20,
-  "sight": 15,
-  "alimentationType": "Carnivore"
-}{
-   "color": {
-     "value": -16777216,
-     "falpha": 0.0
-   },
-   "name": "Buffalo",
-   "size": "Medium",
-   "strength": 20,
-   "sight": 15,
-   "alimentationType": "Herbivore"
- }
+}
