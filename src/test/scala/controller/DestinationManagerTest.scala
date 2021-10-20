@@ -70,6 +70,10 @@ class DestinationManagerTest extends AnyFunSuite {
   }
 
   test("Carnivore should go towards a herbivore, herbivore should go to random place"){
+    val herbivore1: Animal = Animal(Species("HerbivoreExample2", Medium, 10, 10, Herbivore), Point(0,1))
+    val carnivore1: Animal = Animal(Species("CarnivoreExample1", Medium, 10, 10, Carnivore), Point(0,2))
+    val meat1: FoodInstance = FoodInstance(beefMeat, Point(5, 5), 1)
+
     val destMng = DestinationManager(Seq(carnivore1, herbivore1), Seq(meat1), habitat)
     val result = destMng.calculateDestination()
     println(result)
@@ -79,6 +83,11 @@ class DestinationManagerTest extends AnyFunSuite {
   }
 
   test("Carnivore should go towards a herbivore, herbivore should towards food"){
+    val herbivore1: Animal = Animal(Species("HerbivoreExample2", Medium, 10, 10, Herbivore), Point(0,1))
+    val carnivore1: Animal = Animal(Species("CarnivoreExample1", Medium, 10, 10, Carnivore), Point(0,2))
+    val meat1: FoodInstance = FoodInstance(beefMeat, Point(5, 5), 1)
+    val carrot: FoodInstance = FoodInstance(carrotFood, Point(1,0), 1)
+
     val destMng = DestinationManager(Seq(carnivore1, herbivore1), Seq(meat1, carrot), habitat)
     val result = destMng.calculateDestination()
     println(result)

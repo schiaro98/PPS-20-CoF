@@ -24,10 +24,11 @@ object FeedManager {
 
       @tailrec
       def _consumeResources(animals: Seq[Animal],
-                            resources: Seq[FoodInstance],
+                            resources: Seq[FoodInstance] = Seq.empty,
                             updatedAnimals: Seq[Animal] = Seq.empty) : (Seq[Animal],Seq[FoodInstance]) = animals match {
         case h :: t =>
-
+          println(resources.length)
+          println(resources)
           val nearestWaterArea = findNearestWaterZone(h, habitat)
           val myAnimal = if(nearestWaterArea.isDefined){
             h.drink()
@@ -43,12 +44,13 @@ object FeedManager {
                 val (updatedAnimal, remainedFood) = myAnimal.eat(x)
 
                 if(remainedFood.isDefined) {
+                  require(remainedFood.get.foodType == x.foodType, "Remaining food is not of same type of the original")
+                  require(remainedFood.get.quantity < x.quantity, "Remaining food quantity is greater than original")
                   _consumeResources(t, resources.filterNot(_ == x) :+ remainedFood.get , updatedAnimals :+ updatedAnimal)
                 } else {
                   _consumeResources(t, resources.filterNot(_ == x), updatedAnimals :+ updatedAnimal)
                 }
               case _ => _consumeResources(t, resources, updatedAnimals :+ myAnimal)
-
             }
           } else _consumeResources(t, resources, updatedAnimals :+ myAnimal)
         case _ => (updatedAnimals, resources)

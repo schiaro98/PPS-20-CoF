@@ -47,7 +47,6 @@ case class GameLoop(population: Map[Species, Int], habitat: Habitat) extends Run
 
         val (updatedAnimal, generatedFood) = animalManager.lifeCycleUpdate()
         animalManager = AnimalManager(updatedAnimal)
-        //TODO nella riga sotto ho aggiunto le carcasse al ResourceManager, si faceva così? è giusto? il nome è definitivo? forse con "setFood" si capisce meglio?
         resourceManager = resourceManager.foodInstances_(resourceManager.foodInstances ++ generatedFood)
 
         val battleManager: BattleManager = BattleManager(animalManager.animals)
