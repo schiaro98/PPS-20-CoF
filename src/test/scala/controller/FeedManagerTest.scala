@@ -42,7 +42,7 @@ class FeedManagerTest extends AnyFunSuite {
                       FoodInstance(Food(10, Meat),Point(101, 101), 1))
 
     val animalManager = AnimalManager(animals)
-    val (animalsUpdated, food) = animalManager.lifeCycleUpdate()
+    val (animalsUpdated, _) = animalManager.lifeCycleUpdate()
     val feedManager: FeedManager = FeedManager(animalsUpdated, foods, habitat)
     val (animalsUpdated2, _) = feedManager.consumeResources()
     assert(animalsUpdated2.forall(_.health == Constants.MaxHealth))
