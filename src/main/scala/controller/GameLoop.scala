@@ -1,7 +1,7 @@
 package controller
 
 import model._
-import utility.{Constants, Logger}
+import utility.{Constants, Logger, Statistics}
 import view.{SimulationGui, SimulationPanel, StatisticsGUI}
 
 /**
@@ -57,13 +57,14 @@ case class GameLoop(population: Map[Species, Int], habitat: Habitat) extends Run
 
         //TODO Calcolo eventi inaspettati
 
-        //resourceManager = resourceManager.grow()
+        resourceManager = resourceManager.grow()
 
         simulationGui.updatePanel(animalManager.animals, resourceManager.foodInstances)
         simulationGui.updateElapsedTime()
       }
       waitForNextStep(current)
       previous = current
+      Statistics.incTime()
     }
     logger.info("Simulation finished")
     val f = new StatisticsGUI

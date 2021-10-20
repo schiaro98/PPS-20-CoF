@@ -67,5 +67,5 @@ object Constants {
 
   val NonWalkableArea: Set[AreaType] = Set(Volcano,Rock,Water) //TODO gestire questo nel model ?
 
-  val FoodToGrowPerFertileArea: Int = 10
+  val FoodToGrowPerFertileArea: Int = 1
 }
