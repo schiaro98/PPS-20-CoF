@@ -4,6 +4,7 @@ import model._
 import utility.{AnimalUtils, Constants}
 
 import scala.annotation.tailrec
+import scala.collection.parallel.CollectionConverters.ImmutableIterableIsParallelizable
 import scala.util.Random
 
 sealed trait ShiftManager {
@@ -46,7 +47,7 @@ object ShiftManager {
 
     private val nonWalkableAreas: Seq[Area] = habitat.areas.filterNot(_.areaType == Fertile)
     //lambda returning an Int for potential shifts
-    private val randShift = (x: Int) => Random.between(Constants.MinShift, x)
+    private val randShift = (x: Int) => (Random.between(Constants.MinShift, x),Random.between(Constants.MinShift, x))
 
     /**
      *
@@ -62,52 +63,25 @@ object ShiftManager {
     override def animals: Set[Animal] = mySupportAnimalsDestinations.keySet.to(Set)
 
     override def walk(): Unit =
-      mySupportAnimalsDestinations = initWalks(mySupportAnimalsDestinations.toList)
+      mySupportAnimalsDestinations = mySupportAnimalsDestinations.par.map(t => (t._1.shift(createPath(t._1, t._2)),t._2)).to(Map)
 
 
-    private def initWalks(animalsToDestinations: List[(Animal, Point)]): Map[Animal, Point] = {
-      @tailrec
-      def _initWalks(animalsToDestinations: List[(Animal, Point)], map: Map[Animal, Point] = Map.empty): Map[Animal, Point] =
-        animalsToDestinations match {
-          case (k, v) :: t => _initWalks(t, map ++ Map(k.shift(createPath(k, v)) -> v))
-          case _ => map
-        }
+    private def createPath(a: Animal, d: Point): Point = {
+      val f = a.position
+      val td =
+        if (a.species.alimentationType == Carnivore)
+          randShift(Constants.MaxShiftForCarnivore)
+        else
+          randShift(Constants.MaxShiftForHerbivore)
+      val topLeft = makeInBounds(f.x - td._1, f.y - td._2)
+      val bottomRight = makeInBounds(f.x + td._1, f.y + td._2)
 
-      _initWalks(animalsToDestinations)
-    }
-
-
-    private def createPath(animal: Animal, dest: Point): Point = {
-      def _createPath(from: Point,
-                      dest: Point,
-                      species: Species,
-                      isCarnivore: Boolean = false,
-                     ): Point = {
-        val travelDistance =
-          if (isCarnivore)
-            (randShift(Constants.MaxShift + Constants.IncCarnivoreVelocity), randShift(Constants.MaxShift + Constants.IncCarnivoreVelocity))
-          else (randShift(Constants.MaxShift), randShift(Constants.MaxShift))
-        val topLeft = makeInBounds(from.x - travelDistance._1, from.y - travelDistance._2)
-        val bottomRight = makeInBounds(from.x + travelDistance._1, from.y + travelDistance._2)
-        val legalPoints = for (x <- topLeft.x to bottomRight.x;
-                               y <- topLeft.y to bottomRight.y
-                               if areAllLegal(AnimalUtils.getCornersOfSpeciesInPoint(species, Point(x, y))))
-        yield Point(x, y)
-        findClosestPoint(legalPoints, dest)
-      }
-
-      _createPath(animal.position, dest, animal.species, isCarnivore = animal.alimentationType == Carnivore)
-    }
-
-    /**
-     *
-     * @param points the [[Seq]] of [[Point]] we want to test
-     * @return true if all points are legal
-     */
-    @tailrec
-    private def areAllLegal(points: Seq[Point]): Boolean = points match {
-      case h :: t => if (isLegal(h)) areAllLegal(t) else false
-      case _ => true
+      val legalPoints = for (x <- topLeft.x to bottomRight.x;
+                             y <- topLeft.y to bottomRight.y
+                             //all corners of the animal must be legal
+                             if AnimalUtils.getCornersOfSpeciesInPoint(a.species, Point(x, y)).count(!isLegal(_)) == 0)
+      yield Point(x, y)
+      findClosestPoint(legalPoints, d).getOrElse(a.position)
     }
 
     /**
@@ -129,13 +103,13 @@ object ShiftManager {
      * @param dest   the destination
      * @return the closest Point to dest
      */
-    private def findClosestPoint(points: Seq[Point], dest: Point): Point = {
+    private def findClosestPoint(points: Seq[Point], dest: Point): Option[Point] = {
       @tailrec
-      def _findClosestPoint(points: Seq[Point], dest: Point, closestP: Option[Point] = None, minDist: Double = Double.MaxValue): Point = points match {
+      def _findClosestPoint(points: Seq[Point], dest: Point, closestP: Option[Point] = None, minDist: Double = Double.MaxValue): Option[Point] = points match {
         case h +: t =>
           val d = h.distance(dest)
           if (d < minDist) _findClosestPoint(t, dest, Some(h), d) else _findClosestPoint(t, dest, closestP, minDist)
-        case _ => closestP.getOrElse(throw new RuntimeException("No Point found, but there should be at least one"))
+        case _ => closestP
       }
 
       _findClosestPoint(points, dest)
