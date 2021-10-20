@@ -1,7 +1,7 @@
 package controller
 
 import model._
-import utility.{Constants, Logger}
+import utility.{Constants, Logger, Statistics}
 import view.{SimulationGui, SimulationPanel, StatisticsGUI}
 
 /**
@@ -40,14 +40,13 @@ case class GameLoop(population: Map[Species, Int], habitat: Habitat) extends Run
         shiftManager.walk()
         animalManager = AnimalManager(shiftManager.animals.toSeq)
 
-        val feedManager = FeedManager(animalManager.animals, resourceManager.foodInstances)
+        val feedManager = FeedManager(animalManager.animals, resourceManager.foodInstances, habitat)
         val feedResult = feedManager.consumeResources()
         animalManager = AnimalManager(feedResult._1)
         resourceManager = resourceManager.foodInstances_(/* resourceManager.foodInstances ++ */ feedResult._2)
 
         val (animalAfterLifeCycle, foodAfterLifeCycle) = animalManager.lifeCycleUpdate()
         animalManager = AnimalManager(animalAfterLifeCycle)
-        //TODO nella riga sotto ho aggiunto le carcasse al ResourceManager, si faceva così? è giusto? il nome è definitivo? forse con "setFood" si capisce meglio?
         resourceManager = resourceManager.foodInstances_(resourceManager.foodInstances ++ foodAfterLifeCycle)
 
         val battleManager: BattleManager = BattleManager(animalManager.animals)
@@ -57,16 +56,16 @@ case class GameLoop(population: Map[Species, Int], habitat: Habitat) extends Run
 
         val (animalAfterUnexpectedEvents, foodAfterUnexpectedEvents) = animalManager.unexpectedEvents(habitat)
         animalManager = AnimalManager(animalAfterUnexpectedEvents)
-        //TODO nella riga sotto ho aggiunto le carcasse al ResourceManager, si faceva così? è giusto? il nome è definitivo? forse con "setFood" si capisce meglio?
         resourceManager = resourceManager.foodInstances_(resourceManager.foodInstances ++ foodAfterUnexpectedEvents)
 
-        //resourceManager = resourceManager.grow()
+        resourceManager = resourceManager.grow()
 
         simulationGui.updatePanel(animalManager.animals, resourceManager.foodInstances)
         simulationGui.updateElapsedTime()
       }
       waitForNextStep(current)
       previous = current
+      Statistics.incTime()
     }
     logger.info("Simulation finished")
     val f = new StatisticsGUI

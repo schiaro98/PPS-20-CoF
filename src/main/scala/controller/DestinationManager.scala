@@ -28,7 +28,7 @@ object DestinationManager {
       var destination: Map[Animal, Point] = Map.empty
       animals.foreach(animal => {
         val neareastWaterZone = findNearestWaterZone(animal, habitat)
-        if (animal.thirst < 50 && neareastWaterZone.isDefined) {
+        if (neareastWaterZone.isDefined) { //TODO togliere costante
           destination = destination + (animal -> neareastWaterZone.get)
         } else {
           val point = animal.alimentationType match {
@@ -84,8 +84,8 @@ object DestinationManager {
     def findNearestWaterZone(animal: Animal, h: Habitat): Option[Point] = {
       h.areas
         .filter(_.areaType == Water)
+        .filter(_.area.topLeft.distance(animal.position) < animal.sight)
         .map(rectangle => Point.getRandomPoint(rectangle.area.topLeft, rectangle.area.bottomRight))
-        .filter(_.distance(animal.position) < animal.sight)
         .minByOption(_.distance(animal.position))
     }
 

@@ -1,6 +1,6 @@
 package model
 
-import utility.{Constants, Logger}
+import utility.{Constants, Logger, Statistics}
 import utility.Constants._
 
 import java.awt.Color
@@ -128,7 +128,7 @@ object Animal {
     override def eat(food: FoodInstance): (Animal, Option[FoodInstance]) = food.foodType match {
       case Meat if this.alimentationType == Carnivore => consume(food)
       case Vegetable if this.alimentationType == Herbivore => consume(food)
-      case _ => throw new IllegalArgumentException
+      case _ => throw new IllegalArgumentException("A carnivore trying to eat vegetable or a Herbivore trying to eat Meat")
     }
 
     override def toString: String = s"Animal: $name, Size: $size, Health: $health, Thirst: $thirst, $strength pos: ${(position.x, position.y)}"
@@ -155,12 +155,26 @@ object Animal {
     private def consume(food: FoodInstance): (Animal, Option[FoodInstance]) = health match {
       case Constants.MaxHealth => (this, Some(food))
       case _ if MaxHealth - health > food.energy * food.quantity =>
+        Statistics.update(foodEaten = food.quantity)
         logger.info(this.name + " eat all food")
         (this.update(health = health + food.energy * food.quantity), None)
       case _ =>
+        /*
+        TODO è capitata sta cosa:
+        INFO: Cat eat some food
+          Food quantity : 2
+          Food to eat: 3
+          di chi è la colpa?
+         */
         logger.info(this.name + " eat some food")
         val foodToEat = (MaxHealth - health) / food.energy + (if (MaxHealth - health % food.energy == 0) 0 else 1)
-        (this.update(health = MaxHealth), Some(food.consume(foodToEat)))
+        Statistics.update(foodEaten = foodToEat)
+        if(foodToEat > food.quantity){
+          val foodToEat2 = food.quantity
+          (this.update(health = MaxHealth), Some(food.consume(foodToEat2)))
+        } else {
+          (this.update(health = MaxHealth), Some(food.consume(foodToEat)))
+        }
     }
   }
 }

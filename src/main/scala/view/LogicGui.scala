@@ -1,7 +1,7 @@
 package view
 
 import model.{Size, Species, Type}
-import utility.{OfSpecies, Serializer}
+import utility.{Constants, OfSpecies, Serializer}
 
 import java.awt.Color
 
@@ -20,7 +20,7 @@ class LogicGui(speciesFile: String) {
   /**
    * Save the Species present in the file in a variable
    */
-  def initialize(): Unit = getAllSpecies.foreach(s => species += (s -> 1))
+  def initialize(): Unit = getAllSpecies.foreach(s => species += (s -> Constants.InitialNumForAnimals))
 
   def getAllSpecies: Seq[Species] = serializer.deserializeManyFromFile(speciesFile)(classOf[Species])
 
