@@ -94,26 +94,26 @@ object ResourceManager {
                                     val foodInstances: FoodInstances,
                                    ) extends ResourceManager {
 
-    /**
-     *
-     * @return a random [[Food]] from foods
-     */
-    private def randomFood(): Option[Food] = {
-      if (foods.nonEmpty) {
-        Some(foods.toSeq(new Random().nextInt(foods.size)))
-      } else None
-    }
-
     override def grow(): ResourceManager = {
       if (foodInstances.count(_.foodType == Vegetable) < Constants.MaxFoodInstances){
         val newFoods = habitat.areas
           .filter(_.isInstanceOf[Area with GrowFood])
           .map(_.asInstanceOf[Area with GrowFood])
-          .map(_.growFood(randomFood()))
+          .map(_.growFood(randomVegetable()))
           .filter(_.isDefined)
           .map(_.get)
         ResourceManager(habitat, foods.filter(_.foodType == Vegetable), foodInstances ++ newFoods)
       } else this
+    }
+
+    /**
+     *
+     * @return a random [[Food]] from foods
+     */
+    private def randomVegetable(): Option[Food] = {
+      if (foods.nonEmpty) {
+        Some(foods.filter(_.foodType == Vegetable).toSeq(new Random().nextInt(foods.size)))
+      } else None
     }
 
     override def importFoodsFromFile(fileName: String): ResourceManager = {
@@ -130,7 +130,7 @@ object ResourceManager {
     override def fillHabitat(): ResourceManager = {
       @tailrec
       def _fillHabitat(resourceManager: ResourceManager): ResourceManager = {
-        if (resourceManager.foodInstances.size > habitat.areas.count(_.areaType == Fertile) * Constants.FoodToGrowPerFertileArea)
+        if (resourceManager.foodInstances.size > Constants.MaxFoodInstances)
           resourceManager
         else _fillHabitat(resourceManager.grow())
       }
