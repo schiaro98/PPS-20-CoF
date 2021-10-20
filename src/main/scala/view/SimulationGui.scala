@@ -13,22 +13,21 @@ import scala.swing.event.ButtonClicked
  * Class used to create the window where show the simulation.
  *
  * @param habitat         the [[Habitat]] of the simulation.
- * @param simulationPanel the [[SimulationPanel]] where all the element of the simulation (areas, animals and food) can be drawn.
  * @param setPaused       handler method used to pause/unpause the simulation.
  * @param setSpeed        handler method used to speed up/slow down the simulation.
  * @param stop            handler method used to stop the simulation.
  */
 class SimulationGui(habitat: Habitat,
-                    simulationPanel: SimulationPanel,
                     setPaused: Boolean => Unit,
                     setSpeed: Boolean => Unit,
-                    stop: () => Unit,
-                   ) extends SimpleSwingApplication {
+                    stop: () => Unit) extends SimpleSwingApplication {
 
   val (width, height) = habitat.dimensions
+  val simulationPanel = new SimulationPanel(habitat.dimensions)
   val textArea: TextArea = new TextArea("", 10, 10) { editable = false }
-  val elapsedTimeLabel: Label = new Label("    Time elapsed:    ")
+  val elapsedTimeLabel: Label = new Label("   Time elapsed:   ")
   val elapsedTimeField: TextField = new TextField(Statistics.time().toString) { editable = false }
+  val buttons: Seq[Button] = SimulationButton(setPaused, setSpeed, stop).buttons
 
   override def top: Frame = new Frame {
     this.resizable = false
@@ -36,7 +35,7 @@ class SimulationGui(habitat: Habitat,
     this.title = "Simulation"
 
     val logPanel: BoxPanel = new BoxPanel(Orientation.Horizontal) {
-      contents addAll (List(elapsedTimeLabel, elapsedTimeField) appendedAll SimulationButton(setPaused, setSpeed, stop).button)
+      contents addAll (List(elapsedTimeLabel, elapsedTimeField) appendedAll buttons)
     }
     contents = new BorderPanel() {
       layout(simulationPanel) = North
@@ -65,6 +64,11 @@ class SimulationGui(habitat: Habitat,
   def updateElapsedTime(): Unit = {
     elapsedTimeField.text = Statistics.time().toString
   }
+
+  /**
+   * Disable all the button of the GUI (play, pause, speed down, speed up and stop).
+   */
+  def disableAllButton(): Unit = buttons.foreach(button => button.enabled = false)
 
   /**
    * Method to update the text in the [[TextArea]] with the latest events recorded in the logger.
@@ -126,5 +130,5 @@ case class SimulationButton(setPaused: Boolean => Unit, setSpeed: Boolean => Uni
     }
   }
 
-  def button = List(playButton, pauseButton, speedDownButton, speedUpButton, stopButton)
+  def buttons = Seq(playButton, pauseButton, speedDownButton, speedUpButton, stopButton)
 }
