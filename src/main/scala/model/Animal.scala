@@ -128,7 +128,7 @@ object Animal {
     override def eat(food: FoodInstance): (Animal, Option[FoodInstance]) = food.foodType match {
       case Meat if this.alimentationType == Carnivore => consume(food)
       case Vegetable if this.alimentationType == Herbivore => consume(food)
-      case _ => throw new IllegalArgumentException
+      case _ => throw new IllegalArgumentException("A carnivore trying to eat vegetable or a Herbivore trying to eat Meat")
     }
 
     override def toString: String = s"Animal: $name, Size: $size, Health: $health, Thirst: $thirst, $strength pos: ${(position.x, position.y)}"
