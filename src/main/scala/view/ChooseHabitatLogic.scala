@@ -5,7 +5,7 @@ import model._
 class ChooseHabitatLogic(val species:Map[Species, Int]) {
 
   def createHabitat(ht: HabitatType, w: String, h: String, ue: String, areas: Seq[Area] = Seq.empty): Option[Habitat] =
-    if (isNumber(w) && isNumber(h) && isNumber(ue) && ue.toInt >= 0  && ue.toInt <= 100) {
+    if (isNumber(w) && isNumber(h) && isNumber(ue) && ue.toInt >= 0  && ue.toInt <= 10) {
       if (ht == SimpleHabitatType){
         Some(Habitat(Probability(ue.toInt)))
       } else Some(Habitat(ht, Probability(ue.toInt), (w.toInt, h.toInt), areas))

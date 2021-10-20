@@ -15,7 +15,7 @@ class ChooseHabitatGUI(val l :ChooseHabitatLogic) {
   val h: TextField = new TextField("500"){
     editable = false
   }
-  val ue: TextField = new TextField("10")
+  val ue: TextField = new TextField("1")
 
   val ours: RadioButton = new RadioButton("The habitat that we made"){
     doClick()
@@ -61,7 +61,7 @@ class ChooseHabitatGUI(val l :ChooseHabitatLogic) {
 
       peer.add(Box.createVerticalStrut(10))
 
-      contents += new Label("Set a quantity of unexpected events that could kill animals (From 0 to 100)")
+      contents += new Label("Set a quantity of unexpected events that could kill animals (From 0 to 10)")
       contents += ue
 
       contents ++= radios.buttons
