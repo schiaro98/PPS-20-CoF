@@ -7,43 +7,51 @@ import view.LogicGui
 
 class GameLoopTest extends AnyFunSuite{
 
-  val logic = new LogicGui(Constants.SavedSpecies)
   val habitat: Habitat = Habitat()
+  val logic = new LogicGui(Constants.SavedSpecies)
   logic.initialize()
-  var animalManager: AnimalManager = AnimalManager().generateInitialAnimals(logic.species, habitat)
-  var resourceManager: ResourceManager = ResourceManager(habitat, Constants.FoodsFilePath)
 
-  test("Basic loop should whork"){
+  test("The computation performed in the GameLoop should not throw exceptions"){
 
-    //TODO rivedere bene dopo l'aggiunta del AnimalManager
+    //reusable manager
+    var animalManager: AnimalManager = AnimalManager().generateInitialAnimals(logic.species, habitat)
+    var resourceManager: ResourceManager = ResourceManager(habitat, Constants.FoodsFilePath)
 
-    var i = 0
-    while (animalManager.animals.lengthIs > 0 && i < 100) {
-      val destinationManager: DestinationManager = DestinationManager(animalManager.animals, resourceManager.foodInstances, habitat)
+    for (_ <- 1 to 20 if animalManager.animals.lengthIs > 0) {
+
+      //find destination
+      val destinationManager: DestinationManager =
+        DestinationManager(animalManager.animals, resourceManager.foodInstances, habitat)
       val destinations: Map[Animal, Point] = destinationManager.calculateDestination()
-      val shiftManager = ShiftManager(habitat, destinations)
 
+      //animals movement
+      val shiftManager = ShiftManager(habitat, destinations)
       shiftManager.walk()
       animalManager = AnimalManager(shiftManager.animals.toSeq)
 
+      //animals eat and drink
       val feedManager = FeedManager(animalManager.animals, resourceManager.foodInstances, habitat)
+      val (animalAfterFeed, foodAfterFeed) = feedManager.consumeResources()
+      animalManager = AnimalManager(animalAfterFeed)
+      resourceManager = resourceManager.foodInstances_(foodAfterFeed)
 
-      val (animalsUpdated, foodsRemaining) = feedManager.consumeResources()
-      animalManager = AnimalManager(animalsUpdated)
+      //animals life cycle
+      val (animalAfterLifeCycle, foodAfterLifeCycle) = animalManager.lifeCycleUpdate()
+      animalManager = AnimalManager(animalAfterLifeCycle)
+      resourceManager = resourceManager.foodInstances_(resourceManager.foodInstances ++ foodAfterLifeCycle)
 
-      val (updatedAnimal, generatedFood) = animalManager.lifeCycleUpdate()
-      animalManager = AnimalManager(updatedAnimal)
-      //TODO nella riga sotto ho aggiunto le carcasse al ResourceManager, si faceva così? è giusto? il nome è definitivo? forse con "setFood" si capisce meglio?
-      resourceManager = resourceManager.foodInstances_(resourceManager.foodInstances ++ generatedFood)
-
+      //animals battle
       val battleManager: BattleManager = BattleManager(animalManager.animals)
-      val result = battleManager.battle()
-      animalManager = AnimalManager(result._1)
-      val oldFood = resourceManager.foodInstances
-      resourceManager = resourceManager.foodInstances_(oldFood.filterNot((result._2 ++ foodsRemaining).contains(_)))
+      val (animalAfterBattle, foodAfterBattle) = battleManager.battle()
+      animalManager = AnimalManager(animalAfterBattle)
+      resourceManager = resourceManager.foodInstances_(resourceManager.foodInstances ++ foodAfterBattle)
 
-      //TODO Calcolo eventi inaspettati
+      //animals killed by unexpected events
+      val (animalAfterUnexpectedEvents, foodAfterUnexpectedEvents) = animalManager.unexpectedEvents(habitat)
+      animalManager = AnimalManager(animalAfterUnexpectedEvents)
+      resourceManager = resourceManager.foodInstances_(resourceManager.foodInstances ++ foodAfterUnexpectedEvents)
 
+      //vegetable growth
       resourceManager = resourceManager.grow()
     }
   }

@@ -46,9 +46,9 @@ case class GameLoop(population: Map[Species, Int], habitat: Habitat) extends Run
 
         //animals eat and drink
         val feedManager = FeedManager(animalManager.animals, resourceManager.foodInstances, habitat)
-        val feedResult = feedManager.consumeResources()
-        animalManager = AnimalManager(feedResult._1)
-        resourceManager = resourceManager.foodInstances_(feedResult._2)
+        val (animalAfterFeed, foodAfterFeed) = feedManager.consumeResources()
+        animalManager = AnimalManager(animalAfterFeed)
+        resourceManager = resourceManager.foodInstances_(foodAfterFeed)
 
         //animals life cycle
         val (animalAfterLifeCycle, foodAfterLifeCycle) = animalManager.lifeCycleUpdate()
@@ -57,9 +57,9 @@ case class GameLoop(population: Map[Species, Int], habitat: Habitat) extends Run
 
         //animals battle
         val battleManager: BattleManager = BattleManager(animalManager.animals)
-        val result = battleManager.battle()
-        animalManager = AnimalManager(result._1)
-        resourceManager = resourceManager.foodInstances_(resourceManager.foodInstances ++ result._2)
+        val (animalAfterBattle, foodAfterBattle) = battleManager.battle()
+        animalManager = AnimalManager(animalAfterBattle)
+        resourceManager = resourceManager.foodInstances_(resourceManager.foodInstances ++ foodAfterBattle)
 
         //animals killed by unexpected events
         val (animalAfterUnexpectedEvents, foodAfterUnexpectedEvents) = animalManager.unexpectedEvents(habitat)
@@ -115,5 +115,3 @@ case class GameLoop(population: Map[Species, Int], habitat: Habitat) extends Run
    */
   def stop(): Unit = isStopped = true
 }
-
-
