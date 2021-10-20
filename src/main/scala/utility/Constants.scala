@@ -68,8 +68,13 @@ object Constants {
   val DefaultRandomSize = 10
   val DefaultGridSize = 100
 
+  val MaxDimension = 1_000
+
   val NonWalkableArea: Set[AreaType] = Set(Volcano,Rock,Water) //TODO gestire questo nel model ?
 
   val FoodToGrowPerFertileArea: Int = 1
 
+
+  //------- ResourceManager ----
+  val MaxFoodInstances = 80
 }

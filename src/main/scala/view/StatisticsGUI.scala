@@ -16,7 +16,7 @@ class StatisticsGUI {
   val deathForNaturalCause = "Death for natural cause"
 
   val data = new DefaultCategoryDataset
-  for (i <- 1 to Statistics.time()){
+  for (i <- 1 to Statistics.time){
     data.addValue(Statistics.map(i).foods, Foods, i)
     data.addValue(Statistics.map(i).attacks, Attacks, i)
     data.addValue(Statistics.map(i).foodEaten, FoodEaten, i)

@@ -1,16 +1,32 @@
 package utility
 
 object Statistics {
+
   private var _time: Int = 0
+  var map: Map[Int, StatisticsForTimeT] = Map.empty
 
-  def time() :Int = _time
+  /**
+   *
+   * @return the current time
+   */
+  def time:Int = _time
 
+  /**
+   * re initialize the [[Statistics]] and time
+   */
+  def restart():Unit = {
+    _time = 0
+    map = map.empty
+  }
+
+  /**
+   * increment time and create an empty Map
+   */
   def incTime(): Unit = {
     _time+=1
     update()
   }
 
-  var map: Map[Int, StatisticsForTimeT] = Map.empty
 
   /**
    * Update the values in the current time

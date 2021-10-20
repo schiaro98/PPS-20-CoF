@@ -105,13 +105,15 @@ object ResourceManager {
     }
 
     override def grow(): ResourceManager = {
-      val newFoods = habitat.areas
-        .filter(_.isInstanceOf[Area with GrowFood])
-        .map(_.asInstanceOf[Area with GrowFood])
-        .map(_.growFood(randomFood()))
-        .filter(_.isDefined)
-        .map(_.get)
-      ResourceManager(habitat, foods.filter(_.foodType == Vegetable), foodInstances ++ newFoods)
+      if (foodInstances.count(_.foodType == Vegetable) < Constants.MaxFoodInstances){
+        val newFoods = habitat.areas
+          .filter(_.isInstanceOf[Area with GrowFood])
+          .map(_.asInstanceOf[Area with GrowFood])
+          .map(_.growFood(randomFood()))
+          .filter(_.isDefined)
+          .map(_.get)
+        ResourceManager(habitat, foods.filter(_.foodType == Vegetable), foodInstances ++ newFoods)
+      } else this
     }
 
     override def importFoodsFromFile(fileName: String): ResourceManager = {
