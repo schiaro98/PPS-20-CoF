@@ -69,7 +69,7 @@ case class Point(x: Int, y: Int) {
    * @param p the [[Point]] of reference
    * @return distance from another [[Point]]
    */
-  def distance(p: Point): Double = Math.sqrt(Math.pow(x - p.x, 2) + Math.pow(y - p.y, 2))
+  def distance(p: Point): Int = ((x - p.x)*(x - p.x)) + ((y - p.y)*(y - p.y))
 
   /**
    * Calculate distance upon x axis

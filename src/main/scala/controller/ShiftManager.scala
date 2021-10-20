@@ -45,28 +45,28 @@ object ShiftManager {
 
   private class ShiftManagerImpl(val habitat: Habitat, val animalsDestinations: Map[Animal, Point]) extends ShiftManager {
 
-    private val nonWalkableAreas: Seq[Area] = habitat.areas.filterNot(_.areaType == Fertile)
-    //lambda returning an Int for potential shifts
+    //lambda returning an (Int,Int) for potential shifts
     private val randShift = (x: Int) => (Random.between(Constants.MinShift, x),Random.between(Constants.MinShift, x))
-
-    /**
-     *
-     * @param p the Point to analyze
-     * @return true if the animal can be in the point p
-     */
-    private def isLegal(p: Point): Boolean = !nonWalkableAreas.exists(_.contains(p))
+    //tha area in which animals can't go
+    private val nonWalkableAreas: Seq[Area] = habitat.areas.filterNot(_.areaType == Fertile)
 
     //require that on creation no animal is inside a nonWalkableArea
     animalsDestinations.keySet.foreach(animal => require(nonWalkableAreas.count(_.contains(animal.position)) == 0))
-    private var mySupportAnimalsDestinations: Map[Animal, Point] = animalsDestinations
+    private var myAnimalsToDestinations: Map[Animal, Point] = animalsDestinations
 
-    override def animals: Set[Animal] = mySupportAnimalsDestinations.keySet.to(Set)
+    override def animals: Set[Animal] = myAnimalsToDestinations.keySet.to(Set)
 
     override def walk(): Unit =
-      mySupportAnimalsDestinations = mySupportAnimalsDestinations.par.map(t => (t._1.shift(createPath(t._1, t._2)),t._2)).to(Map)
+      myAnimalsToDestinations = myAnimalsToDestinations.par.map(t => (t._1.shift(nextStep(t._1, t._2)),t._2)).to(Map)
 
-
-    private def createPath(a: Animal, d: Point): Point = {
+    /**
+     * Find the closer reachable point to the destination
+     *
+     * @param a the [[Animal]]
+     * @param d the destination [[Point]]
+     * @return the closest [[Point]] to the destination that the [[Animal]] reach
+     */
+    private def nextStep(a: Animal, d: Point): Point = {
       val f = a.position
       val td =
         if (a.species.alimentationType == Carnivore)
@@ -81,8 +81,16 @@ object ShiftManager {
                              //all corners of the animal must be legal
                              if AnimalUtils.getCornersOfSpeciesInPoint(a.species, Point(x, y)).count(!isLegal(_)) == 0)
       yield Point(x, y)
+      //if no point found stay where you are
       findClosestPoint(legalPoints, d).getOrElse(a.position)
     }
+
+    /**
+     *
+     * @param p the Point to analyze
+     * @return true if the [[Animal]] can be in the point p
+     */
+    private def isLegal(p: Point): Boolean = !nonWalkableAreas.exists(_.contains(p))
 
     /**
      * Make coordinates be inside of the habitat
@@ -105,7 +113,7 @@ object ShiftManager {
      */
     private def findClosestPoint(points: Seq[Point], dest: Point): Option[Point] = {
       @tailrec
-      def _findClosestPoint(points: Seq[Point], dest: Point, closestP: Option[Point] = None, minDist: Double = Double.MaxValue): Option[Point] = points match {
+      def _findClosestPoint(points: Seq[Point], dest: Point, closestP: Option[Point] = None, minDist: Int = Int.MaxValue): Option[Point] = points match {
         case h +: t =>
           val d = h.distance(dest)
           if (d < minDist) _findClosestPoint(t, dest, Some(h), d) else _findClosestPoint(t, dest, closestP, minDist)
