@@ -55,7 +55,7 @@ class ResourceManagerTest extends AnyFunSuite{
   test("Initialize habitat with foods"){
     val resMan = ResourceManager(habitat, Constants.FoodsFilePath)
     val newResMan = resMan.fillHabitat()
-    assert(newResMan.foodInstances.size > habitat.areas.count(a => a.areaType == Fertile) * Constants.FoodToGrowPerFertileArea)
+    assert(newResMan.foodInstances.size > Constants.InitialFoodInstances)
   }
 
   test("Try to initialize habitat with all fertile areas with zero fertility"){

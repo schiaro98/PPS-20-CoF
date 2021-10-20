@@ -130,7 +130,7 @@ object ResourceManager {
     override def fillHabitat(): ResourceManager = {
       @tailrec
       def _fillHabitat(resourceManager: ResourceManager): ResourceManager = {
-        if (resourceManager.foodInstances.size > Constants.MaxFoodInstances)
+        if (resourceManager.foodInstances.size > Constants.InitialFoodInstances)
           resourceManager
         else _fillHabitat(resourceManager.grow())
       }

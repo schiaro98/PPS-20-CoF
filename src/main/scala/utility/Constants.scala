@@ -76,4 +76,5 @@ object Constants {
 
   //------- ResourceManager ----
   val MaxFoodInstances = 80
+  val InitialFoodInstances = 50
 }
