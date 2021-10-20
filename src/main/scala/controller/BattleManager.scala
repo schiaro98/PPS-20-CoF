@@ -5,20 +5,16 @@ import utility.{Logger, Statistics}
 
 import scala.annotation.tailrec
 
+/**
+ * A controller for battling the [[Animal]] present in the map
+ */
 sealed trait BattleManager {
 
   /**
    * For every animal that is able to see other animals, execute battles
-   * @return the Meat that can be released during the battles
+   * @return the Meat that can be released during the battles, and the list of [[Animal]] updated
    */
   def battle(): (Seq[Animal],Seq[FoodInstance])
-
-  /**
-   * Return a sequence of pairs of [[Animal]], the presence in this list means that animal 1 can see animal 2
-   * @param seqOfAnimals list of animals to be checked
-   * @return a sequence of pairs of animals that can see other animals
-   */
-  def visibleAnimals(seqOfAnimals: Seq[Animal]): Seq[(Animal, Animal)]
 
 }
 
@@ -65,22 +61,8 @@ object BattleManager {
     }
 
     /**
-     * Return a sequence of tuples of every animal an animal can see.
-     *
-     * @param seqOfAnimals animal to be compared
-     * @return Sequence of tuples
-     */
-    override def visibleAnimals(seqOfAnimals: Seq[Animal]): Seq[(Animal, Animal)] = {
-      var visible: Seq[(Animal, Animal)] = Seq.empty
-      for (a <- seqOfAnimals; b <- seqOfAnimals.filterNot(animal => a == animal)) {
-        if (a canSee b) visible = visible :+ (a, b)
-      }
-      visible
-    }
-
-    /**
-     * Given a [[Probability]], it increase if the defending animal is fast (deducted by it's size) and far away. But it can
-     * increase if the attacking animal is near or fast
+     * Given a [[Probability]], it increase if the defending animal is fast (deducted by it's size) and far away.
+     * But it can increase if the attacking animal is near (or fast)
      *
      * @param attacker attacking animal
      * @param defender defending animal
