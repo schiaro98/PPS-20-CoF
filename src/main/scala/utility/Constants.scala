@@ -37,7 +37,8 @@ object Constants {
   val QuantityForMedium = 5
   val QuantityForSmall = 2
 
-  val MaxShift = 15
+  val MaxShiftForHerbivore = 15
+  val MaxShiftForCarnivore = 20
   val MinShift = 5
 
   val PixelForBig = 12
@@ -45,8 +46,6 @@ object Constants {
   val PixelForSmall = 8
 
   val PixelForFood = 8
-
-  val IncCarnivoreVelocity = 5
 
   val Hitbox = 5
   val waterHitbox = 10

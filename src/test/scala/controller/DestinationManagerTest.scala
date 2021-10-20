@@ -63,7 +63,6 @@ class DestinationManagerTest extends AnyFunSuite {
   test("Carnivore should go towards a Meat piece"){
     val destMng = DestinationManager(Seq(carnivore1), Seq(meat1), habitat)
     val result = destMng.calculateDestination()
-    println(result)
     assert(result.size == 1)
     assert(result.keySet.contains(carnivore1))
     assert(result(carnivore1) == meat1.position)
@@ -76,7 +75,6 @@ class DestinationManagerTest extends AnyFunSuite {
 
     val destMng = DestinationManager(Seq(carnivore1, herbivore1), Seq(meat1), habitat)
     val result = destMng.calculateDestination()
-    println(result)
     assert(result.size == 2)
     assert(result.keySet.contains(carnivore1))
     assert(result(carnivore1) == herbivore1.position)
@@ -90,7 +88,6 @@ class DestinationManagerTest extends AnyFunSuite {
 
     val destMng = DestinationManager(Seq(carnivore1, herbivore1), Seq(meat1, carrot), habitat)
     val result = destMng.calculateDestination()
-    println(result)
     assert(result.size == 2)
     assert(result.keySet.contains(carnivore1))
     assert(result(carnivore1) == herbivore1.position)
@@ -102,8 +99,6 @@ class DestinationManagerTest extends AnyFunSuite {
 
     val destMng = DestinationManager(allAnimals, allFoods, habitat)
     val result = destMng.calculateDestination()
-    //No animal should point to water. they'r not thirsy
-    println(result)
 
     assert(result.contains(herbivore1))
     assert(result(herbivore1) == carrot.position)
@@ -118,23 +113,11 @@ class DestinationManagerTest extends AnyFunSuite {
 
   test("Test the drinking of animals"){
     val carnivore2: Animal = Animal(Species("CarnivoreExample2", Medium, 10, 10, Carnivore), Point(0,195))
-    val thirstyCarnivore = carnivore2.update(health = carnivore2.health, Constants.MaxThirst / 10, carnivore2.position)
     val habitat = Habitat(Probability(1), (1000, 1000))
     val destMng = DestinationManager(Seq(carnivore2), Seq.empty, habitat)
     val result = destMng.calculateDestination()
 
-    /*
-    habitat.areas.filter(_.areaType == Water).map(area => area.area.topLeft).foreach(println(_))
-      Point of the default map
-      Point(400,0)
-      Point(450,0)
-      Point(0,200)
-      Point(300,300)
-      Point(350,300)
-      Point(50,400)
-    */
     assert(habitat.areas.map(area => area.area.topLeft).contains(Point(400,0)))
     assert(habitat.areas.count(_.areaType == Water) == 6)
-    println(result)
   }
 }

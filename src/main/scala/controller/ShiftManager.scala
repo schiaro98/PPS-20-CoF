@@ -4,8 +4,7 @@ import model._
 import utility.{AnimalUtils, Constants}
 
 import scala.annotation.tailrec
-import scala.collection.parallel.CollectionConverters._
-import scala.collection.parallel.ParMap
+import scala.collection.parallel.CollectionConverters.ImmutableIterableIsParallelizable
 import scala.util.Random
 
 sealed trait ShiftManager {
@@ -48,7 +47,7 @@ object ShiftManager {
 
     private val nonWalkableAreas: Seq[Area] = habitat.areas.filterNot(_.areaType == Fertile)
     //lambda returning an Int for potential shifts
-    private val randShift = (x: Int) => Random.between(Constants.MinShift, x)
+    private val randShift = (x: Int) => (Random.between(Constants.MinShift, x),Random.between(Constants.MinShift, x))
 
     /**
      *
@@ -59,75 +58,30 @@ object ShiftManager {
 
     //require that on creation no animal is inside a nonWalkableArea
     animalsDestinations.keySet.foreach(animal => require(nonWalkableAreas.count(_.contains(animal.position)) == 0))
-    private var mySupportAnimalsDestinations: ParMap[Animal, Seq[Point]] = initWalks(animalsDestinations.keySet.toSeq)
+    private var mySupportAnimalsDestinations: Map[Animal, Point] = animalsDestinations
 
     override def animals: Set[Animal] = mySupportAnimalsDestinations.keySet.to(Set)
 
     override def walk(): Unit =
-      mySupportAnimalsDestinations =
-        mySupportAnimalsDestinations.filter(_._2.nonEmpty).map(t => t._1.shift(t._2.head) -> t._2.tail) ++
-          mySupportAnimalsDestinations.filterNot(_._2.nonEmpty)
+      mySupportAnimalsDestinations = mySupportAnimalsDestinations.par.map(t => (t._1.shift(createPath(t._1, t._2)),t._2)).to(Map)
 
 
-    /**
-     *
-     * @param animals the animals for which we want to find the destination
-     * @return a parallelizable Map from animals to the Sequence of points that they have to do to arrive to dest
-     *         (in this implementation they may not be able to arrive to dest)
-     */
-    private def initWalks(animals: Seq[Animal]): ParMap[Animal, Seq[Point]] = {
-      @tailrec
-      def _initWalks(animals: Seq[Animal], map: Map[Animal, Seq[Point]] = Map.empty): ParMap[Animal, Seq[Point]] = animals match {
-        case h +: t => _initWalks(t, map ++ Map(h -> createPath(h, animalsDestinations(h))))
-        case _ => map.par
-      }
+    private def createPath(a: Animal, d: Point): Point = {
+      val f = a.position
+      val td =
+        if (a.species.alimentationType == Carnivore)
+          randShift(Constants.MaxShiftForCarnivore)
+        else
+          randShift(Constants.MaxShiftForHerbivore)
+      val topLeft = makeInBounds(f.x - td._1, f.y - td._2)
+      val bottomRight = makeInBounds(f.x + td._1, f.y + td._2)
 
-      _initWalks(animals)
-    }
-
-    /**
-     *
-     * @param animal the animal from that wants to go to dest
-     * @param dest   the destination point
-     * @return the Sequence of Point that the animal will do
-     */
-    private def createPath(animal: Animal, dest: Point): Seq[Point] = {
-      @tailrec
-      def _createPath(from: Point,
-                      dest: Point,
-                      species: Species,
-                      path: Seq[Point] = Seq.empty,
-                      isCarnivore: Boolean = false,
-                     ): Seq[Point] = path match {
-        case _ if from == dest => path.reverse
-        case _ =>
-          val travelDistance =
-            if (isCarnivore)
-              (randShift(Constants.MaxShift + Constants.IncCarnivoreVelocity), randShift(Constants.MaxShift + Constants.IncCarnivoreVelocity))
-            else (randShift(Constants.MaxShift), randShift(Constants.MaxShift))
-          val topLeft = makeInBounds(from.x - travelDistance._1, from.y - travelDistance._2)
-          val bottomRight = makeInBounds(from.x + travelDistance._1, from.y + travelDistance._2)
-          val legalPoints = for (x <- topLeft.x to bottomRight.x;
-                                 y <- topLeft.y to bottomRight.y
-                                 if areAllLegal( AnimalUtils.getCornersOfSpeciesInPoint(species, Point(x,y))))
-          yield Point(x, y)
-          val closerPoint = findClosestPoint(legalPoints, dest)
-          if (path.nonEmpty && path.contains(closerPoint)) path.reverse
-          else _createPath(closerPoint, dest, animal.species, closerPoint +: path)
-      }
-
-      _createPath(animal.position, dest, animal.species, isCarnivore = animal.alimentationType == Carnivore)
-    }
-
-    /**
-     *
-     * @param points the [[Seq]] of [[Point]] we want to test
-     * @return true if all points are legal
-     */
-    @tailrec
-    private def areAllLegal(points: Seq[Point]): Boolean = points match {
-      case h::t => if (isLegal(h)) areAllLegal(t) else false
-      case _ => true
+      val legalPoints = for (x <- topLeft.x to bottomRight.x;
+                             y <- topLeft.y to bottomRight.y
+                             //all corners of the animal must be legal
+                             if AnimalUtils.getCornersOfSpeciesInPoint(a.species, Point(x, y)).count(!isLegal(_)) == 0)
+      yield Point(x, y)
+      findClosestPoint(legalPoints, d).getOrElse(a.position)
     }
 
     /**
@@ -149,13 +103,13 @@ object ShiftManager {
      * @param dest   the destination
      * @return the closest Point to dest
      */
-    private def findClosestPoint(points: Seq[Point], dest: Point): Point = {
+    private def findClosestPoint(points: Seq[Point], dest: Point): Option[Point] = {
       @tailrec
-      def _findClosestPoint(points: Seq[Point], dest: Point, closestP: Option[Point] = None, minDist: Double = Double.MaxValue): Point = points match {
+      def _findClosestPoint(points: Seq[Point], dest: Point, closestP: Option[Point] = None, minDist: Double = Double.MaxValue): Option[Point] = points match {
         case h +: t =>
           val d = h.distance(dest)
           if (d < minDist) _findClosestPoint(t, dest, Some(h), d) else _findClosestPoint(t, dest, closestP, minDist)
-        case _ => closestP.getOrElse(throw new RuntimeException("LIKE IN LIFE, THERE ISN'T A POINT"))
+        case _ => closestP
       }
 
       _findClosestPoint(points, dest)
