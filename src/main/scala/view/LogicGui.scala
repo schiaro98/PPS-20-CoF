@@ -57,9 +57,7 @@ class LogicGui(speciesFile: String) {
    *
    * @param s species of the animal
    */
-  def remove(s: Species): Unit = {
-    species = species - s
-  }
+  def remove(s: Species): Unit = species = species - s
 
   /**
    * Decrease quantity of an animal, deleting it if it's equal to zero
@@ -78,9 +76,8 @@ class LogicGui(speciesFile: String) {
   /**
    * Given the Species parameters, give an istance of Species
    */
-  def captionSpecies(color: Color, name: String, size: Size, strength: String, sight: String, alimentationType: Type): Species = {
+  def captionSpecies(color: Color, name: String, size: Size, strength: String, sight: String, alimentationType: Type): Species =
     Species(name, size, strength.toInt, sight.toInt, alimentationType, color)
-  }
 
   /**
    * Add species to species file
@@ -105,15 +102,13 @@ class LogicGui(speciesFile: String) {
   /**
    * Remove all species from species file, basically it clean the species file
    */
-  def removeAllSpeciesFromFile(): Unit = {
+  def removeAllSpeciesFromFile(): Unit =
     serializer.serializeManyToFile(Seq.empty[Species])(speciesFile)
-  }
 
   /**
    * Return the species, given the name
    */
-  def getSpecies(name: String): Option[Species] = {
+  def getSpecies(name: String): Option[Species] =
     species.keySet.find(species => species.name == name)
-  }
 
 }
