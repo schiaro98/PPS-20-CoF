@@ -34,6 +34,7 @@ class StatisticsGUI {
     peer.setContentPane(new ChartPanel(chart))
     peer.setLocationRelativeTo(null)
     minimumSize = new Dimension(500,500)
+    centerOnScreen()
     open()
   }
 
