@@ -1,7 +1,7 @@
 package controller
 
 import model.{Animal, FoodInstance, Habitat, Species}
-import utility.{AnimalUtils, Constants, Logger}
+import utility.{AnimalUtils, Constants, Logger, Statistics}
 
 /**
  * A controller of the [[Animal]]s present in the simulation.
@@ -84,14 +84,15 @@ object AnimalManager {
     /**
      * Method used to update the animals in a certain way that can also cause death.
      *
-     * @param update how each [[Animal]] will be updated
-     * @param reasonOfDeath the reason why an [[Animal]] dies
+     * @param update how each [[Animal]] will be updated.
+     * @param reasonOfDeath the reason why an [[Animal]] dies.
      * @return a pair with the alive and updated [[Animal]]s, and the food released if any of these died.
      */
     private def updateAnimalAndInfo(update: Animal => Animal, reasonOfDeath: String): (Seq[Animal], Seq[FoodInstance]) = {
       val updatedAnimals = animals.map(update)
-      updatedAnimals.filter(!_.isAlive).foreach(animal => logger.info(animal.name + reasonOfDeath))
-      (updatedAnimals.filter(_.isAlive), updatedAnimals.filter(!_.isAlive).map(a => a.die()))
+      Statistics.update(deathForNaturalCause = updatedAnimals.count(!_.isAlive))
+      updatedAnimals.filterNot(_.isAlive).foreach(animal => logger.info(animal.name + reasonOfDeath))
+      (updatedAnimals.filter(_.isAlive), updatedAnimals.filterNot(_.isAlive).map(a => a.die()))
     }
   }
 }

@@ -52,7 +52,6 @@ class ResourceManagerTest extends AnyFunSuite{
     assert(newResMan.foods.nonEmpty)
   }
 
-
   test("Initialize habitat with foods"){
     val resMan = ResourceManager(habitat, Constants.FoodsFilePath)
     val newResMan = resMan.fillHabitat()

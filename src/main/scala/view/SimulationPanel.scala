@@ -13,11 +13,11 @@ import scala.swing.Panel
  * [[Panel]] used to draw the shapes of the areas, animals and food; it creates also the mouse listeners
  * that shows the [[AnimalPopup]].
  *
- * @param width  the width of the Frame (and also of the Habitat).
- * @param height the height of the Frame (and also of the Habitat).
+ * @param dimension the width and the height of the Frame (and also of the Habitat).
  */
-class SimulationPanel(val width: Int, val height: Int) extends Panel {
+class SimulationPanel(dimension: (Int, Int)) extends Panel {
 
+  val (width, height) = dimension
   val shapes = new ArrayBuffer[Shape]
   var popups: Seq[AnimalPopup] = Seq.empty
   var listener: Seq[MouseMotionListener] = Seq.empty
