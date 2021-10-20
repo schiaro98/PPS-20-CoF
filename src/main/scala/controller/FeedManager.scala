@@ -16,7 +16,7 @@ sealed trait FeedManager {
 }
 
 object FeedManager {
-  def apply(animals: Seq[Animal], resources: Seq[FoodInstance], habitat: Habitat = Habitat()): FeedManager = SimpleFeedManager(animals, resources, habitat)
+  def apply(animals: Seq[Animal], resources: Seq[FoodInstance], habitat: Habitat): FeedManager = SimpleFeedManager(animals, resources, habitat)
 
   private case class SimpleFeedManager(animals: Seq[Animal], resources: Seq[FoodInstance], habitat: Habitat) extends FeedManager {
 
@@ -33,45 +33,25 @@ object FeedManager {
             h.drink()
           } else h
 
-          //Contiene la risorsa più vicina all'animale, deve essere dentro alla hitbox
           val nearestResource = resources
             .filter(_.position.distance(myAnimal.position) < Constants.hitbox)
             .minByOption(_.position.distance(myAnimal.position))
 
-          //Se l'animale ha un cibo mangiabile nell'hitbox
           if(nearestResource.isDefined) {
-
-            //Se il cibo è una verdura e l'animale erbivoro
-            //oppure è una carne e l'animale carnivoro
-            //Provo a consumare la risorsa
             nearestResource.get match {
               case x: FoodInstance if x.foodType == Meat && myAnimal.alimentationType == Carnivore || x.foodType == Vegetable && myAnimal.alimentationType == Herbivore =>
-
-                //updatedAnimal contiene l'animale con i valori aggiornati dopo aver mangiato
-
-                //remainedFood contiene un Option vuoto se non è rimasto cibo
-                // o un option di FoodInstance se il cibo è avanzato
                 val (updatedAnimal, remainedFood) = myAnimal.eat(x)
-                println(updatedAnimal.toString + "has eat")
-                //Se il cibo è avanzato, ciclo la lista di animali rimanenti,
-                // togliendo il cibo vecchio (Con quantità piena) e mettendo quello avanzato
+
                 if(remainedFood.isDefined) {
                   _consumeResources(t, resources.filterNot(_ == x) :+ remainedFood.get , updatedAnimals :+ updatedAnimal)
                 } else {
                   _consumeResources(t, resources.filterNot(_ == x), updatedAnimals :+ updatedAnimal)
                 }
-              case _ =>
-                println("ERROR: Trying to do something impossible")
-                (updatedAnimals, resources)
+              case _ => _consumeResources(t, resources, updatedAnimals :+ myAnimal)
+
             }
-          } else {
-            //Se l'animale NON ha un cibo mangiabile nell'hitbox
-            //ciclo sugli animali rimanenti, sul cibo e aggiungo un animale agli aggiornati
-            _consumeResources(t, resources, updatedAnimals :+ myAnimal)
-          }
-        case _ =>
-          //Se finisco la lista, ritorno i cibi avanzati
-          (updatedAnimals, resources)
+          } else _consumeResources(t, resources, updatedAnimals :+ myAnimal)
+        case _ => (updatedAnimals, resources)
 
       }
       _consumeResources(animals, resources)
