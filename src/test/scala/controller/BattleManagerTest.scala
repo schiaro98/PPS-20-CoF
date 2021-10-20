@@ -12,22 +12,11 @@ class BattleManagerTest extends AnyFunSuite{
   val unreachableAnimal: Animal = Animal(Species("tiger", Medium, 10, 10, Carnivore), Point(100,100))
   val bm: BattleManager = BattleManager()
 
-  test("Test if two animals sees each other"){
-    assert(a1 canSee  a2)
-    assert(a2 canSee a1)
-    assert(!(a1 canSee unreachableAnimal))
-  }
-
-  test("Test if animals that sees each other are returned"){
-    assert(bm.visibleAnimals(Seq(a1,a2,a3,unreachableAnimal)).toSet ===
-      Seq((a1,a2), (a2,a1), (a1, a3), (a2, a3), (a3,a1), (a3,a2)).toSet)
-  }
 
 
   test("Execute a simple battle"){
     val bm = BattleManager(Seq(a1, a2, a3))
     bm.battle()
-    val result = bm.battle()
   }
 
 }

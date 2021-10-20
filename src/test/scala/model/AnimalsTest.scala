@@ -11,6 +11,15 @@ class AnimalsTest extends AnyFunSuite{
   val p: Point = Point(0,0)
   val a: Animal = Animal(Species("tiger", Medium, 10, 10, Carnivore, color), p)
 
+  test("Test if two animals sees each other"){
+    val a1: Animal = Animal(Species("tiger1", Medium, 10, 10, Carnivore), Point(0,0))
+    val a2: Animal = Animal(Species("tiger2", Small, 10, 10, Carnivore), Point(1,1))
+    val unreachableAnimal: Animal = Animal(Species("tiger", Medium, 10, 10, Carnivore), Point(100,100))
+    assert(a1 canSee  a2)
+    assert(a2 canSee a1)
+    assert(!(a1 canSee unreachableAnimal))
+  }
+
   test("An animal is an entity with personal parameters and belong to a species") {
     assert(color == a.color)
     assert("tiger" == a.name)
