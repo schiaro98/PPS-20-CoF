@@ -34,6 +34,8 @@ class AnimalsTest extends AnyFunSuite{
     assert(!a3.isAlive)
   }
 
+  //TODO controlla test del cibo mangiato
+
   test("An animal that eats regains health") {
     val animal0 = a.update(MaxHealth, MaxThirst)
     val food1 = FoodInstance(Food(10,Meat), p, 5)

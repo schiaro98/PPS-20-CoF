@@ -100,10 +100,7 @@ object Habitat {
    *
    * @return a random [[AreaType]]
    */
-  private def randomAreaType: AreaType = {
-    val choices: Seq[AreaType] = Seq(Fertile, Water, Rock, Volcano) //todo se si aggiunge un nuovo tipo bisogna modificare manualmente questa seq; alternative? ( ad es. un metodo getAllTypeOfHabitat? )
-    Random.shuffle(choices).head
-  }
+  private def randomAreaType: AreaType = Random.shuffle(Area.getAllTypeOfArea).head
 
   /**
    * This method create an habitat, of given dimension, with diven areas, arranged in a randow way

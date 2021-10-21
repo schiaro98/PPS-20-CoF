@@ -8,22 +8,17 @@ import java.awt.Color
 import scala.util.Random
 
 /**
- * The possible types of area.
+ * The possible types of area that can be walkable or not.
  */
-sealed trait AreaType
-case object Fertile extends AreaType
+sealed trait AreaType {
+  val walkable: Boolean = false
+}
+case object Fertile extends AreaType {
+  override val walkable: Boolean = true
+}
 case object Water extends AreaType
 case object Rock extends AreaType
 case object Volcano extends AreaType
-
-//TODO fare walkable e nonWalkable
-//sealed trait AreaType
-//sealed trait Walkable
-//sealed trait NoNWalkable
-//case object Fertile extends AreaType with Walkable
-//case object Water extends AreaType with NoNWalkable
-//case object Rock extends AreaType with NoNWalkable
-//case object Volcano extends AreaType with NoNWalkable
 
 /**
  * The Model of an [[Area]]
@@ -43,6 +38,13 @@ sealed trait Area {
 }
 
 object Area {
+
+  /**
+   * Method to obtain all the possible [[AreaType]].
+   *
+   * @return a Set with all the possible [[AreaType]].
+   */
+  def getAllTypeOfArea = Set(Fertile, Water, Rock, Volcano)
 
   /**
    *Apply method for [[Area]]

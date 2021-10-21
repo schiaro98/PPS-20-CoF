@@ -62,9 +62,8 @@ object AnimalUtils {
    * @param point the [[Point]] whose position is to be checked.
    * @return true if the point is not placeable because was in a non-walkable area, otherwise true.
    */
-  private def isNotPlaceable(areas: Seq[Area], point: Point): Boolean = {
-    Constants.NonWalkableArea.contains(areas.find(a => a.area.contains(point)).getOrElse(return false).areaType)
-  }
+  private def isNotPlaceable(areas: Seq[Area], point: Point): Boolean =
+    areas.filterNot(_.areaType.walkable).exists(_.area.contains(point))
 
   /**
    * @param topLeft the top left vertices of the square
