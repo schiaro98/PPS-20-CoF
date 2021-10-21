@@ -1,7 +1,10 @@
 package utility
 
 import model._
+import model.animal.{Carnivore, Medium, Small, Species}
+import model.food.{FoodType, Vegetable}
 import org.scalatest.funsuite.AnyFunSuite
+import utility.serializer.{DefaultSerializer, OfFood, OfSpecies, Serializer}
 
 import java.awt.Color
 import java.nio.charset.StandardCharsets
@@ -82,15 +85,15 @@ class SerializeTest extends AnyFunSuite{
 
   test("Test serialize many to file for Food"){
     val fileName = "foodSerializer.txt"
-    foodSerializer.serializeManyToFile(Seq(Food(10, Vegetable, Color.green), Food(20, Vegetable, Color.green), Food(15, Vegetable, Color.ORANGE)))(fileName)
+    foodSerializer.serializeManyToFile(Seq(FoodType(10, Vegetable, Color.green), FoodType(20, Vegetable, Color.green), FoodType(15, Vegetable, Color.ORANGE)))(fileName)
     val path = Path.of("res"+File.separator+"serialization"+File.separator+fileName)
     val json = Files.readString(path, StandardCharsets.UTF_8)
-    assert(json == "{\"color\":{\"value\":-16711936,\"falpha\":0.0},\"energy\":10,\"foodType\":\"Vegetable\"}{\"color\":{\"value\":-16711936,\"falpha\":0.0},\"energy\":20,\"foodType\":\"Vegetable\"}{\"color\":{\"value\":-14336,\"falpha\":0.0},\"energy\":15,\"foodType\":\"Vegetable\"}")
+    assert(json == "{\"color\":{\"value\":-16711936,\"falpha\":0.0},\"energy\":10,\"foodCategory\":\"Vegetable\"}{\"color\":{\"value\":-16711936,\"falpha\":0.0},\"energy\":20,\"foodCategory\":\"Vegetable\"}{\"color\":{\"value\":-14336,\"falpha\":0.0},\"energy\":15,\"foodCategory\":\"Vegetable\"}")
   }
 
   test("Test deserialize many from file for Food"){
     val fileName = "foodSerializer.txt"
-    val foods = foodSerializer.deserializeManyFromFile(fileName)(classOf[Food])
+    val foods = foodSerializer.deserializeManyFromFile(fileName)(classOf[FoodType])
     assert(foods.lengthIs == 3)
   }
 

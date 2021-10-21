@@ -1,6 +1,9 @@
-package controller
+package controller.manager
 
 import model._
+import model.animal.{Animal, Carnivore, Herbivore}
+import model.food.{Food, Meat, Vegetable}
+import model.habitat.{Area, Habitat, Water}
 import utility.Constants
 
 import scala.annotation.tailrec
@@ -12,25 +15,25 @@ sealed trait FeedManager {
    * It manage also the decrease of health and thirst
    * @return a pair of the sequence of the animals updated and of the food still eatable
    */
-  def consumeResources(): (Seq[Animal],Seq[FoodInstance])
+  def consumeResources(): (Seq[Animal],Seq[Food])
 }
 
 object FeedManager {
-  def apply(animals: Seq[Animal], resources: Seq[FoodInstance], habitat: Habitat): FeedManager = SimpleFeedManager(animals, resources, habitat)
+  def apply(animals: Seq[Animal], resources: Seq[Food], habitat: Habitat): FeedManager = SimpleFeedManager(animals, resources, habitat)
 
-  private case class SimpleFeedManager(animals: Seq[Animal], resources: Seq[FoodInstance], habitat: Habitat) extends FeedManager {
+  private case class SimpleFeedManager(animals: Seq[Animal], resources: Seq[Food], habitat: Habitat) extends FeedManager {
 
-    override def consumeResources():(Seq[Animal],Seq[FoodInstance]) = {
+    override def consumeResources():(Seq[Animal],Seq[Food]) = {
 
-      def isEatable(food: FoodInstance, animal: Animal): Boolean = {
-        (food.foodType == Meat && animal.alimentationType == Carnivore) ||
-          (food.foodType == Vegetable && animal.alimentationType == Herbivore)
+      def isEatable(food: Food, animal: Animal): Boolean = {
+        (food.foodCategory == Meat && animal.alimentationType == Carnivore) ||
+          (food.foodCategory == Vegetable && animal.alimentationType == Herbivore)
       }
 
       @tailrec
       def _consumeResources(animals: Seq[Animal],
-                            resources: Seq[FoodInstance] = Seq.empty,
-                            updatedAnimals: Seq[Animal] = Seq.empty) : (Seq[Animal],Seq[FoodInstance]) = animals match {
+                            resources: Seq[Food] = Seq.empty,
+                            updatedAnimals: Seq[Animal] = Seq.empty) : (Seq[Animal],Seq[Food]) = animals match {
         case h :: t =>
           val myAnimal = if(isAnimalNearToWater(h, habitat)){
             h.drink()
@@ -43,11 +46,11 @@ object FeedManager {
 
           if(nearestResource.isDefined) {
             nearestResource.get match {
-              case x: FoodInstance =>
+              case x: Food =>
                 val (updatedAnimal, remainedFood) = myAnimal.eat(x)
 
                 if(remainedFood.isDefined) {
-                  require(remainedFood.get.foodType == x.foodType, "Remaining food is not of same type of the original")
+                  require(remainedFood.get.foodCategory == x.foodCategory, "Remaining food is not of same type of the original")
                   require(remainedFood.get.quantity <= x.quantity, "Remaining food quantity is greater than original")
                   _consumeResources(t, resources.filterNot(_ == x) :+ remainedFood.get , updatedAnimals :+ updatedAnimal)
                 } else {

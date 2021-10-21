@@ -1,14 +1,16 @@
 package view
 
 import model._
-import utility.StringConverter
+import model.animal.{Big, Medium, Small}
+import utility.serializer.StringConverter
+import view.logic.ChooseSpeciesLogic
 
 import java.awt.{Color, Dimension}
 import scala.swing.BorderPanel.Position.Center
 import scala.swing._
 import scala.swing.event.{ButtonClicked, UIEvent}
 
-class SpeciesGui(logic: LogicGui) extends SimpleSwingApplication {
+class ChooseSpeciesGUI(logic: ChooseSpeciesLogic) extends SimpleSwingApplication {
 
   def top: Frame = new Frame {
     title = "Create species"

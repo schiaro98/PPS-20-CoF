@@ -58,4 +58,14 @@
   "strength": 30,
   "sight": 20,
   "alimentationType": "Herbivore"
+}{
+  "color": {
+    "value": -65383,
+    "falpha": 0.0
+  },
+  "name": "fenicottero",
+  "size": "Small",
+  "strength": 10000,
+  "sight": 1000,
+  "alimentationType": "Carnivore"
 }

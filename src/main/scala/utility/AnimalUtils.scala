@@ -1,6 +1,8 @@
 package utility
 
-import model._
+import model.animal._
+import model.habitat.{Area, Habitat}
+import model.position.Point
 
 import scala.annotation.tailrec
 

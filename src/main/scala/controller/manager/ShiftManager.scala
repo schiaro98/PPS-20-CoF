@@ -1,6 +1,9 @@
-package controller
+package controller.manager
 
 import model._
+import model.animal.{Animal, Carnivore}
+import model.habitat.{Area, Habitat}
+import model.position.Point
 import utility.{AnimalUtils, Constants}
 
 import scala.collection.parallel.CollectionConverters.ImmutableIterableIsParallelizable

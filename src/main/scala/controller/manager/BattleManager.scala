@@ -1,6 +1,8 @@
-package controller
+package controller.manager
 
 import model._
+import model.animal.{Animal, Big, Medium, Small}
+import model.food.Food
 import utility.Logger
 
 import scala.annotation.tailrec
@@ -16,7 +18,7 @@ sealed trait BattleManager {
    *
    * @return the Meat that can be released during the battles, and the list of [[Animal]] updated
    */
-  def battle(): (Seq[Animal],Seq[FoodInstance])
+  def battle(): (Seq[Animal],Seq[Food])
 
 }
 
@@ -26,11 +28,11 @@ object BattleManager {
   private case class SimpleBattleManager(animals: Seq[Animal]) extends BattleManager {
     private val logger = Logger
 
-    def battle(): (Seq[Animal],Seq[FoodInstance]) = {
+    def battle(): (Seq[Animal],Seq[Food]) = {
       @tailrec
       def battle_(animals: Seq[Animal],
-                  meats: Seq[FoodInstance] = Seq.empty,
-                  animalUpdated: Seq[Animal] = Seq.empty): (Seq[Animal], Seq[FoodInstance]) = animals match {
+                  meats: Seq[Food] = Seq.empty,
+                  animalUpdated: Seq[Animal] = Seq.empty): (Seq[Animal], Seq[Food]) = animals match {
         case attacker :: t =>
           val enemyOpt = animals
             .filterNot(_ == attacker)

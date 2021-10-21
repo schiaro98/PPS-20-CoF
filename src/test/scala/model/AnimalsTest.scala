@@ -1,5 +1,8 @@
 package model
 
+import model.animal.{Adult, Animal, Carnivore, Medium, Old, Small, Species, Young}
+import model.food.{Food, FoodType, Meat}
+import model.position.Point
 import org.scalatest.funsuite.AnyFunSuite
 import utility.Constants
 
@@ -12,7 +15,7 @@ class AnimalsTest extends AnyFunSuite {
   val sight = 10
   val species: Species = Species("tiger", Medium, 0, sight, Carnivore, color)
   val animal: Animal = Animal(species, p)
-  val food: FoodInstance = FoodInstance(Food(10, Meat), p, 5)
+  val food: Food = Food(FoodType(10, Meat), p, 5)
   val decrement = 90
 
   test("An animal is an entity with personal parameters and belong to a species") {
@@ -64,7 +67,7 @@ class AnimalsTest extends AnyFunSuite {
 
   test("An animal doesn't eat all the food if it does not need it") {
     val notSoHungryAnimal = animal.update(Constants.MaxHealth - decrement)
-    val moreFood = FoodInstance(Food(12, Meat), p, 10)
+    val moreFood = Food(FoodType(12, Meat), p, 10)
     val (animalAfterEat, foodAfterEat) = notSoHungryAnimal.eat(moreFood)
     assert(animalAfterEat.health == Constants.MaxHealth - decrement + 7 * moreFood.energy)
     assert(foodAfterEat.get.quantity == 3)
@@ -77,6 +80,6 @@ class AnimalsTest extends AnyFunSuite {
   }
 
   test("An dying animal releases some meat") {
-    assert(animal.die().foodType == Meat)
+    assert(animal.die().foodCategory == Meat)
   }
 }

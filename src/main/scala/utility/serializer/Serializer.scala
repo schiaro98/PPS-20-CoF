@@ -1,7 +1,11 @@
-package utility
+package utility.serializer
 
 import com.google.gson._
-import model._
+import model.animal.{Size, Species}
+import model.{animal, habitat, _}
+import model.food.{FoodCategory, FoodType}
+import model.habitat.{Area, AreaType, Fertile, Rock, Volcano, Water}
+import model.shape.RectangleArea
 
 import java.awt.Color
 import java.io.PrintWriter
@@ -84,8 +88,8 @@ object Serializer {
       override def serialize(src: Size, typeOfSrc: Type, context: JsonSerializationContext): JsonElement = new JsonPrimitive(src.toString)
     }
 
-    object TypeSerializer extends JsonSerializer[model.Type] {
-      override def serialize(src: model.Type, typeOfSrc: Type, context: JsonSerializationContext): JsonElement = new JsonPrimitive(src.toString)
+    object TypeSerializer extends JsonSerializer[animal.Type] {
+      override def serialize(src: animal.Type, typeOfSrc: Type, context: JsonSerializationContext): JsonElement = new JsonPrimitive(src.toString)
     }
 
     object SpeciesDeserializer extends JsonDeserializer[Species] {
@@ -100,7 +104,7 @@ object Serializer {
             val strength = obj.get("strength").getAsInt
             val sight = obj.get("sight").getAsInt
             val color = colorSerializer.deserializeOne(obj.get("color").toString)(classOf[Color])
-            Species(name, size, strength, sight, alimentationType, color)
+            animal.Species(name, size, strength, sight, alimentationType, color)
           case _ => null
         }
         Option(res).getOrElse(throw new JsonParseException(s"$json can't be parsed to Species"))
@@ -109,34 +113,34 @@ object Serializer {
 
     override val gson: Gson = new GsonBuilder().registerTypeHierarchyAdapter(classOf[Size], SizeSerializer)
       .registerTypeHierarchyAdapter(classOf[Species], SpeciesDeserializer)
-      .registerTypeHierarchyAdapter(classOf[model.Type], TypeSerializer).setPrettyPrinting().create()
+      .registerTypeHierarchyAdapter(classOf[animal.Type], TypeSerializer).setPrettyPrinting().create()
   }
 
   private class FoodsSerializer extends SerializerImpl {
 
     val colorSerializer: Serializer = Serializer(OfColor)
 
-    object FoodTypeSerializer extends JsonSerializer[model.FoodType] {
-      override def serialize(src: FoodType, typeOfSrc: Type, context: JsonSerializationContext): JsonElement = new JsonPrimitive(src.toString)
+    object FoodCategorySerializer extends JsonSerializer[FoodCategory] {
+      override def serialize(src: FoodCategory, typeOfSrc: Type, context: JsonSerializationContext): JsonElement = new JsonPrimitive(src.toString)
     }
 
-    object FoodDeserializer extends JsonDeserializer[Food] {
-      override def deserialize(json: JsonElement, typeOfT: Type, context: JsonDeserializationContext): Food = {
+    object FoodDeserializer extends JsonDeserializer[FoodType] {
+      override def deserialize(json: JsonElement, typeOfT: Type, context: JsonDeserializationContext): FoodType = {
         val res = json match {
           case obj: JsonObject if obj.has("color") && obj.has("energy")
-            && obj.has("foodType") =>
+            && obj.has("foodCategory") =>
             val color = colorSerializer.deserializeOne(obj.get("color").toString)(classOf[Color])
             val energy = obj.get("energy").getAsInt
-            val foodType = obj.get("foodType").getAsString
-            Food(energy, StringConverter.getFoodType(foodType), color)
+            val foodCategory = obj.get("foodCategory").getAsString
+            food.FoodType(energy, StringConverter.getFoodCategory(foodCategory), color)
           case _ => null
         }
         Option(res).getOrElse(throw new JsonParseException(s"$json can't be parsed to Food"))
       }
     }
 
-    override val gson: Gson = new GsonBuilder().registerTypeHierarchyAdapter(classOf[Food], FoodDeserializer)
-    .registerTypeHierarchyAdapter(classOf[FoodType], FoodTypeSerializer).create()
+    override val gson: Gson = new GsonBuilder().registerTypeHierarchyAdapter(classOf[FoodType], FoodDeserializer)
+    .registerTypeHierarchyAdapter(classOf[FoodCategory], FoodCategorySerializer).create()
   }
 
   private class ProbabilitySerializer extends SerializerImpl {
@@ -178,9 +182,9 @@ object Serializer {
             val area = deserializeOne(obj.get("area").toString)(classOf[RectangleArea])
             if (obj.has("fertility")) {
               val fertility = probabilitySerializer.deserializeOne(obj.get("fertility").toString)(classOf[Probability])
-              Area(areaType, area, fertility)
+              habitat.Area(areaType, area, fertility)
             } else {
-              Area(areaType, area)
+              habitat.Area(areaType, area)
             }
           case _ => null
         }

@@ -1,11 +1,12 @@
-package view
+package view.logic
 
-import model.{Size, Species, Type}
-import utility.{Constants, OfSpecies, Serializer}
+import model.animal.{Size, Species, Type}
+import utility.Constants
+import utility.serializer.{OfSpecies, Serializer}
 
 import java.awt.Color
 
-class LogicGui(speciesFile: String) {
+class ChooseSpeciesLogic(speciesFile: String) {
 
   /**
    * Serializer object is used to write or retrieve species saved in species file

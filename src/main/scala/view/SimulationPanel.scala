@@ -1,7 +1,11 @@
 package view
 
-import model.{Animal, FoodInstance, Habitat, Point}
-import utility.{AnimalUtils, Constants, RectangleArea}
+import model.animal.Animal
+import model.food.Food
+import model.habitat.Habitat
+import model.position.Point
+import model.shape.{Circle, Rectangle, RectangleArea, Shape}
+import utility.{AnimalUtils, Constants}
 
 import java.awt.event.{MouseEvent, MouseMotionListener}
 import java.awt.{Color, Dimension, Graphics2D}
@@ -74,18 +78,18 @@ class SimulationPanel(dimension: (Int, Int)) extends Panel {
   /**
    * Draw all the food present in the map by creating specific circle.
    *
-   * @param food a Seq of [[FoodInstance]] to draw.
+   * @param food a Seq of [[Food]] to draw.
    */
-  def drawFood(food: Seq[FoodInstance]): Unit = food.foreach(f => addShape(new Circle(f.position, f.color, Constants.PixelForFood)))
+  def drawFood(food: Seq[Food]): Unit = food.foreach(f => addShape(new Circle(f.position, f.color, Constants.PixelForFood)))
 
   /**
    * Method to draw all the areas present in the [[Habitat]], the animals and the food.
    *
    * @param habitat the [[Habitat]] of the simulation.
    * @param animals a Seq of [[Animal]] to draw.
-   * @param food    a Seq of [[FoodInstance]] to draw.
+   * @param food    a Seq of [[Food]] to draw.
    */
-  def drawAll(habitat: Habitat, animals: Seq[Animal], food: Seq[FoodInstance]): Unit = {
+  def drawAll(habitat: Habitat, animals: Seq[Animal], food: Seq[Food]): Unit = {
     drawHabitat(habitat)
     drawAnimals(animals)
     drawFood(food)

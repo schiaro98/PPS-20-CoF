@@ -1,6 +1,10 @@
 package controller
 
-import model.{Animal, Carnivore, Habitat, Medium, Point, Probability, Species}
+import controller.manager.AnimalManager
+import model.animal.{Animal, Carnivore, Medium, Species}
+import model.habitat.Habitat
+import model.position.Point
+import model.{Probability, animal}
 import org.scalatest.funsuite.AnyFunSuite
 import utility.Constants
 
@@ -8,7 +12,7 @@ class AnimalManagerTest extends AnyFunSuite {
 
   val numberOfAnimals = 10
   val tiger: Species = Species("tiger", Medium, 10, 10, Carnivore)
-  val animals: Seq[Animal] = Seq.fill(numberOfAnimals)(Animal(tiger, Point(0, 0)))
+  val animals: Seq[Animal] = Seq.fill(numberOfAnimals)(animal.Animal(tiger, Point(0, 0)))
 
   test("A AnimalManager with a Seq of Animal can return that Seq") {
     val animalManager: AnimalManager = AnimalManager(animals)
@@ -35,14 +39,14 @@ class AnimalManagerTest extends AnyFunSuite {
   }
 
   test("In a non dangerous habitat no animal dies") {
-    val habitat: Habitat = Habitat(Probability(0), (0, 0), Seq.empty)
+    val habitat: Habitat = model.habitat.Habitat(Probability(0), (0, 0), Seq.empty)
     val animalManager: AnimalManager = AnimalManager(animals)
     for (_ <- 1 to 10)
       assert(animalManager.unexpectedEvents(habitat)._1.lengthCompare(numberOfAnimals) == 0 )
   }
 
   test("In a very dangerous habitat animals die") {
-    val habitat: Habitat = Habitat(Probability(100), (0, 0), Seq.empty)
+    val habitat: Habitat = model.habitat.Habitat(Probability(100), (0, 0), Seq.empty)
     val animalManager: AnimalManager = AnimalManager(animals)
     for (_ <- 1 to 10)
       assert(animalManager.unexpectedEvents(habitat)._1.lengthCompare(numberOfAnimals) < 0 )

@@ -1,4 +1,6 @@
-package model
+package model.animal
+
+import model.position.Visualizable
 
 import java.awt.Color
 

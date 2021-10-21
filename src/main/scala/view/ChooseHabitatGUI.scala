@@ -2,6 +2,8 @@ package view
 
 import controller.GameLoop
 import model._
+import model.habitat.{EmptyHabitatType, GridHabitatType, Habitat, HabitatType, RandomHabitatType, SimpleHabitatType}
+import view.logic.ChooseHabitatLogic
 
 import javax.swing.{Box, WindowConstants}
 import scala.swing._

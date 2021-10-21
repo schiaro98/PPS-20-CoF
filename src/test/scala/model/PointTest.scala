@@ -1,5 +1,6 @@
 package model
 
+import model.position.Point
 import org.scalatest.funsuite.AnyFunSuite
 
 class PointTest extends AnyFunSuite{

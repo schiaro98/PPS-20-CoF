@@ -1,6 +1,8 @@
 package view
 
-import model.{Animal, FoodInstance, Habitat}
+import model.food.Food
+import model.animal.Animal
+import model.habitat.Habitat
 import utility.{Logger, Statistics}
 
 import java.awt.Dimension
@@ -51,7 +53,7 @@ class SimulationGui(habitat: Habitat,
    * @param animals a Seq of [[Animal]] to draw on the [[SimulationPanel]].
    * @param food    the food to draw on the [[SimulationPanel]].
    */
-  def updatePanel(animals: Seq[Animal], food: Seq[FoodInstance]): Unit = {
+  def updatePanel(animals: Seq[Animal], food: Seq[Food]): Unit = {
     simulationPanel.drawAll(habitat, animals, food)
     simulationPanel.revalidate()
     simulationPanel.repaint()

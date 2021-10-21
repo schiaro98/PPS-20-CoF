@@ -1,4 +1,4 @@
-package model
+package model.position
 
 import scala.util.Random
 

@@ -1,6 +1,6 @@
 package view
 
-import model.Animal
+import model.animal.Animal
 
 import java.awt._
 import javax.swing._

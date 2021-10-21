@@ -1,7 +1,8 @@
 package view
 
-import model.Species
+import model.animal.Species
 import utility.Constants
+import view.logic.{ChooseHabitatLogic, ChooseSpeciesLogic}
 
 import java.awt.Dimension
 import javax.swing.WindowConstants
@@ -11,7 +12,7 @@ import scala.swing.event.ButtonClicked
 
 object StartingGUI {
 
-  val logic = new LogicGui(Constants.SavedSpecies)
+  val logic = new ChooseSpeciesLogic(Constants.SavedSpecies)
   logic.initialize()
 
   val frame: Frame = new Frame {
@@ -21,7 +22,7 @@ object StartingGUI {
     val createButton: Button = new Button("Create new specie") {
       tooltip = "Click to create new species"
       reactions += {
-        case _: ButtonClicked => new SpeciesGui(logic) {
+        case _: ButtonClicked => new ChooseSpeciesGUI(logic) {
           top.visible = true
         }
       }

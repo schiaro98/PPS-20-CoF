@@ -1,13 +1,17 @@
 package controller
 
-import model._
+import controller.manager.ShiftManager
+import model.animal.{Animal, Carnivore, Herbivore, Medium, Small, Species}
+import model.habitat.{Area, EmptyHabitatType, Fertile, Habitat, RandomHabitatType, Water}
+import model.position.Point
+import model.shape.RectangleArea
+import model.{animal, habitat, _}
 import org.scalatest.funsuite.AnyFunSuite
-import utility.RectangleArea
 
 import scala.util.Random
 
 class ShiftManagerTest extends AnyFunSuite {
-  val ourHabitat: Habitat = Habitat(Probability(0))
+  val ourHabitat: Habitat = habitat.Habitat(Probability(0))
 
   val MaxX = 500
   val MaxY = 500
@@ -18,10 +22,10 @@ class ShiftManagerTest extends AnyFunSuite {
   val dog: Species = Species("dog", Medium, 20, 20, Carnivore)
   val cat: Species = Species("cat", Small, 15, 10, Carnivore)
 
-  val t1: Animal = Animal(tiger, getLegalRandomPoint(ourHabitat))
-  val e1: Animal = Animal(elephant, getLegalRandomPoint(ourHabitat))
-  val d1: Animal = Animal(dog, getLegalRandomPoint(ourHabitat))
-  val c1: Animal = Animal(cat, getLegalRandomPoint(ourHabitat))
+  val t1: Animal = animal.Animal(tiger, getLegalRandomPoint(ourHabitat))
+  val e1: Animal = animal.Animal(elephant, getLegalRandomPoint(ourHabitat))
+  val d1: Animal = animal.Animal(dog, getLegalRandomPoint(ourHabitat))
+  val c1: Animal = animal.Animal(cat, getLegalRandomPoint(ourHabitat))
   //destinations
   val dest1: Point = Point.getRandomPoint(Point(MaxX, MaxY))
   val dest2: Point = Point.getRandomPoint(Point(MaxX, MaxY))
@@ -36,7 +40,7 @@ class ShiftManagerTest extends AnyFunSuite {
 
   test("Single animal arrives at destination in empty habitat") {
     val dest = Point(55, 100)
-    val habitat = Habitat(EmptyHabitatType, Probability(0), (500, 500), Seq.empty[Area])
+    val habitat = model.habitat.Habitat(EmptyHabitatType, Probability(0), (500, 500), Seq.empty[Area])
     val sm: ShiftManager = ShiftManager(habitat, Map(t1 -> dest))
     while (sm.animals.count(_.position == dest) != 1) {
       sm.walk()
@@ -46,7 +50,7 @@ class ShiftManagerTest extends AnyFunSuite {
 
   test("Multiple animals arrive at different random destinations in empty habitat") {
     val destinations = Set(dest1, dest2, dest3, dest4)
-    val habitat = Habitat(EmptyHabitatType, Probability(0), (MaxX, MaxY), Seq.empty[Area])
+    val habitat = model.habitat.Habitat(EmptyHabitatType, Probability(0), (MaxX, MaxY), Seq.empty[Area])
     val sm: ShiftManager = ShiftManager(habitat,
       Map(t1 -> dest1,
         e1 -> dest2,
@@ -62,7 +66,7 @@ class ShiftManagerTest extends AnyFunSuite {
   test("Multiple animals arrive at the same random destination in empty habitat") {
     val r = (x: Int) => Random.nextInt(x)
     val dest = Point(r(500), r(500))
-    val habitat = Habitat(EmptyHabitatType, Probability(0), (500, 500), Seq.empty[Area])
+    val habitat = model.habitat.Habitat(EmptyHabitatType, Probability(0), (500, 500), Seq.empty[Area])
     val sm: ShiftManager = ShiftManager(habitat, (t1, dest), (e1, dest), (d1, dest), (c1, dest))
     while (sm.animals.count(_.position == dest) != sm.animals.size) {
       sm.walk()
@@ -98,12 +102,12 @@ class ShiftManagerTest extends AnyFunSuite {
   }
 
   test("Multiple animals walk to different random destinations in Random Habitat") {
-    val randHabitat = Habitat(RandomHabitatType, Probability(0), (500, 500), Seq.empty)
+    val randHabitat = habitat.Habitat(RandomHabitatType, Probability(0), (500, 500), Seq.empty)
 
-    val t: Animal = Animal(tiger, getLegalRandomPoint(randHabitat))
-    val e: Animal = Animal(elephant, getLegalRandomPoint(randHabitat))
-    val d: Animal = Animal(dog, getLegalRandomPoint(randHabitat))
-    val c: Animal = Animal(cat, getLegalRandomPoint(randHabitat))
+    val t: Animal = animal.Animal(tiger, getLegalRandomPoint(randHabitat))
+    val e: Animal = animal.Animal(elephant, getLegalRandomPoint(randHabitat))
+    val d: Animal = animal.Animal(dog, getLegalRandomPoint(randHabitat))
+    val c: Animal = animal.Animal(cat, getLegalRandomPoint(randHabitat))
 
     val sm: ShiftManager = ShiftManager(randHabitat, (t, dest1), (e, dest2), (d, dest3), (c, dest4))
     for (_ <- 0 to 100) {
@@ -114,9 +118,9 @@ class ShiftManagerTest extends AnyFunSuite {
   }
 
   test("Destination is inside non walkable area and animal doesn't go inside") {
-    val area = Area(Water, RectangleArea(Point(15, 15), Point(50, 50)))
-    val h = Habitat(unexpectedEvents = Probability(10), areas = Seq(area))
-    val t: Animal = Animal(tiger, getLegalRandomPoint(h))
+    val area = habitat.Area(Water, RectangleArea(Point(15, 15), Point(50, 50)))
+    val h = habitat.Habitat(unexpectedEvents = Probability(10), areas = Seq(area))
+    val t: Animal = animal.Animal(tiger, getLegalRandomPoint(h))
     val sm = ShiftManager(h, (t, Point(30, 30)))
     for (_ <- 1 to 100) {
       sm.walk()

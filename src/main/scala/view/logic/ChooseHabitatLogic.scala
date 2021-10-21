@@ -1,5 +1,7 @@
-package view
+package view.logic
 
+import model.animal.Species
+import model.habitat.{Area, Habitat, HabitatType, SimpleHabitatType}
 import model._
 import utility.Constants
 
@@ -12,8 +14,8 @@ class ChooseHabitatLogic(val species:Map[Species, Int]) {
       && h.toInt >= 0 && h.toInt <= Constants.MaxDimension
     ) {
       if (ht == SimpleHabitatType){
-        Some(Habitat(Probability(ue.toInt)))
-      } else Some(Habitat(ht, Probability(ue.toInt), (w.toInt, h.toInt), areas))
+        Some(habitat.Habitat(Probability(ue.toInt)))
+      } else Some(habitat.Habitat(ht, Probability(ue.toInt), (w.toInt, h.toInt), areas))
     } else None
 
 

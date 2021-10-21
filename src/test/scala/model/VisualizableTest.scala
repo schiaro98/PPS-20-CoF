@@ -1,5 +1,8 @@
 package model
 
+import model.animal.{Carnivore, Medium, Species}
+import model.food.{Food, FoodType, Vegetable}
+import model.position.{Point, Visualizable}
 import org.scalatest.funsuite.AnyFunSuite
 import utility.Constants
 
@@ -10,7 +13,7 @@ class VisualizableTest extends AnyFunSuite {
   val color: Color = Color.black
 
   test("A visualizable must provide an image") {
-    val v: Visualizable = Food(0, Vegetable, color)
+    val v: Visualizable = FoodType(0, Vegetable, color)
     assert(color == v.color)
   }
 
@@ -21,8 +24,8 @@ class VisualizableTest extends AnyFunSuite {
   }
 
   test("A Vegetable is a visualizable with energy and quantity") {
-    val f: Food =
-      FoodInstance(Food(Constants.DefaultEnergyOfVegetable, Vegetable, color), Point(0,0), 10)
+    val f: FoodType =
+      Food(FoodType(Constants.DefaultEnergyOfVegetable, Vegetable, color), Point(0,0), 10)
     assert(color == f.color)
     assert(10 == f.energy )
   }

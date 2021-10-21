@@ -1,7 +1,9 @@
-package model
+package model.animal
 
-import utility.{Constants, Logger, Statistics}
+import model.food.{Food, FoodType, Meat, Vegetable}
+import model.position.{Placeable, Point}
 import utility.Constants._
+import utility.{Constants, Logger, Statistics}
 
 import java.awt.Color
 import scala.util.Random
@@ -71,7 +73,7 @@ trait Animal extends Species with Placeable {
    * @return a pair containing the same [[Animal]] with health increased and the remaining food,
    *         if there is, that it hasn't eaten.
    */
-  def eat(food: FoodInstance): (Animal, Option[FoodInstance])
+  def eat(food: Food): (Animal, Option[Food])
 
   /**
    * Method to quench an [[Animal]]'s thirst.
@@ -85,7 +87,7 @@ trait Animal extends Species with Placeable {
    *
    * @return a new food, the meat that can be eaten.
    */
-  def die(): FoodInstance
+  def die(): Food
 }
 
 /**
@@ -129,11 +131,11 @@ object Animal {
       this.update(thirst = MaxThirst)
     }
 
-    override def die(): FoodInstance = FoodInstance(Food(Constants.DefaultEnergyOfMeat, Meat), position, quantityFromDeath())
+    override def die(): Food = Food(FoodType(Constants.DefaultEnergyOfMeat, Meat), position, quantityFromDeath())
 
     override def shift(pos: Point): Animal = this.update(position = pos)
 
-    override def eat(food: FoodInstance): (Animal, Option[FoodInstance]) = food.foodType match {
+    override def eat(food: Food): (Animal, Option[Food]) = food.foodCategory match {
       case Meat if this.alimentationType == Carnivore => consume(food)
       case Vegetable if this.alimentationType == Herbivore => consume(food)
       case _ => throw new IllegalArgumentException("A carnivore trying to eat vegetable or a Herbivore trying to eat Meat")
@@ -160,14 +162,14 @@ object Animal {
      * @param food The food to eat.
      * @return a pair that contains the [[Animal]] with the health increased and the remaining food, if there is still any.
      */
-    private def consume(food: FoodInstance): (Animal, Option[FoodInstance]) = health match {
+    private def consume(food: Food): (Animal, Option[Food]) = health match {
       case Constants.MaxHealth => (this, Some(food))
       case _ if MaxHealth - health > food.energy * food.quantity =>
-        logger.info(this.name + s" eat all the ${food.foodType}")
+        logger.info(this.name + s" eat all the ${food.foodCategory}")
         Statistics.update(foodEaten = food.quantity)
         (this.update(health = health + food.energy * food.quantity), None)
       case _ =>
-        logger.info(this.name + s" eat some ${food.foodType}")
+        logger.info(this.name + s" eat some ${food.foodCategory}")
         val foodToEat = (MaxHealth - health) / food.energy
         Statistics.update(foodEaten = foodToEat)
         (this.update(health = health + food.energy * foodToEat), Some(food.consume(foodToEat)))

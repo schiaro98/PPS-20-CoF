@@ -1,6 +1,10 @@
 package controller
 
+import controller.manager.{AnimalManager, BattleManager, DestinationManager, FeedManager, ResourceManager, ShiftManager}
 import model._
+import model.animal.{Animal, Species}
+import model.habitat.Habitat
+import model.position.Point
 import utility.{Constants, Logger, Statistics}
 import view.{SimulationGui, StatisticsGUI}
 

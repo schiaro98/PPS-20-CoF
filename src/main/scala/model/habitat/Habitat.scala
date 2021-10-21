@@ -1,7 +1,12 @@
-package model
+package model.habitat
 
+import model.animal.Animal
+import model.position.Point
+import model.{Probability, shape}
+import model.shape.RectangleArea
+import utility.Constants
 import utility.Constants.{DefaultGridSize, DefaultStartingX, DefaultStartingY}
-import utility.{Constants, OfArea, RectangleArea, Serializer}
+import utility.serializer.{OfArea, Serializer}
 
 import scala.util.Random
 
@@ -146,7 +151,7 @@ object Habitat {
         val startingPoint = Point(i, j)
         val areaWidth = Random.between(maxWidth / 2, maxWidth)
         val areaHeight = Random.between(maxHeight / 2, maxHeight)
-        val rectangle = RectangleArea(startingPoint, Point(startingPoint.x + areaWidth, startingPoint.y + areaHeight))
+        val rectangle = shape.RectangleArea(startingPoint, Point(startingPoint.x + areaWidth, startingPoint.y + areaHeight))
         val newArea: Area = Area(randomAreaType, rectangle, Probability(Random.between(1, 100)))
         grid = grid.::(newArea)
       }

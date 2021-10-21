@@ -1,6 +1,9 @@
-package controller
+package controller.manager
 
-import model._
+import model.{animal, _}
+import model.animal.{Adult, Age, Animal, Old, Species, Young}
+import model.food.Food
+import model.habitat.Habitat
 import utility.{AnimalUtils, Constants, Logger, Statistics}
 
 import scala.annotation.tailrec
@@ -33,7 +36,7 @@ sealed trait AnimalManager {
    *
    * @return a pair with the alive and updated [[Animal]]s, and the food released if any of these died.
    */
-  def lifeCycleUpdate(): (Seq[Animal], Seq[FoodInstance])
+  def lifeCycleUpdate(): (Seq[Animal], Seq[Food])
 
   /**
    * Calculate the unexpected events that can kill some [[Animal]]s, based on the dangerousness of the [[Habitat]].
@@ -41,7 +44,7 @@ sealed trait AnimalManager {
    * @param habitat the [[Habitat]] where the simulation takes place.
    * @return a pair with the alive [[Animal]]s and the food released if any of these died.
    */
-  def unexpectedEvents(habitat: Habitat): (Seq[Animal], Seq[FoodInstance])
+  def unexpectedEvents(habitat: Habitat): (Seq[Animal], Seq[Food])
 }
 
 /**
@@ -62,12 +65,12 @@ object AnimalManager {
     private val logger = Logger
 
 
-    override def lifeCycleUpdate(): (Seq[Animal], Seq[FoodInstance]) =
+    override def lifeCycleUpdate(): (Seq[Animal], Seq[Food]) =
       updateAnimalAndInfo(
         (animal: Animal) => animal.update(animal.health - Constants.healthDecrease, animal.thirst - Constants.thirstDecrease),
         " died for natural causes")
 
-    override def unexpectedEvents(habitat: Habitat): (Seq[Animal], Seq[FoodInstance]) =
+    override def unexpectedEvents(habitat: Habitat): (Seq[Animal], Seq[Food]) =
       updateAnimalAndInfo(
         (animal: Animal) => if (probabilityBasedOnAge(habitat, animal).calculate) animal.update(health = 0) else animal,
         " died for an unexpected event")
@@ -79,7 +82,7 @@ object AnimalManager {
      * @param reasonOfDeath the reason why an [[Animal]] dies.
      * @return a pair with the alive and updated [[Animal]]s, and the food released if any of these died.
      */
-    private def updateAnimalAndInfo(update: Animal => Animal, reasonOfDeath: String): (Seq[Animal], Seq[FoodInstance]) = {
+    private def updateAnimalAndInfo(update: Animal => Animal, reasonOfDeath: String): (Seq[Animal], Seq[Food]) = {
       val updatedAnimals = animals.map(update)
       Statistics.update(deathForNaturalCause = updatedAnimals.count(!_.isAlive))
       updatedAnimals.filterNot(_.isAlive).foreach(animal => logger.info(animal.name + reasonOfDeath))
@@ -113,7 +116,7 @@ object AnimalManager {
       @tailrec
       def generateAnimalsInHabitat(s: Species, quantity: Int, habitat: Habitat, animals: Seq[Animal] = Seq.empty): Seq[Animal] = quantity match {
         case x if x > 0 =>
-          generateAnimalsInHabitat(s, quantity - 1, habitat, animals :+ Animal(s, AnimalUtils.placeAnimal(habitat, s)))
+          generateAnimalsInHabitat(s, quantity - 1, habitat, animals :+ animal.Animal(s, AnimalUtils.placeAnimal(habitat, s)))
         case _ => animals
       }
 

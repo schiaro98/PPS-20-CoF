@@ -1,22 +1,25 @@
-package controller
+package controller.manager
 
-import controller.Aliases.SomeFoods
+import controller.manager.Aliases.SomeFoods
 import model._
-import utility.{Constants, OfFood, Serializer}
+import model.food.{Food, FoodType, Vegetable}
+import model.habitat.{Area, Fertile, GrowFood, Habitat}
+import utility.Constants
+import utility.serializer.{OfFood, Serializer}
 
 import scala.annotation.tailrec
 import scala.util.Random
 
 object Aliases {
   /**
-   * a [[Seq]] of [[FoodInstance]]
+   * a [[Seq]] of [[Food]]
    */
-  type SomeFoods = Seq[FoodInstance]
+  type SomeFoods = Seq[Food]
 }
 
 sealed trait ResourceManager {
 
-  import controller.Aliases._
+  import Aliases._
 
   /**
    *
@@ -26,7 +29,7 @@ sealed trait ResourceManager {
 
   /**
    *
-   * @param fi replace the [[Seq]] of [[FoodInstance]] to the [[ResourceManager]]
+   * @param fi replace the [[Seq]] of [[Food]] to the [[ResourceManager]]
    * @return the updated [[ResourceManager]]
    */
   def someFoods_(fi: SomeFoods): ResourceManager
@@ -35,7 +38,7 @@ sealed trait ResourceManager {
    *
    * @return the Set of foods that the [ResourceManager] can grow
    */
-  def foods: Set[Food]
+  def foods: Set[FoodType]
 
   /**
    *
@@ -70,55 +73,55 @@ object ResourceManager {
    * The apply for [[ResourceManager]]
    *
    * @param habitat       the [[Habitat]] in which the Resources are placed
-   * @param foods         the [[Seq]] of [[Food]] that can be placed in the map from the [[ResourceManager]]
-   * @param foodInstances the actual [[FoodInstance]]
+   * @param foods         the [[Seq]] of [[FoodType]] that can be placed in the map from the [[ResourceManager]]
+   * @param foodInstances the actual [[Food]]
    * @return
    */
   def apply(habitat: Habitat,
-            foods: Set[Food] = Set.empty[Food],
-            foodInstances: SomeFoods = Seq.empty[FoodInstance],
+            foods: Set[FoodType] = Set.empty[FoodType],
+            foodInstances: SomeFoods = Seq.empty[Food],
            ): ResourceManager = new ResourceManagerImpl(habitat, foods, foodInstances)
 
   /**
    * The apply for [[ResourceManager]]
    *
    * @param habitat  the [[Habitat]] in which the Resources are placed
-   * @param fileName the name of the file of the [[Food]]
+   * @param fileName the name of the file of the [[FoodType]]
    * @return a [[ResourceManager]] implementation
    */
   def apply(habitat: Habitat, fileName: String): ResourceManager =
-    new ResourceManagerImpl(habitat, Set.empty[Food], Seq.empty[FoodInstance]).importFoodsFromFile(fileName)
+    new ResourceManagerImpl(habitat, Set.empty[FoodType], Seq.empty[Food]).importFoodsFromFile(fileName)
 
   private class ResourceManagerImpl(val habitat: Habitat,
-                                    val foods: Set[Food],
+                                    val foods: Set[FoodType],
                                     val someFoods: SomeFoods,
                                    ) extends ResourceManager {
 
     override def grow(): ResourceManager = {
-      if (someFoods.count(_.foodType == Vegetable) < Constants.MaxFoodInstances){
+      if (someFoods.count(_.foodCategory == Vegetable) < Constants.MaxFoodInstances){
         val newFoods = habitat.areas
           .filter(_.isInstanceOf[Area with GrowFood])
           .map(_.asInstanceOf[Area with GrowFood])
           .map(_.growFood(randomVegetable()))
           .filter(_.isDefined)
           .map(_.get)
-        ResourceManager(habitat, foods.filter(_.foodType == Vegetable), someFoods ++ newFoods)
+        ResourceManager(habitat, foods.filter(_.foodCategory == Vegetable), someFoods ++ newFoods)
       } else this
     }
 
     /**
      *
-     * @return a random [[Food]] from foods
+     * @return a random [[FoodType]] from foods
      */
-    private def randomVegetable(): Option[Food] = {
+    private def randomVegetable(): Option[FoodType] = {
       if (foods.nonEmpty) {
-        Some(foods.filter(_.foodType == Vegetable).toSeq(new Random().nextInt(foods.size)))
+        Some(foods.filter(_.foodCategory == Vegetable).toSeq(new Random().nextInt(foods.size)))
       } else None
     }
 
     override def importFoodsFromFile(fileName: String): ResourceManager = {
       val serializer: Serializer = Serializer(OfFood)
-      val growableFoods = serializer.deserializeManyFromFile(fileName)(classOf[Food])
+      val growableFoods = serializer.deserializeManyFromFile(fileName)(classOf[FoodType])
       ResourceManager(habitat, growableFoods.toSet, someFoods)
     }
 

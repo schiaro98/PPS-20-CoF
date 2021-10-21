@@ -1,13 +1,17 @@
 package utility
 
-import model._
+import model.{shape, _}
+import model.animal.{Big, Carnivore, Herbivore, Medium, Species}
+import model.habitat.{Area, Fertile, Habitat}
+import model.position.Point
+import model.shape.RectangleArea
 import org.scalatest.funsuite.AnyFunSuite
 
 class AnimalUtilsTest extends AnyFunSuite {
 
   val topLeft: Point = Point(0, 0)
   val bottomRight: Point = Point(100, 100)
-  val rectangle: RectangleArea = RectangleArea(topLeft, bottomRight)
+  val rectangle: RectangleArea = shape.RectangleArea(topLeft, bottomRight)
   val tiger: Species = Species("tiger", Medium, 0, 0, Carnivore)
 
   test("An animal can be positioned in a walkable areas") {

@@ -1,6 +1,10 @@
-package controller
+package controller.manager
 
 import model._
+import model.animal.{Animal, Carnivore, Herbivore}
+import model.food.{Food, Meat, Vegetable}
+import model.habitat.{Fertile, Habitat, Water}
+import model.position.{Placeable, Point}
 
 import scala.annotation.tailrec
 
@@ -21,11 +25,11 @@ sealed trait DestinationManager {
 
 object DestinationManager {
   def apply(animals: Seq[Animal],
-            resources: Seq[FoodInstance],
+            resources: Seq[Food],
             habitat: Habitat): DestinationManager =
     DestinationManagerImpl(animals, resources, habitat)
 
-  private case class DestinationManagerImpl(animals: Seq[Animal], food: Seq[FoodInstance], habitat: Habitat) extends DestinationManager {
+  private case class DestinationManagerImpl(animals: Seq[Animal], food: Seq[Food], habitat: Habitat) extends DestinationManager {
 
     override def calculateDestination(): Map[Animal, Point] = {
       @tailrec
@@ -36,12 +40,12 @@ object DestinationManager {
             _calculateDestination(t, destination + (animal -> neareastWaterZone.get))
           } else {
             val point = animal.alimentationType match {
-              case Herbivore => findNearestResource(animal, food.filter(_.foodType == Vegetable))
+              case Herbivore => findNearestResource(animal, food.filter(_.foodCategory == Vegetable))
                 .getOrElse(getLegalRandomPoint(habitat))
               case Carnivore =>
                 findNearestResource(animal, animals.filter(_.alimentationType == Herbivore)).getOrElse(
                   findNearestResource(animal,
-                    food.filter(_.foodType == Meat))
+                    food.filter(_.foodCategory == Meat))
                     .getOrElse(getLegalRandomPoint(habitat)))
             }
             _calculateDestination(t, destination + (animal -> point))

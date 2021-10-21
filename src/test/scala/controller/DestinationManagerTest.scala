@@ -1,29 +1,34 @@
 package controller
 
-import model.{Point, _}
+import controller.manager.DestinationManager
+import model.animal.{Animal, Carnivore, Herbivore, Medium, Species}
+import model.food.{Food, FoodType, Meat, Vegetable}
+import model.habitat.{EmptyHabitatType, Habitat, Water}
+import model.position.Point
+import model.{animal, _}
 import org.scalatest.funsuite.AnyFunSuite
 
 import java.awt.Color
 
 class DestinationManagerTest extends AnyFunSuite {
-  val habitat: Habitat = Habitat(EmptyHabitatType, Probability(1), (100, 100), Seq.empty)
-  val herbivore1: Animal = Animal(Species("HerbivoreExample1", Medium, 10, 10, Herbivore), Point(0,0))
-  val herbivore2: Animal = Animal(Species("HerbivoreExample2", Medium, 10, 10, Herbivore), Point(0,10))
-  val carnivore1: Animal = Animal(Species("CarnivoreExample1", Medium, 10, 10, Carnivore), Point(0,20))
-  val carnivore2: Animal = Animal(Species("CarnivoreExample2", Medium, 10, 10, Carnivore), Point(0,30))
+  val habitat: Habitat = model.habitat.Habitat(EmptyHabitatType, Probability(1), (100, 100), Seq.empty)
+  val herbivore1: Animal = animal.Animal(Species("HerbivoreExample1", Medium, 10, 10, Herbivore), Point(0,0))
+  val herbivore2: Animal = animal.Animal(Species("HerbivoreExample2", Medium, 10, 10, Herbivore), Point(0,10))
+  val carnivore1: Animal = animal.Animal(Species("CarnivoreExample1", Medium, 10, 10, Carnivore), Point(0,20))
+  val carnivore2: Animal = animal.Animal(Species("CarnivoreExample2", Medium, 10, 10, Carnivore), Point(0,30))
 
   val allAnimals = Seq(herbivore1, herbivore2, carnivore1, carnivore2)
 
-  val carrotFood: Food = Food(5, Vegetable, Color.ORANGE)
-  val beetFood: Food = Food(10, Vegetable, Color.PINK)
-  val beefMeat: Food = Food(10, Meat, Color.red)
-  val crocodileMeat: Food = Food(10, Meat, Color.green)
+  val carrotFood: FoodType = FoodType(5, Vegetable, Color.ORANGE)
+  val beetFood: FoodType = FoodType(10, Vegetable, Color.PINK)
+  val beefMeat: FoodType = FoodType(10, Meat, Color.red)
+  val crocodileMeat: FoodType = FoodType(10, Meat, Color.green)
 
-  val carrot: FoodInstance = FoodInstance(carrotFood, Point(1,0), 1)
-  val beet: FoodInstance = FoodInstance(beetFood, Point(1,10), 1)
+  val carrot: Food = Food(carrotFood, Point(1,0), 1)
+  val beet: Food = Food(beetFood, Point(1,10), 1)
 
-  val meat1: FoodInstance = FoodInstance(beefMeat, Point(1,20), 1)
-  val meat2: FoodInstance = FoodInstance(crocodileMeat, Point(1,30), 1)
+  val meat1: Food = Food(beefMeat, Point(1,20), 1)
+  val meat2: Food = Food(crocodileMeat, Point(1,30), 1)
   val allFoods = Seq(carrot, beet, meat2, meat1)
 
   test("An herbivore should go towards a vegetable"){
@@ -68,9 +73,9 @@ class DestinationManagerTest extends AnyFunSuite {
   }
 
   test("Carnivore should go towards a herbivore, herbivore should go to random place"){
-    val herbivore1: Animal = Animal(Species("HerbivoreExample2", Medium, 10, 10, Herbivore), Point(0,1))
-    val carnivore1: Animal = Animal(Species("CarnivoreExample1", Medium, 10, 10, Carnivore), Point(0,2))
-    val meat1: FoodInstance = FoodInstance(beefMeat, Point(5, 5), 1)
+    val herbivore1: Animal = animal.Animal(Species("HerbivoreExample2", Medium, 10, 10, Herbivore), Point(0,1))
+    val carnivore1: Animal = animal.Animal(Species("CarnivoreExample1", Medium, 10, 10, Carnivore), Point(0,2))
+    val meat1: Food = Food(beefMeat, Point(5, 5), 1)
 
     val destMng = DestinationManager(Seq(carnivore1, herbivore1), Seq(meat1), habitat)
     val result = destMng.calculateDestination()
@@ -80,10 +85,10 @@ class DestinationManagerTest extends AnyFunSuite {
   }
 
   test("Carnivore should go towards a herbivore, herbivore should towards food"){
-    val herbivore1: Animal = Animal(Species("HerbivoreExample2", Medium, 10, 10, Herbivore), Point(0,1))
-    val carnivore1: Animal = Animal(Species("CarnivoreExample1", Medium, 10, 10, Carnivore), Point(0,2))
-    val meat1: FoodInstance = FoodInstance(beefMeat, Point(5, 5), 1)
-    val carrot: FoodInstance = FoodInstance(carrotFood, Point(1,0), 1)
+    val herbivore1: Animal = animal.Animal(Species("HerbivoreExample2", Medium, 10, 10, Herbivore), Point(0,1))
+    val carnivore1: Animal = animal.Animal(Species("CarnivoreExample1", Medium, 10, 10, Carnivore), Point(0,2))
+    val meat1: Food = Food(beefMeat, Point(5, 5), 1)
+    val carrot: Food = Food(carrotFood, Point(1,0), 1)
 
     val destMng = DestinationManager(Seq(carnivore1, herbivore1), Seq(meat1, carrot), habitat)
     val result = destMng.calculateDestination()
@@ -94,7 +99,7 @@ class DestinationManagerTest extends AnyFunSuite {
   }
 
   test("Complete test of a dest manager"){
-    val habitat = Habitat(Probability(1), (1000, 1000))
+    val habitat = model.habitat.Habitat(Probability(1), (1000, 1000))
 
     val destMng = DestinationManager(allAnimals, allFoods, habitat)
     val result = destMng.calculateDestination()
@@ -111,8 +116,8 @@ class DestinationManagerTest extends AnyFunSuite {
 
 
   test("Test the drinking of animals"){
-    val carnivore2: Animal = Animal(Species("CarnivoreExample2", Medium, 10, 10, Carnivore), Point(0,195))
-    val habitat = Habitat(Probability(1), (1000, 1000))
+    val carnivore2: Animal = animal.Animal(Species("CarnivoreExample2", Medium, 10, 10, Carnivore), Point(0,195))
+    val habitat = model.habitat.Habitat(Probability(1), (1000, 1000))
     val destMng = DestinationManager(Seq(carnivore2), Seq.empty, habitat)
     destMng.calculateDestination()
 

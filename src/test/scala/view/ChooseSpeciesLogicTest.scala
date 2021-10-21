@@ -1,10 +1,11 @@
 package view
 
-import model._
+import model.animal._
 import org.scalatest.funsuite.AnyFunSuite
+import view.logic.ChooseSpeciesLogic
 
-class LogicGuiTest extends AnyFunSuite {
-  val mng = new LogicGui("speciesTest.txt")
+class ChooseSpeciesLogicTest extends AnyFunSuite {
+  val mng = new ChooseSpeciesLogic("speciesTest.txt")
   val exampleSpecies: Species = Species("TestName", Small, 10, 10, Carnivore)
   mng.removeAllSpeciesFromFile()
   mng.addSpeciesInTheFile(Species("Lion", Medium, 10, 10, Carnivore))

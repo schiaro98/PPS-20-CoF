@@ -1,6 +1,11 @@
 package controller
 
-import model._
+import controller.manager.FeedManager
+import model.{animal, _}
+import model.animal.{Animal, Carnivore, Medium, Species}
+import model.food.{Food, FoodType, Meat}
+import model.habitat.Habitat
+import model.position.Point
 import org.scalatest.funsuite.AnyFunSuite
 import utility.Constants
 
@@ -9,9 +14,9 @@ class FeedManagerTest extends AnyFunSuite {
   val animalQuantity = 10
   val foodQuantity = 10
   val habitat: Habitat = Habitat()
-  val animals: Seq[Animal] = Seq.fill(10)(Animal(Species("tiger", Medium, 10, 10, Carnivore), Point(0,0)))
-  val foodsFar: Seq[FoodInstance] = Seq.fill(10)(FoodInstance(Food(10, Meat),Point(100, 100), 1))
-  val foodsNear: Seq[FoodInstance] = Seq.fill(10)(FoodInstance(Food(10, Meat),Point(2, 2), 1))
+  val animals: Seq[Animal] = Seq.fill(10)(animal.Animal(Species("tiger", Medium, 10, 10, Carnivore), Point(0,0)))
+  val foodsFar: Seq[Food] = Seq.fill(10)(Food(FoodType(10, Meat),Point(100, 100), 1))
+  val foodsNear: Seq[Food] = Seq.fill(10)(Food(FoodType(10, Meat),Point(2, 2), 1))
   val feedManager: FeedManager = FeedManager(animals, foodsFar, habitat)
 
   test("Animals should not eat food that is far away"){
@@ -37,9 +42,9 @@ class FeedManagerTest extends AnyFunSuite {
   test("A Carnivore should eat the meat"){
     val initialHealth = 50
     val species = Species("tiger", Medium, 10, 10, Carnivore)
-    val animals = Seq(Animal(species, Point(0, 0), initialHealth), Animal(species, Point(100, 100), initialHealth))
-    val meat = Food(10, Meat)
-    val foods: Seq[FoodInstance] = Seq(FoodInstance(meat, Point(1, 1), 1), FoodInstance(meat, Point(101, 101), 1))
+    val animals = Seq(animal.Animal(species, Point(0, 0), initialHealth), animal.Animal(species, Point(100, 100), initialHealth))
+    val meat = FoodType(10, Meat)
+    val foods: Seq[Food] = Seq(Food(meat, Point(1, 1), 1), Food(meat, Point(101, 101), 1))
 
     val feedManager: FeedManager = FeedManager(animals, foods, habitat)
     val (animalAfterFeed, _) = feedManager.consumeResources()

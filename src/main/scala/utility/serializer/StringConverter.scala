@@ -1,9 +1,11 @@
-package utility
+package utility.serializer
 
+import model.food.{FoodCategory, Meat, Vegetable}
 import model._
+import model.animal.{Big, Carnivore, Herbivore, Medium, Size, Small, Type}
 
 object StringConverter {
-  def getAlimentationType(input: String) : Type = {
+  def getAlimentationType(input: String): Type = {
     input match {
       case "Herbivore" => Herbivore
       case "Carnivore" => Carnivore
@@ -20,7 +22,7 @@ object StringConverter {
     }
   }
 
-  def getFoodType(input: String): FoodType = {
+  def getFoodCategory(input: String): FoodCategory = {
     input match {
       case "Meat" => Meat
       case "Vegetable" => Vegetable

@@ -1,8 +1,11 @@
-package model
+package model.habitat
 
+import model.food.{Food, FoodType}
+import model.position.Point
+import model.Probability
+import model.shape.{Rectangle, RectangleArea}
 import utility.Constants.DefaultFoodQuantity
-import utility.{Constants, RectangleArea, Statistics}
-import view.Rectangle
+import utility.{Constants, Statistics}
 
 import java.awt.Color
 import scala.util.Random
@@ -75,7 +78,7 @@ object Area {
                                         ) extends Area with GrowFood {
     require(areaType == Fertile)
 
-    override def growFood(optFood: Option[Food]): Option[FoodInstance] = {
+    override def growFood(optFood: Option[FoodType]): Option[Food] = {
       if (optFood.isDefined) {
         val food = optFood.get
         if (fertility.calculate)
@@ -86,7 +89,7 @@ object Area {
 
             val quantity = Random.nextInt(DefaultFoodQuantity)
             Statistics.update(foods = quantity)
-            return Some(FoodInstance(food, Point(_1, _2), quantity))
+            return Some(Food(food, Point(_1, _2), quantity))
           }
       }
       None
@@ -103,8 +106,8 @@ sealed trait GrowFood {
   /**
    * Given a food calculate the probability of its growth.
    *
-   * @param food the [[Food]] that can grow.
-   * @return an [[Option]] of [[FoodInstance]].
+   * @param food the [[FoodType]] that can grow.
+   * @return an [[Option]] of [[Food]].
    */
-  def growFood(food: Option[Food]): Option[FoodInstance]
+  def growFood(food: Option[FoodType]): Option[Food]
 }

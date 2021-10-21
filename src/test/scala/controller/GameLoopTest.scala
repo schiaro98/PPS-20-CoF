@@ -1,16 +1,17 @@
 package controller
 
-import model.Habitat
+import controller.manager.{AnimalManager, ResourceManager}
+import model.habitat.Habitat
 import org.scalatest.funsuite.AnyFunSuite
 import utility.Constants
-import view.LogicGui
+import view.logic.ChooseSpeciesLogic
 
 import scala.annotation.tailrec
 
 class GameLoopTest extends AnyFunSuite{
 
   val habitat: Habitat = Habitat()
-  val logic = new LogicGui(Constants.SavedSpecies)
+  val logic = new ChooseSpeciesLogic(Constants.SavedSpecies)
   logic.initialize()
 
   test("The computation performed in the GameLoop should not throw exceptions") {
