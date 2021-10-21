@@ -43,10 +43,10 @@ class AnimalPopup(animal: Animal, location: () => Point) {
   /**
    * Method to get the info of a animal.
    *
-   * @param animal the animal about which information is desired.
+   * @param a the animal about which information is desired.
    * @return a formatted String with the info of the animal.
    */
-  def textToDisplay(animal: Animal): String = {
-    s"Species: ${animal.name}\nHealth: ${animal.health}\nThirst: ${animal.thirst}\nType: ${animal.alimentationType}\nStrength: ${animal.strength}\nSight: ${animal.sight}\nSize: ${animal.size}"
+  def textToDisplay(a: Animal): String = {
+    s"Species: ${a.name}\nHealth: ${a.health}\nThirst: ${a.thirst}\nType: ${a.alimentationType}\nAge: ${a.age}\nStrength: ${a.strength}\nSight: ${a.sight}\nSize: ${a.size}"
   }
 }

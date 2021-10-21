@@ -4,6 +4,7 @@ import utility.{Constants, Logger, Statistics}
 import utility.Constants._
 
 import java.awt.Color
+import scala.util.Random
 
 /**
  * The possible age of an animal
@@ -20,58 +21,46 @@ trait Animal extends Species with Placeable {
 
   val health: Int
   val thirst: Int
+  val age: Age
 
   /**
-   * Method used to get the [[Species]] given an [[Animal]]
+   * Method used to modify some parameters of the [[Animal]].
    *
-   * @return the [[Species]] of the [[Animal]]
+   * @param health   the new health.
+   * @param thirst   the new thirst.
+   * @param position the new position.
+   * @param age      the new [[Age]].
+   * @return a new animal, the same as before but with the updated parameters.
+   */
+  def update(health: Int = health, thirst: Int = thirst, position: Point = position, age: Age = age): Animal
+
+  /**
+   * Method used to get the [[Species]] of an [[Animal]].
+   *
+   * @return the [[Species]] of the [[Animal]].
    */
   def species:Species
 
   /**
-   * Method used to understand if the animal can see a certain element of the map.
+   * Method to check if the [[Animal]] is alive.
    *
-   * @param element the element to see.
-   * @return true if the animal can see the element, false otherwise.
-   */
-  def canSee(element: Placeable): Boolean
-
-  /**
-   * Method to check if the animal is alive.
-   *
-   * @return a boolean, true if the animal is alive, false otherwise.
+   * @return true if the [[Animal]] is alive, false otherwise.
    */
   def isAlive: Boolean
 
   /**
-   * Method that map an animal to a new animal to prepare the next iteration of the simulation.
+   * Method used to understand if the [[Animal]] can see a certain element on the map.
    *
-   * @param health   the new health updated after any clashes.
-   * @param thirst   the new thirst.
-   * @param position the new position after a possible move.
-   * @return a new animal, the same as before but with the updated parameters for the next iteration of the simulation.
+   * @param element the element to see.
+   * @return true if the [[Animal]] can see the element, false otherwise.
    */
-  def update(health: Int = health, thirst: Int = thirst, position: Point = position): Animal
+  def canSee(element: Placeable): Boolean
 
   /**
-   * Method to quench an animal's thirst.
-   *
-   * @return a new animal, the same as before but with the parameter of thirst to the maximum.
-   */
-  def drink(): Animal
-
-  /**
-   * Method to obtain the meat that can be eaten from the carcass of the animal once it is dead.
-   *
-   * @return a new food, the meat that can be eaten.
-   */
-  def die(): FoodInstance
-
-  /**
-   * Shift an animal position.
+   * Shift an [[Animal]] position.
    *
    * @param pos the new position of the animal.
-   * @return the same Animal but in the specified position.
+   * @return the same [[Animal]] but in the specified position.
    */
   def shift(pos: Point): Animal
 
@@ -83,6 +72,20 @@ trait Animal extends Species with Placeable {
    *         if there is, that it hasn't eaten.
    */
   def eat(food: FoodInstance): (Animal, Option[FoodInstance])
+
+  /**
+   * Method to quench an [[Animal]]'s thirst.
+   *
+   * @return a new [[Animal]], the same as before but with the parameter of thirst to the maximum.
+   */
+  def drink(): Animal
+
+  /**
+   * Method to obtain the meat that can be eaten from the carcass of the [[Animal]] once it is dead.
+   *
+   * @return a new food, the meat that can be eaten.
+   */
+  def die(): FoodInstance
 }
 
 /**
@@ -90,29 +93,34 @@ trait Animal extends Species with Placeable {
  */
 object Animal {
 
+  def randomAge: Age = Random.shuffle(Set(Young, Adult, Old)).head
+
   /**
    * Apply method for [[Animal]].
    *
    * @param s        the species of the animal.
-   * @param position the location on the map, where the animal is.
-   * @param health   the parameter that indicates whether the animal is healthy.
-   * @param thirst   the parameter that indicates whether the animal is thirsty.
+   * @param position the location on the map, where the [[Animal]] is.
+   * @param health   the parameter that indicates whether the [[Animal]] is healthy.
+   * @param thirst   the parameter that indicates whether the [[Animal]] is thirsty.
+   * @param age      the [[Age]] of the [[Animal]].
    * @return a new implementation of [[Animal]].
    */
-  def apply(s: Species, position: Point, health: Int = MaxHealth, thirst: Int = MaxThirst): Animal = AnimalImpl(
-    s.color, s.name, s.size, s.strength, s.sight, health, thirst, position, s.alimentationType)
+  def apply(s: Species, position: Point, health: Int = MaxHealth, thirst: Int = MaxThirst,
+            age: Age = randomAge): Animal = AnimalImpl(
+    s.color, s.name, s.size, s.strength, s.sight, health, thirst, position, s.alimentationType, age)
 
 
   private case class AnimalImpl(override val color: Color, override val name: String, override val size: Size,
                                 override val strength: Int, override val sight: Int, override val health: Int,
                                 override val thirst: Int, override val position: Point,
-                                override val alimentationType: Type) extends Animal {
+                                override val alimentationType: Type, override val age: Age) extends Animal {
 
     private val logger = Logger
+
     override def canSee(element: Placeable): Boolean = this.position.distance(element.position) <= this.sight
 
-    override def update(health: Int, thirst: Int, position: Point): Animal =
-      Animal(Species(name, size, strength, sight, alimentationType, color), position, health, thirst)
+    override def update(health: Int, thirst: Int, position: Point, age: Age): Animal =
+      Animal(Species(name, size, strength, sight, alimentationType, color), position, health, thirst, age)
 
     override def isAlive: Boolean = health > 0 && thirst > 0
 
@@ -147,22 +155,22 @@ object Animal {
     }
 
     /**
-     * Method to restore health to an animal by eating food.
+     * Method to restore health to an [[Animal]] by eating food.
      *
      * @param food The food to eat.
-     * @return a pair that contains the animal with the health restored and the remaining food, if there is still any.
+     * @return a pair that contains the [[Animal]] with the health increased and the remaining food, if there is still any.
      */
     private def consume(food: FoodInstance): (Animal, Option[FoodInstance]) = health match {
       case Constants.MaxHealth => (this, Some(food))
       case _ if MaxHealth - health > food.energy * food.quantity =>
+        logger.info(this.name + " eat all the food")
         Statistics.update(foodEaten = food.quantity)
-        logger.info(this.name + " eat all food")
         (this.update(health = health + food.energy * food.quantity), None)
       case _ =>
         logger.info(this.name + " eat some food")
         val foodToEat = (MaxHealth - health) / food.energy
         Statistics.update(foodEaten = foodToEat)
-        (this.update(health = MaxHealth), Some(food.consume(foodToEat)))
+        (this.update(health = health + food.energy * foodToEat), Some(food.consume(foodToEat)))
     }
   }
 }

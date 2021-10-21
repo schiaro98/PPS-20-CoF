@@ -39,6 +39,10 @@ object Constants {
   val MaxShiftForCarnivore = 20
   val MinShift = 5
 
+  val probabilityForYoung = 0
+  val probabilityForAdult = 20
+  val probabilityForOld = 40
+
   val PixelForBig = 12
   val PixelForMedium = 10
   val PixelForSmall = 8
