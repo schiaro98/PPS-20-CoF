@@ -34,8 +34,6 @@ class AnimalsTest extends AnyFunSuite{
     assert(!a3.isAlive)
   }
 
-  //TODO controlla test del cibo mangiato
-
   test("An animal that eats regains health") {
     val animal0 = a.update(MaxHealth, MaxThirst)
     val food1 = FoodInstance(Food(10,Meat), p, 5)
@@ -48,6 +46,6 @@ class AnimalsTest extends AnyFunSuite{
     val animal2 = a.update(MaxHealth - 90, MaxThirst)
     val food2 = FoodInstance(Food(12,Meat), p, 10)
     val res2 = animal2.eat(food2)
-    assert((MaxHealth, 2) == (res2._1.health, res2._2.get.quantity))
+    assert((MaxHealth, 3) == (res2._1.health, res2._2.get.quantity))
   }
 }
