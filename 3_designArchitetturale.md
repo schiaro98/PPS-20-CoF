@@ -1,6 +1,8 @@
 # DesignArchitetturale
-SCHIARO
 ## Architettura complessiva
+Partendo dai requisiti abbiamo dapprima sviluppato un diagramma UML dei componenti principali dell'applicazione così da notare eventuali scelte errate in fase di progettazione
+![Diagramma UML](/resources/uml1.png)
+## Da qui fino alla fine di Model è da spostare
 ### Controller
 #### Animal Manager
 E' il controller degli animali presenti nella simulazione.
