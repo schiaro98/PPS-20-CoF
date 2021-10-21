@@ -80,8 +80,8 @@ class ShiftManagerTest extends AnyFunSuite {
     assert(sm.animals.head.position.distance(d) < dist)
   }
 
-  test("Test 100 times multiple animals walk to one random destination in ours habitat") {
-    for (_ <- 0 until 100) {
+  test("Test 10 times multiple animals walk to one random destination in ours habitat") {
+    for (_ <- 0 until 10) {
       val dest = Point.getRandomPoint(Point(MaxX, MaxY))
 
       val sumOfDistances = t1.position.distance(dest) + e1.position.distance(dest) +

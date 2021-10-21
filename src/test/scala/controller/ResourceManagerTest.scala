@@ -10,7 +10,7 @@ import scala.reflect.io.File
 
 class ResourceManagerTest extends AnyFunSuite{
 
-  val fertileArea: Area = Area(Fertile, RectangleArea(Point(0,0), Point(10,10)),probability = Probability(0))
+  val fertileArea: Area = Area(Fertile, RectangleArea(Point(0,0), Point(10,10)),probability = Probability(100))
   val waterArea: Area = Area(Water, RectangleArea(Point(0, 15), Point(15,30)))
   val rockArea: Area = Area(Rock, RectangleArea(Point(40,40), Point(50,50)))
   val volcanoArea: Area = Area(Volcano, RectangleArea(Point(70,70), Point(80,80)))

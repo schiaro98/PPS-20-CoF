@@ -1,6 +1,6 @@
 package utility
 
-import model.{Area, Big, Carnivore, Fertile, Habitat, Herbivore, Medium, Point, Species, Volcano}
+import model._
 import org.scalatest.funsuite.AnyFunSuite
 
 class AnimalUtilsTest extends AnyFunSuite {
@@ -15,12 +15,6 @@ class AnimalUtilsTest extends AnyFunSuite {
     val habitat: Habitat = Habitat(dimensions = (100, 100), areas = Seq(area))
     val point = AnimalUtils.placeAnimal(habitat, tiger)
     assert(point.isInside(topLeft, bottomRight))
-  }
-
-  test("An animal can't be positioned in an habitat without walkable areas") {
-    val area = Area(Volcano, rectangle)
-    val habitat: Habitat = Habitat(dimensions = (100, 100), areas = Seq(area))
-    assertThrows[IllegalArgumentException](AnimalUtils.placeAnimal(habitat, tiger))
   }
 
   test("Species with different size have a different amount of pixel") {
