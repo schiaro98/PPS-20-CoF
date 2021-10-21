@@ -3,8 +3,10 @@
 ## Architettura complessiva
 
 ## Descrizione di pattern architetturali usati
-
-## Componenti del sistema distribuito
+###MVC
+###Model
+###Controller
+###View
 
 ## Scelte tecnologiche cruciali ai fini architetturali
 corredato da pochi ma efficaci diagrammi
