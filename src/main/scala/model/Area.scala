@@ -79,11 +79,10 @@ object Area {
       if (optFood.isDefined) {
         val food = optFood.get
         if (fertility.calculate) {
-          val random = new Random
-          val _1 = random.between(area.topLeft.x, area.bottomRight.x)
-          val _2 = random.between(area.topLeft.y - Constants.PixelForFood, area.bottomRight.y - Constants.PixelForFood)
+          val _1 = Random.between(area.topLeft.x, area.bottomRight.x - Constants.PixelForFood)
+          val _2 = Random.between(area.topLeft.y, area.bottomRight.y - Constants.PixelForFood)
 
-          val quantity = random.nextInt(DefaultFoodQuantity)
+          val quantity = Random.nextInt(DefaultFoodQuantity)
           Statistics.update(foods = quantity)
           return Some(FoodInstance(food, Point(_1, _2), quantity))
         }

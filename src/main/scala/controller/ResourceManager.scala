@@ -16,7 +16,7 @@ object Aliases {
 
 sealed trait ResourceManager {
 
-  import Aliases._
+  import controller.Aliases._
 
   /**
    *
@@ -130,7 +130,7 @@ object ResourceManager {
     override def fillHabitat(): ResourceManager = {
       @tailrec
       def _fillHabitat(resourceManager: ResourceManager): ResourceManager = {
-        if (resourceManager.someFoods.size > Constants.InitialFoodInstances)
+        if (resourceManager.someFoods.lengthCompare(Constants.InitialFoodInstances) > 0)
           resourceManager
         else _fillHabitat(resourceManager.grow())
       }

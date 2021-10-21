@@ -26,6 +26,7 @@ trait Species extends Visualizable {
   val strength: Int
   val sight: Int
   val alimentationType: Type
+  val color: Color
 }
 
 /**

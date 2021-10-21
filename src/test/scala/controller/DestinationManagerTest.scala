@@ -2,7 +2,6 @@ package controller
 
 import model.{Point, _}
 import org.scalatest.funsuite.AnyFunSuite
-import utility.Constants
 
 import java.awt.Color
 
@@ -115,7 +114,7 @@ class DestinationManagerTest extends AnyFunSuite {
     val carnivore2: Animal = Animal(Species("CarnivoreExample2", Medium, 10, 10, Carnivore), Point(0,195))
     val habitat = Habitat(Probability(1), (1000, 1000))
     val destMng = DestinationManager(Seq(carnivore2), Seq.empty, habitat)
-    val result = destMng.calculateDestination()
+    destMng.calculateDestination()
 
     assert(habitat.areas.map(area => area.area.topLeft).contains(Point(400,0)))
     assert(habitat.areas.count(_.areaType == Water) == 6)

@@ -18,7 +18,7 @@ class AnimalManagerTest extends AnyFunSuite {
   test("At the beginning of the simulation there should be as many animals as specified by the user") {
     val habitat: Habitat = Habitat()
     val animalManager = AnimalManager().generateInitialAnimals(Map(tiger -> numberOfAnimals), habitat)
-    assert(animalManager.animals.size == numberOfAnimals)
+    assert(animalManager.animals.lengthCompare(numberOfAnimals) == 0)
     animalManager.animals.foreach(animal => assert(animal.name == tiger.name))
   }
 
@@ -38,13 +38,13 @@ class AnimalManagerTest extends AnyFunSuite {
     val habitat: Habitat = Habitat(Probability(0), (0, 0), Seq.empty)
     val animalManager: AnimalManager = AnimalManager(animals)
     for (_ <- 1 to 10)
-      assert(animalManager.unexpectedEvents(habitat)._1.size == numberOfAnimals )
+      assert(animalManager.unexpectedEvents(habitat)._1.lengthCompare(numberOfAnimals) == 0 )
   }
 
   test("In a very dangerous habitat animals die") {
     val habitat: Habitat = Habitat(Probability(100), (0, 0), Seq.empty)
     val animalManager: AnimalManager = AnimalManager(animals)
     for (_ <- 1 to 10)
-      assert(animalManager.unexpectedEvents(habitat)._1.size < numberOfAnimals )
+      assert(animalManager.unexpectedEvents(habitat)._1.lengthCompare(numberOfAnimals) < 0 )
   }
 }

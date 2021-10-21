@@ -1,6 +1,6 @@
 package controller
 
-import model.{Point, _}
+import model._
 
 import scala.annotation.tailrec
 
@@ -13,7 +13,7 @@ sealed trait DestinationManager {
    * For an [[Herbivore]], it should point to the more near vegetables or a random location if it can't see anything
    * For a [[Carnivore]], it should point to the more near herbivore animal, or a random location
    *
-   * @return
+   * @return map containing a destination [[Point]] for every [[Animal]]
    */
   def calculateDestination(): Map[Animal, Point]
 

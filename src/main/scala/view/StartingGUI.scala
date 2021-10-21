@@ -9,14 +9,14 @@ import scala.swing.BorderPanel.Position._
 import scala.swing._
 import scala.swing.event.ButtonClicked
 
-object MainGUI {
+object StartingGUI {
 
   val logic = new LogicGui(Constants.SavedSpecies)
   logic.initialize()
 
   val frame: Frame = new Frame {
     title = "Circle of life"
-    preferredSize = new Dimension(450, 200)
+    preferredSize = new Dimension(600, 250)
 
     val createButton: Button = new Button("Create new specie") {
       tooltip = "Click to create new species"
