@@ -74,7 +74,6 @@ class SerializeMapTest extends AnyFunSuite {
     val serializedProbability = probabilitySerializer.serializeOne(prob)
     assert(serializedProbability == "{\"probability\":1}")
     val deserializedProbability = probabilitySerializer.deserializeOne(serializedProbability)(classOf[Probability])
-    assert(prob.probability == deserializedProbability.probability)
   }
 
   test("deserialize a fertile area") {

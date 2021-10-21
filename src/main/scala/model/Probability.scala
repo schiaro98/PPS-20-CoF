@@ -2,10 +2,10 @@ package model
 
 import scala.util.Random
 
-//TODO aggiungere scaladoc in trait, object e metodi
+/**
+ * Trait that rappresent a probability
+ */
 trait Probability {
-
-  val probability: Int
 
   /**
    *
@@ -13,8 +13,18 @@ trait Probability {
    */
   def calculate: Boolean
 
+  /**
+   * Incraese the probability of the given percentual
+   * @param x the percentual used to increment the Probability
+   * @return a new Probability
+   */
   def increase(x: Int): Probability
 
+  /**
+   * Decrease the probability of the given percentual
+   * @param x the percentual used to decrease the Probability
+   * @return a new Probability
+   */
   def decrease(x: Int): Probability
 }
 
@@ -27,8 +37,7 @@ object Probability {
    */
   def apply(probability: Int): Probability = ProbabilityImpl(probability)
 
-  private case class ProbabilityImpl(override val probability: Int) extends Probability {
-    //the probability needs to be between 0 and 100
+  private case class ProbabilityImpl(probability: Int) extends Probability {
     require(probability >= 0 && probability <= 100 )
 
     override def calculate: Boolean = probability match {
