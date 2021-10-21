@@ -1,11 +1,25 @@
-# DesignArchitetturale
+# Design Architetturale
+
 ## Architettura complessiva
+Il progetto ha lo scopo di simulare il ciclo di vita di alcuni animali, creabili dall'utente, all'interno di un Habitat, di dimensioni e caratteristiche variabili, nel tempo.
+Ogni animale appartiene ad una specie e ogni specie ha alcuni parametri specificabili dall'utente:
+  - Taglia
+  - Alimentazione (carnivoro o erbivoro)
+  - Nome
+  - Forza
+  - Raggio visivo
+  - Colore
+Ogni specie, una volta inserita nel simulatore viene salvata ed è quindi utilizzabile una volta riaperto il programma. E' possibile poi specificare per ogni specie la quantità, in modo da avere una simulazione più frenetica (con molti animali) o più blanda (con meno animali).
+
+Per quanto riguarda invece l'habitat, è possibile scegliere tra l'habitat standard, un habitat con zone create randomicamente, un habitat con zone disposte a griglia oppure un habitat vuoto. Per ognuno di essi è possibile definire un campo *unexpected events* che definisce la probabilità che un un animale possa morire non per cause naturali.
+
 Partendo dai requisiti abbiamo dapprima sviluppato un diagramma UML dei componenti principali dell'applicazione così da notare eventuali scelte errate in fase di progettazione
 ![Diagramma UML](/resources/UML1.png)
 
 In questo diagramma abbiamo definito alcuni punti fondamentali, come la relazione tra animale e specie, la composizione di Habitat in aree, la differenziazione tra tipo di cibo e l'esistenza di zone dell'habitat non percorribili.
 
 Per quanto riguarda l'architettura è stato scelto di modellare l'applicazione attraverso il pattern MVC. In questo modo abbiamo potuto suddividere l'applicazione in 3 componenti *loosely coupled*. Il componente **View** infatti si occupa solamente di rappresentare le informazioni in una mappa. Il **Model** invece si occupa di modellare le entità di gioco come ad esempio gli Animali, gli Habitat o i cibi e di gestire i dati ricevuti dall'utente tramite la Gui. Il **Controller** invece si occupa di modificare i dati forniti dal Model, elaborandoli e restituendoli aggiornati alla Gui.
+
 
 ### Model
 Abbiamo dato particolare attenzione al Model, infatti abbiamo scelto di progettare le varie entità con uno sguardo particolare a possibili estensioni future. Per questo motivo abbiamo costruito la maggior parte delle nostre classi, in modo che fossero più semplici possibili da modificare. In particolare abbiamo usato un Trait, contenente i metodi e campi pubblici, un object e la case class dove venivano implementati i metodi **Sta cosa non mi piace se qualcuno ha qualche consiglio mi dica pure**
