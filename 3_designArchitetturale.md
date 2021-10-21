@@ -4,6 +4,12 @@ Partendo dai requisiti abbiamo dapprima sviluppato un diagramma UML dei componen
 ![Diagramma UML](/resources/UML1.png)
 
 In questo diagramma abbiamo definito alcuni punti fondamentali, come la relazione tra animale e specie, la composizione di Habitat in aree, la differenziazione tra tipo di cibo e l'esistenza di zone dell'habitat non percorribili.
+
+Per quanto riguarda l'architettura è stato scelto di modellare l'applicazione attraverso il pattern MVC. In questo modo abbiamo potuto suddividere l'applicazione in 3 componenti *loosely coupled*. Il componente **View** infatti si occupa solamente di rappresentare le informazioni in una mappa. Il **Model** invece si occupa di modellare le entità di gioco come ad esempio gli Animali, gli Habitat o i cibi e di gestire i dati ricevuti dall'utente tramite la Gui. Il **Controller** invece si occupa di modificare i dati forniti dal Model, elaborandoli e restituendoli aggiornati alla Gui.
+
+### Model
+Abbiamo dato particolare attenzione al Model, infatti abbiamo scelto di progettare le varie entità con uno sguardo particolare a possibili estensioni future. Per questo motivo abbiamo costruito la maggior parte delle nostre classi, in modo che fossero più semplici possibili da modificare. In particolare abbiamo usato un Trait, contenente i metodi e campi pubblici, un object e la case class dove venivano implementati i metodi **Sta cosa non mi piace se qualcuno ha qualche consiglio mi dica pure**
+
 ## Da qui fino alla fine di Model è da spostare
 ### Controller
 #### Animal Manager
