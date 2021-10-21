@@ -16,7 +16,7 @@ object StartingGUI {
 
   val frame: Frame = new Frame {
     title = "Circle of life"
-    preferredSize = new Dimension(500, 250)
+    preferredSize = new Dimension(600, 250)
 
     val createButton: Button = new Button("Create new specie") {
       tooltip = "Click to create new species"
