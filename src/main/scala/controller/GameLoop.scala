@@ -1,7 +1,6 @@
 package controller
 
 import controller.manager.{AnimalManager, BattleManager, DestinationManager, FeedManager, ResourceManager, ShiftManager}
-import model._
 import model.animal.{Animal, Species}
 import model.habitat.Habitat
 import model.position.Point
@@ -79,60 +78,87 @@ case class GameLoop(population: Map[Species, Int], habitat: Habitat) extends Run
    *
    * @param animalManager the [[AnimalManager]] of this step.
    * @param resourceManager the [[ResourceManager]] of this step.
-   * @return the [[AnimalManager]] and the [[ResourceManager]] for the nest step.
+   * @return the [[AnimalManager]] and the [[ResourceManager]] for the next step.
    */
   def compute(animalManager: AnimalManager, resourceManager: ResourceManager): (AnimalManager, ResourceManager) = {
-    growVegetableAfter(
+    growFoodAfter(
       calculateUnexpectedEventsAfter(
-        battleOf(
+        battlesOf(
           updateHealthAndThirstOf(
             shiftedAnimals(animalManager, resourceManager)))))
   }
 
-  //TODO scaladoc
+  /**
+   * Method used to find a destination for the [[Animal]]s of the simulation and move them towards it.
+   *
+   * @param animalManager the [[AnimalManager]] at the beginning of the simulation.
+   * @param resourceManager the [[ResourceManager]] at the beginning of the simulation.
+   * @return the [[AnimalManager]] with the shifted [[Animal]]s and the initial [[ResourceManager]].
+   */
   private def shiftedAnimals(animalManager: AnimalManager, resourceManager: ResourceManager): (AnimalManager, ResourceManager) = {
     //find destination
-    val destinationManager: DestinationManager =
-      DestinationManager(animalManager.animals, resourceManager.someFoods, habitat)
+    val destinationManager: DestinationManager = DestinationManager(animalManager.animals, resourceManager.someFoods, habitat)
     val destinations: Map[Animal, Point] = destinationManager.calculateDestination()
-
     //animals movement
     val shiftManager = ShiftManager(habitat, destinations)
     shiftManager.walk()
     (AnimalManager(shiftManager.animals.toSeq), resourceManager)
   }
 
-  //TODO scaladoc
+  /**
+   * Method used to make [[Animal]]s eat and drink and update their parameters due to the cycle of life.
+   *
+   * @param managers the [[AnimalManager]] and the [[ResourceManager]] after the animal shift.
+   * @return the [[AnimalManager]] with the updated [[Animal]]s and a [[ResourceManager]] in which the meat of the
+   *         dead [[Animal]]s was added.
+   */
   private def updateHealthAndThirstOf(managers: (AnimalManager, ResourceManager)): (AnimalManager, ResourceManager) = {
     val (animalManager, resourceManager) = managers
     //animals eat and drink
     val feedManager = FeedManager(animalManager.animals, resourceManager.someFoods, habitat)
-    val (animalAfterFeed, foodAfterFeed) = feedManager.consumeResources()
-    val animalManager1 = AnimalManager(animalAfterFeed)
-    val resourceManager1 = resourceManager.someFoods_(foodAfterFeed)
-
+    val (animals, foods) = feedManager.consumeResources()
+    val newAnimalManager = AnimalManager(animals)
+    val newResourceManager = resourceManager.someFoods_(foods)
     //animals life cycle
-    val (animalAfterLifeCycle, foodAfterLifeCycle) = animalManager1.lifeCycleUpdate()
-    (AnimalManager(animalAfterLifeCycle), resourceManager1.someFoods_(resourceManager1.someFoods ++ foodAfterLifeCycle))
+    val (animalsUpdated, foodsUpdated) = newAnimalManager.lifeCycleUpdate()
+    (AnimalManager(animalsUpdated), newResourceManager.someFoods_(newResourceManager.someFoods ++ foodsUpdated))
   }
 
-  //TODO scaladoc
-  private def battleOf(managers: (AnimalManager, ResourceManager)): (AnimalManager, ResourceManager) = {
+  /**
+   * Method used to make [[Animal]]s battle.
+   *
+   * @param managers the [[AnimalManager]] and the [[ResourceManager]] after the health and thirst update.
+   * @return the [[AnimalManager]] with the alive [[Animal]]s and a [[ResourceManager]] in which the meat of the
+   *         dead [[Animal]]s was added.
+   */
+  private def battlesOf(managers: (AnimalManager, ResourceManager)): (AnimalManager, ResourceManager) = {
     val (animalManager, resourceManager) = managers
     val battleManager: BattleManager = BattleManager(animalManager.animals)
-    val (animalAfterBattle, foodAfterBattle) = battleManager.battle()
-    (AnimalManager(animalAfterBattle),  resourceManager.someFoods_(resourceManager.someFoods ++ foodAfterBattle))
+    val (animals, foods) = battleManager.battle()
+    (AnimalManager(animals),  resourceManager.someFoods_(resourceManager.someFoods ++ foods))
   }
 
-  //TODO scaladoc
+  /**
+   * Method that calculate some unexpected events that can kill some [[Animal]]s.
+   *
+   * @param managers the [[AnimalManager]] and the [[ResourceManager]] after the battles.
+   * @return the [[AnimalManager]] with the alive [[Animal]]s and a [[ResourceManager]] in which the meat of the
+   *         dead [[Animal]]s was added.
+   */
   private def calculateUnexpectedEventsAfter(managers: (AnimalManager, ResourceManager)): (AnimalManager, ResourceManager) = {
     val (animalManager, resourceManager) = managers
-    val (animalAfterUnexpectedEvents, foodAfterUnexpectedEvents) = animalManager.unexpectedEvents(habitat)
-    (AnimalManager(animalAfterUnexpectedEvents), resourceManager.someFoods_(resourceManager.someFoods ++ foodAfterUnexpectedEvents))
+    val (animals, foods) = animalManager.unexpectedEvents(habitat)
+    (AnimalManager(animals), resourceManager.someFoods_(resourceManager.someFoods ++ foods))
   }
 
-  //TODO scaladoc
-  private def growVegetableAfter(managers: (AnimalManager, ResourceManager)): (AnimalManager, ResourceManager) = {
+  /**
+   * Method used to grow food in the [[Habitat]].
+   *
+   * @param managers the [[AnimalManager]] and the [[ResourceManager]] after the unexpected events.
+   * @return the [[AnimalManager]] with the alive [[Animal]]s of this step and a [[ResourceManager]] in which the
+   *         food grown in this step was added.
+   */
+  private def growFoodAfter(managers: (AnimalManager, ResourceManager)): (AnimalManager, ResourceManager) = {
     val (animalManager, resourceManager) = managers
     (animalManager, resourceManager.grow())
   }
