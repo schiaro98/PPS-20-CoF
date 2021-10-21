@@ -41,9 +41,9 @@ class ShiftManagerTest extends AnyFunSuite {
   test("Single animal arrives at destination in empty habitat") {
     val dest = Point(55, 100)
     val habitat = model.habitat.Habitat(EmptyHabitatType, Probability(0), (500, 500), Seq.empty[Area])
-    val sm: ShiftManager = ShiftManager(habitat, Map(t1 -> dest))
+    var sm: ShiftManager = ShiftManager(habitat, Map(t1 -> dest))
     while (sm.animals.count(_.position == dest) != 1) {
-      sm.walk()
+      sm = sm.walk()
     }
     assert(sm.animals.count(_.position == dest) == 1)
   }
@@ -51,14 +51,14 @@ class ShiftManagerTest extends AnyFunSuite {
   test("Multiple animals arrive at different random destinations in empty habitat") {
     val destinations = Set(dest1, dest2, dest3, dest4)
     val habitat = model.habitat.Habitat(EmptyHabitatType, Probability(0), (MaxX, MaxY), Seq.empty[Area])
-    val sm: ShiftManager = ShiftManager(habitat,
+    var sm: ShiftManager = ShiftManager(habitat,
       Map(t1 -> dest1,
         e1 -> dest2,
         d1 -> dest3,
         c1 -> dest4
       ))
     while (sm.animals.count(a => destinations.contains(a.position)) != sm.animals.size) {
-      sm.walk()
+      sm = sm.walk()
     }
     assert(sm.animals.count(a => destinations.contains(a.position)) == sm.animals.size)
   }
@@ -67,9 +67,9 @@ class ShiftManagerTest extends AnyFunSuite {
     val r = (x: Int) => Random.nextInt(x)
     val dest = Point(r(500), r(500))
     val habitat = model.habitat.Habitat(EmptyHabitatType, Probability(0), (500, 500), Seq.empty[Area])
-    val sm: ShiftManager = ShiftManager(habitat, (t1, dest), (e1, dest), (d1, dest), (c1, dest))
+    var sm: ShiftManager = ShiftManager(habitat, (t1, dest), (e1, dest), (d1, dest), (c1, dest))
     while (sm.animals.count(_.position == dest) != sm.animals.size) {
-      sm.walk()
+      sm = sm.walk()
     }
     assert(sm.animals.count(_.position == dest) == sm.animals.size)
   }
@@ -77,9 +77,9 @@ class ShiftManagerTest extends AnyFunSuite {
   test("One animal walk to a random destination in ours habitat") {
     val d = getLegalRandomPoint(ourHabitat)
     val dist = t1.position.distance(d)
-    val sm: ShiftManager = ShiftManager(ourHabitat, (t1, d))
+    var sm: ShiftManager = ShiftManager(ourHabitat, (t1, d))
     for (_ <- 0 to 100) {
-      sm.walk()
+      sm = sm.walk()
     }
     assert(sm.animals.head.position.distance(d) < dist)
   }
@@ -91,9 +91,9 @@ class ShiftManagerTest extends AnyFunSuite {
       val sumOfDistances = t1.position.distance(dest) + e1.position.distance(dest) +
         d1.position.distance(dest) + c1.position.distance(dest)
 
-      val sm: ShiftManager = ShiftManager(ourHabitat, (t1, dest), (e1, dest), (d1, dest), (c1, dest))
+      var sm: ShiftManager = ShiftManager(ourHabitat, (t1, dest), (e1, dest), (d1, dest), (c1, dest))
       for (_ <- 0 to 100) {
-        sm.walk()
+        sm = sm.walk()
         require(sm.animals.size == 4)
       }
       val sumOfDistancesAfterWalking = sm.animals.map(_.position.distance(dest)).sum
@@ -109,9 +109,9 @@ class ShiftManagerTest extends AnyFunSuite {
     val d: Animal = animal.Animal(dog, getLegalRandomPoint(randHabitat))
     val c: Animal = animal.Animal(cat, getLegalRandomPoint(randHabitat))
 
-    val sm: ShiftManager = ShiftManager(randHabitat, (t, dest1), (e, dest2), (d, dest3), (c, dest4))
+    var sm: ShiftManager = ShiftManager(randHabitat, (t, dest1), (e, dest2), (d, dest3), (c, dest4))
     for (_ <- 0 to 100) {
-      sm.walk()
+      sm = sm.walk()
       sm.animals.count(isAnimalInLegalPosition(randHabitat, _)) == sm.animals.size
     }
     assert(sm.animals.count(isAnimalInLegalPosition(randHabitat, _)) == sm.animals.size)
@@ -121,9 +121,9 @@ class ShiftManagerTest extends AnyFunSuite {
     val area = habitat.Area(Water, RectangleArea(Point(15, 15), Point(50, 50)))
     val h = habitat.Habitat(unexpectedEvents = Probability(10), areas = Seq(area))
     val t: Animal = animal.Animal(tiger, getLegalRandomPoint(h))
-    val sm = ShiftManager(h, (t, Point(30, 30)))
+    var sm = ShiftManager(h, (t, Point(30, 30)))
     for (_ <- 1 to 100) {
-      sm.walk()
+      sm = sm.walk()
     }
     assert(!area.contains(sm.animals.head.position))
   }

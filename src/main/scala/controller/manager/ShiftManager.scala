@@ -1,6 +1,5 @@
 package controller.manager
 
-import model._
 import model.animal.{Animal, Carnivore}
 import model.habitat.{Area, Habitat}
 import model.position.Point
@@ -13,7 +12,7 @@ sealed trait ShiftManager {
   /**
    * Make all the animals walk
    */
-  def walk(): Unit
+  def walk(): ShiftManager
 
   /**
    *
@@ -54,12 +53,12 @@ object ShiftManager {
 
     //require that on creation no animal is inside a nonWalkableArea
     animalsToDestinations.keySet.foreach(animal => require(nonWalkableAreas.count(_.contains(animal.position)) == 0))
-    private var myAnimalsToDestinations: Map[Animal, Point] = animalsToDestinations
 
-    override def animals: Set[Animal] = myAnimalsToDestinations.keySet
+    override def animals: Set[Animal] = animalsToDestinations.keySet
 
-    override def walk(): Unit =
-      myAnimalsToDestinations = myAnimalsToDestinations.par.map(t => (t._1.shift(nextStep(t._1, t._2)),t._2)).to(Map)
+    override def walk(): ShiftManager =
+      ShiftManager(habitat, animalsToDestinations.par.map(t => (t._1.shift(nextStep(t._1, t._2)),t._2)).to(Map))
+
 
     /**
      * Find the closer reachable point to the destination

@@ -33,7 +33,7 @@ case class GameLoop(population: Map[Species, Int], habitat: Habitat) extends Run
       if (!isPaused) {
         val (newAnimalManager, newResourceManager) = compute(animalManager, resourceManager)
 
-        simulationGui.updatePanel(newAnimalManager.animals, newResourceManager.someFoods)
+        simulationGui.updatePanel(newAnimalManager.animals, newResourceManager.foods)
         simulationGui.updateElapsedTime()
 
         waitForNextStep(current)
@@ -50,7 +50,7 @@ case class GameLoop(population: Map[Species, Int], habitat: Habitat) extends Run
     val animalManager = AnimalManager().generateInitialAnimals(population, habitat)
     val resourceManager = ResourceManager(habitat, Constants.FoodsFilePath).fillHabitat()
     val simulationGui = new SimulationGUI(habitat, setPaused, setSpeed, stop) { top.visible = true }
-    simulationGui.updatePanel(animalManager.animals, resourceManager.someFoods)
+    simulationGui.updatePanel(animalManager.animals, resourceManager.foods)
 
     loop(animalManager, resourceManager, simulationGui)
 
@@ -97,11 +97,10 @@ case class GameLoop(population: Map[Species, Int], habitat: Habitat) extends Run
    */
   private def shiftedAnimals(animalManager: AnimalManager, resourceManager: ResourceManager): (AnimalManager, ResourceManager) = {
     //find destination
-    val destinationManager: DestinationManager = DestinationManager(animalManager.animals, resourceManager.someFoods, habitat)
+    val destinationManager: DestinationManager = DestinationManager(animalManager.animals, resourceManager.foods, habitat)
     val destinations: Map[Animal, Point] = destinationManager.calculateDestination()
     //animals movement
-    val shiftManager = ShiftManager(habitat, destinations)
-    shiftManager.walk()
+    val shiftManager = ShiftManager(habitat, destinations).walk()
     (AnimalManager(shiftManager.animals.toSeq), resourceManager)
   }
 
@@ -115,12 +114,12 @@ case class GameLoop(population: Map[Species, Int], habitat: Habitat) extends Run
   private def updateHealthAndThirstOf(managers: (AnimalManager, ResourceManager)): (AnimalManager, ResourceManager) = {
     val (animalManager, resourceManager) = managers
     //animals eat and drink
-    val (animals, foods) = FeedManager(animalManager.animals, resourceManager.someFoods, habitat).consumeResources()
+    val (animals, foods) = FeedManager(animalManager.animals, resourceManager.foods, habitat).consumeResources()
     val newAnimalManager = AnimalManager(animals)
-    val newResourceManager = resourceManager.someFoods_(foods)
+    val newResourceManager = resourceManager.foods_(foods)
     //animals life cycle
     val (animalsUpdated, foodsUpdated) = newAnimalManager.lifeCycleUpdate()
-    (AnimalManager(animalsUpdated), newResourceManager.someFoods_(newResourceManager.someFoods ++ foodsUpdated))
+    (AnimalManager(animalsUpdated), newResourceManager.foods_(newResourceManager.foods ++ foodsUpdated))
   }
 
   /**
@@ -134,7 +133,7 @@ case class GameLoop(population: Map[Species, Int], habitat: Habitat) extends Run
     val (animalManager, resourceManager) = managers
     val battleManager: BattleManager = BattleManager(animalManager.animals)
     val (animals, foods) = battleManager.battle()
-    (AnimalManager(animals), resourceManager.someFoods_(resourceManager.someFoods ++ foods))
+    (AnimalManager(animals), resourceManager.foods_(resourceManager.foods ++ foods))
   }
 
   /**
@@ -147,7 +146,7 @@ case class GameLoop(population: Map[Species, Int], habitat: Habitat) extends Run
   private def calculateUnexpectedEventsAfter(managers: (AnimalManager, ResourceManager)): (AnimalManager, ResourceManager) = {
     val (animalManager, resourceManager) = managers
     val (animals, foods) = animalManager.unexpectedEvents(habitat)
-    (AnimalManager(animals), resourceManager.someFoods_(resourceManager.someFoods ++ foods))
+    (AnimalManager(animals), resourceManager.foods_(resourceManager.foods ++ foods))
   }
 
   /**
