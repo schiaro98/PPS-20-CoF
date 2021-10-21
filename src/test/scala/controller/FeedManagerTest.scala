@@ -34,17 +34,15 @@ class FeedManagerTest extends AnyFunSuite {
       feedManager.consumeResources()
   }
 
-  test("Animal should eat the meat"){
-    val animals = Seq(Animal(Species("tiger", Medium, 10, 10, Carnivore), Point(0, 0)),
-      Animal(Species("tiger", Medium, 10, 10, Carnivore), Point(100, 100)))
+  test("A Carnivore should eat the meat"){
+    val initialHealth = 50
+    val species = Species("tiger", Medium, 10, 10, Carnivore)
+    val animals = Seq(Animal(species, Point(0, 0), initialHealth), Animal(species, Point(100, 100), initialHealth))
+    val meat = Food(10, Meat)
+    val foods: Seq[FoodInstance] = Seq(FoodInstance(meat, Point(1, 1), 1), FoodInstance(meat, Point(101, 101), 1))
 
-    val foods: Seq[FoodInstance] = Seq(FoodInstance(Food(10, Meat),Point(1, 1), 1),
-                      FoodInstance(Food(10, Meat),Point(101, 101), 1))
-
-    val animalManager = AnimalManager(animals)
-    val (animalsUpdated, _) = animalManager.lifeCycleUpdate()
-    val feedManager: FeedManager = FeedManager(animalsUpdated, foods, habitat)
-    val (animalsUpdated2, _) = feedManager.consumeResources()
-    assert(animalsUpdated2.forall(_.health == Constants.MaxHealth))
+    val feedManager: FeedManager = FeedManager(animals, foods, habitat)
+    val (animalAfterFeed, _) = feedManager.consumeResources()
+    assert(animalAfterFeed.forall(_.health > initialHealth))
   }
 }

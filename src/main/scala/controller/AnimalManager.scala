@@ -1,6 +1,6 @@
 package controller
 
-import model.{Animal, FoodInstance, Habitat, Species}
+import model.{Adult, Age, Animal, FoodInstance, Habitat, Old, Probability, Species, Young}
 import utility.{AnimalUtils, Constants, Logger, Statistics}
 
 /**
@@ -78,7 +78,7 @@ object AnimalManager {
 
     override def unexpectedEvents(habitat: Habitat): (Seq[Animal], Seq[FoodInstance]) =
       updateAnimalAndInfo(
-        (animal: Animal) => if (habitat.unexpectedEvents.calculate) animal.update(health = 0) else animal,
+        (animal: Animal) => if (probabilityBasedOnAge(habitat, animal).calculate) animal.update(health = 0) else animal,
         " died for an unexpected event")
 
     /**
@@ -93,6 +93,22 @@ object AnimalManager {
       Statistics.update(deathForNaturalCause = updatedAnimals.count(!_.isAlive))
       updatedAnimals.filterNot(_.isAlive).foreach(animal => logger.info(animal.name + reasonOfDeath))
       (updatedAnimals.filter(_.isAlive), updatedAnimals.filterNot(_.isAlive).map(a => a.die()))
+    }
+
+    /**
+     * Method used to obtain the probability that an unexpected event could happen could happen to an [[Animal]],
+     * based on his [[Age]].
+     *
+     * @param animal the [[Animal]] to which an unexpected event could happen.
+     * @return the [[Probability]] of the [[Animal]] to die.
+     */
+    private def probabilityBasedOnAge(habitat: Habitat, animal: Animal): Probability = {
+      val increment = animal.age match {
+        case Young => Constants.probabilityForYoung
+        case Adult => Constants.probabilityForAdult
+        case Old => Constants.probabilityForOld
+      }
+      habitat.unexpectedEvents.increase(increment)
     }
   }
 }
