@@ -1,11 +1,11 @@
 package controller
 
-import controller.manager.{AnimalManager, BattleManager, DestinationManager, FeedManager, ResourceManager, ShiftManager}
+import controller.manager._
 import model.animal.{Animal, Species}
 import model.habitat.Habitat
 import model.position.Point
 import utility.{Constants, Logger, Statistics}
-import view.{SimulationGui, StatisticsGUI}
+import view.{SimulationGUI, StatisticsGUI}
 
 import scala.annotation.tailrec
 
@@ -28,7 +28,7 @@ case class GameLoop(population: Map[Species, Int], habitat: Habitat) extends Run
    */
   override def run(): Unit = {
     @tailrec
-    def loop(animalManager: AnimalManager, resourceManager: ResourceManager, simulationGui: SimulationGui): Unit = {
+    def loop(animalManager: AnimalManager, resourceManager: ResourceManager, simulationGui: SimulationGUI): Unit = {
       val current: Long = System.currentTimeMillis()
       if (!isPaused) {
         val (newAnimalManager, newResourceManager) = compute(animalManager, resourceManager)
@@ -49,7 +49,7 @@ case class GameLoop(population: Map[Species, Int], habitat: Habitat) extends Run
 
     val animalManager = AnimalManager().generateInitialAnimals(population, habitat)
     val resourceManager = ResourceManager(habitat, Constants.FoodsFilePath).fillHabitat()
-    val simulationGui = new SimulationGui(habitat, setPaused, setSpeed, stop) { top.visible = true }
+    val simulationGui = new SimulationGUI(habitat, setPaused, setSpeed, stop) { top.visible = true }
     simulationGui.updatePanel(animalManager.animals, resourceManager.someFoods)
 
     loop(animalManager, resourceManager, simulationGui)
@@ -76,7 +76,7 @@ case class GameLoop(population: Map[Species, Int], habitat: Habitat) extends Run
   /**
    * Method that contains all the calculations that are performed in one step of the simulation.
    *
-   * @param animalManager the [[AnimalManager]] of this step.
+   * @param animalManager   the [[AnimalManager]] of this step.
    * @param resourceManager the [[ResourceManager]] of this step.
    * @return the [[AnimalManager]] and the [[ResourceManager]] for the next step.
    */
@@ -91,7 +91,7 @@ case class GameLoop(population: Map[Species, Int], habitat: Habitat) extends Run
   /**
    * Method used to find a destination for the [[Animal]]s of the simulation and move them towards it.
    *
-   * @param animalManager the [[AnimalManager]] at the beginning of the simulation.
+   * @param animalManager   the [[AnimalManager]] at the beginning of the simulation.
    * @param resourceManager the [[ResourceManager]] at the beginning of the simulation.
    * @return the [[AnimalManager]] with the shifted [[Animal]]s and the initial [[ResourceManager]].
    */
@@ -115,8 +115,7 @@ case class GameLoop(population: Map[Species, Int], habitat: Habitat) extends Run
   private def updateHealthAndThirstOf(managers: (AnimalManager, ResourceManager)): (AnimalManager, ResourceManager) = {
     val (animalManager, resourceManager) = managers
     //animals eat and drink
-    val feedManager = FeedManager(animalManager.animals, resourceManager.someFoods, habitat)
-    val (animals, foods) = feedManager.consumeResources()
+    val (animals, foods) = FeedManager(animalManager.animals, resourceManager.someFoods, habitat).consumeResources()
     val newAnimalManager = AnimalManager(animals)
     val newResourceManager = resourceManager.someFoods_(foods)
     //animals life cycle
@@ -135,7 +134,7 @@ case class GameLoop(population: Map[Species, Int], habitat: Habitat) extends Run
     val (animalManager, resourceManager) = managers
     val battleManager: BattleManager = BattleManager(animalManager.animals)
     val (animals, foods) = battleManager.battle()
-    (AnimalManager(animals),  resourceManager.someFoods_(resourceManager.someFoods ++ foods))
+    (AnimalManager(animals), resourceManager.someFoods_(resourceManager.someFoods ++ foods))
   }
 
   /**
