@@ -1,11 +1,9 @@
 package model.habitat
 
-import model.animal.Animal
 import model.position.Point
 import model.{Probability, shape}
 import model.shape.RectangleArea
 import utility.Constants
-import utility.Constants.{DefaultGridSize, DefaultStartingX, DefaultStartingY}
 import utility.serializer.{OfArea, Serializer}
 
 import scala.util.Random
@@ -21,8 +19,8 @@ case object GridHabitatType extends HabitatType
 
 /**
  * Trait that represents an habitat.
- * Every habitat has a dimension (width x height), a [[Probability]] that unexpected events occurs (An ([[Animal]] can
- * die if an ugly event occurs) and a [[Seq]] of [[Area]] that can have different behaviours
+ * Every habitat has a dimension (width x height), a [[Probability]] that some unexpected events happen and kill some
+ * animal and a [[Seq]] of [[Area]] that can have different behaviours
  */
 trait Habitat {
   val unexpectedEvents: Probability
@@ -96,7 +94,7 @@ object Habitat {
     case EmptyHabitatType => SimpleHabitat(unexpectedEvents, dimensions, Seq.empty)
     case SimpleHabitatType => SimpleHabitat(unexpectedEvents, dimensions, areas)
     case RandomHabitatType => SimpleHabitat(unexpectedEvents, dimensions, createRandomAreas(dimensions))
-    case GridHabitatType => SimpleHabitat(unexpectedEvents, dimensions, createGridArea(dimensions, DefaultGridSize))
+    case GridHabitatType => SimpleHabitat(unexpectedEvents, dimensions, createGridArea(dimensions, Constants.DefaultGridSize))
     case _ => throw new IllegalArgumentException("Habitat type error on method apply")
   }
   
@@ -146,8 +144,8 @@ object Habitat {
     val maxWidth = dimension._1 / (numberOfAreas / 2)
     val maxHeight = dimension._2 / (numberOfAreas / 2)
 
-    for (i <- DefaultStartingX until dimension._1 by (dimension._1 / Math.round(Math.sqrt(numberOfAreas).toFloat))) {
-      for (j <- DefaultStartingY until dimension._2 by (dimension._2 / Math.round(Math.sqrt(numberOfAreas).toFloat))) {
+    for (i <- Constants.DefaultStartingX until dimension._1 by (dimension._1 / Math.round(Math.sqrt(numberOfAreas).toFloat))) {
+      for (j <- Constants.DefaultStartingY until dimension._2 by (dimension._2 / Math.round(Math.sqrt(numberOfAreas).toFloat))) {
         val startingPoint = Point(i, j)
         val areaWidth = Random.between(maxWidth / 2, maxWidth)
         val areaHeight = Random.between(maxHeight / 2, maxHeight)

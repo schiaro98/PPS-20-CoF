@@ -1,7 +1,6 @@
 package utility
 
 import java.awt.Color
-import scala.swing.Dimension
 
 /**
  * Object used to store all the constants used in the code in one file
@@ -26,10 +25,10 @@ object Constants {
   val InitialNumForAnimals = 5
 
   val MaxHealth = 300
-  val healthDecrease = 5
+  val HealthDecrease = 5
 
   val MaxThirst = 100
-  val thirstDecrease = 2
+  val ThirstDecrease = 2
 
   val QuantityForBig = 8
   val QuantityForMedium = 5
@@ -39,9 +38,9 @@ object Constants {
   val MaxShiftForCarnivore = 20
   val MinShift = 5
 
-  val probabilityForYoung = 0
-  val probabilityForAdult = 20
-  val probabilityForOld = 40
+  val ProbabilityForYoung = 0
+  val ProbabilityForAdult = 20
+  val ProbabilityForOld = 40
 
   val PixelForBig = 12
   val PixelForMedium = 10
@@ -49,29 +48,23 @@ object Constants {
 
   val PixelForFood = 8
 
-  val Hitbox = 5
-  val waterHitbox = 10
+  val HitBox = 5
 
   // ------- Gui --------
-  val DefaultSimulationDimension = new Dimension(1000, 1000)
   val MainMapDimension: (Int, Int) = (500, 500)
 
   val DefaultStartingX = 100
   val DefaultStartingY = 100
 
-  val OffsetX = 20
-  val OffsetY = 45
+  val PopupOffsetX = 20
+  val PopupOffsetY = 45
 
   val Period = 1000
   val SpeedUpPeriod: Int = Period / 10
 
   // ------- Habitat ------
-  val DefaultRandomSize = 10
   val DefaultGridSize = 100
-
   val MaxDimension = 1_000
-
-  val FoodToGrowPerFertileArea: Int = 1
 
   //------- ResourceManager ----
   val MaxFoods = 80

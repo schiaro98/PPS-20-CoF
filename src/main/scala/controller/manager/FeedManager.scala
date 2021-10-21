@@ -40,7 +40,7 @@ object FeedManager {
           } else h
 
           val nearestResource = resources
-            .filter(_.position.distance(myAnimal.position) < Constants.Hitbox)
+            .filter(_.position.distance(myAnimal.position) < Constants.HitBox)
             .filter(isEatable(_, myAnimal))
             .minByOption(_.position.distance(myAnimal.position))
 

@@ -4,7 +4,6 @@ import model.food.{Food, FoodType}
 import model.position.Point
 import model.Probability
 import model.shape.{Rectangle, RectangleArea}
-import utility.Constants.DefaultFoodQuantity
 import utility.{Constants, Statistics}
 
 import java.awt.Color
@@ -87,7 +86,7 @@ object Area {
             val _1 = Random.between(area.topLeft.x, area.bottomRight.x - Constants.PixelForFood)
             val _2 = Random.between(area.topLeft.y, area.bottomRight.y - Constants.PixelForFood)
 
-            val quantity = Random.nextInt(DefaultFoodQuantity)
+            val quantity = Random.nextInt(Constants.DefaultFoodQuantity)
             Statistics.update(foods = quantity)
             return Some(Food(food, Point(_1, _2), quantity))
           }

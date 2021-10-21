@@ -2,7 +2,6 @@ package model.animal
 
 import model.food.{Food, FoodType, Meat, Vegetable}
 import model.position.{Placeable, Point}
-import utility.Constants._
 import utility.{Constants, Logger, Statistics}
 
 import java.awt.Color
@@ -107,7 +106,7 @@ object Animal {
    * @param age      the [[Age]] of the [[Animal]].
    * @return a new implementation of [[Animal]].
    */
-  def apply(s: Species, position: Point, health: Int = MaxHealth, thirst: Int = MaxThirst,
+  def apply(s: Species, position: Point, health: Int = Constants.MaxHealth, thirst: Int = Constants.MaxThirst,
             age: Age = randomAge): Animal = AnimalImpl(
     s.color, s.name, s.size, s.strength, s.sight, health, thirst, position, s.alimentationType, age)
 
@@ -128,7 +127,7 @@ object Animal {
 
     override def drink(): Animal = {
       logger.info(this.name + " drinked water")
-      this.update(thirst = MaxThirst)
+      this.update(thirst = Constants.MaxThirst)
     }
 
     override def die(): Food = Food(FoodType(Constants.DefaultEnergyOfMeat, Meat), position, quantityFromDeath())
@@ -151,9 +150,9 @@ object Animal {
      * @return the quantity of food.
      */
     private def quantityFromDeath(): Int = size match {
-      case Big => QuantityForBig
-      case Medium => QuantityForMedium
-      case Small => QuantityForSmall
+      case Big => Constants.QuantityForBig
+      case Medium => Constants.QuantityForMedium
+      case Small => Constants.QuantityForSmall
     }
 
     /**
@@ -164,13 +163,13 @@ object Animal {
      */
     private def consume(food: Food): (Animal, Option[Food]) = health match {
       case Constants.MaxHealth => (this, Some(food))
-      case _ if MaxHealth - health > food.energy * food.quantity =>
+      case _ if Constants.MaxHealth - health > food.energy * food.quantity =>
         logger.info(this.name + s" eat all the ${food.foodCategory}")
         Statistics.update(foodEaten = food.quantity)
         (this.update(health = health + food.energy * food.quantity), None)
       case _ =>
         logger.info(this.name + s" eat some ${food.foodCategory}")
-        val foodToEat = (MaxHealth - health) / food.energy
+        val foodToEat = (Constants.MaxHealth - health) / food.energy
         Statistics.update(foodEaten = foodToEat)
         (this.update(health = health + food.energy * foodToEat), Some(food.consume(foodToEat)))
     }

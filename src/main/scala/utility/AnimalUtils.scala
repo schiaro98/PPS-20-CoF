@@ -19,14 +19,14 @@ object AnimalUtils {
    */
   def placeAnimal(habitat: Habitat, species: Species): Point = {
     @tailrec
-    def placeAnimal_(width: Int, height: Int, species: Species, pixel: Int): Point = {
+    def _placeAnimal(width: Int, height: Int, species: Species, pixel: Int): Point = {
       val point = Point.getRandomPoint((width - pixel, height - pixel))
       areNotPlaceable(habitat.areas, getSquareVertices(point, pixel)) match {
-        case true => placeAnimal_(width, height, species, pixel)
+        case true => _placeAnimal(width, height, species, pixel)
         case false => point
       }
     }
-    placeAnimal_(habitat.dimensions._1, habitat.dimensions._2, species, getPixelFromSize(species))
+    _placeAnimal(habitat.dimensions._1, habitat.dimensions._2, species, getPixelFromSize(species))
   }
 
   /**

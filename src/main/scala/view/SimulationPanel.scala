@@ -113,8 +113,8 @@ class SimulationPanel(dimension: (Int, Int)) extends Panel {
    */
   private def createPopupAndMouseListener(animal: Animal, rectangle: Rectangle): Unit = {
     val p = new AnimalPopup(animal, () => new swing.Point(
-      rectangle.topLeft.x + Constants.OffsetX + SwingUtilities.getWindowAncestor(this.peer).getLocation().x,
-      rectangle.topLeft.y + Constants.OffsetY + SwingUtilities.getWindowAncestor(this.peer).getLocation().y
+      rectangle.topLeft.x + Constants.PopupOffsetX + SwingUtilities.getWindowAncestor(this.peer).getLocation().x,
+      rectangle.topLeft.y + Constants.PopupOffsetY + SwingUtilities.getWindowAncestor(this.peer).getLocation().y
     ))
     popups = popups :+ p
 

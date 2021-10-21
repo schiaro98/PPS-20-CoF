@@ -30,7 +30,7 @@ object BattleManager {
 
     def battle(): (Seq[Animal],Seq[Food]) = {
       @tailrec
-      def battle_(animals: Seq[Animal],
+      def _battle(animals: Seq[Animal],
                   meats: Seq[Food] = Seq.empty,
                   animalUpdated: Seq[Animal] = Seq.empty): (Seq[Animal], Seq[Food]) = animals match {
         case attacker :: t =>
@@ -49,17 +49,17 @@ object BattleManager {
 
             if (isBattleWin) {
               logger.info("Attacking animal: " + attacker.name + " has won against " + enemy.name)
-              battle_(t, meats :+ enemy.die(), animalUpdated :+ attacker)
+              _battle(t, meats :+ enemy.die(), animalUpdated :+ attacker)
             } else {
               logger.info("Defending animal: " + enemy.name + " has won against "  + attacker.name)
-              battle_(t, meats :+ attacker.die(), animalUpdated :+ enemy)
+              _battle(t, meats :+ attacker.die(), animalUpdated :+ enemy)
             }
           } else {
-            battle_(t, meats, animalUpdated :+ attacker)
+            _battle(t, meats, animalUpdated :+ attacker)
           }
         case _ => (animalUpdated, meats)
       }
-      battle_(animals)
+      _battle(animals)
     }
 
     /**
