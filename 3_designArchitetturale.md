@@ -1,5 +1,5 @@
 # DesignArchitetturale
-
+SCHIARO
 ## Architettura complessiva
 Architettura di massima, componenti più importanti
 
