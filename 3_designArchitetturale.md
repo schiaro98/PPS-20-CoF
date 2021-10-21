@@ -1,7 +1,9 @@
 # DesignArchitetturale
 ## Architettura complessiva
 Partendo dai requisiti abbiamo dapprima sviluppato un diagramma UML dei componenti principali dell'applicazione così da notare eventuali scelte errate in fase di progettazione
-![Diagramma UML](/resources/uml1.png)
+![Diagramma UML](/resources/UML1.png)
+
+In questo diagramma abbiamo definito alcuni punti fondamentali, come la relazione tra animale e specie, la composizione di Habitat in aree, la differenziazione tra tipo di cibo e l'esistenza di zone dell'habitat non percorribili.
 ## Da qui fino alla fine di Model è da spostare
 ### Controller
 #### Animal Manager
