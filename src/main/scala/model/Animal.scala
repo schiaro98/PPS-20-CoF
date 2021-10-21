@@ -163,11 +163,11 @@ object Animal {
     private def consume(food: FoodInstance): (Animal, Option[FoodInstance]) = health match {
       case Constants.MaxHealth => (this, Some(food))
       case _ if MaxHealth - health > food.energy * food.quantity =>
-        logger.info(this.name + " eat all the food")
+        logger.info(this.name + s" eat all the ${food.foodType}")
         Statistics.update(foodEaten = food.quantity)
         (this.update(health = health + food.energy * food.quantity), None)
       case _ =>
-        logger.info(this.name + " eat some food")
+        logger.info(this.name + s" eat some ${food.foodType}")
         val foodToEat = (MaxHealth - health) / food.energy
         Statistics.update(foodEaten = foodToEat)
         (this.update(health = health + food.energy * foodToEat), Some(food.consume(foodToEat)))

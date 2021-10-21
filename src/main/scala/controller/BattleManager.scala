@@ -11,7 +11,9 @@ import scala.annotation.tailrec
 sealed trait BattleManager {
 
   /**
-   * For every animal that is able to see other animals, execute battles
+   * For every animal that is able to see other animals, execute battles.
+   * The probability of winning a battle is calculated by different factors, like the strength, size and distance.
+   *
    * @return the Meat that can be released during the battles, and the list of [[Animal]] updated
    */
   def battle(): (Seq[Animal],Seq[FoodInstance])

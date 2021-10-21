@@ -17,8 +17,8 @@ class FeedManagerTest extends AnyFunSuite {
   test("Animals should not eat food that is far away"){
     val (animalsUpdated, foodsRemaining) = feedManager.consumeResources()
 
-    assert(animalsUpdated.length == animalQuantity)
-    assert(foodsRemaining.length == foodQuantity)
+    assert(animalsUpdated.lengthCompare(animalQuantity) == 0)
+    assert(foodsRemaining.lengthCompare(foodQuantity) == 0)
 
     animalsUpdated.foreach(animal => {
       assert(animal.health == Constants.MaxHealth)

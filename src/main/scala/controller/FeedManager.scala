@@ -22,6 +22,11 @@ object FeedManager {
 
     override def consumeResources():(Seq[Animal],Seq[FoodInstance]) = {
 
+      def isEatable(food: FoodInstance, animal: Animal): Boolean = {
+        (food.foodType == Meat && animal.alimentationType == Carnivore) ||
+          (food.foodType == Vegetable && animal.alimentationType == Herbivore)
+      }
+
       @tailrec
       def _consumeResources(animals: Seq[Animal],
                             resources: Seq[FoodInstance] = Seq.empty,
@@ -33,13 +38,7 @@ object FeedManager {
 
           val nearestResource = resources
             .filter(_.position.distance(myAnimal.position) < Constants.Hitbox)
-            .filter(food => {
-              if (myAnimal.alimentationType == Carnivore){
-                food.foodType == Meat
-              } else {
-                food.foodType == Vegetable
-              }
-            })
+            .filter(isEatable(_, myAnimal))
             .minByOption(_.position.distance(myAnimal.position))
 
           if(nearestResource.isDefined) {
@@ -72,7 +71,7 @@ object FeedManager {
     def isAnimalNearToWater(animal: Animal, h: Habitat): Boolean = {
       @tailrec
       def _isAnimalNearToWater(areas: Seq[Area]): Boolean = areas.filter(_.areaType == Water) match {
-        case h::t => h match {
+        case h :: t => h match {
           case h =>
             if( h.area.topLeft.distance(animal.position) < animal.sight ||
               h.area.bottomRight.distance(animal.position) < animal.sight){
