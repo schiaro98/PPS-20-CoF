@@ -17,7 +17,7 @@ class BattleManagerTest extends AnyFunSuite{
     val herbivore: Animal = Animal(Species("Herbivore1", Medium, 10, 10, Herbivore), Point(0,0))
     val bm = BattleManager(Seq.fill(size)(herbivore))
     val (notDeadAnimal, meat) = bm.battle()
-    assert(notDeadAnimal.size == size)
+    assert(notDeadAnimal.lengthCompare(size) == 0)
     assert(meat.isEmpty)
   }
 
@@ -27,7 +27,7 @@ class BattleManagerTest extends AnyFunSuite{
     val a3: Animal = Animal(Species("tiger3", Small, 10, 10, Carnivore), Point(200,200))
     val bm = BattleManager(Seq(a1,a2,a3))
     val (notDeadAnimal, meat) = bm.battle()
-    assert(notDeadAnimal.size == 3)
+    assert(notDeadAnimal.lengthCompare(3) == 0)
     assert(meat.isEmpty)
   }
 }

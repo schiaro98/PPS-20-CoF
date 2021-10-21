@@ -20,9 +20,10 @@ object AnimalUtils {
     @tailrec
     def placeAnimal_(width: Int, height: Int, species: Species, pixel: Int): Point = {
       val point = Point.getRandomPoint((width - pixel, height - pixel))
-      areNotPlaceable(habitat.areas, getSquareVertices(point, pixel)) match {
-        case true => placeAnimal_(width, height, species, pixel)
-        case false => point
+      if (areNotPlaceable(habitat.areas, getSquareVertices(point, pixel))) {
+        placeAnimal_(width, height, species, pixel)
+      } else {
+        point
       }
     }
 

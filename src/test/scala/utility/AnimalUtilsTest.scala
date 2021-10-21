@@ -30,6 +30,6 @@ class AnimalUtilsTest extends AnyFunSuite {
   }
 
   test("An animal is represented with a square that have 4 vertices") {
-    assert(AnimalUtils.verticesOfAnimal(tiger, topLeft).size == 4)
+    assert(AnimalUtils.verticesOfAnimal(tiger, topLeft).lengthCompare(4) == 0)
   }
 }
