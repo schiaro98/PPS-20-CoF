@@ -78,7 +78,7 @@ object ShiftManager {
       val legalPoints = for (x <- topLeft.x to bottomRight.x;
                              y <- topLeft.y to bottomRight.y
                              //all corners of the animal must be legal
-                             if AnimalUtils.getCornersOfSpeciesInPoint(a.species, Point(x, y)).count(!isLegal(_)) == 0)
+                             if AnimalUtils.verticesOfAnimal(a.species, Point(x, y)).count(!isLegal(_)) == 0)
       yield Point(x, y)
       //find the closest point to dest
       legalPoints.par.fold(a.position)((p1,p2) => if(p1.distance(d)<p2.distance(d)) p1 else p2)
