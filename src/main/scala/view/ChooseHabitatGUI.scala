@@ -63,7 +63,6 @@ class ChooseHabitatGUI(val l :ChooseHabitatLogic) {
 
       contents += new Label("Set a quantity of unexpected events that could kill animals (From 0 to 10)")
       contents += ue
-
       contents ++= radios.buttons
 
       peer.add(Box.createVerticalStrut(10))
@@ -74,7 +73,6 @@ class ChooseHabitatGUI(val l :ChooseHabitatLogic) {
       contents += h
 
       peer.add(Box.createVerticalStrut(20))
-
 
       contents += new Button("Start Simulation") {
         reactions += {
@@ -89,9 +87,6 @@ class ChooseHabitatGUI(val l :ChooseHabitatLogic) {
         }
       }
     }
-
-
-    //    this.preferredSize = new Dimension(1000, 1000)
     peer.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE)
     centerOnScreen()
     open()

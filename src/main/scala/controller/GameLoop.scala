@@ -70,7 +70,13 @@ case class GameLoop(population: Map[Species, Int], habitat: Habitat) extends Run
     }
   }
 
-  //TODO scaladoc
+  /**
+   * Method that contains all the calculations that are performed in one step of the simulation.
+   *
+   * @param animalManager the [[AnimalManager]] of this step.
+   * @param resourceManager the [[ResourceManager]] of this step.
+   * @return the [[AnimalManager]] and the [[ResourceManager]] for the nest step.
+   */
   def compute(animalManager: AnimalManager, resourceManager: ResourceManager): (AnimalManager, ResourceManager) = {
     growVegetableAfter(
       calculateUnexpectedEventsAfter(
