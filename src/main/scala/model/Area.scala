@@ -78,14 +78,16 @@ object Area {
     override def growFood(optFood: Option[Food]): Option[FoodInstance] = {
       if (optFood.isDefined) {
         val food = optFood.get
-        if (fertility.calculate) {
-          val _1 = Random.between(area.topLeft.x, area.bottomRight.x - Constants.PixelForFood)
-          val _2 = Random.between(area.topLeft.y, area.bottomRight.y - Constants.PixelForFood)
+        if (fertility.calculate)
+          if (area.topLeft.x < area.bottomRight.x - Constants.PixelForFood &&
+            area.topLeft.y < area.bottomRight.y - Constants.PixelForFood ) {
+            val _1 = Random.between(area.topLeft.x, area.bottomRight.x - Constants.PixelForFood)
+            val _2 = Random.between(area.topLeft.y, area.bottomRight.y - Constants.PixelForFood)
 
-          val quantity = Random.nextInt(DefaultFoodQuantity)
-          Statistics.update(foods = quantity)
-          return Some(FoodInstance(food, Point(_1, _2), quantity))
-        }
+            val quantity = Random.nextInt(DefaultFoodQuantity)
+            Statistics.update(foods = quantity)
+            return Some(FoodInstance(food, Point(_1, _2), quantity))
+          }
       }
       None
     }
