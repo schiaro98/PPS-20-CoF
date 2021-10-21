@@ -1,5 +1,6 @@
 # Processo di sviluppo
-Fico il markdown
+
+Scrum, TDD
 
 ## Modalità di divisione in itinere dei task
 
@@ -23,7 +24,7 @@ Tutti gli sprint/meeting sono stati effettuati in modalità remota, utilizzando 
 
 ## Modalità di revisione in itinere dei task
 
-La revisione dei task, come già accennato,  è stata effettuata al termine di ogni sprint ed è stata coadiuvata dalla pipeline di GitHub impostata in modo da controllare che tutti i test passassero.
+La revisione dei task, come già accennato, è stata effettuata al termine di ogni sprint ed è stata coadiuvata dalla pipeline di GitHub impostata in modo da controllare che tutti i test passassero.
 In questa fase si provvedeva anche a dare dei commenti critici sul codice prodotto al fine di migliorare il prima possibile i punti critici con piccoli refactor che avrebbero permesso di diminuire il debito tecnico.
 
 ## Scelta degli strumenti di test/build/continuous integration
@@ -31,5 +32,8 @@ In questa fase si provvedeva anche a dare dei commenti critici sul codice prodot
 Per compilare i sorgenti Scala del progetto è stato usato Sbt poichè è lo strumento nativo per il build di scala.
 Diversamente da Gradle infatti non richiede di aggiungere plugin o specificare alcuna impostazione poichè le impostazione vengono automaticamente create insieme al progetto
 
+###Testing
+
+###Continuos Integration
 
 ---magari parlare anche della pipeline di github più nello specifico
