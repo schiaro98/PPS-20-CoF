@@ -59,11 +59,9 @@ object Serializer {
       while (p.hasNext) {
         val e = p.next()
         if (e.isJsonObject) {
-          /* do something useful with JSON object .. */
           val obj = gson.fromJson(e, classOfT)
           tempList += obj
         }
-        /* handle other JSON data structures */
       }
       tempList.toSeq
     }
