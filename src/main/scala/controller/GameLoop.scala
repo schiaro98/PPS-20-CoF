@@ -1,12 +1,11 @@
 package controller
 
-import controller.manager.{AnimalManager, BattleManager, DestinationManager, FeedManager, ResourceManager, ShiftManager}
-import model._
+import controller.manager._
 import model.animal.{Animal, Species}
 import model.habitat.Habitat
 import model.position.Point
 import utility.{Constants, Logger, Statistics}
-import view.{SimulationGui, StatisticsGUI}
+import view.{SimulationGUI, StatisticsGUI}
 
 import scala.annotation.tailrec
 
@@ -29,7 +28,7 @@ case class GameLoop(population: Map[Species, Int], habitat: Habitat) extends Run
    */
   override def run(): Unit = {
     @tailrec
-    def loop(animalManager: AnimalManager, resourceManager: ResourceManager, simulationGui: SimulationGui): Unit = {
+    def loop(animalManager: AnimalManager, resourceManager: ResourceManager, simulationGui: SimulationGUI): Unit = {
       val current: Long = System.currentTimeMillis()
       if (!isPaused) {
         val (newAnimalManager, newResourceManager) = compute(animalManager, resourceManager)
@@ -50,7 +49,7 @@ case class GameLoop(population: Map[Species, Int], habitat: Habitat) extends Run
 
     val animalManager = AnimalManager().generateInitialAnimals(population, habitat)
     val resourceManager = ResourceManager(habitat, Constants.FoodsFilePath).fillHabitat()
-    val simulationGui = new SimulationGui(habitat, setPaused, setSpeed, stop) { top.visible = true }
+    val simulationGui = new SimulationGUI(habitat, setPaused, setSpeed, stop) { top.visible = true }
     simulationGui.updatePanel(animalManager.animals, resourceManager.someFoods)
 
     loop(animalManager, resourceManager, simulationGui)

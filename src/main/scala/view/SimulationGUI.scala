@@ -19,7 +19,7 @@ import scala.swing.event.ButtonClicked
  * @param setSpeed        handler method used to speed up/slow down the simulation.
  * @param stop            handler method used to stop the simulation.
  */
-class SimulationGui(habitat: Habitat,
+class SimulationGUI(habitat: Habitat,
                     setPaused: Boolean => Unit,
                     setSpeed: Boolean => Unit,
                     stop: () => Unit) extends SimpleSwingApplication {
