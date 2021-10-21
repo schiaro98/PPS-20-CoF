@@ -47,7 +47,7 @@ object ShiftManager {
     //lambda returning an (Int,Int) for potential shifts
     private val randShift = (x: Int) => (Random.between(Constants.MinShift, x),Random.between(Constants.MinShift, x))
     //tha area in which animals can't go
-    private val nonWalkableAreas: Seq[Area] = habitat.areas.filterNot(_.areaType == Fertile)
+    private val nonWalkableAreas: Seq[Area] = habitat.areas.filterNot(_.areaType.walkable)
 
     //require that on creation no animal is inside a nonWalkableArea
     animalsToDestinations.keySet.foreach(animal => require(nonWalkableAreas.count(_.contains(animal.position)) == 0))

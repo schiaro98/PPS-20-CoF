@@ -1,6 +1,6 @@
 package controller
 
-import controller.Aliases.FoodInstances
+import controller.Aliases.SomeFoods
 import model._
 import utility.{Constants, OfFood, Serializer}
 
@@ -11,7 +11,7 @@ object Aliases {
   /**
    * a [[Seq]] of [[FoodInstance]]
    */
-  type FoodInstances = Seq[FoodInstance]
+  type SomeFoods = Seq[FoodInstance]
 }
 
 sealed trait ResourceManager {
@@ -20,16 +20,16 @@ sealed trait ResourceManager {
 
   /**
    *
-   * @return the [[FoodInstances]] in the ResourceManager
+   * @return the [[SomeFoods]] in the ResourceManager
    */
-  def foodInstances: FoodInstances
+  def someFoods: SomeFoods
 
   /**
    *
    * @param fi replace the [[Seq]] of [[FoodInstance]] to the [[ResourceManager]]
    * @return the updated [[ResourceManager]]
    */
-  def foodInstances_(fi: FoodInstances): ResourceManager
+  def someFoods_(fi: SomeFoods): ResourceManager
 
   /**
    *
@@ -76,7 +76,7 @@ object ResourceManager {
    */
   def apply(habitat: Habitat,
             foods: Set[Food] = Set.empty[Food],
-            foodInstances: FoodInstances = Seq.empty[FoodInstance],
+            foodInstances: SomeFoods = Seq.empty[FoodInstance],
            ): ResourceManager = new ResourceManagerImpl(habitat, foods, foodInstances)
 
   /**
@@ -91,18 +91,18 @@ object ResourceManager {
 
   private class ResourceManagerImpl(val habitat: Habitat,
                                     val foods: Set[Food],
-                                    val foodInstances: FoodInstances,
+                                    val someFoods: SomeFoods,
                                    ) extends ResourceManager {
 
     override def grow(): ResourceManager = {
-      if (foodInstances.count(_.foodType == Vegetable) < Constants.MaxFoodInstances){
+      if (someFoods.count(_.foodType == Vegetable) < Constants.MaxFoodInstances){
         val newFoods = habitat.areas
           .filter(_.isInstanceOf[Area with GrowFood])
           .map(_.asInstanceOf[Area with GrowFood])
           .map(_.growFood(randomVegetable()))
           .filter(_.isDefined)
           .map(_.get)
-        ResourceManager(habitat, foods.filter(_.foodType == Vegetable), foodInstances ++ newFoods)
+        ResourceManager(habitat, foods.filter(_.foodType == Vegetable), someFoods ++ newFoods)
       } else this
     }
 
@@ -119,7 +119,7 @@ object ResourceManager {
     override def importFoodsFromFile(fileName: String): ResourceManager = {
       val serializer: Serializer = Serializer(OfFood)
       val growableFoods = serializer.deserializeManyFromFile(fileName)(classOf[Food])
-      ResourceManager(habitat, growableFoods.toSet, foodInstances)
+      ResourceManager(habitat, growableFoods.toSet, someFoods)
     }
 
     override def writeFoodsToFile(filename: String): Unit = {
@@ -130,7 +130,7 @@ object ResourceManager {
     override def fillHabitat(): ResourceManager = {
       @tailrec
       def _fillHabitat(resourceManager: ResourceManager): ResourceManager = {
-        if (resourceManager.foodInstances.size > Constants.InitialFoodInstances)
+        if (resourceManager.someFoods.size > Constants.InitialFoodInstances)
           resourceManager
         else _fillHabitat(resourceManager.grow())
       }
@@ -142,7 +142,7 @@ object ResourceManager {
       else _fillHabitat(this)
     }
 
-    override def foodInstances_(fi: FoodInstances): ResourceManager =
+    override def someFoods_(fi: SomeFoods): ResourceManager =
       ResourceManager(habitat, foods, fi)
   }
 }

@@ -38,10 +38,10 @@ class ShiftManagerTest extends AnyFunSuite {
     val dest = Point(55, 100)
     val habitat = Habitat(EmptyHabitatType, Probability(0), (500, 500), Seq.empty[Area])
     val sm: ShiftManager = ShiftManager(habitat, Map(t1 -> dest))
-    while (sm.animals.count(a => a.position == dest) != 1) {
+    while (sm.animals.count(_.position == dest) != 1) {
       sm.walk()
     }
-    assert(sm.animals.count(a => a.position == dest) == 1)
+    assert(sm.animals.count(_.position == dest) == 1)
   }
 
   test("Multiple animals arrive at different random destinations in empty habitat") {
@@ -64,10 +64,10 @@ class ShiftManagerTest extends AnyFunSuite {
     val dest = Point(r(500), r(500))
     val habitat = Habitat(EmptyHabitatType, Probability(0), (500, 500), Seq.empty[Area])
     val sm: ShiftManager = ShiftManager(habitat, (t1, dest), (e1, dest), (d1, dest), (c1, dest))
-    while (sm.animals.count(a => a.position == dest) != sm.animals.size) {
+    while (sm.animals.count(_.position == dest) != sm.animals.size) {
       sm.walk()
     }
-    assert(sm.animals.count(a => a.position == dest) == sm.animals.size)
+    assert(sm.animals.count(_.position == dest) == sm.animals.size)
   }
 
   test("One animal walk to a random destination in ours habitat") {
@@ -108,9 +108,9 @@ class ShiftManagerTest extends AnyFunSuite {
     val sm: ShiftManager = ShiftManager(randHabitat, (t, dest1), (e, dest2), (d, dest3), (c, dest4))
     for (_ <- 0 to 100) {
       sm.walk()
-      sm.animals.count(a => isAnimalInLegalPosition(randHabitat, a)) == sm.animals.size
+      sm.animals.count(isAnimalInLegalPosition(randHabitat, _)) == sm.animals.size
     }
-    assert(sm.animals.count(a => isAnimalInLegalPosition(randHabitat, a)) == sm.animals.size)
+    assert(sm.animals.count(isAnimalInLegalPosition(randHabitat, _)) == sm.animals.size)
   }
 
   test("Destination is inside non walkable area and animal doesn't go inside") {
@@ -129,7 +129,7 @@ class ShiftManagerTest extends AnyFunSuite {
 
   def getLegalRandomPoint(h: Habitat): Point = {
     val p = Point(Random.nextInt(h.dimensions._1), Random.nextInt(h.dimensions._2))
-    if (h.areas.filterNot(a => a.areaType == Fertile).count(a => a.contains(p)) == 0) p else getLegalRandomPoint(h)
+    if (h.areas.filterNot(_.areaType.walkable).count(a => a.contains(p)) == 0) p else getLegalRandomPoint(h)
   }
 
   def getAnimalFromSpecies(s: Species, sm: ShiftManager): Animal = sm.animals.filter(_.species == s).head

@@ -28,26 +28,29 @@ object DestinationManager {
   private case class DestinationManagerImpl(animals: Seq[Animal], food: Seq[FoodInstance], habitat: Habitat) extends DestinationManager {
 
     override def calculateDestination(): Map[Animal, Point] = {
-      var destination: Map[Animal, Point] = Map.empty
-      animals.foreach(animal => {
-        val neareastWaterZone = findNearestWaterZone(animal, habitat)
-        if (neareastWaterZone.isDefined) {
-          destination = destination + (animal -> neareastWaterZone.get)
-        } else {
-          val point = animal.alimentationType match {
-            case Herbivore => findNearestResource(animal, food.filter(_.foodType == Vegetable))
-              .getOrElse(getLegalRandomPoint(habitat))
-            case Carnivore =>
-              findNearestResource(animal, animals.filter(_.alimentationType == Herbivore)).getOrElse(
-                findNearestResource(animal,
-                  food.filter(_.foodType == Meat))
-                  .getOrElse(getLegalRandomPoint(habitat)))
+      @tailrec
+      def _calculateDestination(animals: Seq[Animal], destination: Map[Animal, Point]= Map.empty ): Map[Animal, Point] = animals match {
+        case animal :: t =>
+          val neareastWaterZone = findNearestWaterZone(animal, habitat)
+          if (neareastWaterZone.isDefined) {
+            _calculateDestination(t, destination + (animal -> neareastWaterZone.get))
+          } else {
+            val point = animal.alimentationType match {
+              case Herbivore => findNearestResource(animal, food.filter(_.foodType == Vegetable))
+                .getOrElse(getLegalRandomPoint(habitat))
+              case Carnivore =>
+                findNearestResource(animal, animals.filter(_.alimentationType == Herbivore)).getOrElse(
+                  findNearestResource(animal,
+                    food.filter(_.foodType == Meat))
+                    .getOrElse(getLegalRandomPoint(habitat)))
+            }
+            _calculateDestination(t, destination + (animal -> point))
           }
-          destination = destination + (animal -> point)
-        }
-      })
-      destination
+        case _ => destination
+      }
+      _calculateDestination(animals)
     }
+
 
     /**
      * Find the nearest resource
