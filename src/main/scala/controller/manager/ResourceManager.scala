@@ -1,6 +1,6 @@
 package controller.manager
 
-import controller.manager.Aliases.SomeFoods
+import controller.manager.Aliases.Foods
 import model._
 import model.food.{Food, FoodType, Vegetable}
 import model.habitat.{Area, Fertile, GrowFood, Habitat}
@@ -14,7 +14,7 @@ object Aliases {
   /**
    * a [[Seq]] of [[Food]]
    */
-  type SomeFoods = Seq[Food]
+  type Foods = Seq[Food]
 }
 
 sealed trait ResourceManager {
@@ -23,45 +23,45 @@ sealed trait ResourceManager {
 
   /**
    *
-   * @return the [[SomeFoods]] in the ResourceManager
+   * @return the [[Foods]] in the ResourceManager
    */
-  def someFoods: SomeFoods
+  def foods: Foods
 
   /**
    *
-   * @param fi replace the [[Seq]] of [[Food]] to the [[ResourceManager]]
+   * @param f replace the [[Seq]] of [[Food]] to the [[ResourceManager]]
    * @return the updated [[ResourceManager]]
    */
-  def someFoods_(fi: SomeFoods): ResourceManager
+  def foods_(f: Foods): ResourceManager
 
   /**
    *
-   * @return the Set of foods that the [ResourceManager] can grow
+   * @return the Set of foodTypes that the [ResourceManager] can grow
    */
-  def foods: Set[FoodType]
+  def foodTypes: Set[FoodType]
 
   /**
    *
-   * @return a [ResourceManager] with fixed amount of [FoodInstnce] if there isa at least one [Area] with fertility > 0
+   * @return a [[ResourceManager]] with fixed amount of [[Food]] if there isa at least one [[Area]] with fertility > 0
    */
   def fillHabitat(): ResourceManager
 
   /**
    *
    * @param fileName of the resource with Foods
-   * @return a [ResourceManager] with Seq[Food] read from file
+   * @return a [[ResourceManager]] with [[Seq]] of [[Food]] read from file
    */
-  def importFoodsFromFile(fileName: String): ResourceManager
+  def importFoodTypesFromFile(fileName: String): ResourceManager
 
   /**
-   * Writes Seq of [Food] of the current [ResourceManager] to file
+   * Writes Seq of [[FoodType]] of the current [[ResourceManager]] to file
    *
-   * @param filename of the resource in which the foods wil be saved
+   * @param filename of the resource in which the foodTypes wil be saved
    */
-  def writeFoodsToFile(filename: String): Unit
+  def writeFoodTypesToFile(filename: String): Unit
 
   /**
-   * Grow foods in the current habitat
+   * Grow foodTypes in the current habitat
    *
    * @return new ResourceManager with updated fields
    */
@@ -73,14 +73,14 @@ object ResourceManager {
    * The apply for [[ResourceManager]]
    *
    * @param habitat       the [[Habitat]] in which the Resources are placed
-   * @param foods         the [[Seq]] of [[FoodType]] that can be placed in the map from the [[ResourceManager]]
-   * @param foodInstances the actual [[Food]]
+   * @param foodTypes         the [[Seq]] of [[FoodType]] that can be placed in the map from the [[ResourceManager]]
+   * @param foods the actual [[Food]]
    * @return
    */
   def apply(habitat: Habitat,
-            foods: Set[FoodType] = Set.empty[FoodType],
-            foodInstances: SomeFoods = Seq.empty[Food],
-           ): ResourceManager = new ResourceManagerImpl(habitat, foods, foodInstances)
+            foodTypes: Set[FoodType] = Set.empty[FoodType],
+            foods: Foods = Seq.empty[Food],
+           ): ResourceManager = new ResourceManagerImpl(habitat, foodTypes, foods)
 
   /**
    * The apply for [[ResourceManager]]
@@ -90,54 +90,54 @@ object ResourceManager {
    * @return a [[ResourceManager]] implementation
    */
   def apply(habitat: Habitat, fileName: String): ResourceManager =
-    new ResourceManagerImpl(habitat, Set.empty[FoodType], Seq.empty[Food]).importFoodsFromFile(fileName)
+    new ResourceManagerImpl(habitat, Set.empty[FoodType], Seq.empty[Food]).importFoodTypesFromFile(fileName)
 
   private class ResourceManagerImpl(val habitat: Habitat,
-                                    val foods: Set[FoodType],
-                                    val someFoods: SomeFoods,
+                                    val foodTypes: Set[FoodType],
+                                    val foods: Foods,
                                    ) extends ResourceManager {
 
     override def grow(): ResourceManager = {
-      if (someFoods.count(_.foodCategory == Vegetable) < Constants.MaxFoodInstances){
+      if (foods.count(_.foodCategory == Vegetable) < Constants.MaxFoods){
         val newFoods = habitat.areas
           .filter(_.isInstanceOf[Area with GrowFood])
           .map(_.asInstanceOf[Area with GrowFood])
           .map(_.growFood(randomVegetable()))
           .filter(_.isDefined)
           .map(_.get)
-        ResourceManager(habitat, foods.filter(_.foodCategory == Vegetable), someFoods ++ newFoods)
+        ResourceManager(habitat, foodTypes.filter(_.foodCategory == Vegetable), foods ++ newFoods)
       } else this
     }
 
     /**
      *
-     * @return a random [[FoodType]] from foods
+     * @return a random [[FoodType]] from foodTypes
      */
     private def randomVegetable(): Option[FoodType] = {
-      if (foods.nonEmpty) {
-        Some(foods.filter(_.foodCategory == Vegetable).toSeq(new Random().nextInt(foods.size)))
+      if (foodTypes.nonEmpty) {
+        Some(foodTypes.filter(_.foodCategory == Vegetable).toSeq(new Random().nextInt(foodTypes.size)))
       } else None
     }
 
-    override def importFoodsFromFile(fileName: String): ResourceManager = {
+    override def importFoodTypesFromFile(fileName: String): ResourceManager = {
       val serializer: Serializer = Serializer(OfFood)
       val growableFoods = serializer.deserializeManyFromFile(fileName)(classOf[FoodType])
-      ResourceManager(habitat, growableFoods.toSet, someFoods)
+      ResourceManager(habitat, growableFoods.toSet, foods)
     }
 
-    override def writeFoodsToFile(filename: String): Unit = {
+    override def writeFoodTypesToFile(filename: String): Unit = {
       val serializer: Serializer = Serializer(OfFood)
-      serializer.serializeManyToFile(foods)(Constants.FoodsFilePath)
+      serializer.serializeManyToFile(foodTypes)(Constants.FoodsFilePath)
     }
 
     override def fillHabitat(): ResourceManager = {
       @tailrec
       def _fillHabitat(resourceManager: ResourceManager): ResourceManager = {
-        if (resourceManager.someFoods.lengthCompare(Constants.InitialFoodInstances) > 0)
+        if (resourceManager.foods.lengthCompare(Constants.InitialFoods) > 0)
           resourceManager
         else _fillHabitat(resourceManager.grow())
       }
-      //if there isn't at least one Fertile area with fertility > 0 no foods are produced and infinite loops occur
+      //if there isn't at least one Fertile area with fertility > 0 no foodTypes are produced and infinite loops occur
       if (habitat.areas
         .filter(_.areaType == Fertile)
         .map(_.asInstanceOf[Area with GrowFood])
@@ -145,7 +145,7 @@ object ResourceManager {
       else _fillHabitat(this)
     }
 
-    override def someFoods_(fi: SomeFoods): ResourceManager =
-      ResourceManager(habitat, foods, fi)
+    override def foods_(f: Foods): ResourceManager =
+      ResourceManager(habitat, foodTypes, f)
   }
 }

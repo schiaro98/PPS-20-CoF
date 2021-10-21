@@ -23,29 +23,29 @@ class ResourceManagerTest extends AnyFunSuite{
 
   val habitat: Habitat = model.habitat.Habitat( Probability(30), (100, 100), Seq(fertileArea, waterArea, rockArea, volcanoArea, area))
 
-  val foods = Set(FoodType(5, Vegetable), FoodType(10, Vegetable), FoodType(15, Vegetable), FoodType(50, Vegetable))
+  val foodTypes = Set(FoodType(5, Vegetable), FoodType(10, Vegetable), FoodType(15, Vegetable), FoodType(50, Vegetable))
 
-  test("ResourceManager grow() with no growable foods"){
+  test("ResourceManager grow() with no growable foodTypes"){
     val resMan = ResourceManager(habitat)
 
     val newResMan = resMan.grow()
-    assert(newResMan.someFoods.isEmpty)
+    assert(newResMan.foodTypes.isEmpty)
   }
 
   test("ResourceManager grow()"){
-    val resMan = ResourceManager(habitat, foods)
+    val resMan = ResourceManager(habitat, foodTypes)
     val newResMan = resMan.grow()
-    assert(newResMan.someFoods.nonEmpty)
+    assert(newResMan.foods.nonEmpty)
   }
 
   test("ResourceManager import food from non existing file"){
-    val resMan = ResourceManager(habitat, foods)
-    assertThrows[NoSuchFileException](resMan.importFoodsFromFile("absolutelyNonExistingFileMadeUpOnlyForThisTest.txtxtxt"))
+    val resMan = ResourceManager(habitat, foodTypes)
+    assertThrows[NoSuchFileException](resMan.importFoodTypesFromFile("absolutelyNonExistingFileMadeUpOnlyForThisTest.txtxtxt"))
   }
 
   test("ResourceManager write food to file"){
-    val resMan = ResourceManager(habitat, foods)
-    resMan.writeFoodsToFile(Constants.FoodsFilePath)
+    val resMan = ResourceManager(habitat, foodTypes)
+    resMan.writeFoodTypesToFile(Constants.FoodsFilePath)
     val path = Path.of("res"+File.separator+"serialization"+File.separator+Constants.FoodsFilePath)
     val json = Files.readString(path, StandardCharsets.UTF_8)
     assert(json == "{\"color\":{\"value\":-16755701,\"falpha\":0.0},\"energy\":5,\"foodCategory\":\"Vegetable\"}{\"color\":{\"value\":-16755701,\"falpha\":0.0},\"energy\":10,\"foodCategory\":\"Vegetable\"}{\"color\":{\"value\":-16755701,\"falpha\":0.0},\"energy\":15,\"foodCategory\":\"Vegetable\"}{\"color\":{\"value\":-16755701,\"falpha\":0.0},\"energy\":50,\"foodCategory\":\"Vegetable\"}")
@@ -53,14 +53,14 @@ class ResourceManagerTest extends AnyFunSuite{
 
   test("ResourceManager import food from file"){
     val resMan = ResourceManager(habitat)
-    val newResMan = resMan.importFoodsFromFile(Constants.FoodsFilePath)
-    assert(newResMan.foods.nonEmpty)
+    val newResMan = resMan.importFoodTypesFromFile(Constants.FoodsFilePath)
+    assert(newResMan.foodTypes.nonEmpty)
   }
 
   test("Initialize habitat with foods"){
     val resMan = ResourceManager(habitat, Constants.FoodsFilePath)
     val newResMan = resMan.fillHabitat()
-    assert(newResMan.someFoods.lengthCompare(Constants.InitialFoodInstances) > 0)
+    assert(newResMan.foods.lengthCompare(Constants.InitialFoods) > 0)
   }
 
   test("Try to initialize habitat with all fertile areas with zero fertility"){
@@ -70,7 +70,7 @@ class ResourceManagerTest extends AnyFunSuite{
     val habitat: Habitat = model.habitat.Habitat( Probability(30),(100,100), Seq(f1,f2,w))
     val resMan = ResourceManager(habitat, Constants.FoodsFilePath)
     val newResMan = resMan.fillHabitat()
-    assert(newResMan.someFoods.lengthCompare(resMan.someFoods.size) == 0)
+    assert(newResMan.foods.lengthCompare(resMan.foods.size) == 0)
   }
 
 }
