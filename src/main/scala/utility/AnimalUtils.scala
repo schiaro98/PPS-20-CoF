@@ -14,7 +14,6 @@ object AnimalUtils {
    *
    * @param species the [[Species]] of the animal.
    * @return the [[Point]] (top left) where is possible to create the animal.
-   * @throws IllegalArgumentException if there aren't walkable areas in the [[Habitat]].
    */
   def placeAnimal(habitat: Habitat, species: Species): Point = {
     @tailrec
@@ -25,9 +24,6 @@ object AnimalUtils {
         case false => point
       }
     }
-
-    if (habitat.areas.count(_.areaType.walkable) == 0)
-      throw new IllegalArgumentException("Try to place an animal in an habitat without walkable areas")
     placeAnimal_(habitat.dimensions._1, habitat.dimensions._2, species, getPixelFromSize(species))
   }
 

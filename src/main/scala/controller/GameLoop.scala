@@ -4,6 +4,8 @@ import model._
 import utility.{Constants, Logger, Statistics}
 import view.{SimulationGui, StatisticsGUI}
 
+import scala.annotation.tailrec
+
 /**
  * [[Runnable]] used to start the simulation, it contains the game loop which must be executed in a new thread.
  *
@@ -22,61 +24,33 @@ case class GameLoop(population: Map[Species, Int], habitat: Habitat) extends Run
    * carried out at each unit of time.
    */
   override def run(): Unit = {
-    //reusable manager
-    var animalManager = AnimalManager().generateInitialAnimals(population, habitat)
-    var resourceManager = ResourceManager(habitat, Constants.FoodsFilePath).fillHabitat()
+    @tailrec
+    def loop(animalManager: AnimalManager, resourceManager: ResourceManager, simulationGui: SimulationGui): Unit = {
+      val current: Long = System.currentTimeMillis()
+      if (!isPaused) {
+        val (newAnimalManager, newResourceManager) = compute(animalManager, resourceManager)
 
-    //GUI
+        simulationGui.updatePanel(newAnimalManager.animals, newResourceManager.someFoods)
+        simulationGui.updateElapsedTime()
+
+        waitForNextStep(current)
+        Statistics.incTime()
+        if (newAnimalManager.animals.lengthIs == 0 || isStopped) return
+        loop(newAnimalManager, newResourceManager, simulationGui)
+      } else {
+        waitForNextStep(current)
+        if (animalManager.animals.lengthIs == 0 || isStopped) return
+        loop(animalManager, resourceManager, simulationGui)
+      }
+    }
+
+    val animalManager = AnimalManager().generateInitialAnimals(population, habitat)
+    val resourceManager = ResourceManager(habitat, Constants.FoodsFilePath).fillHabitat()
     val simulationGui = new SimulationGui(habitat, setPaused, setSpeed, stop) { top.visible = true }
     simulationGui.updatePanel(animalManager.animals, resourceManager.someFoods)
 
-    var previous: Long = System.currentTimeMillis()
-    while (animalManager.animals.lengthIs > 0 && !isStopped) {
-      val current: Long = System.currentTimeMillis()
-      if (!isPaused) {
-        //find destination
-        val destinationManager: DestinationManager =
-          DestinationManager(animalManager.animals, resourceManager.someFoods, habitat)
-        val destinations: Map[Animal, Point] = destinationManager.calculateDestination()
+    loop(animalManager, resourceManager, simulationGui)
 
-        //animals movement
-        val shiftManager = ShiftManager(habitat, destinations)
-        shiftManager.walk()
-        animalManager = AnimalManager(shiftManager.animals.toSeq)
-
-        //animals eat and drink
-        val feedManager = FeedManager(animalManager.animals, resourceManager.someFoods, habitat)
-        val (animalAfterFeed, foodAfterFeed) = feedManager.consumeResources()
-        animalManager = AnimalManager(animalAfterFeed)
-        resourceManager = resourceManager.someFoods_(foodAfterFeed)
-
-        //animals life cycle
-        val (animalAfterLifeCycle, foodAfterLifeCycle) = animalManager.lifeCycleUpdate()
-        animalManager = AnimalManager(animalAfterLifeCycle)
-        resourceManager = resourceManager.someFoods_(resourceManager.someFoods ++ foodAfterLifeCycle)
-
-        //animals battle
-        val battleManager: BattleManager = BattleManager(animalManager.animals)
-        val (animalAfterBattle, foodAfterBattle) = battleManager.battle()
-        animalManager = AnimalManager(animalAfterBattle)
-        resourceManager = resourceManager.someFoods_(resourceManager.someFoods ++ foodAfterBattle)
-
-        //animals killed by unexpected events
-        val (animalAfterUnexpectedEvents, foodAfterUnexpectedEvents) = animalManager.unexpectedEvents(habitat)
-        animalManager = AnimalManager(animalAfterUnexpectedEvents)
-        resourceManager = resourceManager.someFoods_(resourceManager.someFoods ++ foodAfterUnexpectedEvents)
-
-        //vegetable growth
-        resourceManager = resourceManager.grow()
-
-        //update
-        simulationGui.updatePanel(animalManager.animals, resourceManager.someFoods)
-        simulationGui.updateElapsedTime()
-      }
-      waitForNextStep(current)
-      previous = current
-      Statistics.incTime()
-    }
     logger.info("Simulation finished")
     simulationGui.disableAllButton()
     val f = new StatisticsGUI
@@ -94,6 +68,63 @@ case class GameLoop(population: Map[Species, Int], habitat: Habitat) extends Run
     if (dt < period) {
       Thread.sleep(Constants.Period - dt)
     }
+  }
+
+  //TODO scaladoc
+  def compute(animalManager: AnimalManager, resourceManager: ResourceManager): (AnimalManager, ResourceManager) = {
+    growVegetableAfter(
+      calculateUnexpectedEventsAfter(
+        battleOf(
+          updateHealthAndThirstOf(
+            shiftedAnimals(animalManager, resourceManager)))))
+  }
+
+  //TODO scaladoc
+  private def shiftedAnimals(animalManager: AnimalManager, resourceManager: ResourceManager): (AnimalManager, ResourceManager) = {
+    //find destination
+    val destinationManager: DestinationManager =
+      DestinationManager(animalManager.animals, resourceManager.someFoods, habitat)
+    val destinations: Map[Animal, Point] = destinationManager.calculateDestination()
+
+    //animals movement
+    val shiftManager = ShiftManager(habitat, destinations)
+    shiftManager.walk()
+    (AnimalManager(shiftManager.animals.toSeq), resourceManager)
+  }
+
+  //TODO scaladoc
+  private def updateHealthAndThirstOf(managers: (AnimalManager, ResourceManager)): (AnimalManager, ResourceManager) = {
+    val (animalManager, resourceManager) = managers
+    //animals eat and drink
+    val feedManager = FeedManager(animalManager.animals, resourceManager.someFoods, habitat)
+    val (animalAfterFeed, foodAfterFeed) = feedManager.consumeResources()
+    val animalManager1 = AnimalManager(animalAfterFeed)
+    val resourceManager1 = resourceManager.someFoods_(foodAfterFeed)
+
+    //animals life cycle
+    val (animalAfterLifeCycle, foodAfterLifeCycle) = animalManager1.lifeCycleUpdate()
+    (AnimalManager(animalAfterLifeCycle), resourceManager1.someFoods_(resourceManager1.someFoods ++ foodAfterLifeCycle))
+  }
+
+  //TODO scaladoc
+  private def battleOf(managers: (AnimalManager, ResourceManager)): (AnimalManager, ResourceManager) = {
+    val (animalManager, resourceManager) = managers
+    val battleManager: BattleManager = BattleManager(animalManager.animals)
+    val (animalAfterBattle, foodAfterBattle) = battleManager.battle()
+    (AnimalManager(animalAfterBattle),  resourceManager.someFoods_(resourceManager.someFoods ++ foodAfterBattle))
+  }
+
+  //TODO scaladoc
+  private def calculateUnexpectedEventsAfter(managers: (AnimalManager, ResourceManager)): (AnimalManager, ResourceManager) = {
+    val (animalManager, resourceManager) = managers
+    val (animalAfterUnexpectedEvents, foodAfterUnexpectedEvents) = animalManager.unexpectedEvents(habitat)
+    (AnimalManager(animalAfterUnexpectedEvents), resourceManager.someFoods_(resourceManager.someFoods ++ foodAfterUnexpectedEvents))
+  }
+
+  //TODO scaladoc
+  private def growVegetableAfter(managers: (AnimalManager, ResourceManager)): (AnimalManager, ResourceManager) = {
+    val (animalManager, resourceManager) = managers
+    (animalManager, resourceManager.grow())
   }
 
   /**
