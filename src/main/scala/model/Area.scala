@@ -1,7 +1,7 @@
 package model
 
 import utility.Constants.DefaultFoodQuantity
-import utility.{RectangleArea, Statistics}
+import utility.{Constants, RectangleArea, Statistics}
 import view.Rectangle
 
 import java.awt.Color
@@ -81,7 +81,7 @@ object Area {
         if (fertility.calculate) {
           val random = new Random
           val _1 = random.between(area.topLeft.x, area.bottomRight.x)
-          val _2 = random.between(area.topLeft.y, area.bottomRight.y)
+          val _2 = random.between(area.topLeft.y - Constants.PixelForFood, area.bottomRight.y - Constants.PixelForFood)
 
           val quantity = random.nextInt(DefaultFoodQuantity)
           Statistics.update(foods = quantity)

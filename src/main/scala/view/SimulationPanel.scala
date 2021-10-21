@@ -104,7 +104,6 @@ class SimulationPanel(dimension: (Int, Int)) extends Panel {
   /**
    * Create a popup with the information of the animal and a mouse listener which shows the popup when
    * the mouse is over that animal.
-   * TODO questo metodo rallenta parecchio l'applicazione
    * @param animal    the animal with all his information.
    * @param rectangle the rectangle used to draw the animal.
    */

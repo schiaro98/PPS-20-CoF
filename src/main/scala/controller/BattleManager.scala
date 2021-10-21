@@ -1,7 +1,7 @@
 package controller
 
 import model._
-import utility.{Logger, Statistics}
+import utility.Logger
 
 import scala.annotation.tailrec
 
@@ -29,31 +29,29 @@ object BattleManager {
       def battle_(animals: Seq[Animal],
                   meats: Seq[FoodInstance] = Seq.empty,
                   animalUpdated: Seq[Animal] = Seq.empty): (Seq[Animal], Seq[FoodInstance]) = animals match {
-        case h :: t =>
+        case attacker :: t =>
           val enemyOpt = animals
-            .filterNot(_ == h)
-            .filter(_.position.distance(h.position) < h.sight)
-            .minByOption(_.position.distance(h.position))
+            .filterNot(_ == attacker)
+            .filter(_.position.distance(attacker.position) < attacker.sight)
+            .minByOption(_.position.distance(attacker.position))
 
           if(enemyOpt.isDefined){
             val enemy = enemyOpt.get
-            val probabilities = List(
-              calculateProbabilityFromSize(h, enemy),
-              calculateProbabilityFromDistance(h, enemy),
-              calculateProbabilityFromStrength(h, enemy)
-            )
+            val isBattleWin = List(
+              calculateProbabilityFromSize(attacker, enemy),
+              calculateProbabilityFromDistance(attacker, enemy),
+              calculateProbabilityFromStrength(attacker, enemy)
+            ).map(p => p.calculate).count(p => p) > 1
 
-            Statistics.update(attacks = 1)
-            Statistics.update(deathInBattle = 1)
-            if (Probability(probabilities.map(a => a.probability).sum / probabilities.length).calculate) {
-              logger.info("Attacking animal: " + h.name + " has won against " + enemy.name)
-              battle_(t, meats :+ enemy.die(), animalUpdated :+ h)
+            if (isBattleWin) {
+              logger.info("Attacking animal: " + attacker.name + " has won against " + enemy.name)
+              battle_(t, meats :+ enemy.die(), animalUpdated :+ attacker)
             } else {
-              logger.info("Defending animal: " + enemy.name + " has won against "  + h.name)
-              battle_(t, meats :+ h.die(), animalUpdated :+ enemy)
+              logger.info("Defending animal: " + enemy.name + " has won against "  + attacker.name)
+              battle_(t, meats :+ attacker.die(), animalUpdated :+ enemy)
             }
           } else {
-            battle_(t, meats, animalUpdated :+ h)
+            battle_(t, meats, animalUpdated :+ attacker)
           }
         case _ => (animalUpdated, meats)
       }
@@ -70,18 +68,19 @@ object BattleManager {
      */
      def calculateProbabilityFromDistance(attacker: Animal, defender: Animal): Probability = {
       val probability = Probability(50)
-      attacker.position.distance(defender.position).toInt match {
+      attacker.position.distance(defender.position) match {
         case x if x <= 1 => probability.increase(50)
         case x if x <= 5 && x > 1 =>
           if (attacker.size != Big && defender.size == Big) probability.increase(20)
           else if (attacker.size == Big && defender.size == Small) probability.decrease(20)
-          else probability
+          else return probability
         case x if x <= 10 && x > 5 =>
-          if (attacker.size != Big && defender.size == Big) probability
+          if (attacker.size != Big && defender.size == Big) return probability
           else if (attacker.size == Big && defender.size == Small) probability.decrease(50)
-          else probability
+          else return probability
         case x if x > 10 => probability.increase(75)
       }
+       probability
     }
 
     /**
@@ -94,10 +93,10 @@ object BattleManager {
      def calculateProbabilityFromStrength(attacker: Animal, defender: Animal): Probability = {
       val probability = Probability(50)
       attacker.strength - defender.strength match {
-        case x if x > 5 => probability.increase(50) //Attacking molto più forte
+        case x if x > 5 => probability.increase(50)
         case x if x > 0 && x <= 5 => probability.increase(20)
         case x if x <= 0 && x > -5 => probability.decrease(20)
-        case x if x <= -5 => probability.decrease(50) //Defending molto più forte
+        case x if x <= -5 => probability.decrease(50)
       }
     }
 
@@ -124,7 +123,7 @@ object BattleManager {
         case Small => defender.size match {
           case Big => probability.decrease(80)
           case Medium => probability.decrease(50)
-          case _ => Probability(probability.probability)
+          case _ => probability
         }
       }
       probability

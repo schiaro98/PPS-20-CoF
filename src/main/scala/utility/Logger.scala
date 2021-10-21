@@ -4,18 +4,18 @@ object Logger {
 
   var history : Seq[String] = Seq.empty
 
-  def info(message: String): Unit = {
+  def info(message: String, debug: Boolean = false): Unit = {
     history = history :+ message
-//    println(s"INFO: $message")
+    if(debug)println(s"INFO: $message")
   }
 
-  def debug(message: String): Unit = {
+  def debug(message: String,debug: Boolean = false): Unit = {
     history = history :+ message
-//    println(s"DEBUG: $message")
+    if(debug)println(s"DEBUG: $message")
   }
 
-  def error(message: String): Unit = {
+  def error(message: String, debug: Boolean = false): Unit = {
     history = history :+ message
-//    println(s"ERROR: $message")
+    if(debug)println(s"ERROR: $message")
   }
 }
