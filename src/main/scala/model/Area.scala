@@ -47,13 +47,13 @@ object Area {
   def getAllTypeOfArea = Set(Fertile, Water, Rock, Volcano)
 
   /**
-   *Apply method for [[Area]]
+   * Apply method for [[Area]].
    *
-   * @param areaType one among [[Fertile]], [[Water]], [[Volcano]], [[Rock]]
-   * @param area the [[Rectangle]] in which the [[Area]] is
-   * @param probability 0 by default, applicable only with a [[Fertile]] [[Area]]
-   * @param name an optional name for the [[Area]]
-   * @return an implementation of [[Area]]
+   * @param areaType    the [[AreaType]].
+   * @param area        the [[Rectangle]] which delimits the [[Area]].
+   * @param probability the [[Probability]] that determines the fertility of a [[Fertile]] area.
+   * @param name        the name of the [[Area]].
+   * @return an implementation of [[Area]].
    */
   def apply(areaType: AreaType, area: RectangleArea, probability: Probability = Probability(0), name: String = ""): Area =
     areaType match {
@@ -94,14 +94,13 @@ object Area {
 }
 
 /**
- * Trait that makes it possible to grow food
+ * Trait that makes it possible to grow food.
  */
 sealed trait GrowFood {
   val fertility: Probability
 
   /**
-   * Given a food calculate the probability of its growth, if it can grow return an [[Some]] [[FoodInstance]]
-   * else [[None]]
+   * Given a food calculate the probability of its growth.
    *
    * @param food the [[Food]] that can grow.
    * @return an [[Option]] of [[FoodInstance]].

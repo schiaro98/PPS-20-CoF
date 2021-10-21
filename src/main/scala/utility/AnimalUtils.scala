@@ -2,6 +2,8 @@ package utility
 
 import model._
 
+import scala.annotation.tailrec
+
 /**
  * Object containing some utility methods for [[Animal]]
  */
@@ -12,23 +14,29 @@ object AnimalUtils {
    *
    * @param species the [[Species]] of the animal.
    * @return the [[Point]] (top left) where is possible to create the animal.
+   * @throws IllegalArgumentException if there aren't walkable areas in the [[Habitat]].
    */
   def placeAnimal(habitat: Habitat, species: Species): Point = {
-    val (width, height) = habitat.dimensions
-    val pixel = getPixelFromSize(species)
-    var p = Point.getRandomPoint((width - pixel, height - pixel))
-    while (areNotPlaceable(habitat.areas, getSquareVertices(p, pixel))) {
-      p = Point.getRandomPoint((width - pixel, height - pixel))
+    @tailrec
+    def placeAnimal_(width: Int, height: Int, species: Species, pixel: Int): Point = {
+      val point = Point.getRandomPoint((width - pixel, height - pixel))
+      areNotPlaceable(habitat.areas, getSquareVertices(point, pixel)) match {
+        case true => placeAnimal_(width, height, species, pixel)
+        case false => point
+      }
     }
-    p
+
+    if (habitat.areas.count(_.areaType.walkable) == 0)
+      throw new IllegalArgumentException("Try to place an animal in an habitat without walkable areas")
+    placeAnimal_(habitat.dimensions._1, habitat.dimensions._2, species, getPixelFromSize(species))
   }
 
   /**
    * Method to obtain the pixel used to calculate the dimension of an animal; the value returned is also used to
-   * draw the animal because represent the side of the square
+   * draw the animal because represent the side of the square.
    *
-   * @param species the [[Species]] of the animal
-   * @return the dimension of the animal in pixel
+   * @param species the [[Species]] of the animal.
+   * @return the dimension of the animal in pixel.
    */
   def getPixelFromSize(species: Species): Int = species.size match {
     case Big => Constants.PixelForBig
@@ -37,14 +45,23 @@ object AnimalUtils {
   }
 
   /**
+   * Method to obtain the vertices of the square that represents an [[Animal]].
    *
-   * @param s the [[Species]] of which we want to know the corners
-   * @param p the [[Point]] in which the [[Species]] is or will be
-   * @return the [[Seq]] of [[Point]] corresponding to the corners
+   * @param s the [[Species]] of the [[Animal]].
+   * @param p the [[Point]] in which the [[Animal]] is or will be.
+   * @return a [[Seq]] of [[Point]] corresponding to the vertices of the square.
    */
-  def getCornersOfSpeciesInPoint(s: Species, p: Point):Seq[Point]= {
-    getSquareVertices(p, getPixelFromSize(s))
-  }
+  def verticesOfAnimal(s: Species, p: Point):Seq[Point]= getSquareVertices(p, getPixelFromSize(s))
+
+  /**
+   * Method used to obtain the [[Point]]s corresponding to the vertices of a square.
+   *
+   * @param topLeft the top left vertice of the square.
+   * @param side    the side of the square.
+   * @return a Seq of [[Point]] that contains the vertices of the square.
+   */
+  private def getSquareVertices(topLeft: Point, side: Int): Seq[Point] =
+    Seq(topLeft, Point(topLeft.x + side, topLeft.y), Point(topLeft.x, topLeft.y + side), Point(topLeft.x + side, topLeft.y + side))
 
   /**
    * Check if a sequence of point is in a non-walkable area.
@@ -64,12 +81,4 @@ object AnimalUtils {
    */
   private def isNotPlaceable(areas: Seq[Area], point: Point): Boolean =
     areas.filterNot(_.areaType.walkable).exists(_.area.contains(point))
-
-  /**
-   * @param topLeft the top left vertices of the square
-   * @param side the side of the square
-   * @return a Seq of [[Point]] that contains the vertices of the square
-   */
-  private def getSquareVertices(topLeft: Point, side: Int): Seq[Point] =
-    Seq(topLeft, Point(topLeft.x+side, topLeft.y), Point(topLeft.x, topLeft.y+side), Point(topLeft.x+side, topLeft.y+side))
 }
