@@ -21,7 +21,7 @@ class GameLoopTest extends AnyFunSuite{
 
       //find destination
       val destinationManager: DestinationManager =
-        DestinationManager(animalManager.animals, resourceManager.foodInstances, habitat)
+        DestinationManager(animalManager.animals, resourceManager.someFoods, habitat)
       val destinations: Map[Animal, Point] = destinationManager.calculateDestination()
 
       //animals movement
@@ -30,26 +30,26 @@ class GameLoopTest extends AnyFunSuite{
       animalManager = AnimalManager(shiftManager.animals.toSeq)
 
       //animals eat and drink
-      val feedManager = FeedManager(animalManager.animals, resourceManager.foodInstances, habitat)
+      val feedManager = FeedManager(animalManager.animals, resourceManager.someFoods, habitat)
       val (animalAfterFeed, foodAfterFeed) = feedManager.consumeResources()
       animalManager = AnimalManager(animalAfterFeed)
-      resourceManager = resourceManager.foodInstances_(foodAfterFeed)
+      resourceManager = resourceManager.someFoods_(foodAfterFeed)
 
       //animals life cycle
       val (animalAfterLifeCycle, foodAfterLifeCycle) = animalManager.lifeCycleUpdate()
       animalManager = AnimalManager(animalAfterLifeCycle)
-      resourceManager = resourceManager.foodInstances_(resourceManager.foodInstances ++ foodAfterLifeCycle)
+      resourceManager = resourceManager.someFoods_(resourceManager.someFoods ++ foodAfterLifeCycle)
 
       //animals battle
       val battleManager: BattleManager = BattleManager(animalManager.animals)
       val (animalAfterBattle, foodAfterBattle) = battleManager.battle()
       animalManager = AnimalManager(animalAfterBattle)
-      resourceManager = resourceManager.foodInstances_(resourceManager.foodInstances ++ foodAfterBattle)
+      resourceManager = resourceManager.someFoods_(resourceManager.someFoods ++ foodAfterBattle)
 
       //animals killed by unexpected events
       val (animalAfterUnexpectedEvents, foodAfterUnexpectedEvents) = animalManager.unexpectedEvents(habitat)
       animalManager = AnimalManager(animalAfterUnexpectedEvents)
-      resourceManager = resourceManager.foodInstances_(resourceManager.foodInstances ++ foodAfterUnexpectedEvents)
+      resourceManager = resourceManager.someFoods_(resourceManager.someFoods ++ foodAfterUnexpectedEvents)
 
       //vegetable growth
       resourceManager = resourceManager.grow()

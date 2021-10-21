@@ -24,13 +24,13 @@ class ResourceManagerTest extends AnyFunSuite{
     val resMan = ResourceManager(habitat)
 
     val newResMan = resMan.grow()
-    assert(newResMan.foodInstances.isEmpty)
+    assert(newResMan.someFoods.isEmpty)
   }
 
   test("ResourceManager grow()"){
     val resMan = ResourceManager(habitat, foods)
     val newResMan = resMan.grow()
-    assert(newResMan.foodInstances.nonEmpty)
+    assert(newResMan.someFoods.nonEmpty)
   }
 
   test("ResourceManager import food from non existing file"){
@@ -55,7 +55,7 @@ class ResourceManagerTest extends AnyFunSuite{
   test("Initialize habitat with foods"){
     val resMan = ResourceManager(habitat, Constants.FoodsFilePath)
     val newResMan = resMan.fillHabitat()
-    assert(newResMan.foodInstances.size > Constants.InitialFoodInstances)
+    assert(newResMan.someFoods.size > Constants.InitialFoodInstances)
   }
 
   test("Try to initialize habitat with all fertile areas with zero fertility"){
@@ -65,7 +65,7 @@ class ResourceManagerTest extends AnyFunSuite{
     val habitat: Habitat = Habitat( Probability(30),(100,100), Seq(f1,f2,w))
     val resMan = ResourceManager(habitat, Constants.FoodsFilePath)
     val newResMan = resMan.fillHabitat()
-    assert(newResMan.foodInstances.size== resMan.foodInstances.size)
+    assert(newResMan.someFoods.size== resMan.someFoods.size)
   }
 
 }
