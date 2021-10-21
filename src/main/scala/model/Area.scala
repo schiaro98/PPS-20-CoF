@@ -63,9 +63,9 @@ object Area {
       case Volcano => SimpleAreaImpl(new Rectangle(area, Color.red), if (name == "") "a volcano" else name, areaType)
     }
 
-  private case class SimpleAreaImpl(override val area: Rectangle,
-                                    override val name: String,
-                                    override val areaType: AreaType,
+  abstract private case class SimpleAreaImpl(override val area: Rectangle,
+                                             override val name: String,
+                                             override val areaType: AreaType,
                                    ) extends Area
 
   private case class FertileAreaGrowFood(override val area: Rectangle,
