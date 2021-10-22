@@ -23,12 +23,48 @@ L'utente potrà:
 - osservare la simulazione dal pannello della schermata principale in cui verranno disegnati sotto forma di figure geometriche colorate le aree, gli animali e il cibo;
 - consultare gli avvenimenti più importanti della simulazione in una area di testo sottostante;
 - controllare la simulazione attraverso dei pulsanti che consentono di mettere in play, pausa e stop;
-- velocizzare e rallentare la simulazione;
-- creare una nuova specie attraverso una apposita finestra in cui personalizzare i vari parametri grazie a specifici componenti;
+- velocizzare e rallentare la simulazione attraverso degli appositi pulsanti;
+- creare una nuova specie attraverso una apposita finestra in cui personalizzare i vari parametri come nome, dieta, dimensione e forza;
 - scegliere tramite una tabella di selezione quali specie inserire nella simulazione e quanti esemplari per ciascuna;
 - scegliere di ambientare la simulazione tra quattro diverse tipologie di habitat (uno con aree ad hoc, uno privo di aree, e due con alcune aree a caso);
 - visualizzare un diagramma contenente le statistiche della simulazione una volta terminata.
 
-## Funzionali
-## Non funzionali,
+## Requisiti funzionali
+I requisiti funzionali indicano le funzionalità che il sistema deve fornire e sono strettamente legati ai requisiti utente e al dominio del problema.
+
+Il sistema permetterà di:
+- creare una nuova specie e salvarla su file;
+- recuperare le specie già create da file;
+- recuperare i tipi di cibo da file;
+- avviare una nuova simulazione con determinati esemplari per ogni specie;
+- creare un habitat con quante aree si desidera, purché non sovrapposte;
+- posizionare casualmente all'inizio della simulazione gli animali ed il cibo nelle zone dall'habitat che lo permettono;
+- calcolare i risultati delle operazioni da eseguire in ogni step della simulazione, ovvero:
+    - definire una destinazione per ogni animale;
+    - spostare ogni animale in base alla sua destinazione e all'ambiente in cui si trova;
+    - far mangiare e bere gli animali;
+    - decrementare i parametri vitali degli animali a causa dello scorrere del tempo;
+    - far cacciare i carnivori;
+    - uccidere casualmente degli animali se accadono eventi inaspettati come incendi o malattie;
+    - far crescere del cibo nelle zone dell'habitat che lo permettono;
+- salvare le statistiche relative alla simulazione;
+- mettere in pausa e velocizzare la simulazione.
+
+## Requisiti non funzionali
+I requisiti non funzionali riguardano particolari proprietà del sistema.
+
+#### Cross-platform
+Il sistema sarà eseguibile sui principali sistemi operativi desktop, ovvero Windows, Linux e MacOS.
+
+#### Performance
+La simulazione deve essere eseguibile anche su macchine non particolarmente potenti.
+
+#### Interfaccia utente e usabilità
+L'interfaccia grafica deve essere progettata in maniera tale da essere subito comprensibile da un nuovo utente, senza bisogno di spiegazioni o tutorial.
+Deve essere subito chiaro l'insieme di procedure necessarie per svolgere l'operazione desiderata e l'utente non deve essere disorientato da situazioni equivoche.
+Anche il grafico con le statistiche finali deve essere facilmente comprensibile da tutti.
+
+####
+
+
 ## Di implementazione
