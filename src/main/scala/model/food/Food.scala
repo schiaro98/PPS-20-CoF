@@ -30,7 +30,7 @@ object Food {
   /**
    * Apply method for [[Food]].
    *
-   * @param foodType     the [[FoodType]] to instantiate.
+   * @param foodType the [[FoodType]] to instantiate.
    * @param position the [[Point]] where the [[FoodType]] is.
    * @param quantity the quantity of [[FoodType]].
    * @return an implementation of [[Food]].
@@ -41,7 +41,7 @@ object Food {
   private case class FoodImpl(override val quantity: Int,
                               override val position: Point,
                               override val foodType: FoodType
-                                     ) extends Food {
+                             ) extends Food {
 
     override def consume[F >: Food](amount: Int): F =
       if (quantity >= amount) FoodImpl(quantity - amount, position, foodType)

@@ -2,7 +2,6 @@ package model.animal
 
 import model.food.{Food, FoodType, Meat, Vegetable}
 import model.position.{Placeable, Point}
-import utility.Constants._
 import utility.{Constants, Logger, Statistics}
 
 import scala.util.Random
@@ -11,17 +10,14 @@ import scala.util.Random
  * The possible age of an animal
  */
 sealed trait Age
-
 case object Young extends Age
-
 case object Adult extends Age
-
 case object Old extends Age
 
 /**
  * Trait that represent an animal of a specific [[Species]].
  */
-trait Animal extends Placeable {
+sealed trait Animal extends Placeable {
 
   val species: Species
   val health: Int
@@ -91,20 +87,25 @@ trait Animal extends Placeable {
  */
 object Animal {
 
-  def randomAge: Age = Random.shuffle(Set(Young, Adult, Old)).head
+  /**
+   * Method used to obtain a random [[Age]] for an [[Animal]].
+   *
+   * @return a random [[Age]].
+   */
+  private def randomAge: Age = Random.shuffle(Set(Young, Adult, Old)).head
 
   /**
    * Apply method for [[Animal]].
    *
-   * @param s        the species of the animal.
+   * @param species  the species of the animal.
    * @param position the location on the map, where the [[Animal]] is.
    * @param health   the parameter that indicates whether the [[Animal]] is healthy.
    * @param thirst   the parameter that indicates whether the [[Animal]] is thirsty.
    * @param age      the [[Age]] of the [[Animal]].
    * @return a new implementation of [[Animal]].
    */
-  def apply(s: Species, position: Point, health: Int = Constants.MaxHealth, thirst: Int = Constants.MaxThirst,
-            age: Age = randomAge): Animal = AnimalImpl(s, health, thirst, position, age)
+  def apply(species: Species, position: Point, health: Int = Constants.MaxHealth, thirst: Int = Constants.MaxThirst,
+            age: Age = randomAge): Animal = AnimalImpl(species, health, thirst, position, age)
 
 
   private case class AnimalImpl(override val species: Species,
@@ -124,7 +125,7 @@ object Animal {
 
     override def drink(): Animal = {
       logger.info(species.name + " drunk some water")
-      this.update(thirst = MaxThirst)
+      this.update(thirst = Constants.MaxThirst)
     }
 
     override def die(): Food = Food(FoodType(Constants.DefaultEnergyOfMeat, Meat), position, quantityFromDeath())
@@ -158,13 +159,13 @@ object Animal {
      */
     private def consume(food: Food): (Animal, Option[Food]) = health match {
       case Constants.MaxHealth => (this, Some(food))
-      case _ if MaxHealth - health > food.foodType.energy * food.quantity =>
+      case _ if Constants.MaxHealth - health > food.foodType.energy * food.quantity =>
         logger.info(species.name + s" eat all the ${food.foodType.foodCategory}")
         Statistics.update(foodEaten = food.quantity)
         (this.update(health = health + food.foodType.energy * food.quantity), None)
       case _ =>
         logger.info(species.name + s" eat some ${food.foodType.foodCategory}")
-        val foodToEat = (MaxHealth - health) / food.foodType.energy
+        val foodToEat = (Constants.MaxHealth - health) / food.foodType.energy
         Statistics.update(foodEaten = foodToEat)
         (this.update(health = health + food.foodType.energy * foodToEat), Some(food.consume(foodToEat)))
     }

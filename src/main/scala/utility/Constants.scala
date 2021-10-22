@@ -21,6 +21,8 @@ object Constants {
   val DefaultColorOfVegetable = new Color(0,84,11)
   val DefaultEnergyOfVegetable = 10
 
+  val PixelForFood = 8
+
   // ------- Animal -------
   val InitialNumForAnimals = 5
 
@@ -45,8 +47,6 @@ object Constants {
   val PixelForBig = 12
   val PixelForMedium = 10
   val PixelForSmall = 8
-
-  val PixelForFood = 8
 
   val HitBox = 5
 

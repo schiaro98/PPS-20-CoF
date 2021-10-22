@@ -1,32 +1,34 @@
 package model
 
 import model.animal.{Carnivore, Medium, Species}
-import model.food.{Food, FoodType, Vegetable}
-import model.position.{Point, Visualizable}
-import org.scalatest.funsuite.AnyFunSuite
+import model.food.{FoodType, Vegetable}
+import model.position.Visualizable
+import org.scalatest.flatspec.AnyFlatSpec
+import org.scalatest.matchers.should
 import utility.Constants
 
 import java.awt.Color
 
-class VisualizableTest extends AnyFunSuite {
+class VisualizableTest extends AnyFlatSpec with should.Matchers {
 
   val color: Color = Color.black
 
-  test("A visualizable must provide an image") {
+  "A visualizable" should  "provide a color" in {
     val v: Visualizable = FoodType(0, Vegetable, color)
-    assert(color == v.color)
+    color should be (v.color)
   }
 
-  test("A species is a visualizable with more information") {
-    val s: Species = Species("tiger", Medium, 10, 10, Carnivore)
-    assert(color == s.color)
-    assert("tiger" == s.name )
+  "A Species is a visualizable that" should "have other information" in {
+    val name = "tiger"
+    val s: Species = Species(name, Medium, 0, 0, Carnivore)
+    s.color should be (color)
+    s.name should be (name)
   }
 
-  test("A Vegetable is a visualizable with energy and quantity") {
-    val f: Food =
-      Food(FoodType(Constants.DefaultEnergyOfVegetable, Vegetable, color), Point(0,0), 10)
-    assert(color == f.foodType.color)
-    assert(10 == f.foodType.energy )
+  "A FoodType is a visualizable that" should "have energy and a category" in {
+    val energy = 10
+    val foodType: FoodType = FoodType(energy, Vegetable, color)
+    foodType.color should be (color)
+    foodType.energy should be (energy)
   }
 }

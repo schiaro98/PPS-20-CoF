@@ -28,7 +28,8 @@ object FoodType {
   /**
    * Apply method for a [[FoodType]].
    *
-   * @param energy the health it returns to an animal.
+   * @param energy       the health it returns to an animal.
+   * @param foodCategory the [[FoodCategory]] of this food.
    * @return an implementation of [[FoodType]].
    */
   def apply(energy: Int, foodCategory: FoodCategory): FoodType = foodCategory match {
@@ -39,14 +40,15 @@ object FoodType {
   /**
    * Apply method for a [[FoodType]].
    *
-   * @param color  the [[Color]] that should be used to draw the element.
-   * @param energy the health it returns to an animal.
+   * @param energy       the health it returns to an animal.
+   * @param foodCategory the [[FoodCategory]] of this food.
+   * @param color        the [[Color]] that should be used to draw the element.
    * @return an implementation of [[FoodType]].
    */
-  def apply(energy: Int, foodCategory: FoodCategory, color: Color = Color.blue): FoodType = FoodTypeImpl(color, energy, foodCategory)
+  def apply(energy: Int, foodCategory: FoodCategory, color: Color): FoodType = FoodTypeImpl(color, energy, foodCategory)
 
   private case class FoodTypeImpl(override val color: Color,
                                   override val energy: Int,
                                   override val foodCategory: FoodCategory,
-                             ) extends FoodType
+                                 ) extends FoodType
 }
