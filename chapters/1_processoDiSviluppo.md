@@ -34,7 +34,7 @@ Per la fase di build del progetto è stato usato Sbt poichè è lo strumento nat
 Diversamente da Gradle infatti non richiede di aggiungere plugin o specificare alcuna configurazione poichè le impostazione vengono automaticamente create insieme al progetto. Non avendo particolari librerie o altro non abbiamo avuto bisogno di utilizzare strumenti più avanzati come Gradle. Inoltre sbt supporta nativamente ScalaTest, ovvero la libreria utilizzata per il Testing
 
 ### Testing
-Per il testing abbiamo utilizzato la libreria ScalaTest, per la sua semplicità di uso e completezza. Abbiamo voluto anche testare alcune funzionalità avanzate rispetto alle classiche suite di test, utilizzando le flatSpec con i Matcher
+Per il testing abbiamo utilizzato la libreria ScalaTest, per la sua semplicità di uso e completezza. Abbiamo voluto anche testare alcune funzionalità avanzate rispetto alle classiche suite di test, utilizzando le flatSpec con i Matcher.
 Inoltre è stato utilizzato il plugin sbt-coverage per poter controllare l'effettiva copertura dei test realizzati. Questa metrica infatti, per quanto non indicativa di quanto bene sia eseguita la fase di sviluppo dei test è comunque utile per poter avere una visione più ampia di quali porzioni di progetto siano più o meno soggette a test. Questo tool inoltre permette di visualizzare sotto forma di pagina web la copertura per ogni file, package e per l'intero progetto.
 
 ### Continuos Integration
