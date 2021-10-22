@@ -98,7 +98,7 @@ object ResourceManager {
                                    ) extends ResourceManager {
 
     override def grow(): ResourceManager = {
-      if (foods.count(_.foodCategory == Vegetable) < Constants.MaxFoods){
+      if (foods.count(_.foodType.foodCategory == Vegetable) < Constants.MaxFoods){
         val newFoods = habitat.areas
           .filter(_.isInstanceOf[Area with GrowFood])
           .map(_.asInstanceOf[Area with GrowFood])

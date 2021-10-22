@@ -1,6 +1,5 @@
 package controller.manager
 
-import model._
 import model.animal.{Animal, Carnivore, Herbivore}
 import model.food.{Food, Meat, Vegetable}
 import model.habitat.{Area, Habitat, Water}
@@ -26,8 +25,8 @@ object FeedManager {
     override def consumeResources():(Seq[Animal],Seq[Food]) = {
 
       def isEatable(food: Food, animal: Animal): Boolean = {
-        (food.foodCategory == Meat && animal.alimentationType == Carnivore) ||
-          (food.foodCategory == Vegetable && animal.alimentationType == Herbivore)
+        (food.foodType.foodCategory == Meat && animal.alimentationType == Carnivore) ||
+          (food.foodType.foodCategory == Vegetable && animal.alimentationType == Herbivore)
       }
 
       @tailrec
@@ -50,7 +49,7 @@ object FeedManager {
                 val (updatedAnimal, remainedFood) = myAnimal.eat(x)
 
                 if(remainedFood.isDefined) {
-                  require(remainedFood.get.foodCategory == x.foodCategory, "Remaining food is not of same type of the original")
+                  require(remainedFood.get.foodType.foodCategory == x.foodType.foodCategory, "Remaining food is not of same type of the original")
                   require(remainedFood.get.quantity <= x.quantity, "Remaining food quantity is greater than original")
                   _consumeResources(t, resources.filterNot(_ == x) :+ remainedFood.get , updatedAnimals :+ updatedAnimal)
                 } else {

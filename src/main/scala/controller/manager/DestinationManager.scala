@@ -1,6 +1,5 @@
 package controller.manager
 
-import model._
 import model.animal.{Animal, Carnivore, Herbivore}
 import model.food.{Food, Meat, Vegetable}
 import model.habitat.{Fertile, Habitat, Water}
@@ -40,12 +39,12 @@ object DestinationManager {
             _calculateDestination(t, destination + (animal -> neareastWaterZone.get))
           } else {
             val point = animal.alimentationType match {
-              case Herbivore => findNearestResource(animal, food.filter(_.foodCategory == Vegetable))
+              case Herbivore => findNearestResource(animal, food.filter(_.foodType.foodCategory == Vegetable))
                 .getOrElse(getLegalRandomPoint(habitat))
               case Carnivore =>
                 findNearestResource(animal, animals.filter(_.alimentationType == Herbivore)).getOrElse(
                   findNearestResource(animal,
-                    food.filter(_.foodCategory == Meat))
+                    food.filter(_.foodType.foodCategory == Meat))
                     .getOrElse(getLegalRandomPoint(habitat)))
             }
             _calculateDestination(t, destination + (animal -> point))

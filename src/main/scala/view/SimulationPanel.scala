@@ -80,7 +80,7 @@ class SimulationPanel(dimension: (Int, Int)) extends Panel {
    *
    * @param food a Seq of [[Food]] to draw.
    */
-  def drawFood(food: Seq[Food]): Unit = food.foreach(f => addShape(new Circle(f.position, f.color, Constants.PixelForFood)))
+  def drawFood(food: Seq[Food]): Unit = food.foreach(f => addShape(new Circle(f.position, f.foodType.color, Constants.PixelForFood)))
 
   /**
    * Method to draw all the areas present in the [[Habitat]], the animals and the food.

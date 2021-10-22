@@ -135,7 +135,7 @@ object Animal {
 
     override def shift(pos: Point): Animal = this.update(position = pos)
 
-    override def eat(food: Food): (Animal, Option[Food]) = food.foodCategory match {
+    override def eat(food: Food): (Animal, Option[Food]) = food.foodType.foodCategory match {
       case Meat if this.alimentationType == Carnivore => consume(food)
       case Vegetable if this.alimentationType == Herbivore => consume(food)
       case _ => throw new IllegalArgumentException("A carnivore trying to eat vegetable or a Herbivore trying to eat Meat")
@@ -164,15 +164,15 @@ object Animal {
      */
     private def consume(food: Food): (Animal, Option[Food]) = health match {
       case Constants.MaxHealth => (this, Some(food))
-      case _ if MaxHealth - health > food.energy * food.quantity =>
-        logger.info(this.name + s" eat all the ${food.foodCategory}")
+      case _ if MaxHealth - health > food.foodType.energy * food.quantity =>
+        logger.info(this.name + s" eat all the ${food.foodType.foodCategory}")
         Statistics.update(foodEaten = food.quantity)
-        (this.update(health = health + food.energy * food.quantity), None)
+        (this.update(health = health + food.foodType.energy * food.quantity), None)
       case _ =>
-        logger.info(this.name + s" eat some ${food.foodCategory}")
-        val foodToEat = (MaxHealth - health) / food.energy
+        logger.info(this.name + s" eat some ${food.foodType.foodCategory}")
+        val foodToEat = (MaxHealth - health) / food.foodType.energy
         Statistics.update(foodEaten = foodToEat)
-        (this.update(health = health + food.energy * foodToEat), Some(food.consume(foodToEat)))
+        (this.update(health = health + food.foodType.energy * foodToEat), Some(food.consume(foodToEat)))
     }
   }
 }

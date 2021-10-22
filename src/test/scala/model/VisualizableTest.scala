@@ -24,9 +24,9 @@ class VisualizableTest extends AnyFunSuite {
   }
 
   test("A Vegetable is a visualizable with energy and quantity") {
-    val f: FoodType =
+    val f: Food =
       Food(FoodType(Constants.DefaultEnergyOfVegetable, Vegetable, color), Point(0,0), 10)
-    assert(color == f.color)
-    assert(10 == f.energy )
+    assert(color == f.foodType.color)
+    assert(10 == f.foodType.energy )
   }
 }

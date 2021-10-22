@@ -61,7 +61,7 @@ class AnimalsTest extends AnyFunSuite {
   test("An hungry animal eats all the food") {
     val hungryAnimal = animal.update(Constants.MaxHealth - decrement)
     val (animalAfterEat, foodAfterEat) = hungryAnimal.eat(food)
-    assert(animalAfterEat.health == Constants.MaxHealth - decrement + food.quantity * food.energy)
+    assert(animalAfterEat.health == Constants.MaxHealth - decrement + food.quantity * food.foodType.energy)
     assert(foodAfterEat.isEmpty)
   }
 
@@ -69,7 +69,7 @@ class AnimalsTest extends AnyFunSuite {
     val notSoHungryAnimal = animal.update(Constants.MaxHealth - decrement)
     val moreFood = Food(FoodType(12, Meat), p, 10)
     val (animalAfterEat, foodAfterEat) = notSoHungryAnimal.eat(moreFood)
-    assert(animalAfterEat.health == Constants.MaxHealth - decrement + 7 * moreFood.energy)
+    assert(animalAfterEat.health == Constants.MaxHealth - decrement + 7 * moreFood.foodType.energy)
     assert(foodAfterEat.get.quantity == 3)
   }
 
@@ -80,6 +80,6 @@ class AnimalsTest extends AnyFunSuite {
   }
 
   test("An dying animal releases some meat") {
-    assert(animal.die().foodCategory == Meat)
+    assert(animal.die().foodType.foodCategory == Meat)
   }
 }
