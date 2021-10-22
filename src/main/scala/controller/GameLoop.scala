@@ -20,7 +20,6 @@ case class GameLoop(population: Map[Species, Int], habitat: Habitat) extends Run
   var isPaused: Boolean = false
   var isSpeedUp: Boolean = false
   var isStopped: Boolean = false
-  private val logger = Logger
 
   /**
    * Method that represents the core of the simulation, defines the actions that must be
@@ -28,22 +27,20 @@ case class GameLoop(population: Map[Species, Int], habitat: Habitat) extends Run
    */
   override def run(): Unit = {
     @tailrec
-    def loop(animalManager: AnimalManager, resourceManager: ResourceManager, simulationGui: SimulationGUI): Unit = {
+    def _loop(animalManager: AnimalManager, resourceManager: ResourceManager, simulationGui: SimulationGUI): Unit = {
       val current: Long = System.currentTimeMillis()
-      if (!isPaused) {
-        val (newAnimalManager, newResourceManager) = compute(animalManager, resourceManager)
+      isPaused match {
+        case false =>
+          val (newAnimalManager, newResourceManager) = compute(animalManager, resourceManager)
+          update(newAnimalManager, newResourceManager, simulationGui)
+          waitForNextStep(current)
+          if (newAnimalManager.animals.lengthIs == 0 || isStopped) return
+          _loop(newAnimalManager, newResourceManager, simulationGui)
 
-        simulationGui.updatePanel(newAnimalManager.animals, newResourceManager.foods)
-        simulationGui.updateElapsedTime()
-
-        waitForNextStep(current)
-        Statistics.incTime()
-        if (newAnimalManager.animals.lengthIs == 0 || isStopped) return
-        loop(newAnimalManager, newResourceManager, simulationGui)
-      } else {
-        waitForNextStep(current)
-        if (animalManager.animals.lengthIs == 0 || isStopped) return
-        loop(animalManager, resourceManager, simulationGui)
+        case true =>
+          waitForNextStep(current)
+          if (animalManager.animals.lengthIs == 0 || isStopped) return
+          _loop(animalManager, resourceManager, simulationGui)
       }
     }
 
@@ -52,12 +49,24 @@ case class GameLoop(population: Map[Species, Int], habitat: Habitat) extends Run
     val simulationGui = new SimulationGUI(habitat, setPaused, setSpeed, stop) { top.visible = true }
     simulationGui.updatePanel(animalManager.animals, resourceManager.foods)
 
-    loop(animalManager, resourceManager, simulationGui)
+    _loop(animalManager, resourceManager, simulationGui)
 
-    logger.info("Simulation finished")
+    Logger.info("Simulation finished")
     simulationGui.disableAllButton()
-    val f = new StatisticsGUI
-    f.top
+    StatisticsGUI().show()
+  }
+
+  /**
+   * Update the GUI of the simulation and increment the time.
+   *
+   * @param animalManager   the [[AnimalManager]] of this step.
+   * @param resourceManager the [[ResourceManager]] of this step.
+   * @param simulationGui   the [[SimulationGUI]].
+   */
+  private def update(animalManager: AnimalManager, resourceManager: ResourceManager, simulationGui: SimulationGUI): Unit = {
+    simulationGui.updatePanel(animalManager.animals, resourceManager.foods)
+    simulationGui.updateElapsedTime()
+    Statistics.incTime()
   }
 
   /**

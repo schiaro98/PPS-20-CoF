@@ -67,7 +67,7 @@ object AnimalManager {
 
     override def lifeCycleUpdate(): (Seq[Animal], Seq[Food]) =
       updateAnimalAndInfo(
-        (animal: Animal) => animal.update(animal.health - Constants.healthDecrease, animal.thirst - Constants.thirstDecrease),
+        (animal: Animal) => animal.update(animal.health - Constants.HealthDecrease, animal.thirst - Constants.ThirstDecrease),
         " died for natural causes")
 
     override def unexpectedEvents(habitat: Habitat): (Seq[Animal], Seq[Food]) =
@@ -98,9 +98,9 @@ object AnimalManager {
      */
     private def probabilityBasedOnAge(habitat: Habitat, animal: Animal): Probability = {
       val increment = animal.age match {
-        case Young => Constants.probabilityForYoung
-        case Adult => Constants.probabilityForAdult
-        case Old => Constants.probabilityForOld
+        case Young => Constants.ProbabilityForYoung
+        case Adult => Constants.ProbabilityForAdult
+        case Old => Constants.ProbabilityForOld
       }
       habitat.unexpectedEvents.increase(increment)
     }

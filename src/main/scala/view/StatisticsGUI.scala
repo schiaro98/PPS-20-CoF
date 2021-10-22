@@ -7,11 +7,11 @@ import utility.Statistics
 
 import scala.swing._
 
-class StatisticsGUI {
+case class StatisticsGUI() {
 
   val Foods = "Foods"
   val Attacks = "Attacks"
-  val FoodEaten = "Food eaten "
+  val FoodEaten = "Food eaten"
   val DeathInBattle = "Death in battle"
   val deathForNaturalCause = "Death for natural cause"
 
@@ -29,7 +29,12 @@ class StatisticsGUI {
     data, PlotOrientation.VERTICAL,
     true, true, true)
 
-  def top: MainFrame = new MainFrame {
+  /**
+   * Show the GUI with the statistics of the simulation.
+   *
+   * @return the [[MainFrame]] of the GUI.
+   */
+  def show(): MainFrame = new MainFrame {
     title = "Cof Statistics plotter"
     peer.setContentPane(new ChartPanel(chart))
     peer.setLocationRelativeTo(null)
@@ -37,5 +42,4 @@ class StatisticsGUI {
     centerOnScreen()
     open()
   }
-
 }

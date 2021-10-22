@@ -107,7 +107,7 @@ object Animal {
    * @param age      the [[Age]] of the [[Animal]].
    * @return a new implementation of [[Animal]].
    */
-  def apply(s: Species, position: Point, health: Int = MaxHealth, thirst: Int = MaxThirst,
+  def apply(s: Species, position: Point, health: Int = Constants.MaxHealth, thirst: Int = Constants.MaxThirst,
             age: Age = randomAge): Animal = AnimalImpl(
     s.color, s.name, s.size, s.strength, s.sight, health, thirst, position, s.alimentationType, age)
 
@@ -151,9 +151,9 @@ object Animal {
      * @return the quantity of food.
      */
     private def quantityFromDeath(): Int = size match {
-      case Big => QuantityForBig
-      case Medium => QuantityForMedium
-      case Small => QuantityForSmall
+      case Big => Constants.QuantityForBig
+      case Medium => Constants.QuantityForMedium
+      case Small => Constants.QuantityForSmall
     }
 
     /**
