@@ -19,7 +19,7 @@ class ChooseHabitatGUI(val l :ChooseHabitatLogic) {
   }
   val ue: TextField = new TextField("1")
 
-  val ours: RadioButton = new RadioButton("The habitat that we made"){
+  val ours: RadioButton = new RadioButton("An ad hoc habitat with fertile areas and water"){
     doClick()
     reactions += {
       case _: ButtonClicked =>
@@ -27,7 +27,7 @@ class ChooseHabitatGUI(val l :ChooseHabitatLogic) {
     }
   }
 
-  val empty: RadioButton = new RadioButton("An habitat without any area in it, food won't grow and there is no water to drink"){
+  val empty: RadioButton = new RadioButton("An habitat with no area, there will be no water and food won't grow"){
     reactions += {
       case _: ButtonClicked =>
         setVisibility(true)

@@ -1,6 +1,5 @@
 package view
 
-import model._
 import model.animal.{Big, Medium, Small}
 import utility.serializer.StringConverter
 import view.logic.ChooseSpeciesLogic
@@ -8,13 +7,13 @@ import view.logic.ChooseSpeciesLogic
 import java.awt.{Color, Dimension}
 import scala.swing.BorderPanel.Position.Center
 import scala.swing._
-import scala.swing.event.{ButtonClicked, UIEvent}
+import scala.swing.event.ButtonClicked
 
 class ChooseSpeciesGUI(logic: ChooseSpeciesLogic) extends SimpleSwingApplication {
 
   def top: Frame = new Frame {
     title = "Create species"
-    preferredSize = new Dimension(700, 600)
+    preferredSize = new Dimension(700, 650)
 
     val nameLabel = new Label("Name of the species")
     val nameField = new TextField("Name")
@@ -88,5 +87,7 @@ class ChooseSpeciesGUI(logic: ChooseSpeciesLogic) extends SimpleSwingApplication
       close()
       this.visible = false
     }
+
+    centerOnScreen()
   }
 }
