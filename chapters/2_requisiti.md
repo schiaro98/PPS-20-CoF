@@ -64,7 +64,14 @@ L'interfaccia grafica deve essere progettata in maniera tale da essere subito co
 Deve essere subito chiaro l'insieme di procedure necessarie per svolgere l'operazione desiderata e l'utente non deve essere disorientato da situazioni equivoche.
 Anche il grafico con le statistiche finali deve essere facilmente comprensibile da tutti.
 
-####
+## Requisiti di implementazione
+I requisiti di implementazione definiscono i vincoli sulle tecnologie da utilizzare (ad esempio i linguaggi di programmazione, i tool e i software), e sulla qualità interna del codice.
 
-
-## Di implementazione
+Il sistema presenterà le seguenti caratteristiche:
+- **Linguaggio di programmazione**: Scala nella versione 2.13.6;
+- **Metodologia**: adottare una mentalità Agile ed utilizzare Scrum dove possibile;
+- **Build tool**: sbt, dove verranno gestite tutte le dipendenze delle librerie utilizzate;
+- **Test**: ScalaTest, utilizzando lo stile FunSuite;
+- **CI**: Github Actions, principalmente per controllare la corretta esecuzione dei test ad ogni push;
+- **Grafica**: Scala Swing per realizzare le interfacce grafiche;
+- **Patterns**: MVC per la struttura generale del progetto, inoltre devono essere utilizzati i pattern presenti in letteratura ogni qual volta se ne presenti la possibilità oltre ad evitare i code smell.
