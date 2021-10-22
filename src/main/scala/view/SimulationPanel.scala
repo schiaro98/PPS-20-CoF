@@ -68,8 +68,8 @@ class SimulationPanel(dimension: (Int, Int)) extends Panel {
   def drawAnimals(animals: Seq[Animal]): Unit = {
     eliminateOldPopup()
     animals.foreach(a => {
-      val bottomRight = Point(a.position.x + AnimalUtils.getPixelFromSize(a), a.position.y + AnimalUtils.getPixelFromSize(a))
-      val rectangle = new Rectangle(RectangleArea(a.position, bottomRight), a.color)
+      val bottomRight = Point(a.position.x + AnimalUtils.getPixelFromSize(a.species), a.position.y + AnimalUtils.getPixelFromSize(a.species))
+      val rectangle = new Rectangle(RectangleArea(a.position, bottomRight), a.species.color)
       addShape(rectangle)
       createPopupAndMouseListener(a, rectangle)
     })

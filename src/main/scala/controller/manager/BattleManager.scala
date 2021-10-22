@@ -36,7 +36,7 @@ object BattleManager {
         case attacker :: t =>
           val enemyOpt = animals
             .filterNot(_ == attacker)
-            .filter(_.position.distance(attacker.position) < attacker.sight)
+            .filter(_.position.distance(attacker.position) < attacker.species.sight)
             .minByOption(_.position.distance(attacker.position))
 
           if(enemyOpt.isDefined){
@@ -48,10 +48,10 @@ object BattleManager {
             ).map(p => p.calculate).count(p => p) > 1
 
             if (isBattleWin) {
-              logger.info("Attacking animal: " + attacker.name + " has won against " + enemy.name)
+              logger.info("Attacking animal: " + attacker.species.name + " has won against " + enemy.species.name)
               _battle(t, meats :+ enemy.die(), animalUpdated :+ attacker)
             } else {
-              logger.info("Defending animal: " + enemy.name + " has won against "  + attacker.name)
+              logger.info("Defending animal: " + enemy.species.name + " has won against "  + attacker.species.name)
               _battle(t, meats :+ attacker.die(), animalUpdated :+ enemy)
             }
           } else {
@@ -75,12 +75,12 @@ object BattleManager {
       attacker.position.distance(defender.position) match {
         case x if x <= 1 => probability.increase(50)
         case x if x <= 5 && x > 1 =>
-          if (attacker.size != Big && defender.size == Big) probability.increase(20)
-          else if (attacker.size == Big && defender.size == Small) probability.decrease(20)
+          if (attacker.species.size != Big && defender.species.size == Big) probability.increase(20)
+          else if (attacker.species.size == Big && defender.species.size == Small) probability.decrease(20)
           else return probability
         case x if x <= 10 && x > 5 =>
-          if (attacker.size != Big && defender.size == Big) return probability
-          else if (attacker.size == Big && defender.size == Small) probability.decrease(50)
+          if (attacker.species.size != Big && defender.species.size == Big) return probability
+          else if (attacker.species.size == Big && defender.species.size == Small) probability.decrease(50)
           else return probability
         case x if x > 10 => probability.increase(75)
       }
@@ -96,7 +96,7 @@ object BattleManager {
      */
      def calculateProbabilityFromStrength(attacker: Animal, defender: Animal): Probability = {
       val probability = Probability(50)
-      attacker.strength - defender.strength match {
+      attacker.species.strength - defender.species.strength match {
         case x if x > 5 => probability.increase(50)
         case x if x > 0 && x <= 5 => probability.increase(20)
         case x if x <= 0 && x > -5 => probability.decrease(20)
@@ -113,18 +113,18 @@ object BattleManager {
      */
      def calculateProbabilityFromSize(attacker: Animal, defender: Animal): Probability = {
       var probability = Probability(50)
-      probability = attacker.size match {
-        case Big => defender.size match {
+      probability = attacker.species.size match {
+        case Big => defender.species.size match {
           case Medium => probability.increase(20)
           case Small => probability.increase(50)
           case _ => probability
         }
-        case Medium => defender.size match {
+        case Medium => defender.species.size match {
           case Big => probability.decrease(20)
           case Small => probability.increase(20)
           case _ => probability
         }
-        case Small => defender.size match {
+        case Small => defender.species.size match {
           case Big => probability.decrease(80)
           case Medium => probability.decrease(50)
           case _ => probability

@@ -23,7 +23,7 @@ class AnimalManagerTest extends AnyFunSuite {
     val habitat: Habitat = Habitat()
     val animalManager = AnimalManager().generateInitialAnimals(Map(tiger -> numberOfAnimals), habitat)
     assert(animalManager.animals.lengthCompare(numberOfAnimals) == 0)
-    animalManager.animals.foreach(animal => assert(animal.name == tiger.name))
+    animalManager.animals.foreach(animal => assert(animal.species.name == tiger.name))
   }
 
   test("Every round all the animal should have decreased health and thirst") {

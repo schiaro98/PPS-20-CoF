@@ -85,7 +85,7 @@ object AnimalManager {
     private def updateAnimalAndInfo(update: Animal => Animal, reasonOfDeath: String): (Seq[Animal], Seq[Food]) = {
       val updatedAnimals = animals.map(update)
       Statistics.update(deathForNaturalCause = updatedAnimals.count(!_.isAlive))
-      updatedAnimals.filterNot(_.isAlive).foreach(animal => logger.info(animal.name + reasonOfDeath))
+      updatedAnimals.filterNot(_.isAlive).foreach(animal => logger.info(animal.species.name + reasonOfDeath))
       (updatedAnimals.filter(_.isAlive), updatedAnimals.filterNot(_.isAlive).map(a => a.die()))
     }
 

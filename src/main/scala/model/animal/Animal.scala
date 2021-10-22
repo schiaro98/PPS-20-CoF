@@ -5,22 +5,25 @@ import model.position.{Placeable, Point}
 import utility.Constants._
 import utility.{Constants, Logger, Statistics}
 
-import java.awt.Color
 import scala.util.Random
 
 /**
  * The possible age of an animal
  */
 sealed trait Age
+
 case object Young extends Age
+
 case object Adult extends Age
+
 case object Old extends Age
 
 /**
  * Trait that represent an animal of a specific [[Species]].
  */
-trait Animal extends Species with Placeable {
+trait Animal extends Placeable {
 
+  val species: Species
   val health: Int
   val thirst: Int
   val age: Age
@@ -35,13 +38,6 @@ trait Animal extends Species with Placeable {
    * @return a new animal, the same as before but with the updated parameters.
    */
   def update(health: Int = health, thirst: Int = thirst, position: Point = position, age: Age = age): Animal
-
-  /**
-   * Method used to get the [[Species]] of an [[Animal]].
-   *
-   * @return the [[Species]] of the [[Animal]].
-   */
-  def species:Species
 
   /**
    * Method to check if the [[Animal]] is alive.
@@ -108,26 +104,26 @@ object Animal {
    * @return a new implementation of [[Animal]].
    */
   def apply(s: Species, position: Point, health: Int = Constants.MaxHealth, thirst: Int = Constants.MaxThirst,
-            age: Age = randomAge): Animal = AnimalImpl(
-    s.color, s.name, s.size, s.strength, s.sight, health, thirst, position, s.alimentationType, age)
+            age: Age = randomAge): Animal = AnimalImpl(s, health, thirst, position, age)
 
 
-  private case class AnimalImpl(override val color: Color, override val name: String, override val size: Size,
-                                override val strength: Int, override val sight: Int, override val health: Int,
-                                override val thirst: Int, override val position: Point,
-                                override val alimentationType: Type, override val age: Age) extends Animal {
+  private case class AnimalImpl(override val species: Species,
+                                override val health: Int,
+                                override val thirst: Int,
+                                override val position: Point,
+                                override val age: Age) extends Animal {
 
     private val logger = Logger
 
-    override def canSee(element: Placeable): Boolean = this.position.distance(element.position) <= this.sight
+    override def canSee(element: Placeable): Boolean = this.position.distance(element.position) <= species.sight
 
     override def update(health: Int, thirst: Int, position: Point, age: Age): Animal =
-      Animal(Species(name, size, strength, sight, alimentationType, color), position, health, thirst, age)
+      Animal(species, position, health, thirst, age)
 
     override def isAlive: Boolean = health > 0 && thirst > 0
 
     override def drink(): Animal = {
-      logger.info(this.name + " drinked water")
+      logger.info(species.name + " drunk some water")
       this.update(thirst = MaxThirst)
     }
 
@@ -136,21 +132,19 @@ object Animal {
     override def shift(pos: Point): Animal = this.update(position = pos)
 
     override def eat(food: Food): (Animal, Option[Food]) = food.foodType.foodCategory match {
-      case Meat if this.alimentationType == Carnivore => consume(food)
-      case Vegetable if this.alimentationType == Herbivore => consume(food)
+      case Meat if species.alimentationType == Carnivore => consume(food)
+      case Vegetable if species.alimentationType == Herbivore => consume(food)
       case _ => throw new IllegalArgumentException("A carnivore trying to eat vegetable or a Herbivore trying to eat Meat")
     }
 
-    override def toString: String = s"Animal: $name, Size: $size, Health: $health, Thirst: $thirst, $strength pos: ${(position.x, position.y)}"
-
-    override def species: Species = Species(name, size, strength, sight, alimentationType, color)
+    override def toString: String = s"Animal: ${species.name}, Size: ${species.size}, Health: $health, Thirst: $thirst, ${species.strength} pos: ${(position.x, position.y)}"
 
     /**
      * Method to obtain the amount of meat it will produce once it is dead; it is based on the size of the animal.
      *
      * @return the quantity of food.
      */
-    private def quantityFromDeath(): Int = size match {
+    private def quantityFromDeath(): Int = species.size match {
       case Big => Constants.QuantityForBig
       case Medium => Constants.QuantityForMedium
       case Small => Constants.QuantityForSmall
@@ -165,11 +159,11 @@ object Animal {
     private def consume(food: Food): (Animal, Option[Food]) = health match {
       case Constants.MaxHealth => (this, Some(food))
       case _ if MaxHealth - health > food.foodType.energy * food.quantity =>
-        logger.info(this.name + s" eat all the ${food.foodType.foodCategory}")
+        logger.info(species.name + s" eat all the ${food.foodType.foodCategory}")
         Statistics.update(foodEaten = food.quantity)
         (this.update(health = health + food.foodType.energy * food.quantity), None)
       case _ =>
-        logger.info(this.name + s" eat some ${food.foodType.foodCategory}")
+        logger.info(species.name + s" eat some ${food.foodType.foodCategory}")
         val foodToEat = (MaxHealth - health) / food.foodType.energy
         Statistics.update(foodEaten = foodToEat)
         (this.update(health = health + food.foodType.energy * foodToEat), Some(food.consume(foodToEat)))

@@ -19,7 +19,7 @@ class AnimalsTest extends AnyFunSuite {
   val decrement = 90
 
   test("An animal is an entity with personal parameters and belong to a species") {
-    assert(animal.color == color)
+    assert(animal.species.color == color)
     assert(animal.species.name == species.name)
     assert(animal.position == p)
   }

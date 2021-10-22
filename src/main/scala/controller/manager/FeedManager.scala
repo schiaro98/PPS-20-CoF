@@ -25,8 +25,8 @@ object FeedManager {
     override def consumeResources():(Seq[Animal],Seq[Food]) = {
 
       def isEatable(food: Food, animal: Animal): Boolean = {
-        (food.foodType.foodCategory == Meat && animal.alimentationType == Carnivore) ||
-          (food.foodType.foodCategory == Vegetable && animal.alimentationType == Herbivore)
+        (food.foodType.foodCategory == Meat && animal.species.alimentationType == Carnivore) ||
+          (food.foodType.foodCategory == Vegetable && animal.species.alimentationType == Herbivore)
       }
 
       @tailrec
@@ -75,8 +75,8 @@ object FeedManager {
       def _isAnimalNearToWater(areas: Seq[Area]): Boolean = areas.filter(_.areaType == Water) match {
         case h :: t => h match {
           case h =>
-            if( h.area.topLeft.distance(animal.position) < animal.sight ||
-              h.area.bottomRight.distance(animal.position) < animal.sight){
+            if( h.area.topLeft.distance(animal.position) < animal.species.sight ||
+              h.area.bottomRight.distance(animal.position) < animal.species.sight){
               true
             } else {
               _isAnimalNearToWater(t)

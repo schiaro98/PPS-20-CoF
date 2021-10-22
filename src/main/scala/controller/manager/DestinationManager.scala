@@ -38,11 +38,11 @@ object DestinationManager {
           if (neareastWaterZone.isDefined) {
             _calculateDestination(t, destination + (animal -> neareastWaterZone.get))
           } else {
-            val point = animal.alimentationType match {
+            val point = animal.species.alimentationType match {
               case Herbivore => findNearestResource(animal, food.filter(_.foodType.foodCategory == Vegetable))
                 .getOrElse(getLegalRandomPoint(habitat))
               case Carnivore =>
-                findNearestResource(animal, animals.filter(_.alimentationType == Herbivore)).getOrElse(
+                findNearestResource(animal, animals.filter(_.species.alimentationType == Herbivore)).getOrElse(
                   findNearestResource(animal,
                     food.filter(_.foodType.foodCategory == Meat))
                     .getOrElse(getLegalRandomPoint(habitat)))
@@ -66,7 +66,7 @@ object DestinationManager {
     def findNearestResource[P <: Placeable](animal: Animal, resources: Seq[P]): Option[Point] = {
       resources
         .map(resource => resource.position)
-        .filter(_.distance(animal.position) < animal.sight)
+        .filter(_.distance(animal.position) < animal.species.sight)
         .minByOption(_.distance(animal.position))
     }
 
@@ -93,7 +93,7 @@ object DestinationManager {
     def findNearestWaterZone(animal: Animal, h: Habitat): Option[Point] = {
       h.areas
         .filter(_.areaType == Water)
-        .filter(_.area.topLeft.distance(animal.position) < animal.sight)
+        .filter(_.area.topLeft.distance(animal.position) < animal.species.sight)
         .map(rectangle => Point.getRandomPoint(rectangle.area.topLeft, rectangle.area.bottomRight))
         .minByOption(_.distance(animal.position))
     }
