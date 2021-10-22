@@ -175,17 +175,17 @@ case class GameLoop(population: Map[Species, Int], habitat: Habitat) extends Run
    *
    * @param paused true to pause the simulation, false to unpause.
    */
-  def setPaused(paused: Boolean): Unit = isPaused = paused
+  private def setPaused(paused: Boolean): Unit = isPaused = paused
 
   /**
    * Method to speed up and slow down the simulation.
    *
    * @param speedUp true to speed up the simulation, false to slow down.
    */
-  def setSpeed(speedUp: Boolean): Unit = isSpeedUp = speedUp
+  private def setSpeed(speedUp: Boolean): Unit = isSpeedUp = speedUp
 
   /**
    * Method used to stop the simulation.
    */
-  def stop(): Unit = isStopped = true
+  private def stop(): Unit = isStopped = true
 }
