@@ -30,8 +30,9 @@ To generate the coverage report using the Scoverage plugin
 ``` shell
   - sbt clean coverage test
 ``` 
+For creating a visible html page with results:
 ``` shell
-  For creating a visible html page with results:
+ 
   - sbt coverageReport
 ```
 ## Usage
@@ -40,6 +41,6 @@ To execute the application
   - sbt run
 ``` 
   or
-  ``` shell
+``` shell
   - java -jar PPS-20-CoF{random-number}.jar
 ```
