@@ -21,7 +21,7 @@ class BattleManagerTest extends AnyFlatSpec with should.Matchers {
     val herbivore: Animal = animal.Animal(Species("Herbivore1", Medium, 10, 10, Herbivore), Point(0,0))
     val bm = BattleManager(Seq.fill(size)(herbivore))
     val (notDeadAnimal, meat) = bm.battle()
-    notDeadAnimal.length should be (0)
+    notDeadAnimal.length should be (10)
     meat.length should be (0)
   }
 
