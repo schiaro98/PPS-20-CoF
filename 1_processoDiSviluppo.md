@@ -1,6 +1,6 @@
 # Processo di sviluppo
 
-Scrum, TDD
+Questo progetto ci ha permesso di lavorare seguendo la metodologia Agile seguendo alcuni punti con particolare interesse, senza cercare di seguire ciecamente tutti gli obiettivi. Per quanto riguarda la fase progettuale infatti, abbiamo pensato di avere un prototipo funzionante il più presto possibile, a effettuare continue release e sopratutto di modellare l'applicativo in modo da renderlo facilmente estendibile e modificabile. Quest'ultimo punto ci ha notevolmente aiutato quando nelle fasi finali di progetto abbiamo voluto effettuare modifiche anche importanti al codice da noi prodotto. Abbiamo inoltre pensato di adottare parzialmente anche il "framework" Scrum. Non abbiamo infatti portato avanti il progetto con alcuni dei punti cardine di Scrum come i meeting giornalieri, ma abbiamo comunque voluto fare dei sprint settimanali, seguiti da una review degli stessi. Abbiamo poi utilizzato Trello come tool di collaborazione per controllare in tempo reale lo stato dei task, delle feature da implementare o bug da risolvere.
 
 ## Modalità di divisione in itinere dei task
 
