@@ -10,22 +10,36 @@ Circle of Life, abbreviated in CoF, is an animal life simulator. In this applica
 
 ## Requirements
 Scala, Java and sbt are required for this project
-  - JDK versione >= 8
+``` shell
+  - JDK version >= 8
   - Scala version >= 2.12
   - sbt version >= 1.5.5
+```
 ## Compilation
+To build the project (compiling the scala source code)
+``` shell
   - sbt compile
-
+```
 ## Test
+To run all the tests
+``` shell
   - sbt test
-
+``` 
 ## Coverage
+To generate the coverage report using the Scoverage plugin
+``` shell
   - sbt clean coverage test
-  
+``` 
+``` shell
   For creating a visible html page with results:
   - sbt coverageReport
-
+```
 ## Usage
+To execute the application
+``` shell
   - sbt run
+``` 
   or
+  ``` shell
   - java -jar PPS-20-CoF{random-number}.jar
+```
