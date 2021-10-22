@@ -1,6 +1,7 @@
 # Processo di sviluppo
 
 Questo progetto ci ha permesso di lavorare seguendo la metodologia Agile seguendo alcuni punti con particolare interesse, senza cercare di seguire ciecamente tutti gli obiettivi. Per quanto riguarda la fase progettuale infatti, abbiamo pensato di avere un prototipo funzionante il più presto possibile, a effettuare continue release e sopratutto di modellare l'applicativo in modo da renderlo facilmente estendibile e modificabile. Quest'ultimo punto ci ha notevolmente aiutato quando nelle fasi finali di progetto abbiamo voluto effettuare modifiche anche importanti al codice da noi prodotto. Abbiamo inoltre pensato di adottare parzialmente anche il "framework" Scrum. Non abbiamo infatti portato avanti il progetto con alcuni dei punti cardine di Scrum come i meeting giornalieri, ma abbiamo comunque voluto fare dei sprint settimanali, seguiti da una review degli stessi. Abbiamo poi utilizzato Trello come tool di collaborazione per controllare in tempo reale lo stato dei task, delle feature da implementare o bug da risolvere.
+Per consentire uno sviluppo agile abbiamo organizzato il repository per avere due branch separati, il main che contenesse le release e il develop che contenesse tutte le modifiche alla nostra applicazione. Per poter rilasciare l'applicazione ad ogni fine sprint, abbiamo deciso che fosse necessario effettuare una pull request e un altro membro del gruppo doveva controllare (utilizzando anche i risultati della pipeline e confrontando le modifiche effettuate con i task ) che fosse tutto corretto. 
 
 ## Modalità di divisione in itinere dei task
 
@@ -29,11 +30,11 @@ In questa fase si provvedeva anche a dare dei commenti critici sul codice prodot
 
 ## Scelta degli strumenti di test/build/continuous integration
 ### Build
-Per compilare i sorgenti Scala del progetto è stato usato Sbt poichè è lo strumento nativo per il build di scala.
-Diversamente da Gradle infatti non richiede di aggiungere plugin o specificare alcuna impostazione poichè le impostazione vengono automaticamente create insieme al progetto
+Per la fase di build del progetto è stato usato Sbt poichè è lo strumento nativo per la compilazione di sorgenti Scala.
+Diversamente da Gradle infatti non richiede di aggiungere plugin o specificare alcuna configurazione poichè le impostazione vengono automaticamente create insieme al progetto. Non avendo particolari librerie o altro non abbiamo avuto bisogno di utilizzare strumenti più avanzati come Gradle. Inoltre sbt supporta nativamente ScalaTest, ovvero la libreria utilizzata per il Testing
 
-###Testing
+### Testing
+Per il testing abbiamo utilizzato la libreria ScalaTest, per la sua semplicità di uso e completezza. Abbiamo voluto anche testare alcune funzionalità avanzate rispetto alle classiche suite di test, utilizzando le flatSpec con i Matcher
 
-###Continuos Integration
-
----magari parlare anche della pipeline di github più nello specifico
+### Continuos Integration
+Per distribuire e testare frequentemente la nostra applicazione abbiamo utilizzato la pipeline di Github, tramite le Github Actions. Abbiamo perciò elaborato un file yaml contenente le azione da compiere ad ogni push. In particolare abbiamo specificato di compilare ed eseguire tutti i test ad ogni push sui branch di sviluppo (develop) e main e di pacchettizare l'applicazione in un jar ad ogni push sul branch main. 
