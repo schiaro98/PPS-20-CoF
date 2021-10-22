@@ -1,6 +1,5 @@
 package controller.manager
 
-import model._
 import model.animal.{Animal, Carnivore, Herbivore}
 import model.food.{Food, Meat, Vegetable}
 import model.habitat.{Fertile, Habitat, Water}
