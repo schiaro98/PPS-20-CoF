@@ -1,8 +1,8 @@
-Circle Of Life
+# Circle Of Life
 
-Simone Luzi - simone.luzi@studio.unibo.it
-Luca Rossi - luca.rossi147@studio.unibo.it
-Davide Schiaroli - davide.schiaroli2@studio.unibo.it
+**Simone Luzi** - <simone.luzi@studio.unibo.it>
+**Luca Rossi** - <luca.rossi147@studio.unibo.it>
+**Davide Schiaroli** - <davide.schiaroli2@studio.unibo.it>
 
 {% include_relative 1_processoDiSviluppo.md %}
 {% include_relative 2_requisiti.md %}
