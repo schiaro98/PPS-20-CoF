@@ -18,9 +18,11 @@ Partendo dai requisiti abbiamo dapprima sviluppato un diagramma UML dei componen
 
 In questo diagramma abbiamo definito alcuni punti fondamentali, come la relazione tra animale e specie, la composizione di Habitat in aree, la differenziazione tra tipo di cibo e l'esistenza di zone dell'habitat non percorribili.
 
+![Diagramma UML](/resources/UML2.png)
+In questo secondo diagramma possiamo invece vedere come vengano modificati alcuni aspetti, come ad esempio introducendo il concetto di *visualizable*, ovvero un entita che verrà effettivamente rappresentata nella mappa e quindi visibile. Un esempio sono il cibo e gli animali. 
 Per quanto riguarda l'architettura è stato scelto di modellare l'applicazione attraverso il pattern MVC. In questo modo abbiamo potuto suddividere l'applicazione in 3 componenti *loosely coupled*. Il componente **View** infatti si occupa solamente di rappresentare le informazioni in una mappa. Il **Model** invece si occupa di modellare le entità di gioco come ad esempio gli Animali, gli Habitat o i cibi e di gestire i dati ricevuti dall'utente tramite la Gui. Il **Controller** invece si occupa di modificare i dati forniti dal Model, elaborandoli e restituendoli aggiornati alla Gui.
 
-
+Per la simulazione vera e propria abbiamo invece utilizzato un metodo ricorsivo che prendesse come parametri gli animali e le risorse presenti nella mappa ad ogni aggiornamento.
 ### Model
 Abbiamo dato particolare attenzione al Model, infatti abbiamo scelto di progettare le varie entità con uno sguardo particolare a possibili estensioni future. Per questo motivo abbiamo costruito la maggior parte delle nostre classi, in modo che fossero più semplici possibili da modificare. In particolare abbiamo usato un Trait, contenente i metodi e campi pubblici, un object e la case class dove venivano implementati i metodi **Sta cosa non mi piace se qualcuno ha qualche consiglio mi dica pure**
 
@@ -79,6 +81,8 @@ Placeable è un trait che abbiamo usato per modellare tutti quei componenti che 
 ###View
 
 ## Scelte tecnologiche cruciali ai fini architetturali
+Per permettere a questo progetto di essere il più aderente possibile a quello che abbiamo visto durante il corso, abbiamo deciso di utilizzare fortemente i metodi con ricorsione tail. Questo particolare metodo di ricorsione visto a lezione permette infatti di eseguire cicli di iterazione successivi riutilizzando lo stesso Stack Frame.
+
 corredato da pochi ma efficaci diagrammi
 
 Aggiungere magari diagramma UML di come si connettono MVC
