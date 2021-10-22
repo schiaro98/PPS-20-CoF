@@ -11,7 +11,7 @@ Ogni animale appartiene ad una specie e ogni specie ha alcuni parametri specific
   - Colore
 Ogni specie, una volta inserita nel simulatore viene salvata ed è quindi utilizzabile una volta riaperto il programma. E' possibile poi specificare per ogni specie la quantità, in modo da avere una simulazione più frenetica (con molti animali) o più blanda (con meno animali).
 
-Per quanto riguarda invece l'habitat, è possibile scegliere tra l'habitat standard, un habitat con zone create randomicamente, un habitat con zone disposte a griglia oppure un habitat vuoto. Per ognuno di essi è possibile definire un campo *unexpected events* che definisce la probabilità che un un animale possa morire non per cause naturali.
+Per quanto riguarda invece l'habitat, è possibile scegliere tra l'habitat standard, un habitat con zone create randomicamente, un habitat con zone disposte a griglia oppure un habitat vuoto. Per ognuno di essi è possibile definire un campo *unexpected events* che definisce la probabilità che un un animale possa morire a causa di avvenimenti non ordinari come incendi o malattie.
 
 Partendo dai requisiti abbiamo dapprima sviluppato un diagramma UML dei componenti principali dell'applicazione così da notare eventuali scelte errate in fase di progettazione
 ![Diagramma UML](/resources/UML1.png)
