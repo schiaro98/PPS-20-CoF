@@ -68,11 +68,11 @@ Anche il grafico con le statistiche finali deve essere facilmente comprensibile 
 I requisiti di implementazione definiscono i vincoli sulle tecnologie da utilizzare (ad esempio i linguaggi di programmazione, i tool e i software), e sulla qualità interna del codice.
 
 Il sistema presenterà le seguenti caratteristiche:
-- **Linguaggio di programmazione**: Scala nella versione 2.13.6;
-- **Metodologia**: adottare una mentalità Agile ed utilizzare Scrum dove possibile;
-- **Build tool**: sbt, dove verranno gestite tutte le dipendenze delle librerie utilizzate;
-- **Test**: ScalaTest, utilizzando lo stile FunSuite (a parte qualche caso in cui si è adottato FlatSpec);
-- **CI**: Github Actions, principalmente per controllare la corretta esecuzione dei test ad ogni push;
-- **Coverage**: sbt-scoverage;
-- **Grafica**: Scala Swing per realizzare le interfacce grafiche;
-- **Patterns**: MVC per la struttura generale del progetto, inoltre devono essere utilizzati i pattern presenti in letteratura ogni qual volta se ne presenti la possibilità oltre ad evitare i code smell.
+* **Linguaggio di programmazione**: Scala nella versione 2.13.6;
+* **Metodologia**: adottare una mentalità Agile ed utilizzare Scrum dove possibile;
+* **Build tool**: sbt, dove verranno gestite tutte le dipendenze delle librerie utilizzate;
+* **Test**: ScalaTest, utilizzando lo stile FunSuite (a parte qualche caso in cui si è adottato FlatSpec);
+* **CI**: Github Actions, principalmente per controllare la corretta esecuzione dei test ad ogni push;
+* **Coverage**: sbt-scoverage;
+* **Grafica**: Scala Swing per realizzare le interfacce grafiche;
+* **Patterns**: MVC per la struttura generale del progetto, inoltre devono essere utilizzati i pattern presenti in letteratura ogni qual volta se ne presenti la possibilità oltre ad evitare i code smell.
