@@ -3,8 +3,22 @@
 descrizione finale dettagliata dell'andamento dello sviluppo, del backlog, delle iterazioni. Commenti finali.
 Si noti che la retrospettiva è l'unica sezione che può citare aneddoti di cosa è successo in itinere, mentre le altre sezioni fotografino il risultato finale. Se gli studenti decideranno (come auspicato) di utilizzare un product backlog e/o dei backlog delle varie iterazioni/sprint, è opportuno che questi siano file testuali tenuti in versione in una cartella (process), così che sia ri-verificabile a posteriori la storia del progetto.
 
+## Conclusione
+In conclusione ci riteniamo soddisfatti del lavoro svolto, sulle metodologie utilizzate e sul risultato finale.
+**Da finire obv**
+## Sviluppi futuri
 
-Descrizione sprint - Backlog
+Durante il progetto per portare a termine tutti gli obiettivi, abbiamo dovuto rinunciare a qualche caratteristica del sistema che ci sarebbe piaciuto implementare.
+
+### Ui/Ux 
+Per quanto riguarda l'esperienza utente, avremmo voluto rappresentare gli animali e il cibo attraverso delle immagini, o sprite in modo da rendere più accattivante l'interfaccia grafica. Inoltre avremmo anche voluto dare la possibilità agli utenti di costruire delle proprie mappe con un editor.
+
+### Simulazione
+Inoltre avremmo voluto modellare alcuni aspetti avanzati per quantoo riguarda l'interazione degli animali nella mappa, come ad esempio costruire diversi tipi di cibi, alcuni mangiabili solo da alcuni tipi di animali, diversificando ed estendendo così le diete. Inoltre avremmo voluto anche modellare il fatto che nel tempo le risorse, sia carne che verdura potesso deteriorarsi e poter essere dannose per gli animali.
+
+
+
+## Descrizione sprint - Backlog
 
 | ID | Priority | Type          | Item                                                                                                                                                            | Theme           | Developer   |
 | -- | -------- | ------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------- | ----------- |
