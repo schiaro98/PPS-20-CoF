@@ -1,4 +1,11 @@
 # Design Architetturale 
+Visti i requisiti del punto 2, abbiamo ritenuto opportuno modellare il nostro sistema basandoci su due punti chiave:
+* Modificabilità
+* Riuso
+
+Inoltre abbiamo dato particolare peso alle prestazione, in quanto un simulatore con prestazione troppo basse rispetto 
+alle aspettative di un utente non avrebbe suscitato il necessario interesse. 
+
 
 ## Architettura complessiva
 Il progetto ha lo scopo di simulare il ciclo di vita di alcuni animali, creabili dall'utente, all'interno di un Habitat, di dimensioni e caratteristiche variabili, nel tempo.
