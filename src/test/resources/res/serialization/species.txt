@@ -1,0 +1,71 @@
+{
+  "color": {
+    "value": -8752012,
+    "falpha": 0.0
+  },
+  "name": "Hippopotamus",
+  "size": "Big",
+  "strength": 30,
+  "sight": 10,
+  "alimentationType": "Carnivore"
+}{
+  "color": {
+    "value": -3398716,
+    "falpha": 0.0
+  },
+  "name": "Hyena",
+  "size": "Small",
+  "strength": 20,
+  "sight": 15,
+  "alimentationType": "Carnivore"
+}{
+  "color": {
+    "value": -2175844,
+    "falpha": 0.0
+  },
+  "name": "Lion",
+  "size": "Medium",
+  "strength": 20,
+  "sight": 20,
+  "alimentationType": "Carnivore"
+}{
+  "color": {
+    "value": -1,
+    "falpha": 0.0
+  },
+  "name": "Zebra",
+  "size": "Medium",
+  "strength": 10,
+  "sight": 20,
+  "alimentationType": "Herbivore"
+}{
+  "color": {
+    "value": -14433844,
+    "falpha": 0.0
+  },
+  "name": "Leopard",
+  "size": "Small",
+  "strength": 15,
+  "sight": 30,
+  "alimentationType": "Carnivore"
+}{
+  "color": {
+    "value": -8298180,
+    "falpha": 0.0
+  },
+  "name": "Elephant",
+  "size": "Big",
+  "strength": 30,
+  "sight": 20,
+  "alimentationType": "Herbivore"
+}{
+  "color": {
+    "value": -65383,
+    "falpha": 0.0
+  },
+  "name": "fenicottero",
+  "size": "Small",
+  "strength": 10000,
+  "sight": 1000,
+  "alimentationType": "Carnivore"
+}
