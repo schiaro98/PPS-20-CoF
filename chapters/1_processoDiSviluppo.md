@@ -1,10 +1,12 @@
 # Processo di sviluppo [](#){name=Processo-di-sviluppo}
 
 Questo progetto ci ha permesso di lavorare seguendo alcune metodologie dello sviluppo *Agile*. In particolare abbiamo dato particolare peso alle seguenti caratteristiche fondamentali della gestioni di progetti Agile, derivanti proprio dal [Manifesto Agile](https://agilemanifesto.org/iso/it/principles.html):
-    - Brevi iterazioni di sviluppo note come sprint.
-    - Regolare ridefinizione delle priorità di lavoro.
-    - Approccio rapido e flessibile nell’indirizzare i cambiamenti di ambito.
+* Brevi iterazioni di sviluppo note come sprint.
+* Regolare ridefinizione delle priorità di lavoro.
+* Approccio rapido e flessibile nell’indirizzare i cambiamenti di ambito.
+
 Per quanto riguarda la fase progettuale infatti, abbiamo pensato di avere un prototipo funzionante il più presto possibile, a effettuare continue release e sopratutto di modellare l'applicativo in modo da renderlo facilmente estendibile e modificabile. Quest'ultimo punto ci ha notevolmente aiutato quando nelle fasi finali di progetto abbiamo voluto effettuare modifiche anche importanti al codice da noi prodotto. Abbiamo inoltre pensato di adottare parzialmente anche il "framework" Scrum. Non abbiamo infatti portato avanti il progetto con alcuni dei punti cardine di Scrum come i meeting giornalieri, ma abbiamo comunque voluto fare dei sprint settimanali, seguiti da una review degli stessi. Abbiamo poi utilizzato Trello come tool di collaborazione per controllare in tempo reale lo stato dei task, delle feature da implementare o bug da risolvere.
+
 Per consentire uno sviluppo agile abbiamo organizzato il repository per avere due branch separati, il main che contenesse le release e il develop che contenesse tutte le modifiche alla nostra applicazione. Per poter rilasciare l'applicazione ad ogni fine sprint, abbiamo deciso che fosse necessario effettuare una pull request e un altro membro del gruppo doveva controllare (utilizzando anche i risultati della pipeline e confrontando le modifiche effettuate con i task ) che fosse tutto corretto. Abbiamo inoltre utilizzato un altro branch, docs, per tutto quello che riguarda la produzione della documentazione e della relazione finale.
 
 ## Modalità di divisione in itinere dei task
@@ -12,6 +14,7 @@ Per consentire uno sviluppo agile abbiamo organizzato il repository per avere du
 Dopo aver studiato i punti salienti del progetto ed esserci fatti un'idea approssimativa sul cosa modellare e sul livello di complessità abbiamo concordato quali fossero le entità da rappresentare più urgenti da modellare e abbiamo identificato vari compiti.
 Trovati i compiti ognuno di noi ne ha scelti uno o più da svolgere entro il meeting successivo.
 Ad ogni meeting si discutevano i task svolti, motivando le scelte fatte e proponendo modifiche e migliorie e una volta conclusa questa prima parte si procedeva alla scelta di un nuovo task.
+
 Man mano che il software cresceva in complessità questi meeting diventavano più vicini temporalmente, fino quasi a non essere neanche più definibili meeting ma piuttosto scambi di informazioni correlati da pochi ma efficaci note sulla prossima funzionalità da sviluppare o sul bug da correggere.
 Questa modalità ha facilitato la comunicazione e il controllo sul progetto, permettendoci di conoscere bene il software prodotto e ha velocizzato notevolmente il tempo da utilizzare per scrivere codice piuttosto che "perdere tempo" a dividerci i compiti.
 Alla fine di ogni sprint si riguardava quindi il codice prodotto, ci si diceva quali task si sarebbero portati avanti e si  procedeva all'implementazione.
