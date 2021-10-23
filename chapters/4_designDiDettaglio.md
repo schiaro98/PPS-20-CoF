@@ -1,5 +1,4 @@
-
-# Design di dettaglio
+# Design di dettaglio [](#){name=Design-di-dettaglio}
 In questo capitolo andremo ad esplorare più nel dettaglio  le scelte progettuali che sono state attuate.
 
 ## Scelte rilevanti

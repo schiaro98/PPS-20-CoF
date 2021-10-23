@@ -1,4 +1,4 @@
-# Processo di sviluppo
+# Processo di sviluppo [](#){name=Processo-di-sviluppo}
 
 Questo progetto ci ha permesso di lavorare seguendo alcune metodologie dello sviluppo *Agile*. In particolare abbiamo dato particolare peso alle seguenti caratteristiche fondamentali della gestioni di progetti Agile, derivanti proprio dal [Manifesto Agile](https://agilemanifesto.org/iso/it/principles.html):
     - Brevi iterazioni di sviluppo note come sprint.
@@ -9,7 +9,7 @@ Per consentire uno sviluppo agile abbiamo organizzato il repository per avere du
 
 ## Modalità di divisione in itinere dei task
 
-Dopo aver studiato i punti salienti del progetto e esserci fatti un'idea approssimativa sul cosa modellare e sul livello di complessità abbiamo concordato quali fossero le entità da rappresentare più urgenti da modellare e abbiamo identificato vari compiti.
+Dopo aver studiato i punti salienti del progetto ed esserci fatti un'idea approssimativa sul cosa modellare e sul livello di complessità abbiamo concordato quali fossero le entità da rappresentare più urgenti da modellare e abbiamo identificato vari compiti.
 Trovati i compiti ognuno di noi ne ha scelti uno o più da svolgere entro il meeting successivo.
 Ad ogni meeting si discutevano i task svolti, motivando le scelte fatte e proponendo modifiche e migliorie e una volta conclusa questa prima parte si procedeva alla scelta di un nuovo task.
 Man mano che il software cresceva in complessità questi meeting diventavano più vicini temporalmente, fino quasi a non essere neanche più definibili meeting ma piuttosto scambi di informazioni correlati da pochi ma efficaci note sulla prossima funzionalità da sviluppare o sul bug da correggere.
