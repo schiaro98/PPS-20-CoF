@@ -19,7 +19,7 @@ Dopo aver dato una rappresentazione ad alto livello del dominio applicativo nell
 Ognuno file sopra citato è corredato dalla apposita classe di test che testa più o meno approfonditamente i desiderata delle classi. 
 
 ### Serializer
-La prima classe ad aver modellato è stato il serializzatore, che nella sua versione di bas serializza oggetti in formato json tramite la libreria di java **GSON** .
+La prima classe ad aver modellato è stato il serializzatore, che nella sua versione di base serializza oggetti in formato json tramite la libreria di java **GSON** .
 Ho deciso di modellare il serializzatore come un sealed trait + companion object e classi private, questa strutturazione verrà riutilizzata anche nella maggior parte dei file scritti nel progetto.
 Ho costruito il serializzatore in modo tale che avesse pochi metodi molto facilmente riutilizzabili testando ognuno di essi per essere sicuro del corretto funzionamento.
 Purtroppo GSON non è in grado di rappresentare strutture dati complesse, o meglio, può farlo ma solo definendo dei serializzatori/deserializzatori customizzati che destrutturino gli oggetti in un insieme di dati primitivi JSON e a tal proposito ho creato un paio di classi specifiche, una per **Species** e una per **Food**.
