@@ -6,6 +6,10 @@ Si noti che la retrospettiva è l'unica sezione che può citare aneddoti di cosa
 
 ## Conclusione
 In conclusione ci riteniamo soddisfatti del lavoro svolto, sulle metodologie utilizzate e sul risultato finale.
+L'obiettivo più graficante secondo noi è stato quello di riuscire a costruire una applicazione pensando in modo funzionale.
+Col passare del tempo infatti, prendendo dimestichezza con un nuovo linguaggio, siamo riusciti ad esprimere concetti 
+anche complicati con strumenti tipici della programmazione funzionale. Questa cosa è evidente nel codice sorgente dei manager e del gameLoop.
+I strumenti tipici della FP sono stati l'utilizzo delle funzioni ricorsive, il pattern matching e l'utilizzo raro di variabili mutabiili.
 Nonostante non abbiamo ritenuto necessario adottare tutti i principi della metodologia Scrum o più in generale della 
 filosofia Agile e che alla fine dei conti si tratta comunque di idee che sicuramente sono più coerenti con ambiti "enterprise" 
 riteniamo che siano stati molto d'aiuto durante le varie fasi di questo progetto. 
@@ -16,7 +20,8 @@ dell'applicativo, per quanto hanno sicuramente prodotto un overhead temporale, c
 
 ## Sviluppi futuri
 
-Durante il progetto per portare a termine tutti gli obiettivi, abbiamo dovuto rinunciare a qualche caratteristica del sistema che ci sarebbe piaciuto implementare.
+Durante il progetto per portare a termine tutti gli obiettivi, abbiamo dovuto rinunciare a qualche caratteristica del 
+sistema che ci sarebbe piaciuto implementare. Qui possiamo vederle divise per ambito:
 
 ### Ui/Ux 
 Per quanto riguarda l'esperienza utente, avremmo voluto rappresentare gli animali e il cibo attraverso delle immagini, o sprite in modo da rendere più accattivante l'interfaccia grafica. Inoltre avremmo anche voluto dare la possibilità agli utenti di costruire delle proprie mappe con un editor.
@@ -128,5 +133,3 @@ Inoltre avremmo voluto modellare alcuni aspetti avanzati per quantoo riguarda l'
 | 91 | 1        | Nuova feature | Rifattorizzato AnimalUtils e concluso AnimalUtilsTest                                                                                                           | Controller      | Simone      |
 | 92 | 2        | Nuova feature | Reso GameLoop molto più funzionale                                                                                                                              | Controller      | Simone/Luca |
 |    |          |               | FINE SPRINT 6      
-
-Conclusione e sviluppi futuri
