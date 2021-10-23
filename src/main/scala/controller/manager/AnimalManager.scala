@@ -1,6 +1,6 @@
 package controller.manager
 
-import model.{animal, _}
+import model.Probability
 import model.animal.{Adult, Age, Animal, Old, Species, Young}
 import model.food.Food
 import model.habitat.Habitat
@@ -109,17 +109,15 @@ object AnimalManager {
       @tailrec
       def _generateInitialAnimals(population: Seq[(Species, Int)], habitat: Habitat, animals: Seq[Animal] = Seq.empty): AnimalManager = population match {
         case (k, v) :: t =>
-          _generateInitialAnimals(t, habitat, animals ++ generateAnimalsInHabitat(k, v, habitat))
+          _generateInitialAnimals(t, habitat, animals ++ _generateAnimalsInHabitat(k, v, habitat))
         case _ => AnimalManager(animals)
       }
-
       @tailrec
-      def generateAnimalsInHabitat(s: Species, quantity: Int, habitat: Habitat, animals: Seq[Animal] = Seq.empty): Seq[Animal] = quantity match {
+      def _generateAnimalsInHabitat(s: Species, quantity: Int, habitat: Habitat, animals: Seq[Animal] = Seq.empty): Seq[Animal] = quantity match {
         case x if x > 0 =>
-          generateAnimalsInHabitat(s, quantity - 1, habitat, animals :+ animal.Animal(s, AnimalUtils.placeAnimal(habitat, s)))
+          _generateAnimalsInHabitat(s, quantity - 1, habitat, animals :+ Animal(s, AnimalUtils.placeAnimal(habitat, s)))
         case _ => animals
       }
-
       _generateInitialAnimals(population.toSeq, habitat)
     }
   }
