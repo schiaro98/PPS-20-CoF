@@ -1,7 +1,7 @@
 package controller.manager
 
 import model.Probability
-import model.animal.{Animal, Big, Carnivore, Medium, Small}
+import model.animal.{Animal, Big, Carnivore, Herbivore, Medium, Small}
 import model.food.Food
 import utility.Logger
 
@@ -34,32 +34,36 @@ object BattleManager {
                   meats: Seq[Food] = Seq.empty,
                   animalUpdated: Seq[Animal] = Seq.empty): (Seq[Animal], Seq[Food]) = animals match {
         case attacker :: t =>
-          val enemyOpt = animals
-            .filter(_.species.alimentationType == Carnivore)
-            .filter(_.position.distance(attacker.position) < attacker.species.sight)
-            .minByOption(_.position.distance(attacker.position))
+          if(attacker.species.alimentationType == Carnivore) {
+            val enemyOpt = animals
+              .filterNot(_ == attacker)
+              .filter(_.species.alimentationType == Herbivore)
+              .filter(_.position.distance(attacker.position) < attacker.species.sight)
+              .minByOption(_.position.distance(attacker.position))
 
-          if(enemyOpt.isDefined){
-            val enemy = enemyOpt.get
-            val isBattleWin = List(
-              calculateProbabilityFromSize(attacker, enemy),
-              calculateProbabilityFromDistance(attacker, enemy),
-              calculateProbabilityFromStrength(attacker, enemy)
-            ).map(p => p.calculate).count(p => p) > 1
-
-            if (isBattleWin) {
-              logger.info("Attacking animal: " + attacker.species.name + " has won against " + enemy.species.name)
-              _battle(t, meats :+ enemy.die(), animalUpdated :+ attacker)
-            } else {
-              logger.info("Defending animal: " + enemy.species.name + " has won against "  + attacker.species.name)
-              _battle(t, meats :+ attacker.die(), animalUpdated :+ enemy)
-            }
-          } else {
-            _battle(t, meats, animalUpdated :+ attacker)
-          }
+            if (enemyOpt.isDefined) {
+              val enemy = enemyOpt.get
+              if (calculateBattleResult(attacker, enemy)) {
+                logger.info("Attacking animal: " + attacker.species.name + " has won against " + enemy.species.name)
+                _battle(t, meats :+ enemy.die(), animalUpdated :+ attacker)
+              } else {
+                logger.info("Defending animal: " + enemy.species.name + " has won against " + attacker.species.name)
+                _battle(t, meats :+ attacker.die(), animalUpdated :+ enemy)
+              }
+            } else _battle(t, meats, animalUpdated :+ attacker)
+          } else _battle(t, meats, animalUpdated :+ attacker)
         case _ => (animalUpdated, meats)
       }
       _battle(animals)
+    }
+
+    private def calculateBattleResult(attacker: Animal, enemy: Animal): Boolean = {
+      List(
+        calculateProbabilityFromSize(attacker, enemy),
+        calculateProbabilityFromDistance(attacker, enemy),
+        calculateProbabilityFromStrength(attacker, enemy)
+      ).map(p => p.calculate)
+        .count(p => p) > 1
     }
 
     /**
