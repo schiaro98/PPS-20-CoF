@@ -5,6 +5,7 @@ import utility.Constants
 import utility.serializer.{OfSpecies, Serializer}
 
 import java.awt.Color
+import java.io.{FileNotFoundException, IOException}
 
 class ChooseSpeciesLogic(speciesFile: String) {
 
@@ -86,8 +87,14 @@ class ChooseSpeciesLogic(speciesFile: String) {
    * @param s species to be added
    */
   def addSpeciesInTheFile(s: Species): Unit = {
-    val speciesFromFile = serializer.deserializeManyFromFile(speciesFile)(classOf[Species]) :+ s
-    serializer.serializeManyToFile(speciesFromFile)(speciesFile)
+    try{
+      val speciesFromFile = serializer.deserializeManyFromFile(speciesFile)(classOf[Species]) :+ s
+      serializer.serializeManyToFile(speciesFromFile)(speciesFile)
+    } catch {
+      case e: FileNotFoundException => println("Couldn't find that file.")
+      case e: IOException => println("Had an IOException trying to read that file")
+      case _ => println("error")
+    }
   }
 
   /**

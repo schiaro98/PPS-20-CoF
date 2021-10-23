@@ -1,15 +1,17 @@
 package utility.serializer
 
 import com.google.gson._
+import model._
 import model.animal.{Size, Species}
-import model.{animal, habitat, _}
 import model.food.{FoodCategory, FoodType}
-import model.habitat.{Area, AreaType, Fertile, Rock, Volcano, Water}
+import model.habitat._
 import model.shape.RectangleArea
 
 import java.awt.Color
-import java.io.PrintWriter
+import java.io.{BufferedReader, FileWriter, InputStreamReader, PrintWriter}
 import java.lang.reflect.Type
+import java.nio.file.Paths
+import java.util.stream.Collectors
 import scala.collection.mutable.ListBuffer
 import scala.reflect.io.File
 
@@ -52,8 +54,17 @@ object Serializer {
       case _ => serializedObjs
     }
 
-    def serializeManyToFile[U](objs:Iterable[U])(fileName:String): Unit =
-      new PrintWriter("res"+File.separator+"serialization"+File.separator+fileName) { write(serializeMany(objs)); close() }
+    def serializeManyToFile[U](objs:Iterable[U])(fileName:String): Unit ={
+      val res = getClass.getClassLoader.getResource("res"+File.separator+"serialization"+File.separator+fileName)
+      val f = Paths.get(res.toURI).toFile
+      val path2 = f.getAbsolutePath
+      println(path2)
+      val fw = new FileWriter(path2)
+      val pw = new PrintWriter(fw)
+      pw.print(serializeMany(objs))
+      pw.close()
+    }
+
 
     def deserializeOne[T](json: String)(classOfT: Class[T]): T = gson.fromJson(json,classOfT)
 
@@ -71,12 +82,18 @@ object Serializer {
     }
 
     def deserializeManyFromFile[T](fileName: String)(classOfT: Class[T]): Seq[T] = {
-      import java.nio.charset.StandardCharsets
-      import java.nio.file.{Files, Path}
+      import java.nio.file.Path
 
-      val path = Path.of("res"+File.separator+"serialization"+File.separator+fileName)
-      val json = Files.readString(path, StandardCharsets.UTF_8)
-      if (json == "") Seq.empty[T] else deserializeMany(json)(classOfT)
+      val path = Path.of(File.separator+"res"+File.separator+"serialization"+File.separator+fileName)
+      val is = getClass.getResourceAsStream(path.toString)
+      val isr = new InputStreamReader(is)
+      val br = new BufferedReader(isr)
+      val json = br.lines().collect(Collectors.joining("\n"))
+      val res = if (json == "") Seq.empty[T] else deserializeMany(json)(classOfT)
+      br.close()
+      isr.close()
+      is.close()
+      res
     }
   }
 
