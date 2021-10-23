@@ -83,7 +83,7 @@ object ShiftManager {
                              if AnimalUtils.verticesOfAnimal(a.species, Point(x, y)).count(!isLegal(_)) == 0)
       yield Point(x, y)
       //find the closest point to dest
-      legalPoints.par.fold(a.position)((p1,p2) => if(p1.distance(d)<p2.distance(d)) p1 else p2)
+      legalPoints.fold(a.position)((p1,p2) => if(p1.distance(d)<p2.distance(d)) p1 else p2)
     }
 
     /**
