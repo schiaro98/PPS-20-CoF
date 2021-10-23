@@ -114,8 +114,6 @@ object Animal {
                                 override val position: Point,
                                 override val age: Age) extends Animal {
 
-    private val logger = Logger
-
     override def canSee(element: Placeable): Boolean = this.position.distance(element.position) <= species.sight
 
     override def update(health: Int, thirst: Int, position: Point, age: Age): Animal =
@@ -124,7 +122,7 @@ object Animal {
     override def isAlive: Boolean = health > 0 && thirst > 0
 
     override def drink(): Animal = {
-      logger.info(species.name + " drunk some water")
+      Logger.info(species.name + " drunk some water")
       this.update(thirst = Constants.MaxThirst)
     }
 
@@ -160,11 +158,11 @@ object Animal {
     private def consume(food: Food): (Animal, Option[Food]) = health match {
       case Constants.MaxHealth => (this, Some(food))
       case _ if Constants.MaxHealth - health > food.foodType.energy * food.quantity =>
-        logger.info(species.name + s" eat all the ${food.foodType.foodCategory}")
+        Logger.info(species.name + s" eat all the ${food.foodType.foodCategory}")
         Statistics.update(foodEaten = food.quantity)
         (this.update(health = health + food.foodType.energy * food.quantity), None)
       case _ =>
-        logger.info(species.name + s" eat some ${food.foodType.foodCategory}")
+        Logger.info(species.name + s" eat some ${food.foodType.foodCategory}")
         val foodToEat = (Constants.MaxHealth - health) / food.foodType.energy
         Statistics.update(foodEaten = foodToEat)
         (this.update(health = health + food.foodType.energy * foodToEat), Some(food.consume(foodToEat)))
