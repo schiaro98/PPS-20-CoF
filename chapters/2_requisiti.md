@@ -1,4 +1,4 @@
-# Requisiti [](#){name=Requisiti}
+# Requisiti 
 In questo capitolo verranno analizzati i requisiti del progetto, divisi nelle principali tipoligie.
 
 ## Requisiti di business

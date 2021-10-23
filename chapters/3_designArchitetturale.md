@@ -1,4 +1,4 @@
-# Design Architetturale [](#){name=Design-Architetturale}
+# Design Architetturale 
 
 ## Architettura complessiva
 Il progetto ha lo scopo di simulare il ciclo di vita di alcuni animali, creabili dall'utente, all'interno di un Habitat, di dimensioni e caratteristiche variabili, nel tempo.
