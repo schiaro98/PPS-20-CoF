@@ -92,7 +92,7 @@ case class GameLoop(population: Map[Species, Int], habitat: Habitat) extends Run
   def compute(animalManager: AnimalManager, resourceManager: ResourceManager): (AnimalManager, ResourceManager) = {
     growFoodAfter(
       calculateUnexpectedEventsAfter(
-        battlesOf(
+        calculateBattlesAfter(
           updateHealthAndThirstOf(
             shiftedAnimals(animalManager, resourceManager)))))
   }
@@ -138,7 +138,7 @@ case class GameLoop(population: Map[Species, Int], habitat: Habitat) extends Run
    * @return the [[AnimalManager]] with the alive [[Animal]]s and a [[ResourceManager]] in which the meat of the
    *         dead [[Animal]]s was added.
    */
-  private def battlesOf(managers: (AnimalManager, ResourceManager)): (AnimalManager, ResourceManager) = {
+  private def calculateBattlesAfter(managers: (AnimalManager, ResourceManager)): (AnimalManager, ResourceManager) = {
     val (animalManager, resourceManager) = managers
     val battleManager: BattleManager = BattleManager(animalManager.animals)
     val (animals, foods) = battleManager.battle()
