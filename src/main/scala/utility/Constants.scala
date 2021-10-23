@@ -53,9 +53,6 @@ object Constants {
   // ------- Gui --------
   val MainMapDimension: (Int, Int) = (500, 500)
 
-  val DefaultStartingX = 100
-  val DefaultStartingY = 100
-
   val PopupOffsetX = 20
   val PopupOffsetY = 45
 
@@ -63,7 +60,7 @@ object Constants {
   val SpeedUpPeriod: Int = Period / 10
 
   // ------- Habitat ------
-  val DefaultGridSize = 100
+  val DefaultGridSize = 16
   val MaxDimension = 1_000
 
   //------- ResourceManager ----

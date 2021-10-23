@@ -1,8 +1,8 @@
 package model.habitat
 
 import model.position.Point
-import model.{Probability, shape}
 import model.shape.RectangleArea
+import model.{Probability, shape}
 import utility.Constants
 import utility.serializer.{OfArea, Serializer}
 
@@ -106,6 +106,14 @@ object Habitat {
   private def randomAreaType: AreaType = Random.shuffle(Area.getAllTypeOfArea).head
 
   /**
+   * Method used to obtain a safe random [[AreaType]]
+   *
+   * @return a safe random [[AreaType]]
+   */
+  private def safeRandomAreaType: AreaType = if (Random.between(0, 100) > 80) Water else Fertile
+
+
+  /**
    * This method create an habitat, of given dimension, with diven areas, arranged in a randow way
    *
    * @param dimension dimension of the habitat
@@ -123,11 +131,9 @@ object Habitat {
    * @return
    */
   private def createRandomAreas(dimension: (Int, Int), numberOfAreas: Int): Seq[Area] = {
-    var grid = List[Area]()
     require(dimension._1 * dimension._2 > numberOfAreas * 10)
     val r = RectangleArea(Point(0, 0), Point(1, 1))
-    r.getIn4Quadrant(dimension).foreach(rectangle => grid = grid.::(Area(randomAreaType, rectangle, Probability(Random.between(1, 100)))))
-    grid
+    r.getIn4Quadrant(dimension).map(rectArea => Area(randomAreaType, rectArea, Probability(Random.between(1, 100))))
   }
 
   /**
@@ -139,22 +145,23 @@ object Habitat {
    */
   private def createGridArea(dimension: (Int, Int), numberOfAreas: Int): Seq[Area] = {
     var grid = List[Area]()
-    require(dimension._1 * dimension._2 > numberOfAreas * 10)
-
-    val maxWidth = dimension._1 / (numberOfAreas / 2)
-    val maxHeight = dimension._2 / (numberOfAreas / 2)
-
-    for (i <- Constants.DefaultStartingX until dimension._1 by (dimension._1 / Math.round(Math.sqrt(numberOfAreas).toFloat))) {
-      for (j <- Constants.DefaultStartingY until dimension._2 by (dimension._2 / Math.round(Math.sqrt(numberOfAreas).toFloat))) {
-        val startingPoint = Point(i, j)
-        val areaWidth = Random.between(maxWidth / 2, maxWidth)
-        val areaHeight = Random.between(maxHeight / 2, maxHeight)
-        val rectangle = shape.RectangleArea(startingPoint, Point(startingPoint.x + areaWidth, startingPoint.y + areaHeight))
-        val newArea: Area = Area(randomAreaType, rectangle, Probability(Random.between(1, 100)))
+    val limit = Point(dimension._1, dimension._2)
+    require(dimension._1 * dimension._2 > numberOfAreas * numberOfAreas, "Dimension of habitat are too small")
+    val maxWidth = dimension._1 / numberOfAreas
+    val maxHeigth = dimension._2 / numberOfAreas
+    for (i <- 0 until dimension._1 by maxWidth) {
+      for (j <- 0 until dimension._2 by maxHeigth) {
+        val rectangle = shape.RectangleArea(Point(i,j), Point(i,j) + Point(maxWidth, maxHeigth))
+        val newArea: Area = Area(safeRandomAreaType, rectangle, Probability(Random.between(1, 100)))
         grid = grid.::(newArea)
       }
     }
-    grid
+   grid.filter(area =>
+        area.area.topLeft.x < limit.x &&
+        area.area.topLeft.y < limit.y &&
+        area.area.bottomRight.x < limit.x &&
+        area.area.bottomRight.y < limit.y
+    )
   }
 
   /**

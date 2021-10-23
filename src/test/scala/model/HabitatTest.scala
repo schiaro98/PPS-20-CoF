@@ -63,7 +63,7 @@ class HabitatTest extends AnyFunSuite{
 
   test("Create a grid Habitat with areas, and test it with different number of areas"){
     val tollerance = 5 //Ten % of size is an acceptable tollerance, some areas cannot be drawn because of limit of space
-    for(_ <- 0 to testQ) {
+    for(_ <- 0 to testQ * 100) {
         val habitat = Habitat(GridHabitatType, Probability(1), (1000, 1000), Seq.empty)
         assert(habitat.areas.lengthIs >=
           (Constants.DefaultGridSize - (Constants.DefaultGridSize / tollerance)))
