@@ -42,9 +42,8 @@ object DestinationManager {
               case Herbivore => findNearestResource(animal, food.filter(_.foodType.foodCategory == Vegetable))
                 .getOrElse(getLegalRandomPoint(habitat))
               case Carnivore =>
-                findNearestResource(animal, animals.filter(_.species.alimentationType == Herbivore)).getOrElse(
-                  findNearestResource(animal,
-                    food.filter(_.foodType.foodCategory == Meat))
+                findNearestResource(animal, animals.filter(_.species.alimentationType == Herbivore))
+                  .getOrElse( findNearestResource(animal, food.filter(_.foodType.foodCategory == Meat))
                     .getOrElse(getLegalRandomPoint(habitat)))
             }
             _calculateDestination(t, destination + (animal -> point))
@@ -80,7 +79,7 @@ object DestinationManager {
     @tailrec
     final def getLegalRandomPoint(h: Habitat): Point = {
       val p = Point.getRandomPoint(h.dimensions)
-      if (h.areas.filterNot(a => a.areaType == Fertile).count(a => a.contains(p)) == 0) p else getLegalRandomPoint(h)
+      if (h.areas.filterNot(_.areaType == Fertile).count(_.contains(p)) == 0) p else getLegalRandomPoint(h)
     }
 
     /**

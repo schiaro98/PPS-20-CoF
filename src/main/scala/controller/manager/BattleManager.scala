@@ -1,6 +1,6 @@
 package controller.manager
 
-import model._
+import model.Probability
 import model.animal.{Animal, Big, Carnivore, Medium, Small}
 import model.food.Food
 import utility.Logger
@@ -35,7 +35,6 @@ object BattleManager {
                   animalUpdated: Seq[Animal] = Seq.empty): (Seq[Animal], Seq[Food]) = animals match {
         case attacker :: t =>
           val enemyOpt = animals
-            .filterNot(_ == attacker)
             .filter(_.species.alimentationType == Carnivore)
             .filter(_.position.distance(attacker.position) < attacker.species.sight)
             .minByOption(_.position.distance(attacker.position))
