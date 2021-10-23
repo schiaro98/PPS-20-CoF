@@ -7,6 +7,7 @@ import utility.{Logger, Statistics}
 
 import java.awt.Dimension
 import javax.swing.{ImageIcon, WindowConstants}
+import scala.reflect.io.{File, Path}
 import scala.swing.BorderPanel.Position._
 import scala.swing._
 import scala.swing.event.ButtonClicked
@@ -90,7 +91,7 @@ case class SimulationButton(setPaused: Boolean => Unit, setSpeed: Boolean => Uni
   //TODO mettere File.separator
 
   val playButton: Button = new Button() {
-    icon = new ImageIcon("src/main/resources/images/play-button.png")
+    icon = getImage("play-button.png")
     this.enabled = false
     reactions += {
       case _: ButtonClicked =>
@@ -100,7 +101,7 @@ case class SimulationButton(setPaused: Boolean => Unit, setSpeed: Boolean => Uni
     }
   }
   val pauseButton: Button = new Button() {
-    icon = new ImageIcon("src/main/resources/images/pause.png")
+    icon = getImage("pause.png")
     reactions += {
       case _: ButtonClicked =>
         setPaused(true)
@@ -109,7 +110,7 @@ case class SimulationButton(setPaused: Boolean => Unit, setSpeed: Boolean => Uni
     }
   }
   val speedDownButton: Button = new Button() {
-    icon = new ImageIcon("src/main/resources/images/rewind.png")
+    icon = getImage("rewind.png")
     this.enabled = false
     reactions += {
       case _: ButtonClicked =>
@@ -119,7 +120,7 @@ case class SimulationButton(setPaused: Boolean => Unit, setSpeed: Boolean => Uni
     }
   }
   val speedUpButton: Button = new Button() {
-    icon = new ImageIcon("src/main/resources/images/fast-forward.png")
+    icon = getImage("fast-forward.png")
     reactions += {
       case _: ButtonClicked =>
         setSpeed(true)
@@ -128,10 +129,20 @@ case class SimulationButton(setPaused: Boolean => Unit, setSpeed: Boolean => Uni
     }
   }
   val stopButton: Button = new Button() {
-    icon = new ImageIcon("src/main/resources/images/stop.png")
+    icon = getImage("stop.png")
     reactions += {
       case _: ButtonClicked => stop()
     }
+  }
+
+  def getImage(fileName: String):ImageIcon = {
+    val path = Path("src"+File.separator+"main"+File.separator+"resources"+File.separator+"images"+File.separator+fileName)
+    val file = if (File(path).isFile){
+      new ImageIcon(path.path)
+    } else {
+      new javax.swing.ImageIcon(getClass.getResource(File.separator+"images"+File.separator+fileName))
+    }
+    file
   }
 
   def buttons = Seq(playButton, pauseButton, speedDownButton, speedUpButton, stopButton)
