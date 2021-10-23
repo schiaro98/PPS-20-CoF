@@ -42,6 +42,7 @@ Questo trait è poi stato usato come mixin in concomitanza con Area per modellar
 
 Inizialmente, prima di iniziare con la analisi del dominio del problema, mi sono occupato di alcuni aspetti di CI/CD e di setup del progetto. 
 Ho creato poi il repository GitHub e il progetto Scala/Sbt, infine mi sono occupato della pipeline, che inizialmente aveva il solo compito di compilare il programma. 
+Ho anche valutato l'opportunità di usare uno strumento come Scalafix per la rifatorizzazione del codice, ma abbiamo poi optato per utilizzare lo strumento di default dell'IDE che abbiamo utilizzato, cioè Intellij IDEA. Nel caso avessimo usato un IDE diverso tra i componenti del gruppo, sarebbe sicuramente la scelta di uno strumento di refactor automatico sarebbe stata più idonea. 
 Durante le fasi intermedie del progetto ho aggiunto alcune funzionalità alla pipeline come l'esecuzione di test e release di Jar automatizzata.
 Inizialmente mi sono occupato della View, sviluppando un primo prototipo di quello che poi è diventata la Gui della nostra applicazione utilizzando la libreria scalaSwing. Ho optato per questa libreria invece di ScalaFx per la mancanza di documentazione che avrebbe senz'altro portato a numerosi problemi in futuro. Successivamente ho sviluppato la logica degli animali, cioè come venivano usati all'interno della applicazione quando inseriti da utente.
 Successivamente mi sono occupato dello sviluppo del codice necessario a costruire le mappe random e a griglia.
@@ -64,3 +65,16 @@ Questo metodo, nella ricerca di eventuali punti di interesse, dava la priorità 
 Se non vengono trovate zone d'acqua, vengono cercate, in base alla dieta dell'animale eventuali verdure, oppure carni se si tratta di un carnivoro. Inoltre se si tratta di carnivori vengono anche segnalate le prede vicine.
 
 ### Feed manager
+Il feed manager si occupa di gestire effettivamente le fasi di alimentazione degli animali nella mappa. Anche in questo manager sono stati utilizzati solo metodi tail recursive. Anche qua venivano eseguiti controlli sulle diete degli animali, per permettere ad erbivori e carnivori di mangiare solo cibi adeguati e sulle distanze tra animali e aree d'acqua e verso cibi.
+
+## Model
+Nella parte di Model mi sono occupato di parti legagte alla **View** come le RectangleArea e Shape, al concetto di Point, alla creazione di Habitat randomici e a griglia
+
+### Shape e RectangleArea
+Shape è un Trait che viene implementato dalle classi Rectangle e Circle. In particolare è necessario che le classi implementino il metodo **Draw** che prendi in input un parametro di tipo Graphics2D, ovvero API di Java utilizzata per disegnare grafiche in 2 dimensioni. La classe Rectangle è stata usata per disegnare le aree e gli animali mentre la classe Circle per le verdure e la carne.
+RectangleArea contiene alcuni metodi utili a verificare alcune condizione come ad esempio se due rettangoli fanno *overlap* ovvero si sovrappongono e per creare le aree in modo random
+
+### Point
+Point è la modellazione di un punto nella mappa e permette, oltre ad evitare di utilizzare Tuple2 o metodi che prendono due elementi, di rendere chiaro l'intento quando viene usato come parametro o come campo in una classe. Contiene inoltre numerosi metodi di utility per verificarne la posizione rispetto ad altri punti, rispetto ad assi cartesiano oppure per la creazione randomica.
+
+### 
