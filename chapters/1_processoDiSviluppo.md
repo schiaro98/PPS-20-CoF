@@ -1,4 +1,4 @@
-# Processo di sviluppo [](#){name=Processo-di-sviluppo}
+# Processo di sviluppo {#Processo-di-sviluppo}
 
 Questo progetto ci ha permesso di lavorare seguendo alcune metodologie dello sviluppo *Agile*. In particolare abbiamo dato particolare peso alle seguenti caratteristiche fondamentali della gestioni di progetti Agile, derivanti proprio dal [Manifesto Agile](https://agilemanifesto.org/iso/it/principles.html):
 * Brevi iterazioni di sviluppo note come sprint.
