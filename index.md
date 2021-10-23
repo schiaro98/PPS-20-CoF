@@ -7,10 +7,10 @@
 **Davide Schiaroli** - <davide.schiaroli2@studio.unibo.it>
 
 # Table of Contents
-1. [Processo di sviluppo](#Processo di sviluppo)
+1. [Processo di sviluppo](#Processo-di-sviluppo)
 2. [Requisiti](#Requisiti)
-3. [Design Architetturale](#Design Architetturale)
-4. [Design di dettaglio](#Design di dettaglio)
+3. [Design Architetturale](#Design-Architetturale)
+4. [Design di dettaglio](#Design-di-dettaglio)
 5. [Implementazione](#Implementazione)
 6. [Retrospettiva](#Retrospettiva)
 
