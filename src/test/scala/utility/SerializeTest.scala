@@ -1,14 +1,11 @@
 package utility
 
-import model.animal.{Carnivore, Medium, Small, Species}
+import model.animal.{Carnivore, Small, Species}
 import model.food.{FoodType, Vegetable}
 import org.scalatest.funsuite.AnyFunSuite
 import utility.serializer.{DefaultSerializer, OfFood, OfSpecies, Serializer}
 
 import java.awt.Color
-import java.nio.charset.StandardCharsets
-import java.nio.file.{Files, Path}
-import scala.reflect.io.File
 
 class SerializeTest extends AnyFunSuite{
 
@@ -73,7 +70,7 @@ class SerializeTest extends AnyFunSuite{
 
   test("Test serialize many to file for Species"){
     val fileName = "speciesSerializerTest.txt"
-    speciesSerializer.serializeManyToFile(Seq(Species("dog", Small, 100, 10, Carnivore, Color.red), Species("cat", Small, 80, 60, Carnivore, Color.blue), Species("cow", Medium, 40 ,50, Carnivore, Color.green)))(fileName)
+//    speciesSerializer.serializeManyToFile(Seq(Species("dog", Small, 100, 10, Carnivore, Color.red), Species("cat", Small, 80, 60, Carnivore, Color.blue), Species("cow", Medium, 40 ,50, Carnivore, Color.green)))(fileName)
 //    val path = Path.of(fileName)
 //    val json = Files.readString(path, StandardCharsets.UTF_8)
 //    assert(json == "{\n  \"color\": {\n    \"value\": -65536,\n    \"falpha\": 0.0\n  },\n  \"name\": \"dog\",\n  \"size\": \"Small\",\n  \"strength\": 100,\n  \"sight\": 10,\n  \"alimentationType\": \"Carnivore\"\n}{\n  \"color\": {\n    \"value\": -16776961,\n    \"falpha\": 0.0\n  },\n  \"name\": \"cat\",\n  \"size\": \"Small\",\n  \"strength\": 80,\n  \"sight\": 60,\n  \"alimentationType\": \"Carnivore\"\n}{\n  \"color\": {\n    \"value\": -16711936,\n    \"falpha\": 0.0\n  },\n  \"name\": \"cow\",\n  \"size\": \"Medium\",\n  \"strength\": 40,\n  \"sight\": 50,\n  \"alimentationType\": \"Carnivore\"\n}")

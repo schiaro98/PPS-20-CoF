@@ -8,7 +8,7 @@ import model.habitat._
 import model.shape.RectangleArea
 
 import java.awt.Color
-import java.io.{BufferedReader, FileInputStream, FileWriter, InputStreamReader, PrintWriter}
+import java.io._
 import java.lang.reflect.Type
 import java.nio.file.Paths
 import java.util.stream.Collectors
@@ -83,10 +83,14 @@ object Serializer {
 
     def deserializeManyFromFile[T](fileName: String)(classOfT: Class[T]): Seq[T] = {
       import scala.reflect.io.Path
-
+//      Source.fromInputStream()
       val path = Path("src"+File.separator+"main"+File.separator+"resources"+File.separator+"serialization"+File.separator+fileName)
-      println(File(path).isFile)
-      val isr = new InputStreamReader(new FileInputStream(File(path).jfile))
+      val fileInputStream = if (File(path).isFile) new FileInputStream(File(path).jfile) else {
+//        println(getClass.getResource(File.separator+"serialization"+File.separator+fileName).getPath)
+//        File(getClass.getResource(File.separator+"serialization"+File.separator+fileName).getPath)
+        getClass.getResourceAsStream(File.separator+"serialization"+File.separator+fileName)
+      }
+      val isr = new InputStreamReader(fileInputStream)
       val br = new BufferedReader(isr)
       val json = br.lines().collect(Collectors.joining("\n"))
       val res = if (json == "") Seq.empty[T] else deserializeMany(json)(classOfT)
