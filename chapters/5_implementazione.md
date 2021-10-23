@@ -11,12 +11,13 @@ Dopo aver dato una rappresentazione ad alto livello del dominio applicativo nell
  1. Serializer
  2. Area
  3. Habitat
- 4. ChooseHabitatGUI (e Logic)
- 5. ResourceManager
- 6. ShiftManager
- 7. Statistics (e relativa GUI) 
+ 4. Probability
+ 5. ChooseHabitatGUI (e Logic)
+ 6. ResourceManager
+ 7. ShiftManager
+ 8. Statistics (e relativa GUI) 
  
-Ognuno file sopra citato è corredato dalla apposita classe di test che testa più o meno approfonditamente i desiderata delle classi. 
+Ognuno dei file sopra citato è corredato dall'apposita classe di test che testa più o meno approfonditamente i desiderata delle classi. 
 
 ### Serializer
 La prima classe ad aver modellato è stato il serializzatore, che nella sua versione di base serializza oggetti in formato json tramite la libreria di java **GSON** .
@@ -37,6 +38,48 @@ Le aree sono rettangolari e composte da un angolo in alto a sinistra e da uno in
 Questo require veniva eseguito nel trait **Area**, si è poi deciso, di incapsulare il concetto di area rettangolare e quel require è stato spostato nella classe (**RectangleArea**).
 Per Modellare un'area Fertile, che potesse far crescere del cibo ho deciso di non estendere la classe area, ma di utilizzare un trait che modellasse la creazione di cibo, **GrowFood**.
 Questo trait è poi stato usato come mixin in concomitanza con Area per modellare aree in grado di far crescere cibo.
+
+
+### Habitat
+Dopo la creazione delle aree ho provveduto alla creazione dell'**Habitat**, che per definizione doveva contenere al suo interno delle aree, avere delle dimensioni e una certa probabilità che potessero avvenire degli eventi inaspettati dannosi per gli animali.
+Ho quindi costruito il file con la struttura già usata in precedenza e qualche test di base.
+Abbiamo poi deciso quali deciso che tipi di habitat costruire e le varie classi e apply che ne avrebbero poi permesso la creazione sono state fatte dai miei colleghi.
+Anche in questa classe ho usato dei require per fare in modo che due aree non si accavallino e 
+che le aree non escano dall'habitat.
+
+### Probability
+Per la probabilità ho costruito un semplicissimo trait che prende un *Int* in input fra zero e cento.
+Chiamando il metodo **calculate** su di esso si ha un *Boolean* in uscita.
+Sono stati poi aggiunti altri metodi  da Davide Schiaroli.
+
+### ChooseHabitatGUI ( e logic)
+Dopo aver programmato fondamentalmente in backend ho avuto la parte di frontend di scelta della gui, non ci sono particolari aspetti implementativi da discutere.
+
+### ResourceManager
+Il **ResourceManager** è il luogo in cui risiedono tutte le risorse.
+È incaricato della creazione di tutti i cibi all'interno dell'Habitat a inizio simulazione ed è il punto in cui vengono riposti ad ogni aggiornamento.
+Per modellare la crescita dei cibi è stato creato il solo metodo grow che, in base alla probabilità (**fertility**) delle aree fertili istanzia nuovo cibo nella mappa.
+Come già accennato per favorire l'immutabilità in caso di crescita di cibi anziché restiturie un nuovo set di cibi si restituisce interamente un nuovo ResourceManager con la lista di cibi aggiornata.
+Per rendere il codice più leggibile ho usato i **type** per definire un alias per Seq[Food].
+Inoltre dopo una prima implementazione ho ristrutturato il codice per far sì che la grow fosse solo una concatenazione di filter e map.
+ 
+### ShiftManager
+Lo **ShiftManager** è il manager incaricato allo spostamento degli animali.
+Questa versione dello ShiftManager richiede che nessun animale che gli viene passato sia all'interno di un'area non calpesabile, pena IllegalArgumentException.
+Il Manager prende una coppia (Animal, Point) (o una Map) e chiamando il metodo walk viene restituita una verisione aggiornata dello stesso.
+Sono riuscito a rappresentare questa classe in modo abbastanza sintetico e ordinato grazie a costrutti quali, filter, map, fold e for comprehension e dovendo questo metodo fare calcoli sulle distanze tra punti, che sarebbero potuti risultare pesanti, ho usato anche la parallelizzazione di scala che permette in modo molto sintetico e veloce di parallelizzare operazioni su strutture di dati.
+
+#### Point
+Questa classe non è stata implementata da me ma per la scrittura dello ShiftManager ho alcuni metodi e ho modificato il calcolo della distanza.
+Prima la distanza era calcolata come distanza euclidea tra due punti ma per renderlo un pò più veloce ho eliminato la radice quadrata che sarebbe stato un fattore comune per tutte quante le operazioni.
+
+### Statistics (e relativa GUI) 
+Essendo le statistiche una raccolta di dati provenienti da diverse fonti mi è parso opportuno definirlo come **Singleton**.
+È particolarmente facile utilizzare questo costrutto in scala e questo ha consentito una scrittura molto veloce di questa componente.
+Le statistiche sono costituite da una misura di tempo che può essere incrementata dalla chiamata all'apposito metodo e una case class con tutti i dati di interesse.
+In particolare questa struttura usa una mappa da tempo a statistiche in modo da capire cosa è successo in ogni momento della simulazione.
+La relativa gui si occupa solo della visualizzazione di questi dati su un LineChart. 
+
 
 ## Davide Schiaroli
 
