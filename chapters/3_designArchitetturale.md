@@ -14,11 +14,11 @@ Ogni specie, una volta inserita nel simulatore viene salvata ed è quindi utiliz
 Per quanto riguarda invece l'habitat, è possibile scegliere tra l'habitat standard, un habitat con zone create randomicamente, un habitat con zone disposte a griglia oppure un habitat vuoto. Per ognuno di essi è possibile definire un campo *unexpected events* che definisce la probabilità che un un animale possa morire a causa di avvenimenti non ordinari come incendi o malattie.
 
 Partendo dai requisiti abbiamo dapprima sviluppato un diagramma UML dei componenti principali dell'applicazione così da notare eventuali scelte errate in fase di progettazione
-![Diagramma UML](/resources/UML1.png)
+![Diagramma UML](/resources/UML1.png "Primo diagramma UML")
 
 In questo diagramma abbiamo definito alcuni punti fondamentali, come la relazione tra animale e specie, la composizione di Habitat in aree, la differenziazione tra tipo di cibo e l'esistenza di zone dell'habitat non percorribili.
 
-![Diagramma UML](/resources/UML2.png)
+![Diagramma UML](/resources/UML2.png "Correzione primo diagramma UML")
 In questo secondo diagramma possiamo invece vedere come vengano modificati alcuni aspetti, come ad esempio introducendo il concetto di *visualizable*, ovvero un entita che verrà effettivamente rappresentata nella mappa e quindi visibile. Un esempio sono il cibo e gli animali. 
 Per quanto riguarda l'architettura è stato scelto di modellare l'applicazione attraverso il pattern MVC. In questo modo abbiamo potuto suddividere l'applicazione in 3 componenti *loosely coupled*. Il componente **View** infatti si occupa solamente di rappresentare le informazioni in una mappa. Il **Model** invece si occupa di modellare le entità di gioco come ad esempio gli Animali, gli Habitat o i cibi e di gestire i dati ricevuti dall'utente tramite la Gui. Il **Controller** invece si occupa di modificare i dati forniti dal Model, elaborandoli e restituendoli aggiornati alla Gui.
 
@@ -36,9 +36,9 @@ Si occupa di istanziare gli animali che sono presenti all'inzio della simulazion
 E' il controller delle battaglie tra due animali.
 Contiene un metodo principale battle che si occupa di calcolare ricorsivamente per tutti gli animali gli eventuali scontri tra animali. 
 E' necessario considerare alcuni fattori:
-  - Solo i carnivori possono incominciare una battaglia
-  - Le vittime (erbivori) per essere attaccate devono essere visibili, ovvero rientrare nella soglia del campo    visivo dell'animale attaccante
-  - Per il calcolo dell'esito vengono calcolate varie probabilità in base a distanza, stazza, forza.
+* Solo i carnivori possono incominciare una battaglia
+* Le vittime (erbivori) per essere attaccate devono essere visibili, ovvero rientrare nella soglia del campo    visivo dell'animale attaccante
+* Per il calcolo dell'esito vengono calcolate varie probabilità in base a distanza, stazza, forza.
 Per ogni battaglia è necessario aggiornare gli animali, eliminando gli animali deceduti e rilasciando le risorse
 
 #### Destination Manager
