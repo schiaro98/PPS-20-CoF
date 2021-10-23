@@ -6,7 +6,7 @@ import model.habitat.Habitat
 import utility.{Logger, Statistics}
 
 import java.awt.Dimension
-import javax.swing.WindowConstants
+import javax.swing.{ImageIcon, WindowConstants}
 import scala.swing.BorderPanel.Position._
 import scala.swing._
 import scala.swing.event.ButtonClicked
@@ -87,8 +87,10 @@ class SimulationGUI(habitat: Habitat,
  */
 case class SimulationButton(setPaused: Boolean => Unit, setSpeed: Boolean => Unit, stop: () => Unit) {
 
-  val playButton: Button = new Button("play") {
-//    icon = new ImageIcon("res/images/play-button.png")
+  //TODO mettere File.separator
+
+  val playButton: Button = new Button() {
+    icon = new ImageIcon("src/main/resources/images/play-button.png")
     this.enabled = false
     reactions += {
       case _: ButtonClicked =>
@@ -97,8 +99,8 @@ case class SimulationButton(setPaused: Boolean => Unit, setSpeed: Boolean => Uni
         pauseButton.enabled = true
     }
   }
-  val pauseButton: Button = new Button("pause") {
-//    icon = new ImageIcon("res/images/pause.png")
+  val pauseButton: Button = new Button() {
+    icon = new ImageIcon("src/main/resources/images/pause.png")
     reactions += {
       case _: ButtonClicked =>
         setPaused(true)
@@ -106,8 +108,8 @@ case class SimulationButton(setPaused: Boolean => Unit, setSpeed: Boolean => Uni
         playButton.enabled = true
     }
   }
-  val speedDownButton: Button = new Button("slower") {
-//    icon = new ImageIcon("res/images/rewind.png")
+  val speedDownButton: Button = new Button() {
+    icon = new ImageIcon("src/main/resources/images/rewind.png")
     this.enabled = false
     reactions += {
       case _: ButtonClicked =>
@@ -116,8 +118,8 @@ case class SimulationButton(setPaused: Boolean => Unit, setSpeed: Boolean => Uni
         speedUpButton.enabled = true
     }
   }
-  val speedUpButton: Button = new Button("faster") {
-//    icon = new ImageIcon("res/images/fast-forward.png")
+  val speedUpButton: Button = new Button() {
+    icon = new ImageIcon("src/main/resources/images/fast-forward.png")
     reactions += {
       case _: ButtonClicked =>
         setSpeed(true)
@@ -125,8 +127,8 @@ case class SimulationButton(setPaused: Boolean => Unit, setSpeed: Boolean => Uni
         speedDownButton.enabled = true
     }
   }
-  val stopButton: Button = new Button("stop") {
-//    icon = new ImageIcon("res/images/stop.png")
+  val stopButton: Button = new Button() {
+    icon = new ImageIcon("src/main/resources/images/stop.png")
     reactions += {
       case _: ButtonClicked => stop()
     }
