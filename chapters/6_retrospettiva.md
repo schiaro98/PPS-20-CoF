@@ -1,12 +1,19 @@
-# Retrospettiva # Design di dettaglio [](#){name=Retrospettiva}
+# Retrospettiva 
 
 
-descrizione finale dettagliata dell'andamento dello sviluppo, del backlog, delle iterazioni. Commenti finali.
+descrizione finale dettagliata dell' andamento dello sviluppo, del backlog, delle iterazioni. Commenti finali.
 Si noti che la retrospettiva è l'unica sezione che può citare aneddoti di cosa è successo in itinere, mentre le altre sezioni fotografino il risultato finale. Se gli studenti decideranno (come auspicato) di utilizzare un product backlog e/o dei backlog delle varie iterazioni/sprint, è opportuno che questi siano file testuali tenuti in versione in una cartella (process), così che sia ri-verificabile a posteriori la storia del progetto.
 
 ## Conclusione
 In conclusione ci riteniamo soddisfatti del lavoro svolto, sulle metodologie utilizzate e sul risultato finale.
-**Da finire obv**
+Nonostante non abbiamo ritenuto necessario adottare tutti i principi della metodologia Scrum o più in generale della 
+filosofia Agile e che alla fine dei conti si tratta comunque di idee che sicuramente sono più coerenti con ambiti "enterprise" 
+riteniamo che siano stati molto d'aiuto durante le varie fasi di questo progetto. 
+In particolare, il fatto che il progetto abbia avuto una deadlin fissa, come se fosse un progetto dato in carico a 
+dei sviluppatori all'interno di una azienda, ci ha fatto pensare ed agire come se fossimo stati veramente all'interno di una azienda.
+La stesura di feature da implementare, i meeting settimanali e la produzione continua di versione funzionanti 
+dell'applicativo, per quanto hanno sicuramente prodotto un overhead temporale, ci ha permesso di risparmiare in quello che invece viene chiamato *debito tecnico*
+
 ## Sviluppi futuri
 
 Durante il progetto per portare a termine tutti gli obiettivi, abbiamo dovuto rinunciare a qualche caratteristica del sistema che ci sarebbe piaciuto implementare.
