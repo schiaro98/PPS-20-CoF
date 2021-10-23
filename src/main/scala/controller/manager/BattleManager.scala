@@ -1,7 +1,7 @@
 package controller.manager
 
 import model._
-import model.animal.{Animal, Big, Medium, Small}
+import model.animal.{Animal, Big, Carnivore, Medium, Small}
 import model.food.Food
 import utility.Logger
 
@@ -36,6 +36,7 @@ object BattleManager {
         case attacker :: t =>
           val enemyOpt = animals
             .filterNot(_ == attacker)
+            .filter(_.species.alimentationType == Carnivore)
             .filter(_.position.distance(attacker.position) < attacker.species.sight)
             .minByOption(_.position.distance(attacker.position))
 
