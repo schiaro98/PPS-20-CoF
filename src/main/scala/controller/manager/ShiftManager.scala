@@ -10,7 +10,8 @@ import scala.util.Random
 
 sealed trait ShiftManager {
   /**
-   * Make all the animals walk
+   *
+   * @return a [[ShiftManager]] with updated [[Animal]]
    */
   def walk(): ShiftManager
 
