@@ -30,7 +30,7 @@ Abbiamo dato particolare attenzione al Model, infatti abbiamo scelto di progetta
 ### Controller
 #### Animal Manager
 E' il controller degli animali presenti nella simulazione.
-Si occupa di istanziare gli animali che sono presenti all'inzio della simulazione, aggiornare i valori degli animali ad ogni ciclo e di calcolare gli eventuali esiti dei eventi inaspettati
+Si occupa di istanziare gli animali che sono presenti all'inzio della simulazione, aggiornare i valori degli animali ad ogni ciclo e ne fa morire alcuni se si verificano eventi inaspettati (ad esempio incendi o epidemie).
 
 #### Battle Manager
 E' il controller delle battaglie tra due animali.
