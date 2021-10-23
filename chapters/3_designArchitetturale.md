@@ -12,7 +12,7 @@ Ogni animale appartiene ad una specie e ogni specie ha alcuni parametri specific
 
 Ogni specie, una volta inserita nel simulatore viene salvata ed è quindi utilizzabile una volta riaperto il programma. E' possibile poi specificare per ogni specie la quantità, in modo da avere una simulazione più frenetica (con molti animali) o più blanda (con meno animali).
 
-Per quanto riguarda invece l'habitat, è possibile scegliere tra l'habitat standard, un habitat con zone create randomicamente, un habitat con zone disposte a griglia oppure un habitat vuoto. Per ognuno di essi è possibile definire un campo *unexpected events* che definisce la probabilità che un un animale possa morire a causa di avvenimenti non ordinari come incendi o malattie.
+Per quanto riguarda invece l'habitat, è possibile scegliere tra l'habitat standard, un habitat con zone create in modo randomico, un habitat con zone disposte a griglia oppure un habitat vuoto. Per ognuno di essi è possibile definire un campo *unexpected events* che definisce la probabilità che un un animale possa morire a causa di avvenimenti non ordinari come incendi o malattie.
 
 Partendo dai requisiti abbiamo dapprima sviluppato un diagramma UML dei componenti principali dell'applicazione così da notare eventuali scelte errate in fase di progettazione
 ![Diagramma UML](/resources/UML1.png "Primo diagramma UML")
@@ -73,7 +73,11 @@ Food rappresenta un tipologia di cibo, con una tipologia (Meat o Vegetable) e un
 Rappresenta un'istanza di Food e contiene un campo quantity, che ne descrive la quantità.
 
 #### Placeable e Point
-Placeable è un trait che abbiamo usato per modellare tutti quei componenti che necessitavano di descrivere una posizione all'interno della mappa, come FoodIstance e Animal. Il suo unico campo è un Point, ovvero una tupla due numeri. Point inoltre fornisce numerosi metodi che permettono di verificare varie condizioni di uguaglianza o meno tra due Point, tra un Point e un asse cartesiano e di calcolare la distanza tra due Point
+Placeable è un trait che abbiamo usato per modellare tutti quei componenti che necessitavano di descrivere una posizione 
+all'interno della mappa, come i cibi e gli animali. 
+Il suo unico campo è un Point, ovvero una tupla due numeri. 
+Point inoltre fornisce numerosi metodi che permettono di verificare varie condizioni di uguaglianza o meno tra due Point,
+tra un Point e un asse cartesiano e di calcolare la distanza tra due Point
 
 ## Descrizione di pattern architetturali usati
 ###MVC

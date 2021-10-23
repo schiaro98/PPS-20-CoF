@@ -3,11 +3,11 @@
 per ogni studente, una sotto-sezione descrittiva di cosa fatto/co-fatto e con chi, e descrizione di aspetti implementativi importanti non già presenti nel design
 Cosa ha fatto, classi più rappresentative
 
-Luzi
+## Simone Luzi
 
-Rossi
+## Luca Rossi
 
-Schiaroli
+## Davide Schiaroli
 
 Inizialmente, prima di iniziare con la analisi del dominio del problema, mi sono occupato di alcuni aspetti di CI/CD e di setup del progetto. 
 Ho creato poi il repository GitHub e il progetto Scala/Sbt, infine mi sono occupato della pipeline, che inizialmente aveva il solo compito di compilare il programma. 

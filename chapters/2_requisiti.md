@@ -1,5 +1,5 @@
 # Requisiti 
-In questo capitolo verranno analizzati i requisiti del progetto, divisi nelle principali tipoligie.
+In questo capitolo verranno analizzati i requisiti del progetto, divisi nelle principali tipologie.
 
 ## Requisiti di business
 I requisiti di business consistono nelle funzionalità di alto livello che l'applicazione dovrà fornire, in linea con le migliori speranze del committente riguardo al risultato finale.
