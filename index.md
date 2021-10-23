@@ -6,6 +6,8 @@
 
 **Davide Schiaroli** - <davide.schiaroli2@studio.unibo.it>
 
+This report can also be viewed on the following website [Report](https://schiaro98.github.io/PPS-20-CoF)
+
 {% include_relative chapters/1_processoDiSviluppo.md %}
 
 {% include_relative chapters/2_requisiti.md %}
