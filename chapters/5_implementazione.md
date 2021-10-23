@@ -51,30 +51,31 @@ E' stato necessario creare dei controller per la fasi di battaglia, di movimento
 e di alimentazione (permettere ovvero di far mangiare e bere gli animali).
 Ho inoltre lavorato sulle classi Point, sulla implementazione di un Logger e nella creazione delle aree negli Habitat.
 
-## Controller
+### Controller
 Per quanto riguarda l'implementazione del Controller, mi sono occupato della realizzazione dei manager di combattimento, alimentazione e 
 destinazione. Per tutti e 3 i manager si è deciso di costruire meno metodi possibili, cercando di evitare side effects e sopratutto cercando di costruire metodi tail-recursive.
 
-### Battle Manager
+#### Battle Manager
 Questo manager aveva il compito di prendere come input gli animali presenti nella mappa e di far combattere gli animali che rientravano in una distanza molto limitata, chiamata *Hitbox*. Un'ulteriore filtro che andava considerato è che solamente gli animali carnivori potessero dare il via ad una battaglia verso altri animali. Per avere un responso randomico della battaglia, ma ponderando comunque alcuni fattori come taglia, forza e distanza tra animali,ho creato dei metodi che calcolassero la probabilità utilizzando questi discriminanti. Ogni metodo dopo aver calcolato la probabilità, mi restituiva un valore Booleano. Se il numero di *true* superava il numero di *false* la battaglia era vinta dall'attaccante, altrimenti dal difensore. Questo metodo, oltre a restituire la lista di animali aggiornata, cioè gli animali presi in input meno quelli deceduti in combattimento, restituiva anche tutte le risorse rilasciate dagli animali deceduti. 
 Quando una battaglia va a termine, viene anche visualizzato nella area di testo della simulazione l'esito della battaglia, questo per dare un'idea di cosa succede nei vari momenti della simulazione.
 
-### Destination Manager
+#### Destination Manager
 Questo manager invece si occupa di dare delle posizioni agli animali verso il quale andare. Sostanzialmente serve ad indicare agli animali le prede da attaccare, il cibo (carne e verdure) da mangiare e le zone d'acqua da dove bere.
 Questo metodo, nella ricerca di eventuali punti di interesse, dava la priorità alle zone d'acqua in quanto più rare e più utili per la sopravvivenza. 
 Se non vengono trovate zone d'acqua, vengono cercate, in base alla dieta dell'animale eventuali verdure, oppure carni se si tratta di un carnivoro. Inoltre se si tratta di carnivori vengono anche segnalate le prede vicine.
 
-### Feed manager
+#### Feed manager
 Il feed manager si occupa di gestire effettivamente le fasi di alimentazione degli animali nella mappa. Anche in questo manager sono stati utilizzati solo metodi tail recursive. Anche qua venivano eseguiti controlli sulle diete degli animali, per permettere ad erbivori e carnivori di mangiare solo cibi adeguati e sulle distanze tra animali e aree d'acqua e verso cibi.
 
-## Model
+### Model
 Nella parte di Model mi sono occupato di parti legagte alla **View** come le RectangleArea e Shape, al concetto di Point, alla creazione di Habitat randomici e a griglia
 
-### Shape e RectangleArea
+#### Shape e RectangleArea
 Shape è un Trait che viene implementato dalle classi Rectangle e Circle. In particolare è necessario che le classi implementino il metodo **Draw** che prendi in input un parametro di tipo Graphics2D, ovvero API di Java utilizzata per disegnare grafiche in 2 dimensioni. La classe Rectangle è stata usata per disegnare le aree e gli animali mentre la classe Circle per le verdure e la carne.
 RectangleArea contiene alcuni metodi utili a verificare alcune condizione come ad esempio se due rettangoli fanno *overlap* ovvero si sovrappongono e per creare le aree in modo random
 
-### Point
+#### Point
 Point è la modellazione di un punto nella mappa e permette, oltre ad evitare di utilizzare Tuple2 o metodi che prendono due elementi, di rendere chiaro l'intento quando viene usato come parametro o come campo in una classe. Contiene inoltre numerosi metodi di utility per verificarne la posizione rispetto ad altri punti, rispetto ad assi cartesiano oppure per la creazione randomica.
 
-### 
+#### Random e Grid Habitat
+Queste due diverse implementazioni di Habitat sono utili a verificare come gli animali si comportano in presenza di habitat diversi. L'habitat random è stato realizzato in modo da creare 4 aree Random di dimensione e tipologia variabile. E' possibile che creando aree totalmente random non esistano aree d'acqua, in questo caso gli animali muoriranno quando il loro livello di sete arriverà a zero. Nella area a griglia ho pensato invece di eliminare questo problema creando solamente aree d'acqua o fertili, in modo che ci sia la possibilità che gli animali continuino a vivere per molto tempo. 
