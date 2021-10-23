@@ -18,7 +18,6 @@ case object Old extends Age
  * Trait that represent an animal of a specific [[Species]].
  */
 sealed trait Animal extends Placeable {
-
   val species: Species
   val health: Int
   val thirst: Int
