@@ -1,6 +1,6 @@
 package utility
 
-import model.animal.{Carnivore, Small, Species}
+import model.animal.{Carnivore, Medium, Small, Species}
 import model.food.{FoodType, Vegetable}
 import org.scalatest.funsuite.AnyFunSuite
 import utility.serializer.{DefaultSerializer, OfFood, OfSpecies, Serializer}
@@ -28,15 +28,13 @@ class SerializeTest extends AnyFunSuite{
     assert(json === "{\"brand\":\"Rover\",\"doors\":5}{\"brand\":\"Ferrari\",\"doors\":3}{\"brand\":\"Fiat\",\"doors\":5}")
   }
 
-  test("serializeManyToFile"){
-    val fileName = "cars.txt"
+  test("Test serialize and deserialize from file"){
+    val fileName = "cars.json"
     val cars = List(car, car2, car3)
     defaultSerializer.serializeManyToFile(cars)(fileName)
-//    val path = Path.of("res"+File.separator+"serialization"+File.separator+fileName)
-//    val json = Files.readString(path, StandardCharsets.UTF_8)
-    val deser = defaultSerializer.deserializeManyFromFile(fileName)(classOf[Car])
-//    assert(json === "{\"brand\":\"Rover\",\"doors\":5}{\"brand\":\"Ferrari\",\"doors\":3}{\"brand\":\"Fiat\",\"doors\":5}")
-      assert(deser.head.doors == cars.head.doors)
+    //check that all cars from the first list have the same doors of the deserialized one
+    val deserializedCars = defaultSerializer.deserializeManyFromFile(fileName)(classOf[Car])
+    assert(deserializedCars.zip(cars).count(t => t._1.doors == t._2.doors) == cars.size)
   }
 
   test("deserializeOne"){
@@ -46,14 +44,6 @@ class SerializeTest extends AnyFunSuite{
 
   test("deserializeMany"){
     val deserializedCars = defaultSerializer.deserializeMany("{\"brand\":\"Rover\",\"doors\":5}{\"brand\":\"Ferrari\",\"doors\":3}{\"brand\":\"Fiat\",\"doors\":5}")(classOf[Car])
-    assert(deserializedCars.length === 3)
-    assert(deserializedCars.head.doors === 5)
-  }
-
-  test("deserializeManyFromFile"){
-    val fileName = "cars.txt"
-//    defaultSerializer.serializeManyToFile(List(car, car2, car3))(fileName)
-    val deserializedCars = defaultSerializer.deserializeManyFromFile(fileName)(classOf[Car])
     assert(deserializedCars.length === 3)
     assert(deserializedCars.head.doors === 5)
   }
@@ -68,32 +58,19 @@ class SerializeTest extends AnyFunSuite{
     assert(dog.size == Small)
   }
 
-  test("Test serialize many to file for Species"){
-    val fileName = "speciesSerializerTest.txt"
-//    speciesSerializer.serializeManyToFile(Seq(Species("dog", Small, 100, 10, Carnivore, Color.red), Species("cat", Small, 80, 60, Carnivore, Color.blue), Species("cow", Medium, 40 ,50, Carnivore, Color.green)))(fileName)
-//    val path = Path.of(fileName)
-//    val json = Files.readString(path, StandardCharsets.UTF_8)
-//    assert(json == "{\n  \"color\": {\n    \"value\": -65536,\n    \"falpha\": 0.0\n  },\n  \"name\": \"dog\",\n  \"size\": \"Small\",\n  \"strength\": 100,\n  \"sight\": 10,\n  \"alimentationType\": \"Carnivore\"\n}{\n  \"color\": {\n    \"value\": -16776961,\n    \"falpha\": 0.0\n  },\n  \"name\": \"cat\",\n  \"size\": \"Small\",\n  \"strength\": 80,\n  \"sight\": 60,\n  \"alimentationType\": \"Carnivore\"\n}{\n  \"color\": {\n    \"value\": -16711936,\n    \"falpha\": 0.0\n  },\n  \"name\": \"cow\",\n  \"size\": \"Medium\",\n  \"strength\": 40,\n  \"sight\": 50,\n  \"alimentationType\": \"Carnivore\"\n}")
+  test("Test serialize and deserialize many to file for Species"){
+    val fileName = "speciesSerializerTest.json"
+    val species = Seq(Species("dog", Small, 100, 10, Carnivore, Color.red), Species("cat", Small, 80, 60, Carnivore, Color.blue), Species("cow", Medium, 40 ,50, Carnivore, Color.green))
+    speciesSerializer.serializeManyToFile(species)(fileName)
+    val deserializedSpecies = speciesSerializer.deserializeManyFromFile(fileName)(classOf[Species])
+    assert(deserializedSpecies.zip(species).count(t => t._1.name == t._2.name) == species.size)
   }
 
-  test("Test deserialize many from file for Species"){
-    val fileName = "speciesSerializerTest.txt"
-    val species = speciesSerializer.deserializeManyFromFile(fileName)(classOf[Species])
-    assert(species.lengthIs == 3)
-  }
-
-  test("Test serialize many to file for Food"){
-    val fileName = "foodSerializer.txt"
-    foodSerializer.serializeManyToFile(Seq(FoodType(10, Vegetable, Color.green), FoodType(20, Vegetable, Color.green), FoodType(15, Vegetable, Color.ORANGE)))(fileName)
-//    val path = Path.of("res"+File.separator+"serialization"+File.separator+fileName)
-//    val json = Files.readString(path, StandardCharsets.UTF_8)
-//    assert(json == "{\"color\":{\"value\":-16711936,\"falpha\":0.0},\"energy\":10,\"foodCategory\":\"Vegetable\"}{\"color\":{\"value\":-16711936,\"falpha\":0.0},\"energy\":20,\"foodCategory\":\"Vegetable\"}{\"color\":{\"value\":-14336,\"falpha\":0.0},\"energy\":15,\"foodCategory\":\"Vegetable\"}")
-  }
-
-  test("Test deserialize many from file for Food"){
-    val fileName = "foodSerializer.txt"
-    val foods = foodSerializer.deserializeManyFromFile(fileName)(classOf[FoodType])
-    assert(foods.lengthIs == 3)
-  }
-
+  test("Test serialize and deserialize many to file for Food"){
+    val fileName = "foodTypeSerializerTest.json"
+    val foodTypes = Seq(FoodType(10, Vegetable, Color.green), FoodType(20, Vegetable, Color.green), FoodType(15, Vegetable, Color.ORANGE))
+    foodSerializer.serializeManyToFile(foodTypes)(fileName)
+    val deserializedFoods = foodSerializer.deserializeManyFromFile(fileName)(classOf[FoodType])
+    assert(deserializedFoods.zip(foodTypes).count(t=>t._1.color==t._2.color && t._1.energy == t._2.energy) == foodTypes.size)
+   }
 }

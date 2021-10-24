@@ -8,9 +8,9 @@ import java.awt.Color
 object Constants {
 
   // ------- Text files -------
-  val FoodsFilePath = "foods.txt"
-  val MainMap = "map.txt"
-  val SavedSpecies = "species.txt"
+  val FoodsFilePath = "foodTypes.json"
+  val MainMap = "map.json"
+  val SavedSpecies = "species.json"
 
   // ------- Food -------
   val DefaultFoodQuantity = 10
@@ -61,7 +61,7 @@ object Constants {
 
   // ------- Habitat ------
   val DefaultGridSize = 16
-  val MaxDimension = 1_000
+  val MaxDimension = 600
 
   //------- ResourceManager ----
   val MaxFoods = 80

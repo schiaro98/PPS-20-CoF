@@ -10,7 +10,6 @@ import model.shape.RectangleArea
 import java.awt.Color
 import java.io._
 import java.lang.reflect.Type
-import java.nio.file.Paths
 import java.util.stream.Collectors
 import scala.collection.mutable.ListBuffer
 import scala.reflect.io.File
@@ -55,11 +54,14 @@ object Serializer {
     }
 
     def serializeManyToFile[U](objs:Iterable[U])(fileName:String): Unit ={
-      val res = getClass.getClassLoader.getResource("res"+File.separator+"serialization"+File.separator+fileName)
-      val f = Paths.get(res.toURI).toFile
-      val path2 = f.getAbsolutePath
-      println(path2)
-      val fw = new FileWriter(path2)
+      //val res = getClass.getClassLoader.getResource(File.separator+"serialization"+File.separator+fileName)
+      val path = "src"+File.separator+"main"+File.separator+"resources"+File.separator+"serialization"+File.separator+fileName
+//      println(res)
+//      val f = Paths.get(res.toURI).toFile
+//      val path2 = f.getAbsolutePath
+//      println(path2)
+//      val fw = new FileWriter(path2)
+      val fw = new FileWriter(path)
       val pw = new PrintWriter(fw)
       pw.print(serializeMany(objs))
       pw.close()
