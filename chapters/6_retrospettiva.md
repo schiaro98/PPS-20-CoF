@@ -1,5 +1,21 @@
 # Retrospettiva 
+## Risultato finale
+Qui possiamo vedere come si presenta l'applicazione, con la spiegazione di tutti i campi presenti nelle varie parti della Gui.
 
+Nel primo frame possiamo aumentare o diminuire la quantità di animali per ogni specie in modo da rendere la simulazione più movimentata o meno. Sono poi presenti i pulsanti per creare una nuova specie o per passare alla creazione di una nuova specie.
+![View scelta animali](/resources/view1.png "View scelta animali")
+
+Nel pannello di creazione specie possiamo specificare alcuni campi come nome, forza, vista, taglia e dieta della specie. E' presente poi un pannello per la scelta del colore con cui verrà disegnato l'animale nella mappa.
+![View creazione nuova specie](/resources/view5.png "View creazione nuova specie")
+
+Se invece procediamo alla scelta di un habitat, possiamo scegliere tra l'habitat di default, oppure scegliere tra habitat con zone random, con zone a griglia oppure vuoto. Per ogni habitat possiamo specificare una probabilità che avvengano eventi casuali che possono uccidere o meno gli animali presenti. Per tutti gli habitat meno quello casuale è possibiile specificare una dimensione per la mappa.
+![View scelta habitat](/resources/view2.png "View scelta habitat")
+
+Una volta partita la simulazione è possibile visualizzare, oltre ovviamente alla simulazione che avviene nella parte superiore, gli eventi che accadono e fermare o velocizzare il tempo tramite l'area di testo e i pulsanti presenti nella parte inferiore.
+![View simulazione](/resources/view3.png "View simulazione")
+
+Una volta completata la simulazione, ovvero quando non sono più presenti animali, viene presentato un report contenente le statistiche della simulazione. Ovvero di come i dati riguardanti il cibo e gli animali presenti siano evoluti nel tempo.
+![View statistiche](/resources/view4.png "View statistiche")
 ## Conclusione e commenti finali
 In conclusione ci riteniamo soddisfatti del lavoro svolto, sulle metodologie utilizzate e sul risultato finale.
 L'obiettivo più graficante secondo noi è stato quello di riuscire a costruire una applicazione pensando in modo funzionale.
