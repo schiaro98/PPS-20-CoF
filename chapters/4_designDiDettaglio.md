@@ -1,25 +1,6 @@
 # Design di dettaglio 
 In questo capitolo andremo ad esplorare più nel dettaglio  le scelte progettuali che sono state attuate.
 
-## Pattern di progettazione
-### Factory 
-Scala ci permette di implementare il design pattern factory col minimo sforzo.
-Il costrutto che abbiamo usato nella quasi totalità dei file è stato quello di dichiarare un trait, un companion object con la apply (spesso con valori di default) e una classe privata all'interno del companion object che implementasse il trait. 
-Questo ci ha permesso di nascondere l'implementazione delle classi e dei metodi e di istanziare molto più comodamente gli oggetti.
-
-### Singleton
-Il pattern Singleton ci viene fornito gratuitamente da scala.
-In particolare ha avuto una grandissima utilità in quelle classi di utility, utilizzate da più classi e che avessero una logica comune, più nel dettaglio, il logger e le statistiche sono risultati molto semplici da sviluppare grazie ad un costrutto del genere.
-
-### Strategy
-Il core funzionale di scala permette una definizione veloce di lambda, utilizzate a volte come strategy.
-
- ### Flyweight (quasi)
- Abbiamo usato delle strutture che ci permettono di usare il pattern Flyweight.
- Il pattern Flyweight consiste nel depositare parti fissi comuni e immutabili di dati in oggetti immutabili che sono usati come campi da altri oggetti che modellano la parte dinamica dell'esecutivo.
- Nel nostro codice abbiamo diverse strutture organizzate come sopra descritto, ma come anticipato, abbiamo deciso di utilizzare solamente oggetti immutabili, anche le parti dinamiche sono modellate tramite oggetti immutabili.
- Quindi il vantaggio di performance dato dal pattern flyweight viene un po' perso ma non avendo requisiti sotto quel punto di vista non ci siamo posti il problema e se in futuro dovessimo decidere di implementare il pattern flyweight nella sua totalità sarebbe molto facile convertire il codice prodotto. 
-
 ## Organizzazione dei package
 
 ![Diagramma dei package](https://github.com/schiaro98/PPS-20-CoF/blob/docs/resources/package.png)
@@ -75,3 +56,22 @@ all'interno della mappa, come i cibi e gli animali.
 Il suo unico campo è un Point, ovvero una tupla due numeri. 
 Point inoltre fornisce numerosi metodi che permettono di verificare varie condizioni di uguaglianza o meno tra due Point,
 tra un Point e un asse cartesiano e di calcolare la distanza tra due Point
+
+## Pattern di progettazione
+### Factory 
+Scala ci permette di implementare il design pattern factory col minimo sforzo.
+Il costrutto che abbiamo usato nella quasi totalità dei file è stato quello di dichiarare un trait, un companion object con la apply (spesso con valori di default) e una classe privata all'interno del companion object che implementasse il trait. 
+Questo ci ha permesso di nascondere l'implementazione delle classi e dei metodi e di istanziare molto più comodamente gli oggetti.
+
+### Singleton
+Il pattern Singleton ci viene fornito gratuitamente da scala.
+In particolare ha avuto una grandissima utilità in quelle classi di utility, utilizzate da più classi e che avessero una logica comune, più nel dettaglio, il logger e le statistiche sono risultati molto semplici da sviluppare grazie ad un costrutto del genere.
+
+### Strategy
+Il core funzionale di scala permette una definizione veloce di lambda, utilizzate a volte come strategy.
+
+ ### Flyweight (quasi)
+ Abbiamo usato delle strutture che ci permettono di usare il pattern Flyweight.
+ Il pattern Flyweight consiste nel depositare parti fissi comuni e immutabili di dati in oggetti immutabili che sono usati come campi da altri oggetti che modellano la parte dinamica dell'esecutivo.
+ Nel nostro codice abbiamo diverse strutture organizzate come sopra descritto, ma come anticipato, abbiamo deciso di utilizzare solamente oggetti immutabili, anche le parti dinamiche sono modellate tramite oggetti immutabili.
+ Quindi il vantaggio di performance dato dal pattern flyweight viene un po' perso ma non avendo requisiti sotto quel punto di vista non ci siamo posti il problema e se in futuro dovessimo decidere di implementare il pattern flyweight nella sua totalità sarebbe molto facile convertire il codice prodotto. 
