@@ -121,7 +121,10 @@ object ResourceManager {
 
     override def importFoodTypesFromFile(fileName: String): ResourceManager = {
       val serializer: Serializer = Serializer(OfFood)
-      val growableFoods = serializer.deserializeManyFromFile(fileName)(classOf[FoodType])
+      val growableFoods = try {
+        serializer.deserializeManyFromFile(fileName)(classOf[FoodType])
+      } catch {
+        case e: NullPointerException => Seq(FoodType(5, Vegetable), FoodType(7, Vegetable))}
       ResourceManager(habitat, growableFoods.toSet, foods)
     }
 

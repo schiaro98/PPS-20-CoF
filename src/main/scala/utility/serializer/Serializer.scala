@@ -54,13 +54,7 @@ object Serializer {
     }
 
     def serializeManyToFile[U](objs:Iterable[U])(fileName:String): Unit ={
-      //val res = getClass.getClassLoader.getResource(File.separator+"serialization"+File.separator+fileName)
       val path = "src"+File.separator+"main"+File.separator+"resources"+File.separator+"serialization"+File.separator+fileName
-//      println(res)
-//      val f = Paths.get(res.toURI).toFile
-//      val path2 = f.getAbsolutePath
-//      println(path2)
-//      val fw = new FileWriter(path2)
       val fw = new FileWriter(path)
       val pw = new PrintWriter(fw)
       pw.print(serializeMany(objs))
@@ -83,15 +77,15 @@ object Serializer {
       tempList.toSeq
     }
 
+    @throws(classOf[NullPointerException])
     def deserializeManyFromFile[T](fileName: String)(classOfT: Class[T]): Seq[T] = {
       import scala.reflect.io.Path
 //      Source.fromInputStream()
       val path = Path("src"+File.separator+"main"+File.separator+"resources"+File.separator+"serialization"+File.separator+fileName)
       val fileInputStream = if (File(path).isFile) new FileInputStream(File(path).jfile) else {
-//        println(getClass.getResource(File.separator+"serialization"+File.separator+fileName).getPath)
-//        File(getClass.getResource(File.separator+"serialization"+File.separator+fileName).getPath)
         getClass.getResourceAsStream(File.separator+"serialization"+File.separator+fileName)
       }
+
       val isr = new InputStreamReader(fileInputStream)
       val br = new BufferedReader(isr)
       val json = br.lines().collect(Collectors.joining("\n"))

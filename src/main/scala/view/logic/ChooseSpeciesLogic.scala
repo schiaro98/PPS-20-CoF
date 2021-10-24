@@ -1,6 +1,6 @@
 package view.logic
 
-import model.animal.{Size, Species, Type}
+import model.animal._
 import utility.Constants
 import utility.serializer.{OfSpecies, Serializer}
 
@@ -24,10 +24,18 @@ class ChooseSpeciesLogic(speciesFile: String) {
    */
   def initialize(): Unit = getAllSpecies.foreach(s => species += (s -> Constants.InitialNumForAnimals))
 
-  def getAllSpecies: Seq[Species] = serializer.deserializeManyFromFile(speciesFile)(classOf[Species])
+  def getAllSpecies: Seq[Species] = try {
+    serializer.deserializeManyFromFile(speciesFile)(classOf[Species])
+  } catch {
+    case e: NullPointerException =>
+      Seq(Species("Hippopotamus", Big, 30, 10, Carnivore, new Color(-8752012)),
+          Species("Hyena", Small, 20, 15, Carnivore, new Color(-3398716)))
+    case _ => Seq.empty
+  }
 
   /**
    * Add a new species if it doesn't exist
+   *
    * @param s species of the animal
    */
   def add(s: Species): Unit = {
@@ -87,7 +95,7 @@ class ChooseSpeciesLogic(speciesFile: String) {
    * @param s species to be added
    */
   def addSpeciesInTheFile(s: Species): Unit = {
-    try{
+    try {
       val speciesFromFile = serializer.deserializeManyFromFile(speciesFile)(classOf[Species]) :+ s
       serializer.serializeManyToFile(speciesFromFile)(speciesFile)
     } catch {

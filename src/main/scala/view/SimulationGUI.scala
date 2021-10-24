@@ -90,6 +90,9 @@ case class SimulationButton(setPaused: Boolean => Unit, setSpeed: Boolean => Uni
 
   val playButton: Button = new Button() {
     icon = getImage("play-button.png")
+    if (icon == null) {
+      text = "play"
+    }
     this.enabled = false
     reactions += {
       case _: ButtonClicked =>
@@ -100,6 +103,9 @@ case class SimulationButton(setPaused: Boolean => Unit, setSpeed: Boolean => Uni
   }
   val pauseButton: Button = new Button() {
     icon = getImage("pause.png")
+    if (icon == null) {
+      text = "pause"
+    }
     reactions += {
       case _: ButtonClicked =>
         setPaused(true)
@@ -109,6 +115,9 @@ case class SimulationButton(setPaused: Boolean => Unit, setSpeed: Boolean => Uni
   }
   val speedDownButton: Button = new Button() {
     icon = getImage("rewind.png")
+    if (icon == null) {
+      text = "slower"
+    }
     this.enabled = false
     reactions += {
       case _: ButtonClicked =>
@@ -119,6 +128,9 @@ case class SimulationButton(setPaused: Boolean => Unit, setSpeed: Boolean => Uni
   }
   val speedUpButton: Button = new Button() {
     icon = getImage("fast-forward.png")
+    if (icon == null) {
+      text = "faster"
+    }
     reactions += {
       case _: ButtonClicked =>
         setSpeed(true)
@@ -128,6 +140,9 @@ case class SimulationButton(setPaused: Boolean => Unit, setSpeed: Boolean => Uni
   }
   val stopButton: Button = new Button() {
     icon = getImage("stop.png")
+    if (icon == null) {
+      text = "stop"
+    }
     reactions += {
       case _: ButtonClicked => stop()
     }
@@ -137,7 +152,11 @@ case class SimulationButton(setPaused: Boolean => Unit, setSpeed: Boolean => Uni
     val path = Path("src"+File.separator+"main"+File.separator+"resources"+File.separator+"images"+File.separator+fileName)
     File(path).isFile match {
       case true => new ImageIcon(path.path)
-      case false => new ImageIcon(getClass.getResource(File.separator+"images"+File.separator+fileName))
+      case false => try {
+        new ImageIcon(getClass.getResource(File.separator + "images" + File.separator + fileName))
+      } catch {
+        case e: NullPointerException => null
+      }
     }
   }
 

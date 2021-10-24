@@ -20,10 +20,11 @@ class StatisticsTest extends AnyFunSuite{
     assert(Statistics.map(Statistics.time).foods == 1)
   }
 
-  test("Adding others value in time 1"){
+  test("Adding others value in restarted Statistics"){
+    Statistics.restart()
     Statistics.update(foods = 1)
     Statistics.update(foodEaten = 1)
-    assert(Statistics.map(Statistics.time).foods == 2 )
+    assert(Statistics.map(Statistics.time).foods == 1 )
     assert(Statistics.map(Statistics.time).foodEaten == 1 )
   }
 

@@ -3,8 +3,7 @@ package model.habitat
 import model.position.Point
 import model.shape.RectangleArea
 import model.{Probability, shape}
-import utility.Constants
-import utility.serializer.{OfArea, Serializer}
+import utility.{Constants, OursMap}
 
 import scala.util.Random
 
@@ -74,7 +73,7 @@ object Habitat {
    */
   def apply(unexpectedEvents: Probability = Probability(0),
             dimensions: (Int, Int) = Constants.MainMapDimension,
-            areas: Seq[Area] = Serializer(OfArea).deserializeManyFromFile(Constants.MainMap)(classOf[Area]),
+            areas: Seq[Area] = OursMap.areas
            ): Habitat = SimpleHabitat(unexpectedEvents, dimensions, areas)
 
   /**
