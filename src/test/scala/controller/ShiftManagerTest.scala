@@ -1,16 +1,17 @@
 package controller
 
 import controller.manager.ShiftManager
-import model.animal.{Animal, Carnivore, Herbivore, Medium, Small, Species}
-import model.habitat.{Area, EmptyHabitatType, Fertile, Habitat, RandomHabitatType, Water}
+import model.animal._
+import model.habitat._
 import model.position.Point
 import model.shape.RectangleArea
-import model.{animal, habitat, _}
-import org.scalatest.funsuite.AnyFunSuite
+import model._
+import org.scalatest.flatspec.AnyFlatSpec
+import org.scalatest.matchers.should
 
 import scala.util.Random
 
-class ShiftManagerTest extends AnyFunSuite {
+class ShiftManagerTest extends AnyFlatSpec with should.Matchers {
   val ourHabitat: Habitat = habitat.Habitat(Probability(0))
 
   val MaxX = 500
@@ -32,23 +33,27 @@ class ShiftManagerTest extends AnyFunSuite {
   val dest3: Point = Point.getRandomPoint(Point(MaxX, MaxY))
   val dest4: Point = Point.getRandomPoint(Point(MaxX, MaxY))
 
-
-  test("Create ShiftManager") {
-    val sm: ShiftManager = ShiftManager(ourHabitat, Map(t1 -> Point(55, 100)))
-    assert(sm.animals.size == 1)
+  behavior of "An empty ShiftManager"
+  it should "have size 0" in{
+    assert(ShiftManager(ourHabitat).animals.isEmpty)
   }
 
-  test("Single animal arrives at destination in empty habitat") {
+  "ShiftManager" should "be created" in {
+    val sm: ShiftManager = ShiftManager(ourHabitat, Map(t1 -> Point(55, 100)))
+    sm.animals.size should be (1)
+  }
+
+  "Single animal" should  " arrive at destination inside empty habitat" in  {
     val dest = Point(55, 100)
     val habitat = model.habitat.Habitat(EmptyHabitatType, Probability(0), (500, 500), Seq.empty[Area])
     var sm: ShiftManager = ShiftManager(habitat, Map(t1 -> dest))
     while (sm.animals.count(_.position == dest) != 1) {
       sm = sm.walk()
     }
-    assert(sm.animals.count(_.position == dest) == 1)
+    sm.animals.count(_.position == dest) should  be (1)
   }
 
-  test("Multiple animals arrive at different random destinations in empty habitat") {
+  "Multiple animals" should "arrive at different random destinations in empty habitat" in {
     val destinations = Set(dest1, dest2, dest3, dest4)
     val habitat = model.habitat.Habitat(EmptyHabitatType, Probability(0), (MaxX, MaxY), Seq.empty[Area])
     var sm: ShiftManager = ShiftManager(habitat,
@@ -63,7 +68,7 @@ class ShiftManagerTest extends AnyFunSuite {
     assert(sm.animals.count(a => destinations.contains(a.position)) == sm.animals.size)
   }
 
-  test("Multiple animals arrive at the same random destination in empty habitat") {
+  "Multiple animals " should " arrive at the same random destination in empty habitat" in {
     val r = (x: Int) => Random.nextInt(x)
     val dest = Point(r(500), r(500))
     val habitat = model.habitat.Habitat(EmptyHabitatType, Probability(0), (500, 500), Seq.empty[Area])
@@ -74,20 +79,19 @@ class ShiftManagerTest extends AnyFunSuite {
     assert(sm.animals.count(_.position == dest) == sm.animals.size)
   }
 
-  test("One animal walk to a random destination in ours habitat") {
+  "One animal walking to a random destination in ours habitat" should "get closer" in {
     val d = getLegalRandomPoint(ourHabitat)
     val dist = t1.position.distance(d)
     var sm: ShiftManager = ShiftManager(ourHabitat, (t1, d))
     for (_ <- 0 to 100) {
       sm = sm.walk()
     }
-    assert(sm.animals.head.position.distance(d) < dist)
+    assert(sm.animals.head.position.distance(d) <= dist)
   }
 
-  test("Test 10 times multiple animals walk to one random destination in ours habitat") {
+  "10 times multiple animals walk to one random destination in ours habitat" should " go closer" in{
     for (_ <- 0 until 10) {
       val dest = Point.getRandomPoint(Point(MaxX, MaxY))
-
       val sumOfDistances = t1.position.distance(dest) + e1.position.distance(dest) +
         d1.position.distance(dest) + c1.position.distance(dest)
 
@@ -101,7 +105,7 @@ class ShiftManagerTest extends AnyFunSuite {
     }
   }
 
-  test("Multiple animals walk to different random destinations in Random Habitat") {
+  "Multiple animals walk to different random destinations in Random Habitat" should "get closer" in{
     val randHabitat = habitat.Habitat(RandomHabitatType, Probability(0), (500, 500), Seq.empty)
 
     val t: Animal = animal.Animal(tiger, getLegalRandomPoint(randHabitat))
@@ -117,7 +121,7 @@ class ShiftManagerTest extends AnyFunSuite {
     assert(sm.animals.count(isAnimalInLegalPosition(randHabitat, _)) == sm.animals.size)
   }
 
-  test("Destination is inside non walkable area and animal doesn't go inside") {
+  "Animals" should "not go inside walkable areas" in {
     val area = habitat.Area(Water, RectangleArea(Point(15, 15), Point(50, 50)))
     val h = habitat.Habitat(unexpectedEvents = Probability(10), areas = Seq(area))
     val t: Animal = animal.Animal(tiger, getLegalRandomPoint(h))
