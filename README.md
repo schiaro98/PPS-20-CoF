@@ -11,7 +11,7 @@ Circle of Life, abbreviated in CoF, is an animal life simulator. In this applica
 ## Requirements
 Scala, Java and sbt are required for this project
 ``` shell
-  - JDK version >= 8
+  - JDK version == 11
   - Scala version >= 2.12
   - sbt version >= 1.5.5
 ```
