@@ -1,1 +1,0 @@
-{"icon":"icon.png","energy":5}{"icon":"icon.png","energy":10}{"icon":"icon.png","energy":15}{"icon":"icon.png","energy":50}

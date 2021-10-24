@@ -1,7 +1,11 @@
 package view
 
-import model.{Animal, FoodInstance, Habitat}
-import utility.{Constants, Point}
+import model.animal.Animal
+import model.food.Food
+import model.habitat.Habitat
+import model.position.Point
+import model.shape.{Circle, Rectangle, RectangleArea, Shape}
+import utility.{AnimalUtils, Constants}
 
 import java.awt.event.{MouseEvent, MouseMotionListener}
 import java.awt.{Color, Dimension, Graphics2D}
@@ -10,17 +14,17 @@ import scala.collection.mutable.ArrayBuffer
 import scala.swing.Panel
 
 /**
- * Panel used to draw the shapes of the areas, animals and food; it creates also the mouse listeners
+ * [[Panel]] used to draw the shapes of the areas, animals and food; it creates also the mouse listeners
  * that shows the [[AnimalPopup]].
  *
- * @param width  the width of the Frame (and also of the Habitat).
- * @param height the height of the Frame (and also of the Habitat).
+ * @param dimension the width and the height of the Frame (and also of the Habitat).
  */
-class SimulationPanel(val width: Int, val height: Int) extends Panel {
+class SimulationPanel(dimension: (Int, Int)) extends Panel {
 
+  val (width, height) = dimension
   val shapes = new ArrayBuffer[Shape]
-  var popups: Seq[AnimalPopup] = Seq.empty //TODO lasciare var?
-  var listener: Seq[MouseMotionListener] = Seq.empty //TODO lasciare var?
+  var popups: Seq[AnimalPopup] = Seq.empty
+  var listener: Seq[MouseMotionListener] = Seq.empty
 
   peer.setPreferredSize(new Dimension(width, height))
   opaque = true
@@ -28,56 +32,53 @@ class SimulationPanel(val width: Int, val height: Int) extends Panel {
 
   override def paint(g: Graphics2D): Unit = {
     g.clearRect(0, 0, width, height)
-    for (s <- shapes) {
-      g.setColor(s.color)
-      s.draw(g)
-    }
+    shapes.foreach(s => s.draw(g))
   }
 
   /**
-   * Method used to append a Shape to those to be drawn.
+   * Draw all the areas present in the [[Habitat]] by creating specific rectangles.
    *
-   * @param shape the Shape to be drawn.
-   */
-  def addShape(shape: Shape): Unit = {
-    shapes.append(shape)
-  }
-
-  /**
-   * Method used to append a Seq of Shape to those to be drawn.
-   *
-   * @param shapesSeq the Seq of Shape to drawn.
-   */
-  def addAllShapes(shapesSeq: Seq[Shape]): Unit = {
-    shapesSeq.foreach(s => addShape(s))
-  }
-
-  /**
-   * Draw all the areas present in the habitat by creating specific rectangles.
-   *
-   * @param habitat the Habitat of the simulation.
+   * @param habitat the [[Habitat]] of the simulation.
    */
   def drawHabitat(habitat: Habitat): Unit = {
-    habitat.areas.foreach(area => addShape(new Rectangle(area.area.topLeft, area.area.bottomRight, area.color)))
-  }
-
-  //todo scaladoc
-  def drawFood(food: Seq[FoodInstance]): Unit = {
-    food.foreach(f => addShape(new Circle(f.position, Constants.PixelForFood, Color.white))) //TODO cambiare colore hardcoded
+    shapes.append(new Rectangle(RectangleArea(Point(0, 0), Point(width, height)), Color.white))
+    habitat.areas.foreach(a => shapes.append(new Rectangle(RectangleArea(a.area.topLeft, a.area.bottomRight), a.area.color)))
   }
 
   /**
    * After eliminate the old popups it draw the rectangle that represent each animals
    * and create the related popup with all his information.
    *
-   * @param animalsAndRectangles a Map containing the info of the Animals and Rectangles used to draw them.
+   * @param animals a Seq of [[Animal]] to draw.
    */
-  def drawAnimals(animalsAndRectangles: Map[Animal, Rectangle]): Unit = {
+  def drawAnimals(animals: Seq[Animal]): Unit = {
     eliminateOldPopup()
-    animalsAndRectangles.foreach(v => {
-      addShape(v._2)
-      createPopupAndMouseListener(v._1, v._2)
+    animals.foreach(a => {
+      val bottomRight = Point(a.position.x + AnimalUtils.getPixelFromSize(a.species), a.position.y + AnimalUtils.getPixelFromSize(a.species))
+      val rectangle = new Rectangle(RectangleArea(a.position, bottomRight), a.species.color)
+      shapes.append(rectangle)
+      createPopupAndMouseListener(a, rectangle)
     })
+  }
+
+  /**
+   * Draw all the food present in the map by creating specific circle.
+   *
+   * @param food a Seq of [[Food]] to draw.
+   */
+  def drawFood(food: Seq[Food]): Unit = food.foreach(f => shapes.append(new Circle(f.position, f.foodType.color, Constants.PixelForFood)))
+
+  /**
+   * Method to draw all the areas present in the [[Habitat]], the animals and the food.
+   *
+   * @param habitat the [[Habitat]] of the simulation.
+   * @param animals a Seq of [[Animal]] to draw.
+   * @param food    a Seq of [[Food]] to draw.
+   */
+  def drawAll(habitat: Habitat, animals: Seq[Animal], food: Seq[Food]): Unit = {
+    drawHabitat(habitat)
+    drawAnimals(animals)
+    drawFood(food)
   }
 
   /**
@@ -93,14 +94,13 @@ class SimulationPanel(val width: Int, val height: Int) extends Panel {
   /**
    * Create a popup with the information of the animal and a mouse listener which shows the popup when
    * the mouse is over that animal.
-   *
    * @param animal    the animal with all his information.
    * @param rectangle the rectangle used to draw the animal.
    */
   private def createPopupAndMouseListener(animal: Animal, rectangle: Rectangle): Unit = {
     val p = new AnimalPopup(animal, () => new swing.Point(
-      rectangle.topLeft.x + Constants.OffsetX + SwingUtilities.getWindowAncestor(this.peer).getLocation().x,
-      rectangle.topLeft.y + Constants.OffsetY + SwingUtilities.getWindowAncestor(this.peer).getLocation().y
+      rectangle.topLeft.x + Constants.PopupOffsetX + SwingUtilities.getWindowAncestor(this.peer).getLocation().x,
+      rectangle.topLeft.y + Constants.PopupOffsetY + SwingUtilities.getWindowAncestor(this.peer).getLocation().y
     ))
     popups = popups :+ p
 

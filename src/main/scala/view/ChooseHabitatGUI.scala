@@ -2,6 +2,8 @@ package view
 
 import controller.GameLoop
 import model._
+import model.habitat.{EmptyHabitatType, GridHabitatType, Habitat, HabitatType, RandomHabitatType, SimpleHabitatType}
+import view.logic.ChooseHabitatLogic
 
 import javax.swing.{Box, WindowConstants}
 import scala.swing._
@@ -15,9 +17,9 @@ class ChooseHabitatGUI(val l :ChooseHabitatLogic) {
   val h: TextField = new TextField("500"){
     editable = false
   }
-  val ue: TextField = new TextField("10")
+  val ue: TextField = new TextField("1")
 
-  val ours: RadioButton = new RadioButton("The habitat that we made"){
+  val ours: RadioButton = new RadioButton("An ad hoc habitat with fertile areas and water"){
     doClick()
     reactions += {
       case _: ButtonClicked =>
@@ -25,7 +27,7 @@ class ChooseHabitatGUI(val l :ChooseHabitatLogic) {
     }
   }
 
-  val empty: RadioButton = new RadioButton("An habitat without any area in it, food won't grow and there is no water to drink"){
+  val empty: RadioButton = new RadioButton("An habitat with no area, there will be no water and food won't grow"){
     reactions += {
       case _: ButtonClicked =>
         setVisibility(true)
@@ -61,9 +63,8 @@ class ChooseHabitatGUI(val l :ChooseHabitatLogic) {
 
       peer.add(Box.createVerticalStrut(10))
 
-      contents += new Label("Set a quantity of unexpected events that could kill animals (From 0 to 100)")
+      contents += new Label("Set a quantity of unexpected events that could kill animals (From 0 to 10)")
       contents += ue
-
       contents ++= radios.buttons
 
       peer.add(Box.createVerticalStrut(10))
@@ -74,7 +75,6 @@ class ChooseHabitatGUI(val l :ChooseHabitatLogic) {
       contents += h
 
       peer.add(Box.createVerticalStrut(20))
-
 
       contents += new Button("Start Simulation") {
         reactions += {
@@ -89,9 +89,6 @@ class ChooseHabitatGUI(val l :ChooseHabitatLogic) {
         }
       }
     }
-
-
-    //    this.preferredSize = new Dimension(1000, 1000)
     peer.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE)
     centerOnScreen()
     open()

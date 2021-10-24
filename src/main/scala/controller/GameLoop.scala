@@ -1,151 +1,191 @@
 package controller
 
-import model._
-import utility.{Constants, Point}
-import view.{Rectangle, SimulationPanel, SimulationGui}
+import controller.manager._
+import model.animal.{Animal, Species}
+import model.habitat.Habitat
+import model.position.Point
+import utility.{Constants, Logger, Statistics}
+import view.{SimulationGUI, StatisticsGUI}
 
-import java.awt.Color
-import scala.util.Random
+import scala.annotation.tailrec
 
 /**
- * Runnable used to start the simulation, it contains the game loop which must be executed in a new thread.
+ * [[Runnable]] used to start the simulation, it contains the game loop which must be executed in a new thread.
  *
- * @param species the Species with the number of animals to create at the beginning of the simulation.
- * @param habitat the Habitat where the simulation takes place.
+ * @param population all the [[Species]] with the number of animals to create at the beginning of the simulation.
+ * @param habitat    the [[Habitat]] where the simulation takes place.
  */
-case class GameLoop(species: Map[Species, Int], habitat: Habitat) extends Runnable {
+case class GameLoop(population: Map[Species, Int], habitat: Habitat) extends Runnable {
 
-  var animalsAndRectangles: Map[Animal, Rectangle] = Map.empty[Animal, Rectangle] //TODO lasciamo var?
-  var foodInMap: Seq[FoodInstance] = generateInitialFood() //TODO lasciamo var
-  val animalsInMap: Seq[Animal] = generateInitialAnimals()
-  val battleManager: BattleManager = BattleManager(animalsInMap)
-  val shiftManager: ShiftManager = ShiftManager(habitat, Map.empty[Animal, Point])
+  var isPaused: Boolean = false
+  var isSpeedUp: Boolean = false
+  var isStopped: Boolean = false
 
   /**
    * Method that represents the core of the simulation, defines the actions that must be
    * carried out at each unit of time.
    */
   override def run(): Unit = {
-    val shapePanel = new SimulationPanel(habitat.dimensions._1, habitat.dimensions._2)
-    val simulationGui = new SimulationGui(habitat, shapePanel) { top.visible = true }
-    simulationGui.updatePanel(animalsAndRectangles, foodInMap)
-
-    var previous: Long = System.currentTimeMillis()
-    while (animalsInMap.lengthIs > 1) { //TODO pausa come fermare il gioco senza sprecare cpu?
+    @tailrec
+    def _loop(animalManager: AnimalManager, resourceManager: ResourceManager, simulationGui: SimulationGUI): Unit = {
       val current: Long = System.currentTimeMillis()
-      val elapsed: Double = (current - previous).toDouble / Constants.MillisToSec
+      isPaused match {
+        case false =>
+          val (newAnimalManager, newResourceManager) = compute(animalManager, resourceManager)
+          update(newAnimalManager, newResourceManager, simulationGui)
+          waitForNextStep(current)
+          if (newAnimalManager.animals.lengthIs == 0 || isStopped) return
+          _loop(newAnimalManager, newResourceManager, simulationGui)
 
-      //Prendo dallo shiftmanager il primo movimento per ogni animale
-      //TODO shift manager dovrebbe gestire l'eat se l'animale finisce vicino al cibo e acqua??
-      //Non credo sia proprio lo shift a dover vedere sta cosa ma vabbe
-      battleManager.calculateBattles()
-      //Calcolo eventi inaspettati
-      //crescita casuale dei vegetali
-
-
-
-      simulationGui.updatePanel(animalsAndRectangles, foodInMap)
-
-
-
-      // ---- solo per vedere che la gui cambia----|
-      animalsAndRectangles = Map.empty //          |
-      generateInitialAnimals() //                  |
-      foodInMap = Seq.empty //                     |
-      foodInMap = generateInitialFood() //         |
-      // ---- solo per vedere che la gui cambia----|
-
-
-
-      waitForNextFrame(current)
-      previous = current
+        case true =>
+          waitForNextStep(current)
+          if (animalManager.animals.lengthIs == 0 || isStopped) return
+          _loop(animalManager, resourceManager, simulationGui)
+      }
     }
 
-    //mostrare la gui con il riassunto ?
+    val animalManager = AnimalManager().generateInitialAnimals(population, habitat)
+    val resourceManager = ResourceManager(habitat, Constants.FoodsFilePath).fillHabitat()
+    val simulationGui = new SimulationGUI(habitat, setPaused, setSpeed, stop) { top.visible = true }
+    simulationGui.updatePanel(animalManager.animals, resourceManager.foods)
+
+    _loop(animalManager, resourceManager, simulationGui)
+
+    Logger.info("Simulation finished")
+    simulationGui.disableAllButton()
+    StatisticsGUI().show()
   }
 
   /**
-   * Method that permit to wait the current time to render the following frame.
+   * Update the GUI of the simulation and increment the time.
    *
-   * @param current time at the beginning of current frame.
+   * @param animalManager   the [[AnimalManager]] of this step.
+   * @param resourceManager the [[ResourceManager]] of this step.
+   * @param simulationGui   the [[SimulationGUI]].
    */
-  private def waitForNextFrame(current: Long): Unit = {
+  private def update(animalManager: AnimalManager, resourceManager: ResourceManager, simulationGui: SimulationGUI): Unit = {
+    simulationGui.updatePanel(animalManager.animals, resourceManager.foods)
+    simulationGui.updateElapsedTime()
+    Statistics.incTime()
+  }
+
+  /**
+   * Method that permit to wait the time required before running the cycle again.
+   *
+   * @param current time at the beginning of the cycle.
+   */
+  private def waitForNextStep(current: Long): Unit = {
     val dt = System.currentTimeMillis() - current
-    println("Time elapsed for the computation: " + dt)
-    if (dt < Constants.Period) {
+    val period = if (isSpeedUp) Constants.SpeedUpPeriod else Constants.Period
+    if (dt < period) {
       Thread.sleep(Constants.Period - dt)
     }
   }
 
   /**
-   * Method to create the food to insert at the beginning of the simulation.
+   * Method that contains all the calculations that are performed in one step of the simulation.
    *
-   * @return the created food.
+   * @param animalManager   the [[AnimalManager]] of this step.
+   * @param resourceManager the [[ResourceManager]] of this step.
+   * @return the [[AnimalManager]] and the [[ResourceManager]] for the next step.
    */
-  private def generateInitialFood(): Seq[FoodInstance] = {
-    //TODO resourceManagere.generateFood ?
-    Seq.empty[FoodInstance]
+  def compute(animalManager: AnimalManager, resourceManager: ResourceManager): (AnimalManager, ResourceManager) = {
+    growFoodAfter(
+      calculateUnexpectedEventsAfter(
+        calculateBattlesAfter(
+          updateHealthAndThirstOf(
+            shiftedAnimals(animalManager, resourceManager)))))
   }
 
   /**
-   * Method to create a number of animals for each species equal to the one in the Map.
+   * Method used to find a destination for the [[Animal]]s of the simulation and move them towards it.
    *
-   * @return the created animals.
+   * @param animalManager   the [[AnimalManager]] at the beginning of the simulation.
+   * @param resourceManager the [[ResourceManager]] at the beginning of the simulation.
+   * @return the [[AnimalManager]] with the shifted [[Animal]]s and the initial [[ResourceManager]].
    */
-  private def generateInitialAnimals(): Seq[Animal] = {
-    //TODO fare in modo più funzionale (for yield ad esempio)
-    var animals = Seq.empty[Animal]
-    species foreach (s => {
-      val color = new Color(Random.nextFloat(), Random.nextFloat(), Random.nextFloat()) //TODO cambia colore hardcoded
-      for (_ <- 1 to s._2) {
-        val (x, y) = placeAnimal(s._1)
-        val animal = Animal(s = s._1, x)
-        animals = animals :+ animal
-        animalsAndRectangles += (animal -> new Rectangle(x, y, color))
-      }
-    })
-    animals
+  private def shiftedAnimals(animalManager: AnimalManager, resourceManager: ResourceManager): (AnimalManager, ResourceManager) = {
+    //find destination
+    val destinationManager: DestinationManager = DestinationManager(animalManager.animals, resourceManager.foods, habitat)
+    val destinations: Map[Animal, Point] = destinationManager.calculateDestination()
+    //animals movement
+    val shiftManager = ShiftManager(habitat, destinations).walk()
+    (AnimalManager(shiftManager.animals.toSeq), resourceManager)
   }
 
   /**
-   * Method used to obtain a random permissible point to create an animal of a certain species.
+   * Method used to make [[Animal]]s eat and drink and update their parameters due to the cycle of life.
    *
-   * @param species the Species of the animal.
-   * @return the Point (top left) to create the animal and the Point (bottom right) used to draw the rectangle.
+   * @param managers the [[AnimalManager]] and the [[ResourceManager]] after the animal shift.
+   * @return the [[AnimalManager]] with the updated [[Animal]]s and a [[ResourceManager]] in which the meat of the
+   *         dead [[Animal]]s was added.
    */
-  private def placeAnimal(species: Species): (Point, Point) = {
-    val (width, height) = habitat.dimensions
-    val size = species.size match {
-      case Big => Constants.PixelForBig
-      case Medium => Constants.PixelForMedium
-      case Small => Constants.PixelForSmall
-    }
-    var x = Random.nextInt(width - size)
-    var y = Random.nextInt(height - size)
-    while (areNotPlaceable(Seq(Point(x, y), Point(x + size, y + size), Point(x + size, y), Point(x, y + size)))) {
-      x = Random.nextInt(width - size)
-      y = Random.nextInt(height - size)
-    }
-    (Point(x, y), Point(x + size, y + size))
+  private def updateHealthAndThirstOf(managers: (AnimalManager, ResourceManager)): (AnimalManager, ResourceManager) = {
+    val (animalManager, resourceManager) = managers
+    //animals eat and drink
+    val (animals, foods) = FeedManager(animalManager.animals, resourceManager.foods, habitat).consumeResources()
+    val newAnimalManager = AnimalManager(animals)
+    val newResourceManager = resourceManager.foods_(foods)
+    //animals life cycle
+    val (animalsUpdated, foodsUpdated) = newAnimalManager.lifeCycleUpdate()
+    (AnimalManager(animalsUpdated), newResourceManager.foods_(newResourceManager.foods ++ foodsUpdated))
   }
 
   /**
-   * Check if a sequence of point is in a non-walkable area.
+   * Method used to make [[Animal]]s battle.
    *
-   * @param points the points whose positions are to be checked.
-   * @return true if at least one point is not placeable because was in a non-walkable area, otherwise true.
+   * @param managers the [[AnimalManager]] and the [[ResourceManager]] after the health and thirst update.
+   * @return the [[AnimalManager]] with the alive [[Animal]]s and a [[ResourceManager]] in which the meat of the
+   *         dead [[Animal]]s was added.
    */
-  def areNotPlaceable(points: Seq[Point]): Boolean = points.exists(p => isNotPlaceable(p))
+  private def calculateBattlesAfter(managers: (AnimalManager, ResourceManager)): (AnimalManager, ResourceManager) = {
+    val (animalManager, resourceManager) = managers
+    val battleManager: BattleManager = BattleManager(animalManager.animals)
+    val (animals, foods) = battleManager.battle()
+    (AnimalManager(animals), resourceManager.foods_(resourceManager.foods ++ foods))
+  }
 
   /**
-   * Check if a point is in a non-walkable area.
+   * Method that calculate some unexpected events that can kill some [[Animal]]s.
    *
-   * @param p the point whose position is to be checked.
-   * @return true if the point is not placeable because was in a non-walkable area, otherwise true.
+   * @param managers the [[AnimalManager]] and the [[ResourceManager]] after the battles.
+   * @return the [[AnimalManager]] with the alive [[Animal]]s and a [[ResourceManager]] in which the meat of the
+   *         dead [[Animal]]s was added.
    */
-  def isNotPlaceable(p: Point): Boolean = {
-    Constants.NonWalkableArea.contains(habitat.areas.find(a => a.area.contains(p)).getOrElse(return false).areaType)
+  private def calculateUnexpectedEventsAfter(managers: (AnimalManager, ResourceManager)): (AnimalManager, ResourceManager) = {
+    val (animalManager, resourceManager) = managers
+    val (animals, foods) = animalManager.unexpectedEvents(habitat)
+    (AnimalManager(animals), resourceManager.foods_(resourceManager.foods ++ foods))
   }
+
+  /**
+   * Method used to grow food in the [[Habitat]].
+   *
+   * @param managers the [[AnimalManager]] and the [[ResourceManager]] after the unexpected events.
+   * @return the [[AnimalManager]] with the alive [[Animal]]s of this step and a [[ResourceManager]] in which the
+   *         food grown in this step was added.
+   */
+  private def growFoodAfter(managers: (AnimalManager, ResourceManager)): (AnimalManager, ResourceManager) = {
+    val (animalManager, resourceManager) = managers
+    (animalManager, resourceManager.grow())
+  }
+
+  /**
+   * Method to pause/unpause the simulation.
+   *
+   * @param paused true to pause the simulation, false to unpause.
+   */
+  private def setPaused(paused: Boolean): Unit = isPaused = paused
+
+  /**
+   * Method to speed up and slow down the simulation.
+   *
+   * @param speedUp true to speed up the simulation, false to slow down.
+   */
+  private def setSpeed(speedUp: Boolean): Unit = isSpeedUp = speedUp
+
+  /**
+   * Method used to stop the simulation.
+   */
+  private def stop(): Unit = isStopped = true
 }
-
-

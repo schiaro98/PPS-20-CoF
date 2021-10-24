@@ -1,6 +1,6 @@
 package view
 
-import model.Animal
+import model.animal.Animal
 
 import java.awt._
 import javax.swing._
@@ -38,15 +38,15 @@ class AnimalPopup(animal: Animal, location: () => Point) {
   /**
    * Dispose the Frame of the popup.
    */
-  def deletePopup(): Unit = f.dispose()
+  def deletePopup(): Unit = SwingUtilities.invokeLater(() =>  f.dispose())
 
   /**
    * Method to get the info of a animal.
    *
-   * @param animal the animal about which information is desired.
+   * @param a the animal about which information is desired.
    * @return a formatted String with the info of the animal.
    */
-  def textToDisplay(animal: Animal): String = {
-    s"Species: ${animal.name}\nHealth: ${animal.health}\nThirst: ${animal.thirst}\nStrength: ${animal.strength}\nSight: ${animal.sight}\nSize: ${animal.size}"
+  def textToDisplay(a: Animal): String = {
+    s"Species: ${a.species.name}\nHealth: ${a.health}\nThirst: ${a.thirst}\nType: ${a.species.alimentationType}\nAge: ${a.age}\nStrength: ${a.species.strength}\nSight: ${a.species.sight}\nSize: ${a.species.size}"
   }
 }
