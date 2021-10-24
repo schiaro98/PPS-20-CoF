@@ -5,6 +5,36 @@ Cosa ha fatto, classi più rappresentative
 
 ## Simone Luzi
 
+Inizialmente mi sono dedicato allo sviluppo dei primi elementi di Model del progetto, un compito molto delicato visto che sarebbero stati adoperati in gran parte delle computazioni della simulazione.
+In seguito ho lavorato ad alcuni aspetti di View, in particolare a come far visualizzare lo stato della simulazione (ovvero i diversi tipi di aree, gli animali di diverse specie ed il cibo) e i parametri degli animali.
+In contemporanea ho prodotto alcuni metodi di utility per gli animali ed ho ampliato il serializzatore per poter decodificare anche aree, probabilità e colori.
+Successivamente mi sono occupato di due elementi di Controller, ovvero il gestore degli animali nella simulazione ed il game loop.
+
+####Model
+Dopo aver definito le caratteristiche degli elementi visualizzabili (che hanno un colore, **Visualizable**) e di quelli posizionoabili (che hanno una posizione, **Placeable**) ho potuto realizzare **Species**, **Animal**, **Food** e **FoodType**, concetti fondamentali per la logica della simulazione; essendo elementi del sistema molto importanti questi ultimi hanno subito diverse fasi di modifica e refactoring.
+Ognuno dei quattro è stato realizzato come sealed trait + companion object nel quale l'apply restituisce una classe privata, in questo modo, rispettivamente, si definiscono le funzionalità, i parametri necessari per la creazione e si realizza una delle possibili implementazioni che può essere facilmente sostituita con un'altra.
+Spesso si sono dovute modellare delle caratteristiche che potevano essere solamente una di diverse possibilità; per realizzare questi elementi ho scelto di utilizzare una delle particolarità di Scala, i case object. L'alternativa sarebbe stata utilizzare le enumerazioni che avrebbero fornito come vantaggio la possibilità di restituire tutti i possibili valori ma al costo di avere del codice più verboso e meno immediato.
+Altre peculiarità di Scala di cui ho fatto uso e che si sono rivelati moltu utili sono i valori di default, i named arguments, gli Option ed i match cases.
+
+####View
+Ho realizzato, insieme all'aiuto di Schiaroli, l'interfaccia grafica in cui osservare la simulazione (**SimulationGUI**), costituita da tre parti, in alto il pannello con la vera e propria simulazione, al centro il tempo trascorso e i pulsanti per gestirla ed in basso l'area di testo in cui vengono riportati gli ultimi eventi. Per rendere il file il più leggibile possibile ho racchiuso tutto il codice necessario alla creazione dei pulsanti in una case class in cui si definiscono le reazioni al click grazie all'utilizzo di funzioni higher-order.
+
+All'interno del pannello (**SimulationPanel**), oltre a disegnare le figure geometriche colorate per aree, animali e cibi, ho creato i mouse listener utilizzati per mostrare i popup contenenti i parametri di ogni animale; una particolarità di questo **AnimalPopup** è che, per essere utile, il frame che lo contiene deve essere posizionato vicino al mouse posizionato sopra all'animale che si vuole osservare, e siccome il frame contenente la simulazione può essere spostato, il popup può avere una posizione diversa ogni volta. Per questo motivo ho utilizzato la strategia "call-by-name" che permette di valutare ogni volta i parametri per posizionare il popup, infatti questi ultimi cambieranno in base ad un offset applicato alla location del frame.
+
+####Utility
+**AnimalUtils** contiene dei metodi di utility utilizzati per ottenere un punto random dell'habitat in cui è possibile piazzare un animale, i pixel utilizzati per un animale di una certa dimensione e i vertici del quadrato utilizzato per disegnare un animale.
+Per renderli il più funzionali possibili sono stati utilizzate ricorsioni tail, match cases e funzioni di libreria apposite.
+
+####Controller
+**AnimalManager** contiene gli animali presenti all'interno della simulazione, si occupa di creare e posizionare gli animali delle specie scelti dall'utente nel numero selezionato, di decrementare i parametri di fame e sete degli animali per simulare il passaggio del tempo e calcolare gli eventi inaspettati che potrebbero casualmente uccidere degli animali.
+Visto che sia l'aggiornamento dei parametri vitali che il calcolo degli eventi inaspettati potrebbero causare la morte degli animali, in entrambi casi ho utilizzato una pair come valore di ritorno in modo da poter comunicare sia gli animali ancora in vita che l'eventuale carne creata a causa della loro morte.
+Per rendere il codice il più funzionale possibile è stato creato un metodo privati ad hoc con higher-order per riusare del codice ed anche in questo caso ho utilizzato ricorsioni tail, match cases e funzioni di libreria come filter, foreach e map.
+
+**GameLoop** rappresenta il cuore del sistema, infatti definisce tutte le operazioni da svolgere ad ogni step della simulazione, crea e aggiorna l'interfaccia grafica dove viene visualizzata e fornisce i metodi per metterla in play/pausa/stop e modificarne la velocità.
+Questa classe è stata progettata come Runnable in modo da poter essere eseguita in un nuovo thread; in questo modo i calcoli eseguiti non andranno ad inficiare sulla reattività della GUI.
+Il loop vero è proprio è stato implementato con una ricorsione tail; in questo modo, oltre ad ottenere una ottimizzazione, Scala assicura che non si verifichi mai un errore di stack overflow.
+Dopo la sua implementazione ho rifattorizzato il codice insieme a Rossi per rendere più leggibili e funzionali i calcoli da effettuare ad ogni step; si è scelto di suddividerli in metodi che prendono compe parametri una pair di AnimalManager e ResourcesManager che restituiscono aggiornati come valore finale, in questo modo è stato possibile richiamarli uno di seguito all'altro.
+
 ## Luca Rossi
 Dopo aver dato una rappresentazione ad alto livello del dominio applicativo nella fase di modellazione ho inziato a scrivere il codice elencato di seguito:
 
