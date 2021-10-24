@@ -1,7 +1,7 @@
 package view.logic
 
 import model.animal._
-import utility.Constants
+import utility.{Constants, OursSpecies}
 import utility.serializer.{OfSpecies, Serializer}
 
 import java.awt.Color
@@ -27,9 +27,7 @@ class ChooseSpeciesLogic(speciesFile: String) {
   def getAllSpecies: Seq[Species] = try {
     serializer.deserializeManyFromFile(speciesFile)(classOf[Species])
   } catch {
-    case e: NullPointerException =>
-      Seq(Species("Hippopotamus", Big, 30, 10, Carnivore, new Color(-8752012)),
-          Species("Hyena", Small, 20, 15, Carnivore, new Color(-3398716)))
+    case _: NullPointerException => OursSpecies.species
     case _ => Seq.empty
   }
 
