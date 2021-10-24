@@ -62,9 +62,6 @@ object AnimalManager {
 
   private case class AnimalManagerImpl(animals: Seq[Animal]) extends AnimalManager {
 
-    private val logger = Logger
-
-
     override def lifeCycleUpdate(): (Seq[Animal], Seq[Food]) =
       updateAnimalAndInfo(
         (animal: Animal) => animal.update(animal.health - Constants.HealthDecrease, animal.thirst - Constants.ThirstDecrease),
@@ -85,7 +82,7 @@ object AnimalManager {
     private def updateAnimalAndInfo(update: Animal => Animal, reasonOfDeath: String): (Seq[Animal], Seq[Food]) = {
       val updatedAnimals = animals.map(update)
       Statistics.update(deathForNaturalCause = updatedAnimals.count(!_.isAlive))
-      updatedAnimals.filterNot(_.isAlive).foreach(animal => logger.info(animal.species.name + reasonOfDeath))
+      updatedAnimals.filterNot(_.isAlive).foreach(animal => Logger.info(animal.species.name + reasonOfDeath))
       (updatedAnimals.filter(_.isAlive), updatedAnimals.filterNot(_.isAlive).map(a => a.die()))
     }
 
