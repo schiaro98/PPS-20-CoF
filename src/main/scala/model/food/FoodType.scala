@@ -15,7 +15,7 @@ case object Vegetable extends FoodCategory
 /**
  * Trait that represent a food.
  */
-trait FoodType extends Visualizable {
+sealed trait FoodType extends Visualizable {
   val energy: Int
   val foodCategory: FoodCategory
 }

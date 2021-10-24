@@ -22,7 +22,7 @@ case object Carnivore extends Type
 /**
  * Trait that represent a specific species of animal.
  */
-trait Species extends Visualizable {
+sealed trait Species extends Visualizable {
   val name: String
   val size: Size
   val strength: Int
