@@ -115,7 +115,7 @@ Nella parte di Model mi sono occupato di parti legagte alla **View** come le Rec
 
 #### Shape e RectangleArea
 Shape è un Trait che viene implementato dalle classi Rectangle e Circle. In particolare è necessario che le classi implementino il metodo **Draw** che prendi in input un parametro di tipo Graphics2D, ovvero API di Java utilizzata per disegnare grafiche in 2 dimensioni. La classe Rectangle è stata usata per disegnare le aree e gli animali mentre la classe Circle per le verdure e la carne.
-RectangleArea contiene alcuni metodi utili a verificare alcune condizione come ad esempio se due rettangoli fanno *overlap* ovvero si sovrappongono e per creare le aree in modo random
+RectangleArea contiene alcuni metodi utili a verificare alcune condizioni come ad esempio se due rettangoli fanno *overlap* ovvero si sovrappongono e per creare le aree in modo random
 
 #### Point
 Point è la modellazione di un punto nella mappa e permette, oltre ad evitare di utilizzare Tuple2 o metodi che prendono due elementi, di rendere chiaro l'intento quando viene usato come parametro o come campo in una classe. Contiene inoltre numerosi metodi di utility per verificarne la posizione rispetto ad altri punti, rispetto ad assi cartesiano oppure per la creazione randomica.
