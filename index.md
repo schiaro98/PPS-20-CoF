@@ -233,7 +233,7 @@ I requisiti non funzionali riguardano particolari proprietà del sistema.
 Il sistema sarà eseguibile sui principali sistemi operativi desktop, ovvero Windows, Linux e MacOS.
 
 #### Performance
-Il sistema deve eseguire i calcoli di uno step della simulazione con 40 animali in meno di 1000 ms in una macchina con processore Intel core i7 e 8 Gb di ram; in generale la simulazione sarà eseguibile, magari con dei rallentamenti, anche su macchine non particolarmente potenti.
+Il sistema deve eseguire i calcoli di uno step della simulazione con 40 animali in meno di 1000 ms in una macchina con processore Intel core i7 7th Gen e 8 Gb di ram; in generale la simulazione sarà eseguibile, magari con dei rallentamenti, anche su macchine non particolarmente potenti.
 
 #### Interfaccia utente e usabilità
 L'interfaccia grafica deve essere progettata in maniera tale da essere subito comprensibile da un nuovo utente, senza bisogno di spiegazioni o tutorial.
