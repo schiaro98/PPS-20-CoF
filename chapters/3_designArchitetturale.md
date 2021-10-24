@@ -45,7 +45,7 @@ Nel pannello di creazione specie possiamo specificare alcuni campi come nome, fo
 ![View creazione nuova specie](/resources/view5.png "View creazione nuova specie")
 
 Se invece procediamo alla scelta di un habitat, possiamo scegliere tra l'habitat di default, oppure scegliere tra habitat con zone random, con zone a griglia oppure vuoto. Per ogni habitat possiamo specificare una probabilità che avvengano eventi casuali che possono uccidere o meno gli animali presenti. Per tutti gli habitat meno quello casuale è possibiile specificare una dimensione per la mappa.
-![View scelta habitat](/resources/view5.png "View scelta habitat")
+![View scelta habitat](/resources/view2.png "View scelta habitat")
 
 Una volta partita la simulazione è possibile visualizzare, oltre ovviamente alla simulazione che avviene nella parte superiore, gli eventi che accadono e fermare o velocizzare il tempo tramite l'area di testo e i pulsanti presenti nella parte inferiore.
 ![View simulazione](/resources/view3.png "View simulazione")
