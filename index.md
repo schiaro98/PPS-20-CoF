@@ -275,7 +275,7 @@ Ogni specie, una volta inserita nel simulatore viene salvata ed è quindi utiliz
 
 Per quanto riguarda invece l'habitat, è possibile scegliere tra l'habitat standard, un habitat con zone create in modo randomico, un habitat con zone disposte a griglia oppure un habitat vuoto. Per ognuno di essi è possibile definire un campo *unexpected events* che definisce la probabilità che un un animale possa morire a causa di avvenimenti non ordinari come incendi o malattie.
 
-Partendo dai requisiti abbiamo dapprima sviluppato un diagramma UML dei componenti principali dell'applicazione così da notare eventuali scelte errate in fase di progettazione
+Partendo dai requisiti abbiamo dapprima sviluppato un diagramma una prima stesura prototipale dei componenti principali dell'applicazione così da notare eventuali scelte errate in fase di progettazione
 ![Diagramma UML](/resources/UML1.png "Primo diagramma UML")
 
 In questo diagramma abbiamo definito alcuni punti fondamentali, come la relazione tra animale e specie, la composizione di Habitat in aree, la differenziazione tra tipo di cibo e l'esistenza di zone dell'habitat non percorribili.
