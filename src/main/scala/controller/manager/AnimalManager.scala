@@ -62,6 +62,22 @@ object AnimalManager {
 
   private case class AnimalManagerImpl(animals: Seq[Animal]) extends AnimalManager {
 
+    override def generateInitialAnimals(population: Map[Species, Int], habitat: Habitat): AnimalManager = {
+      @tailrec
+      def _generateInitialAnimals(population: Seq[(Species, Int)], habitat: Habitat, animals: Seq[Animal] = Seq.empty): AnimalManager = population match {
+        case (k, v) :: t =>
+          _generateInitialAnimals(t, habitat, animals ++ _generateAnimalsInHabitat(k, v, habitat))
+        case _ => AnimalManager(animals)
+      }
+      @tailrec
+      def _generateAnimalsInHabitat(s: Species, quantity: Int, habitat: Habitat, animals: Seq[Animal] = Seq.empty): Seq[Animal] = quantity match {
+        case x if x > 0 =>
+          _generateAnimalsInHabitat(s, quantity - 1, habitat, animals :+ Animal(s, AnimalUtils.placeAnimal(habitat, s)))
+        case _ => animals
+      }
+      _generateInitialAnimals(population.toSeq, habitat)
+    }
+    
     override def lifeCycleUpdate(): (Seq[Animal], Seq[Food]) =
       updateAnimalAndInfo(
         (animal: Animal) => animal.update(animal.health - Constants.HealthDecrease, animal.thirst - Constants.ThirstDecrease),
@@ -100,22 +116,6 @@ object AnimalManager {
         case Old => Constants.ProbabilityForOld
       }
       habitat.unexpectedEvents.increase(increment)
-    }
-
-    override def generateInitialAnimals(population: Map[Species, Int], habitat: Habitat): AnimalManager = {
-      @tailrec
-      def _generateInitialAnimals(population: Seq[(Species, Int)], habitat: Habitat, animals: Seq[Animal] = Seq.empty): AnimalManager = population match {
-        case (k, v) :: t =>
-          _generateInitialAnimals(t, habitat, animals ++ _generateAnimalsInHabitat(k, v, habitat))
-        case _ => AnimalManager(animals)
-      }
-      @tailrec
-      def _generateAnimalsInHabitat(s: Species, quantity: Int, habitat: Habitat, animals: Seq[Animal] = Seq.empty): Seq[Animal] = quantity match {
-        case x if x > 0 =>
-          _generateAnimalsInHabitat(s, quantity - 1, habitat, animals :+ Animal(s, AnimalUtils.placeAnimal(habitat, s)))
-        case _ => animals
-      }
-      _generateInitialAnimals(population.toSeq, habitat)
     }
   }
 }
