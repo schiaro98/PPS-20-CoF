@@ -147,7 +147,7 @@ e ha velocizzato notevolmente il tempo da utilizzare per scrivere codice piuttos
 Alla fine di ogni sprint si riguardava quindi il codice prodotto, ci si diceva quali task si sarebbero portati avanti e si procedeva all'implementazione.
 In particolare si è cercato di seguire il più possibile l'approccio TDD.
 Non lo si è portato all'estremo con l'approccio red-green-refactor, ma una volta create le interfacce o modellato le classi abbiamo proceduto con il testing in maniera più o meno esaustiva in base alla complessità e necessità.
-Per il refactor non abbiamo usato particolari regole comuni, ma ogni errore o "Smeel code" veniva riportato tramite
+Per il refactor non abbiamo usato particolari regole comuni, ma ogni errore o "code smell" veniva riportato tramite
 bacheca Trello a chi doveva occuparsene, oppure riscritto direttamente da chi lo aveva incontrato.
 
 ## Meeting/Interazioni pianificate
@@ -169,7 +169,7 @@ Diversamente da Gradle infatti non richiede di aggiungere plugin o specificare a
 
 ### Testing
 Per il testing abbiamo utilizzato la libreria ScalaTest, per la sua semplicità di uso e completezza. Abbiamo voluto anche testare alcune funzionalità avanzate rispetto alle classiche suite di test, utilizzando le flatSpec con i Matcher.
-Inoltre è stato utilizzato il plugin sbt-coverage per poter controllare l'effettiva copertura dei test realizzati. Questa metrica infatti, per quanto non indicativa di quanto bene sia eseguita la fase di sviluppo dei test è comunque utile per poter avere una visione più ampia di quali porzioni di progetto siano più o meno soggette a test. Questo tool inoltre permette di visualizzare sotto forma di pagina web la copertura per ogni file, package e per l'intero progetto.
+Inoltre è stato utilizzato il plugin sbt-scoverage per poter controllare l'effettiva copertura dei test realizzati. Questa metrica infatti, per quanto non indicativa di quanto bene sia eseguita la fase di sviluppo dei test, è comunque utile per poter avere una visione più ampia di quali porzioni di progetto siano più o meno soggette a test. Questo tool inoltre permette di visualizzare sotto forma di pagina web la copertura per ogni file, package e per l'intero progetto.
 
 ### Continuos Integration
 Per distribuire e testare frequentemente la nostra applicazione abbiamo utilizzato la pipeline di Github, tramite le Github Actions. Abbiamo perciò elaborato un file yaml contenente le azione da compiere ad ogni push. In particolare abbiamo specificato di compilare ed eseguire tutti i test ad ogni push sui branch di sviluppo (develop) e di release (main).
@@ -341,8 +341,12 @@ Per ogni animale, vengono cercate le risorse (aree d'acqua dove bere o cibo) vis
 E' il controller che permette di consumare le risorse e permette agli animali di bere, sempre considerando la vicinanza degli animali alle risorse. Si occupa anche della rimozione del cibo mangiato dagli animali.
 
 #### Resource Manager
+E' il controller del cibo presente nella simulazione.
+Si occupa di istanziare i vegetali all'interno dell'Habitat a inizio simulazione, di salvare il cibo presente in ogni step, e farne crescere di nuovo.
 
 #### Shift Manager
+E' il controller dei movimenti degli animali.
+Si occupa di far spostare gli animali dalla loro posizione alla destinazione prefissata. Se non possono raggiungere quest'ultima li farà avvicinare il più possibile in base al loro range di movimento.
 
 ### Model
 #### Species
@@ -356,7 +360,7 @@ Habitat rappresenta una composizione di aree di diverso tipo, dove gli animali p
 Ogni habitat ha una probabilità di eventi inaspettati che determina la possibilità che un animale muoia per cause non calcolate nella simulazione.
 
 #### Area
-Area rappresenta una area all'interno di un Habitat. Ogni area ha un tipo (Water, Rock, Volcano) che può essere camminabile o meno e una rappresentazione logica dell'area occupata all'interno dell'habitat (attraverso il campo Rectangle). In caso l'area sia fertile, allora l'area avrà anche la possibilità di far crescere spontaneamente del cibo al suo interno
+Area rappresenta una zona all'interno di un Habitat. Ogni area ha un tipo (Water, Rock, Volcano) che può essere camminabile o meno e una rappresentazione logica dell'area occupata all'interno dell'habitat (attraverso il campo Rectangle). In caso l'area sia fertile, allora potrà far crescere spontaneamente del cibo al suo interno
 
 #### Food
 Food rappresenta un tipologia di cibo, con una tipologia (Meat o Vegetable) e una quantità di energia che fornisce all'animale una volta mangiata.
@@ -367,6 +371,9 @@ all'interno della mappa, come i cibi e gli animali.
 Il suo unico campo è un Point, ovvero una tupla due numeri.
 Point inoltre fornisce numerosi metodi che permettono di verificare varie condizioni di uguaglianza o meno tra due Point,
 tra un Point e un asse cartesiano e di calcolare la distanza tra due Point
+
+#### Visualizable
+Visualizable è un trait che modella un elemento che verrà visualizzato nella mappa; il suo unico campo è il colore che verrà utilizzato per colorare l'elemento.
 
 ## Pattern di progettazione
 ### Factory
@@ -381,7 +388,7 @@ In particolare ha avuto una grandissima utilità in quelle classi di utility, ut
 ### Strategy
 Il core funzionale di scala permette una definizione veloce di lambda, utilizzate a volte come strategy.
 
-### Flyweight (quasi)
+### Flyweight
 Abbiamo usato delle strutture che ci permettono di usare il pattern Flyweight.
 Il pattern Flyweight consiste nel depositare parti fissi comuni e immutabili di dati in oggetti immutabili che sono usati come campi da altri oggetti che modellano la parte dinamica dell'esecutivo.
 Nel nostro codice abbiamo diverse strutture organizzate come sopra descritto, ma come anticipato, abbiamo deciso di utilizzare solamente oggetti immutabili, anche le parti dinamiche sono modellate tramite oggetti immutabili.
@@ -539,85 +546,7 @@ RectangleArea contiene alcuni metodi utili a verificare alcune condizioni come a
 Point è la modellazione di un punto nella mappa e permette, oltre ad evitare di utilizzare Tuple2 o metodi che prendono due elementi, di rendere chiaro l'intento quando viene usato come parametro o come campo in una classe. Contiene inoltre numerosi metodi di utility per verificarne la posizione rispetto ad altri punti, rispetto ad assi cartesiano oppure per la creazione randomica.
 
 #### Random e Grid Habitat
-Queste due diverse implementazioni di Habitat sono utili a verificare come gli animali si comportano in presenza di habitat diversi. L'habitat random è stato realizzato in modo da creare 4 aree Random di dimensione e tipologia variabile. E' possibile che creando aree totalmente random non esistano aree d'acqua, in questo caso gli animali muoriranno quando il loro livello di sete arriverà a zero. Nella area a griglia ho pensato invece di eliminare questo problema creando solamente aree d'acqua o fertili, in modo che ci sia la possibilità che gli animali continuino a vivere per molto tempo.
-
-# Design di dettaglio
-In questo capitolo andremo ad esplorare più nel dettaglio  le scelte progettuali che sono state attuate.
-
-## Organizzazione dei package
-
-![Diagramma dei package](https://github.com/schiaro98/PPS-20-CoF/blob/docs/resources/package.png)
-
-## Organizzazione del codice
-### Controller
-Il controller contiene la logica necessaria all'esecuzione della simulazione, come la gestione del ciclo di vita degli animali, dei combattimenti, della gestione delle risorse e degli spostamenti.
-
-#### Animal Manager
-E' il controller degli animali presenti nella simulazione.
-Si occupa di istanziare gli animali che sono presenti all'inzio della simulazione, aggiornare i valori degli animali ad ogni ciclo e ne fa morire alcuni se si verificano eventi inaspettati (ad esempio incendi o epidemie).
-
-#### Battle Manager
-E' il controller delle battaglie tra due animali.
-Contiene un metodo principale battle che si occupa di calcolare ricorsivamente per tutti gli animali gli eventuali scontri tra animali.
-E' necessario considerare alcuni fattori:
-* Solo i carnivori possono incominciare una battaglia
-* Le vittime (erbivori) per essere attaccate devono essere visibili, ovvero rientrare nella soglia del campo    visivo dell'animale attaccante
-* Per il calcolo dell'esito vengono calcolate varie probabilità in base a distanza, stazza, forza.
-  Per ogni battaglia è necessario aggiornare gli animali, eliminando gli animali deceduti e rilasciando le risorse
-
-#### Destination Manager
-E' il controller che descrive i movimenti dei vari animali.
-Per ogni animale, vengono cercate le risorse (aree d'acqua dove bere o cibo) visibili e viene ritornata la posizione dove devono dirigersi. Se non ci sono risorse disponibili all'interno del campo visivo viene scelta una posizione casuale dove dirigersi.
-
-#### Feed Manager
-E' il controller che permette di consumare le risorse e permette agli animali di bere, sempre considerando la vicinanza degli animali alle risorse. Si occupa anche della rimozione del cibo mangiato dagli animali.
-
-#### Resource Manager
-
-#### Shift Manager
-
-### Model
-#### Species
-Species rappresenta una specie animale e contiene campi che ne pregiudicano il comportamento all'interno della simulazione, come ad esempio "alimentationType" ovvero la dieta. Infatti gli animali possono compiere azione diverse se sono carnivori oppure erbivori. In oltre ogni specie ha una dimensione, una forza e un raggio visivo.
-
-#### Animal
-Animal raprresenta un'istanza di Species e contiene alcune informazione che variano da specie a specie, come ad esempio la vita (health) e la sete (thirst). Entrambi questi parametri vengono decrementati col passare del tempo e aggiornati quando l'animale mangia o beve. Durante il ciclo di vita dell'animale se uno dei parametri arriva a 0 l'animale muore, rilasciando risorse nella mappa
-
-#### Habitat
-Habitat rappresenta una composizione di aree di diverso tipo, dove gli animali possono muoversi e cibarsi.
-Ogni habitat ha una probabilità di eventi inaspettati che determina la possibilità che un animale muoia per cause non calcolate nella simulazione.
-
-#### Area
-Area rappresenta una area all'interno di un Habitat. Ogni area ha un tipo (Water, Rock, Volcano) che può essere camminabile o meno e una rappresentazione logica dell'area occupata all'interno dell'habitat (attraverso il campo Rectangle). In caso l'area sia fertile, allora l'area avrà anche la possibilità di far crescere spontaneamente del cibo al suo interno
-
-#### Food
-Food rappresenta un tipologia di cibo, con una tipologia (Meat o Vegetable) e una quantità di energia che fornisce all'animale una volta mangiata.
-
-#### Placeable e Point
-Placeable è un trait che abbiamo usato per modellare tutti quei componenti che necessitavano di descrivere una posizione
-all'interno della mappa, come i cibi e gli animali.
-Il suo unico campo è un Point, ovvero una tupla due numeri.
-Point inoltre fornisce numerosi metodi che permettono di verificare varie condizioni di uguaglianza o meno tra due Point,
-tra un Point e un asse cartesiano e di calcolare la distanza tra due Point
-
-## Pattern di progettazione
-### Factory
-Scala ci permette di implementare il design pattern factory col minimo sforzo.
-Il costrutto che abbiamo usato nella quasi totalità dei file è stato quello di dichiarare un trait, un companion object con la apply (spesso con valori di default) e una classe privata all'interno del companion object che implementasse il trait.
-Questo ci ha permesso di nascondere l'implementazione delle classi e dei metodi e di istanziare molto più comodamente gli oggetti.
-
-### Singleton
-Il pattern Singleton ci viene fornito gratuitamente da scala.
-In particolare ha avuto una grandissima utilità in quelle classi di utility, utilizzate da più classi e che avessero una logica comune, più nel dettaglio, il logger e le statistiche sono risultati molto semplici da sviluppare grazie ad un costrutto del genere.
-
-### Strategy
-Il core funzionale di scala permette una definizione veloce di lambda, utilizzate a volte come strategy.
-
-### Flyweight (quasi)
-Abbiamo usato delle strutture che ci permettono di usare il pattern Flyweight.
-Il pattern Flyweight consiste nel depositare parti fissi comuni e immutabili di dati in oggetti immutabili che sono usati come campi da altri oggetti che modellano la parte dinamica dell'esecutivo.
-Nel nostro codice abbiamo diverse strutture organizzate come sopra descritto, ma come anticipato, abbiamo deciso di utilizzare solamente oggetti immutabili, anche le parti dinamiche sono modellate tramite oggetti immutabili.
-Quindi il vantaggio di performance dato dal pattern flyweight viene un po' perso ma non avendo requisiti sotto quel punto di vista non ci siamo posti il problema e se in futuro dovessimo decidere di implementare il pattern flyweight nella sua totalità sarebbe molto facile convertire il codice prodotto. 
+Queste due diverse implementazioni di Habitat sono utili a verificare come gli animali si comportano in presenza di habitat diversi. L'habitat random è stato realizzato in modo da creare 4 aree Random di dimensione e tipologia variabile. E' possibile che creando aree totalmente random non esistano aree d'acqua, in questo caso gli animali muoriranno quando il loro livello di sete arriverà a zero. Nella area a griglia ho pensato invece di eliminare questo problema creando solamente aree d'acqua o fertili, in modo che ci sia la possibilità che gli animali continuino a vivere per molto tempo. 
 
 # Retrospettiva
 ## Risultato finale
