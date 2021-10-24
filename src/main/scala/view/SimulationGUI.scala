@@ -88,8 +88,6 @@ class SimulationGUI(habitat: Habitat,
  */
 case class SimulationButton(setPaused: Boolean => Unit, setSpeed: Boolean => Unit, stop: () => Unit) {
 
-  //TODO mettere File.separator
-
   val playButton: Button = new Button() {
     icon = getImage("play-button.png")
     this.enabled = false
@@ -135,14 +133,12 @@ case class SimulationButton(setPaused: Boolean => Unit, setSpeed: Boolean => Uni
     }
   }
 
-  def getImage(fileName: String):ImageIcon = {
+  def getImage(fileName: String): ImageIcon = {
     val path = Path("src"+File.separator+"main"+File.separator+"resources"+File.separator+"images"+File.separator+fileName)
-    val file = if (File(path).isFile){
-      new ImageIcon(path.path)
-    } else {
-      new javax.swing.ImageIcon(getClass.getResource(File.separator+"images"+File.separator+fileName))
+    File(path).isFile match {
+      case true => new ImageIcon(path.path)
+      case false => new ImageIcon(getClass.getResource(File.separator+"images"+File.separator+fileName))
     }
-    file
   }
 
   def buttons = Seq(playButton, pauseButton, speedDownButton, speedUpButton, stopButton)
