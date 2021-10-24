@@ -36,27 +36,13 @@ class SimulationPanel(dimension: (Int, Int)) extends Panel {
   }
 
   /**
-   * Method used to append a [[Shape]] to those to be drawn.
-   *
-   * @param shape the [[Shape]] to be drawn.
-   */
-  def addShape(shape: Shape): Unit = shapes.append(shape)
-
-  /**
-   * Method used to append a set of [[Shape]] to those to be drawn.
-   *
-   * @param shapesSeq the Seq of [[Shape]] to drawn.
-   */
-  def addAllShapes(shapesSeq: Seq[Shape]): Unit = shapesSeq.foreach(s => addShape(s))
-
-  /**
    * Draw all the areas present in the [[Habitat]] by creating specific rectangles.
    *
    * @param habitat the [[Habitat]] of the simulation.
    */
   def drawHabitat(habitat: Habitat): Unit = {
-    addShape(new Rectangle(RectangleArea(Point(0, 0), Point(width, height)), Color.white))
-    habitat.areas.foreach(a => addShape(new Rectangle(RectangleArea(a.area.topLeft, a.area.bottomRight), a.area.color)))
+    shapes.append(new Rectangle(RectangleArea(Point(0, 0), Point(width, height)), Color.white))
+    habitat.areas.foreach(a => shapes.append(new Rectangle(RectangleArea(a.area.topLeft, a.area.bottomRight), a.area.color)))
   }
 
   /**
@@ -70,7 +56,7 @@ class SimulationPanel(dimension: (Int, Int)) extends Panel {
     animals.foreach(a => {
       val bottomRight = Point(a.position.x + AnimalUtils.getPixelFromSize(a.species), a.position.y + AnimalUtils.getPixelFromSize(a.species))
       val rectangle = new Rectangle(RectangleArea(a.position, bottomRight), a.species.color)
-      addShape(rectangle)
+      shapes.append(rectangle)
       createPopupAndMouseListener(a, rectangle)
     })
   }
@@ -80,7 +66,7 @@ class SimulationPanel(dimension: (Int, Int)) extends Panel {
    *
    * @param food a Seq of [[Food]] to draw.
    */
-  def drawFood(food: Seq[Food]): Unit = food.foreach(f => addShape(new Circle(f.position, f.foodType.color, Constants.PixelForFood)))
+  def drawFood(food: Seq[Food]): Unit = food.foreach(f => shapes.append(new Circle(f.position, f.foodType.color, Constants.PixelForFood)))
 
   /**
    * Method to draw all the areas present in the [[Habitat]], the animals and the food.
