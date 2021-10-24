@@ -42,7 +42,7 @@ Animal raprresenta un'istanza di Species e contiene alcune informazione che vari
 
 #### Habitat
 Habitat rappresenta una composizione di aree di diverso tipo, dove gli animali possono muoversi e cibarsi. 
-Ogni habitat ha una probabilità di eventi inaspettati che determina la possibilità che un animale muoia per cause non calcolate nella simulazione (cacciatori, avvelenamento, etc...)
+Ogni habitat ha una probabilità di eventi inaspettati che determina la possibilità che un animale muoia per cause non calcolate nella simulazione.
 
 #### Area
 Area rappresenta una area all'interno di un Habitat. Ogni area ha un tipo (Water, Rock, Volcano) che può essere camminabile o meno e una rappresentazione logica dell'area occupata all'interno dell'habitat (attraverso il campo Rectangle). In caso l'area sia fertile, allora l'area avrà anche la possibilità di far crescere spontaneamente del cibo al suo interno
