@@ -245,7 +245,7 @@ I requisiti di implementazione definiscono i vincoli sulle tecnologie da utilizz
 
 Il sistema presenterà le seguenti caratteristiche:
 * **Linguaggio di programmazione**: Scala nella versione 2.13.6;
-* **Metodologia**: adottare una mentalità Agile ed utilizzare Scrum dove possibile;
+* **Metodologia**: adottare una mentalità Agile;
 * **Build tool**: sbt, dove verranno gestite tutte le dipendenze delle librerie utilizzate;
 * **Test**: ScalaTest, utilizzando lo stile FunSuite (a parte qualche caso in cui si è adottato FlatSpec);
 * **CI**: Github Actions, principalmente per controllare la corretta esecuzione dei test ad ogni push;
