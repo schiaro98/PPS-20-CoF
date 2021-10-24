@@ -49,7 +49,7 @@ class SimulationGUI(habitat: Habitat,
   }
 
   /**
-   * Method use to delete the old element in the [[SimulationPanel]] and draw on the Panel the new state of the simulation.
+   * Method used to delete the old element in the [[SimulationPanel]] and draw on the Panel the new state of the simulation.
    *
    * @param animals a Seq of [[Animal]] to draw on the [[SimulationPanel]].
    * @param food    the food to draw on the [[SimulationPanel]].
