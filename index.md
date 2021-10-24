@@ -113,6 +113,12 @@ This report can also be viewed on the following website [Report](https://schiaro
 
 # Introduzione
 
+
+L'idea alla base del progetto è la creazione di un simulatore di un habitat, come ad esempio la savana, in cui degli animali terrestri possono svolgere azioni come spostarsi, mangiare, bere e cacciare.
+In particolare l'habitat sarà composto da diversi tipi di aree (ad esempio con acqua potabile oppure zone rigogliose in cui crescono dei vegetali) e gli animali apparterranno ad una specie, che determinerà alcune caratteristiche come la taglia o la dieta (carnivora o erbivora). Ovviamente i carnivori potranno cacciare altri animali per mangiarne la carne mentre gli erbivori dovranno cercare i vegetali sparsi per la mappa.
+La simulazione sarà visualizzabile in una grafica molto semplice, le aree saranno rappresentate attraverso dei rettangoli colorati a seconda della tipologia e si potranno osservare gli animali muoversi sotto forma di quadratini colorati (esemplari di una stessa specie avranno lo stesso colore), mentre il cibo sarà rappresentato con dei piccoli cerchi.
+L'utente potrà scegliere tra una serie di habitat proposti ed avrà anche la possibilità di creare la sua specie personalizzata e di vedere come si comporta; in qualsiasi momento si potrà mettere la simulazione in pausa per controllare i parametri di ogni animale.
+
 # Processo di sviluppo
 
 Questo progetto ci ha permesso di lavorare seguendo alcune metodologie dello sviluppo *Agile*.
