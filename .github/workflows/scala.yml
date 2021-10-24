@@ -19,11 +19,3 @@ jobs:
           distribution: 'adopt'
       - name: Run tests
         run: sbt test
-  package:
-    name: Package
-    needs: [test]
-    runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main'
-    steps:
-      - name: Create package
-        run: sbt clean assembly
