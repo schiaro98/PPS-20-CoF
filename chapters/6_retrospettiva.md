@@ -1,10 +1,6 @@
 # Retrospettiva 
 
-
-descrizione finale dettagliata dell' andamento dello sviluppo, del backlog, delle iterazioni. Commenti finali.
-Si noti che la retrospettiva è l'unica sezione che può citare aneddoti di cosa è successo in itinere, mentre le altre sezioni fotografino il risultato finale. Se gli studenti decideranno (come auspicato) di utilizzare un product backlog e/o dei backlog delle varie iterazioni/sprint, è opportuno che questi siano file testuali tenuti in versione in una cartella (process), così che sia ri-verificabile a posteriori la storia del progetto.
-
-## Conclusione
+## Conclusione e commenti finali
 In conclusione ci riteniamo soddisfatti del lavoro svolto, sulle metodologie utilizzate e sul risultato finale.
 L'obiettivo più graficante secondo noi è stato quello di riuscire a costruire una applicazione pensando in modo funzionale.
 Col passare del tempo infatti, prendendo dimestichezza con un nuovo linguaggio, siamo riusciti ad esprimere concetti 
@@ -13,10 +9,9 @@ I strumenti tipici della FP sono stati l'utilizzo delle funzioni ricorsive, il p
 Nonostante non abbiamo ritenuto necessario adottare tutti i principi della metodologia Scrum o più in generale della 
 filosofia Agile e che alla fine dei conti si tratta comunque di idee che sicuramente sono più coerenti con ambiti "enterprise" 
 riteniamo che siano stati molto d'aiuto durante le varie fasi di questo progetto. 
-In particolare, il fatto che il progetto abbia avuto una deadlin fissa, come se fosse un progetto dato in carico a 
-dei sviluppatori all'interno di una azienda, ci ha fatto pensare ed agire come se fossimo stati veramente all'interno di una azienda.
-La stesura di feature da implementare, i meeting settimanali e la produzione continua di versione funzionanti 
-dell'applicativo, per quanto hanno sicuramente prodotto un overhead temporale, ci ha permesso di risparmiare in quello che invece viene chiamato *debito tecnico*
+In particolare, il fatto che il progetto abbia avuto una deadline fissa, come se fosse un progetto dato in carico a 
+dei sviluppatori all'interno di una azienda, ci ha fatto pensare ed agire come se fossimo stati veramente all'interno di un vero team di svilupoo.
+La stesura di feature da implementare e i meeting settimanali, per quanto hanno sicuramente prodotto un overhead temporale, ci ha permesso di risparmiare in quello che invece viene chiamato *debito tecnico*.
 
 ## Sviluppi futuri
 
@@ -28,8 +23,7 @@ Per quanto riguarda l'esperienza utente, avremmo voluto rappresentare gli animal
 
 ### Simulazione
 Inoltre avremmo voluto modellare alcuni aspetti avanzati per quantoo riguarda l'interazione degli animali nella mappa, come ad esempio costruire diversi tipi di cibi, alcuni mangiabili solo da alcuni tipi di animali, diversificando ed estendendo così le diete. Inoltre avremmo voluto anche modellare il fatto che nel tempo le risorse, sia carne che verdura potesso deteriorarsi e poter essere dannose per gli animali.
-
-
+Un altra possibile modifica risiede nella possibilità di implementare diverse tipologie di animali, più aderenti al tipo di habitat. Ad esempio sarebbe interessante poter simulare habitat con animali acquatici, animali di montagna nelle zone rocciose, etc.
 
 ## Descrizione sprint - Backlog
 
