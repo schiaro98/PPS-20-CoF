@@ -31,27 +31,7 @@ In questo secondo diagramma possiamo invece vedere come vengano modificati alcun
 ## Descrizione di pattern architetturali usati
 Per quanto riguarda l'architettura è stato scelto di modellare l'applicazione attraverso il pattern MVC. In questo modo abbiamo potuto suddividere l'applicazione in 3 componenti *loosely coupled*. Il componente **View** infatti si occupa solamente di visualizzare le informazioni in una mappa. Il **Model** invece si occupa di modellare le entità di gioco come ad esempio gli Animali, gli Habitat o i cibi e di gestire i dati ricevuti dall'utente tramite la Gui. Il **Controller** invece ha il compito di modificare i dati forniti dal Model, elaborandoli e restituendoli aggiornati alla Gui.
 Questa scelta architetturale ci consentirebbe in futuro di poter cambiare uno dei tre componenti principali senza dover riscrivere l'intera applicazione. Un esempio di possibile cambiamento potrebbe essere l'aggiornameto con un nuovo framework per l'interfaccia grafica come ScalaFX oppure ad una versione web.
-### MVC
 ![Diagramma Model View Controller](/resources/MVC.png "Diagramma MVC")
-
-### Model
-### Controller
-### View
-La view si compone principalmente delle classi utili a visualizzare i 5 frame e per la gestione della rappresentazione visuale degli animali, delle aree e dei popup che mostrano le statistiche in tempo reale durante la simulazione.
-Nel primo frame possiamo aumentare o diminuire la quantità di animali per ogni specie in modo da rendere la simulazione più movimentata o meno. Sono poi presenti i pulsanti per creare una nuova specie o per passare alla creazione di una nuova specie.
-![View scelta animali](/resources/view1.png "View scelta animali")
-
-Nel pannello di creazione specie possiamo specificare alcuni campi come nome, forza, vista, taglia e dieta della specie. E' presente poi un pannello per la scelta del colore con cui verrà disegnato l'animale nella mappa.
-![View creazione nuova specie](/resources/view5.png "View creazione nuova specie")
-
-Se invece procediamo alla scelta di un habitat, possiamo scegliere tra l'habitat di default, oppure scegliere tra habitat con zone random, con zone a griglia oppure vuoto. Per ogni habitat possiamo specificare una probabilità che avvengano eventi casuali che possono uccidere o meno gli animali presenti. Per tutti gli habitat meno quello casuale è possibiile specificare una dimensione per la mappa.
-![View scelta habitat](/resources/view2.png "View scelta habitat")
-
-Una volta partita la simulazione è possibile visualizzare, oltre ovviamente alla simulazione che avviene nella parte superiore, gli eventi che accadono e fermare o velocizzare il tempo tramite l'area di testo e i pulsanti presenti nella parte inferiore.
-![View simulazione](/resources/view3.png "View simulazione")
-
-Una volta completata la simulazione, ovvero quando non sono più presenti animali, viene presentato un report contenente le statistiche della simulazione. Ovvero di come i dati riguardanti il cibo e gli animali presenti siano evoluti nel tempo.
-![View statistiche](/resources/view4.png "View statistiche")
 
 ## Scelte tecnologiche cruciali ai fini architetturali
 
