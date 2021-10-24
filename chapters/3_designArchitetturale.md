@@ -30,6 +30,9 @@ In questo secondo diagramma possiamo invece vedere come vengano modificati alcun
 Per quanto riguarda l'architettura è stato scelto di modellare l'applicazione attraverso il pattern MVC. In questo modo abbiamo potuto suddividere l'applicazione in 3 componenti *loosely coupled*. Il componente **View** infatti si occupa solamente di visualizzare le informazioni in una mappa. Il **Model** invece si occupa di modellare le entità di gioco come ad esempio gli Animali, gli Habitat o i cibi e di gestire i dati ricevuti dall'utente tramite la Gui. Il **Controller** invece si occupa di modificare i dati forniti dal Model, elaborandoli e restituendoli aggiornati alla Gui.
 
 ## Descrizione di pattern architetturali usati
+
+![Diagramma Model View Controller](/resources/MVC.png "Diagramma MVC")
+
 ###MVC
 ###Model
 ###Controller
